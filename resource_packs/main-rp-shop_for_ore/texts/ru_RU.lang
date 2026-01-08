@@ -1,0 +1,511 @@
+## =============================
+##  Shop for Ore: РУССКАЯ ЛОКАЛИЗАЦИЯ
+##  Автор: kapycta1231484 & Copilot
+##  Последнее обновление: 2026-01-06
+##  В этом файле все игровые тексты для карты Shop for Ore на русском языке.
+##  Пожалуйста, сохраняйте секции и комментарии для удобной навигации!
+## =============================
+
+## --- КИРКИ ---
+item.stick.name=§lКирка §a1§b уровня
+item.wooden_pickaxe.name=§lКирка §a2§b уровня
+item.stone_pickaxe.name=§lКирка §a3§b уровня
+item.iron_pickaxe.name=§lКирка §a8§b уровня
+item.diamond_pickaxe.name=§lКирка §a13§b уровня
+item.netherite_pickaxe.name=§lКирка §a15§b уровня
+
+## --- ПРЕДМЕТЫ И БЛОКИ ---
+tile.dirt.name=Земля
+tile.cobblestone.name=Булыжник
+item.coal.name=Уголь
+item.raw_iron.name=Сырое железо
+item.raw_copper.name=Сырая медь
+item.redstone.name=Редстоун
+item.raw_gold.name=Сырое золото
+item.lapis_lazuli.name=Лазурит
+item.diamond.name=Алмаз
+item.emerald.name=Изумруд
+tile.netherrack.name=Незерак
+tile.magma.name=Блок магмы
+item.quartz.name=Кварц
+item.gold_nugget.name=Золотой самородок
+tile.ancient_debris.name=Древние обломки
+tile.netherite_block.name=Незеритовый блок
+tile.obsidian.name=Обсидиан
+tile.crying_obsidian.name=Плачущий обсидиан
+item.amethyst_shard.name=Осколок аметиста
+item.gold_ingot.name=§eМонета§r
+tile.emerald_block.name=§2Подарок§r
+
+## --- СЕРВЕРНЫЕ ПРЕДМЕТЫ ---
+item.server:menu=§eМеню сервера §7[Press to open§7]§r
+item.server:menu_new=§eМеню сервера §7[Press to open§7]§r
+item.server:admin_menu=§eМеню админа §7[Press to open§7]§r
+item.server:admin_stick=§cПалочка админа§r
+item.spawn_egg.entity.server:floating_text.name=Яйцо призыва голограммы
+
+## --- СИСТЕМА И ИНТЕРФЕЙС ---
+accessibility.chat.tts.autocomplete=Автозаполнение
+accessibility.chat.tts.autocompleteBack=Обратное автозаполнение
+accessibility.chat.tts.nextMessage=Следующее сообщение
+accessibility.chat.tts.previousMessage=Предыдущее сообщение
+advMode.setCommand.success=§r
+button.deleteText=Удалить текст
+button.kickPlayer=Выгнать игрока
+chat.title=Чат
+chat.title.cheats=Чат и команды
+chat.recipient=Вы
+commandBlock.entherCommand=Введите команду сюда...
+commands.scoreboard.players.offlinePlayerName= §cOffline
+death.attack.explosion= %1$s §r§cвзорвался
+death.attack.flyIntoWall= %1$s §r§cразбился на элитрах
+death.attack.generic= %1$s §r§cзагадочно умер
+death.attack.outOfWorld= %1$s §r§cпопал в пустоту
+death.attack.player= %1$s §r§cбыл убит  игроком§r %2$s
+death.attack.player.item= %1$s §r§cбыл убит  игроком§r %2$s §r§cс помощью§r %3$s
+disconnect.kicked=Вы были кикнуты с сервера
+disconnect.kicked.reason=Вы были кикнуты с сервера по причине:
+disconnectionScreen.disconnected=Потеряно соединение, возможно хост выключил сервер
+disconnectionScreen.unexpectedPacket=§lВас исключил§c администратор
+entity.server:floating_text.name=Голограмма
+map.position=Координаты: %s %s %s
+multiplayer.player.changeToPersona=§b%s §r§bпоменял свой скин
+multiplayer.player.changeToSkin=§b%s §r§bпоменял свой скин
+multiplayer.player.joined.realms=§r %s §r§7присоединился
+multiplayer.player.joined=§r %s §r§7присоединился
+multiplayer.player.left.realms=§r %s §r§7вышел
+multiplayer.player.left=§r %s §r§7вышел
+
+## --- ИНФОРМАЦИЯ О ПАКЕ ---
+pack.name=Дата-пак для карты §lShop for Ore§r (R)
+pack.description=Содержит в себе небольшие улучшения для комфортной игры. §cНе рекомендуется отключать!
+
+## --- СООБЩЕНИЯ ПРИ ПОДКЛЮЧЕНИИ ---
+progressScreen.message.building=Используйте меню в 9 слоте инвентаря, чтобы открыть больше функций
+progressScreen.message.locating=Прежде чем задавать много вопросов, прочитайте таблички на спавне
+progressScreen.message.resourceLoading=Omlet хоста: @waxenjaguar2209
+
+## --- ПЕРЕВОД И КНОПКИ ИНТЕРФЕЙСА ---
+admin.menu.background.1=§8[§cНе работает§8]
+admin.menu.background.2=§8[§7Нажмите чтобы призвать§8]
+admin.menu.button.back=§8Назад
+menu.background=§8[§7Нажмите чтобы открыть§8]
+menu.body.development=§7В разработке...
+menu.button.back=§8 Назад
+
+## --- ГЛАВНОЕ МЕНЮ ---
+menu.title=§l§8Меню сервера
+menu.body=§7Создатель меню§f: kapycta1231484
+menu.button.1=§8 О карте
+menu.button.2=§8 Магазин
+menu.button.3=§8 Настройки
+menu.button.4=§8 Банк
+menu.button.5=§8 Правила
+menu.button.6=§8 Промокоды
+menu.button.7=§8 Телепортации
+menu.button.8=§8 Прокачка
+
+## --- МЕНЮ О КАРТЕ ---
+mapInfo.title=§l§8Меню сервера |  О карте
+mapInfo.body=§7Выбери, что тебе нужно.
+mapInfo.button.1=§8 Уровни
+mapInfo.button.2=§f⩆ §8Как играть?
+mapInfo.button.3=§f⩇ §8Создатель
+mapInfo.button.4=§8 Версия карты
+
+## --- МЕНЮ УРОВНЕЙ ---
+lvlsInfo.title=§l§8Меню сервера |  Уровни
+lvlsInfo.body.lvl.1=1 уровень - Земля и Палка
+lvlsInfo.body.lvl.2=2 уровень - Камень и Деревянная кирка
+lvlsInfo.body.lvl.3=3 уровень - Уголь и Каменная кирка
+lvlsInfo.body.lvl.4=4 уровень - (ничего)
+lvlsInfo.body.lvl.5=5 уровень - Железо
+lvlsInfo.body.lvl.6=6 уровень - Медь
+lvlsInfo.body.lvl.7=7 уровень - (ничего)
+lvlsInfo.body.lvl.8=8 уровень - Редстоун и Железная кирка
+lvlsInfo.body.lvl.9=9 уровень - (ничего)
+lvlsInfo.body.lvl.10=10 уровень - Золото
+lvlsInfo.body.lvl.11=11 уровень - Лазурит
+lvlsInfo.body.lvl.12=12 уровень - (ничего)
+lvlsInfo.body.lvl.13=13 уровень - Алмазы и §bАлмазная кирка§r
+lvlsInfo.body.lvl.14=14 уровень - (ничего)
+lvlsInfo.body.lvl.15=15 уровень - Изумруды и §5Незеритовая кирка§r
+lvlsInfo.body.lvl.16=16 уровень - Незерак и Новая локация: §cНезер§r
+lvlsInfo.body.lvl.17=17 уровень - Магма
+lvlsInfo.body.lvl.18=18 уровень - Кварц
+lvlsInfo.body.lvl.19=19 уровень - Золотые самородки
+lvlsInfo.body.lvl.20=20 уровень - Древние обломки
+lvlsInfo.body.lvl.21=21 уровень - (ничего)
+lvlsInfo.body.lvl.22=22 уровень - Незеритовый блок
+lvlsInfo.body.lvl.23=23 уровень - (ничего)
+lvlsInfo.body.lvl.24=24 уровень - Обсидиан
+lvlsInfo.body.lvl.25=25 уровень - Плачущий обсидиан (§aМАКСИМАЛЬНЫЙ!!!§r)
+
+## --- ОБУЧЕНИЕ / КАК ИГРАТЬ ---
+howtoplay.title=§l§8Меню сервера | §f⩆§8 Как играть?
+howtoplay.text.1=§l§7Обучение
+howtoplay.text.2=§r§7• Чтобы поднять уровень нужно продавать руду и блоки. С каждым уровнем будет открываться доступ к новым киркам и рудам. Подробнее в  Уровни
+howtoplay.text.3=• Чтобы открыть кирку, нужно также продавать руду и блоки
+howtoplay.text.4=• Чтобы продать руду или блоки, встань на золотой блок
+howtoplay.text.5=§l§cПримечание:§r§c Если ты своровал руду которую ты не можешь копать то ты не можете продать её
+howtoplay.text.6=§l§7Покупка VIP
+howtoplay.text.7=§r§7VIP - это привелегия с преимуществами в виде новой руды и VIP магазина
+howtoplay.text.8=Стоит VIP - 125K
+howtoplay.text.9=Покупается в Меню »  Прокачка
+howtoplay.text.10=§l§7Ребитх
+howtoplay.text.11=§r§7Ребитх - это перепрохождение карты с пожизненным эффектом спешки
+howtoplay.text.12=Открывается ребитх после 16 
+howtoplay.text.13=Прокачивается в Меню »  Прокачка
+howtoplay.text.14=§l§7 Что означают смайлики слева сбоку?
+howtoplay.text.15=§r§7 - ваш Никнейм (имя в игре)
+howtoplay.text.16= - ваши Деньги / Монеты / Коины
+howtoplay.text.17= - ваши VIP коины / монеты
+howtoplay.text.18= - ваш Уровень и какой  следующий
+howtoplay.text.19= - ваш Опыт / XP и сколько  до следующего 
+howtoplay.text.20= - ваш Ребитх, особенность: спешка
+howtoplay.text.21= - текущий Онлайн сервера
+
+mapCreator.title=§l§8Меню сервера | §f⩇§8 Создатель
+
+mapVersion.title=§l§8Меню сервера |  Версия карты
+mapVersion.text.1=§l§7Тут написано про последнее обновление карты
+mapVersion.text.2=§lОбновление 0.1.8 от 22 декабря 2024 года§r
+mapVersion.text.3=• Количество командных блоков на карте уменьшено до минимума
+mapVersion.text.4=• Большинство §7.mcfunction§r файлов теперь работают автономно, без использования командных блоков
+mapVersion.text.5=• Практически все файлы аддона и ресурспака карты были оптимизированы, их вес был уменьшен и были убраны лишние строки кода
+mapVersion.text.6=• Обновлено Меню сервера:
+mapVersion.text.7=- Промокоды теперь можно вводить внутри меню
+mapVersion.text.8=- Исправлена ошибка, из-за которой в Меню банка можно было накручивать монеты
+mapVersion.text.9=• Обновлён Чат сервера:
+mapVersion.text.10=- Добавлены пользовательские команды, подробнее в §e!help§r
+mapVersion.text.11=- Добавлены пользовательские эмодзи, подробнее в §e!emotes§r
+mapVersion.text.12=- Добавлена защита от спама, флуда и сообщений, длинной более чем в 200 символов в чате
+
+## --- МЕНЮ МАГАЗИНА ---
+shop.title=§l§8Меню сервера |  Магазин
+shop.body=§7Что ты хочешь купить?
+shop.button.1=§8Зачарования
+shop.button.2=§8PvP Наборы
+shop.button.3=§8Бусты
+
+shop.enchants.title=§l§8 Магазин | Зачарования
+shop.enchants.body.1=§7Выбери, какое зачарование хочешь купить.
+shop.enchants.body.2=§l§cПримечание: §r§7Если ты купишь один раз, у тебя будет §e1§7 уровень зачарования. А если купить повторно тогда, уровень зачарования увеличится.
+shop.enchants.button.1=§8Эффективность
+shop.enchants.button.2=§8Удача
+
+shop.kits.title=§l§8 Магазин | PvP Наборы
+shop.kits.body=§7Покупая один из наборов, ты получишь броню и меч
+shop.kits.button.1=§8Железный набор
+shop.kits.button.2=§8Алмазный набор
+shop.kits.button.3=§8Незеритовый набор
+
+shop.boost.title=§l§8 Магазин | Бусты
+shop.boost.body.1=§7Выбери, какой буст хочешь купить
+shop.boost.body.2=§l§cПримечание: §r§7Буст действителен в течение §e5§7 минут после покупки
+shop.boost.button.1=§2 x2 буст
+shop.boost.button.2=§3 x4 буст
+
+## --- МЕНЮ НАСТРОЕК ---
+settings.title=§l§8Меню сервера |  Настройки
+settings.body=§7Выбор настроек:
+settings.default.1=§7По умолчанию - §2Включено
+settings.default.2=§7По умолчанию - §4Выключено
+settingsSelect.button.1=§8Таблицa
+settingsSelect.button.2=§8Партиклы при продаже
+settingsSelect.button.3=§8Звуки при продаже
+
+settingsTable.title=§l§8 Настройки | Таблица
+settingsTable.body=§7Нажми §2включить§7/§4выключить§7 ниже, чтобы показать или скрыть табличку сервера
+
+settings.button.1=§2Включить
+settings.button.2=§4Выключить
+settings.button.3=§gТолько смайлики
+
+settingsParticle.title=§l§8 Настройки | Партиклы
+settingsParticle.body=§7Нажми §2включить§7/§4выключить§7 ниже, чтобы включить или выключить отображение партиклов при продаже
+
+settingsSound.title=§l§8 Настройки | Звуки
+settingsSound.body=§7Нажми §2включить§7/§4выключить§7 ниже, чтобы включить или выключить звуки при продаже
+
+settingsChanged.1= §7Настройка изменена на - §2Включено
+settingsChanged.2= §7Настройка изменена на - §4Выключено
+settingsChanged.3= §7Настройка изменена на - §gТолько смайлики
+
+## --- МЕНЮ БАНКА ---
+bank.title=§l§8Меню сервера |  Банк
+bank.text.1=§rСумма, которую ты хочешь отправить:
+bank.text.2=§7Введи сюда...
+bank.text.3=§l§cERROR!§r§7 Твоего баланса недостаточно!
+bank.text.4=§aУспешный перевод игроку 
+bank.text.5=§aВам перевел 
+bank.text.6= сумма: 
+bank.text.7=§rВыбери игрока:
+bank.text.8=§eБаланс§r:
+bank.text.9=§l§cERROR!§r§7 Невозможно совершить перевод игроку, используя отрицательные значения
+
+## --- МЕНЮ ПРАВИЛ ---
+rules.title=§l§8Меню сервера |  Правила
+rules.body.1=§l§7Правила сервера:
+rules.body.2=§r§7Прочитав эти правила вы автоматически соглашаетесь с принятием наказания за нарушение одного из пункта правил. Незнание их не освобождает от наказания.
+rules.text.1=§l1.§r§7 Не спамить / флудить в чате • Мут 2-5 мин
+rules.text.2=§l2.§r§7 Не оскорблять игроков сервера / переходить на родню • Мут 7-10 мин
+rules.text.3=§l3.§r§7 Вести себя адекватно
+rules.text.4=§l4.§r§7 Не просить ресурсы, права оператора, режим креатива, команды и ресурспаки • Кик
+rules.text.5=§l5.§r§7 Не просить игроков перейти по ссылке / перейти на стрим / подписаться на рекламируемый аккаунт • Кик
+rules.text.6=§l6.§r§7 Не играть с читами • Бан
+
+## --- МЕНЮ ПРОМОКОДОВ ---
+promo.title=§l§8Меню сервера |  Промокоды
+promo.text.1=§7Промокоды можно найти в любом месте. Они помечены на табличках §2таким§7 цветом.
+promo.text.2=§7Если ты нашел такой, введи его в поле ниже, соблюдая регистр, иначе промокод не сработает.
+promo.textField=§7Введи промокод...
+
+## --- МЕНЮ ТЕЛЕПОРТАЦИЙ ---
+warps.title=§l§8Меню сервера |  Телепортации
+warps.body=§7Куда хочешь телепортироваться?
+warps.button.1=§8Спавн
+warps.button.2=§8Мини-игры
+
+## --- МЕНЮ ПРОКАЧКИ ---
+upgrading.title=§l§8Меню сервера |  Прокачка
+upgrading.body=§7Выбери свой путь развития:
+upgrading.button.1=§2VIР
+upgrading.button.2=§5Ребитх
+
+## --- МЕНЮ РЕГИСТРАЦИИ ---
+reg.title=§lРегистрация аккаунта
+reg.toggle=Я соглашаюсь с правилами сервера и потверждаю §cотсутствие§r читов
+reg.text.1=§cПожалуйста подтвердите §bотсутствие читов§c чтобы играть на сервере
+reg.text.2=§aПриветствую
+reg.text.3=§aДобро пожаловать на сервер! Приятной игры :)
+reg.text.4=§6Информация об аккаунте§r:
+reg.text.5=§6Пароль§r: 
+reg.text.6=§aЗапомни эти данные или сделай скриншот чтобы потом зайти в игру
+
+## --- МЕНЮ ВХОДА ---
+login.title=§lВход в аккаунт
+login.text.1=Приветствую
+login.text.2=§rна сервере §l[] Shop for Ore§r. Придумай и введи пароль для регистрации
+login.text.3=§gВведи пароль, который ты вводил при регистрации
+login.text.4=§7Введи пароль...
+login.text.5=§aУспешный вход в аккаунт! Добро пожаловать!
+login.text.6=§cТвой §bпароль§c неверный, проверь верность своих данных еще раз!
+
+## --- МЕНЮ АДМИНА ---
+admin.menu.title=§l§8Меню админа
+admin.menu.button.1=§8Режим игры
+admin.menu.button.2=§8Установить время
+admin.menu.button.3=§8Телепортации
+admin.menu.button.4=§8Эффекты
+admin.menu.button.5=§8Инстументы
+admin.menu.button.6=§8Объявления
+admin.menu.button.7=§8Вайп
+admin.menu.button.8=§8Призвать бота
+
+## --- АДМИН: РЕЖИМЫ ИГРЫ ---
+gm.title=§l§8Меню админа | Режим игры
+gm.body=§7Список режимов игры:
+gm.button.1=§8Креатив
+gm.button.2=§8Приключение
+gm.button.3=§8Наблюдатель
+gm.button.4=§8Полет
+
+## --- АДМИН: УСТАНОВКА ВРЕМЕНИ ---
+timeSet.title=§l§8Меню админа | Установка времени
+timeSet.body=§7Выбери время, которое хочешь установить:
+timeSet.button.1=§8Рассвет
+timeSet.button.2=§8День
+timeSet.button.3=§8Полдень
+timeSet.button.4=§8Закат
+timeSet.button.5=§8Ночь
+timeSet.button.6=§8Полночь
+
+## --- АДМИН: ТЕЛЕПОРТАЦИИ ---
+warp.title=§l§8Меню админа | Телепортации
+warp.body=§7Список телепортациий:
+warp.button.1=§8Шахта
+warp.button.2=§8VIP локация
+warp.button.3=§8СMD Zone
+warp.button.4=§8/tр to @r
+
+## --- АДМИН: ЭФФЕКТЫ ---
+effects.title=§l§8Меню админа | Эффекты
+effects.body=§7Список эффектов:
+effects.button.1=§8Невидимость
+effects.button.2=§8Стойкость
+effects.button.3=§8Сила
+effects.button.4=§8Спешка
+effects.button.5=§8Очистить эффекты
+
+## --- АДМИН: ИНСТРУМЕНТЫ ---
+tools.title=§l§8Меню админа | Инструменты
+tools.body=§7Выбери то, что тебе надо:
+tools.button.1=§5Командный блок
+tools.button.2=§5Блок разрешения
+tools.button.3=§5Блок запрета
+tools.button.4=§5Структурный блок
+tools.button.5=§5Структурная пустота
+tools.button.6=§5Барьер
+tools.button.7=§5Граница
+tools.button.8=§5Блок света
+tools.button.9=§5Яйцо призыва NPC
+tools.button.10=§5Яйцо призыва голограммы
+tools.button.11=§cПалочка админа
+tools.button.12=§8Очистить инвентарь
+
+## --- АДМИН: ОБЪЯВЛЕНИЯ ---
+sayServer.title=§l§8Меню админа | Объявления
+sayServer.body=§gНапиши в строку ниже, все что хочешь сказать. Это отобразится всему серверу
+sayServer.textField=§7Введи текст...
+sayServer.message=§l§eОбъявление:§r
+
+## --- АДМИН: ВАЙП ---
+wipe.title=§l§8Предупреждение
+wipe.body=§7Вайп приведет к сбросу всей статистики, но не заденет теги и инвентари игроков. Вы уверены?
+wipe.button.1=§2Да
+wipe.button.2=§4Нет
+wipe.message.success=§aСброс статистики прошёл успешно
+
+## --- СИСТЕМНЫЕ И УРОВНЕВЫЕ СООБЩЕНИЯ ---
+message.lvlup.lvl.2= §rповысил свой уровень до §a2§f. Его кирка улучшена с Палка >> Деревянная кирка
+message.lvlup.lvl.3= §rповысил свой уровень до §a3§f. Его кирка улучшена с Деревянная кирка >> Каменная кирка
+message.lvlup.lvl.4= §rповысил свой уровень до §a4
+message.lvlup.lvl.5= §rповысил свой уровень до §a5
+message.lvlup.lvl.6= §rповысил свой уровень до §a6
+message.lvlup.lvl.7= §rповысил свой уровень до §a7
+message.lvlup.lvl.8= §rповысил свой уровень до §a8§f. Его кирка улучшена с Каменная кирка >> Железная кирка
+message.lvlup.lvl.9= §rповысил свой уровень до §a9
+message.lvlup.lvl.10= §rповысил свой уровень до §a10
+message.lvlup.lvl.11= §rповысил свой уровень до §a11
+message.lvlup.lvl.12= §rповысил свой уровень до §a12
+message.lvlup.lvl.13= §rповысил свой уровень до §a13§f. Его кирка улучшена с Железная кирка >> §bАлмазная кирка
+message.lvlup.lvl.14= §rповысил свой уровень до §a14
+message.lvlup.lvl.15= §rповысил свой уровень до §a15§f. Его кирка улучшена с §bАлмазная кирка§f >> §5Незеритовая кирка
+message.lvlup.lvl.16= §rповысил свой уровень до §a16§f. Открыта новая локация: §cНезер
+message.lvlup.lvl.17= §rповысил свой уровень до §a17
+message.lvlup.lvl.18= §rповысил свой уровень до §a18
+message.lvlup.lvl.19= §rповысил свой уровень до §a19
+message.lvlup.lvl.20= §rповысил свой уровень до §a20
+message.lvlup.lvl.21= §rповысил свой уровень до §a21
+message.lvlup.lvl.22= §rповысил свой уровень до §a22
+message.lvlup.lvl.23= §rповысил свой уровень до §a23
+message.lvlup.lvl.24= §rповысил свой уровень до §a24
+message.lvlup.lvl.25= §rповысил свой уровень до §a25§f. Этот уровень §aМАКСИМАЛЬНЫЙ§f!!!
+
+## --- VIP И РЕБИТХ ---
+message.basic.error=§l§cERROR!§r§7 Недостаточно 
+message.lvlup.error.1=§l§cERROR!§r§7 Недостаточно  или ваш уровень меньше 25 
+message.lvlup.error.2=§l§cERROR!§r§7 Ваш уровень не 16-25 
+message.lvlup.haveVIP=§l§cERROR!§r§7 У тебя уже есть §aVIP
+message.lvlup.haveRebirth=§l§cERROR!§r§7 Максимальный уровень ребитха!
+message.lvlup.rebirth.1= §r§dсделал свой первый §5Ребитх
+message.lvlup.rebirth.2= §dТы повысил уровень §5ребитха§d до: §5
+message.lvlup.vip= §rповысил свой уровень до §aVIP
+message.lvlup.vip.success=Поздравляем с покупкой §aVIP§f. Чтобы переместиться на §aVIP остров§f, используйте §eМеню сервера
+
+## --- БУСТЫ ---
+message.boost.end.1=§a x2 буст закончился. Новый можно снова купить в Магазине!
+message.boost.end.2=§b x4 буст закончился. Новый можно снова купить в Магазине!
+message.boost.error=§l§cERROR!§r§7 Невозможно §cкупить буст§7 в данный момент. Дождись окончания предыдущего!
+message.x2boost=§a купил  x2 буст. У вас есть §25 минут§a, чтобы прокачаться!
+message.x4boost=§b купил  x4 буст. У вас есть §35 минут§b, чтобы прокачаться!
+
+## --- НАГРАДЫ ЗА ПРОМОКОДЫ ---
+message.promo.1=§eактивировал(а) промокод и получил(а) 500 
+message.promo.2=§eактивировал(а) промокод и получил(а) 500 
+message.promo.3=§eактивировал(а) промокод и получил(а) 25k 
+message.promo.4=§eактивировал(а) промокод и получил(а) 100 
+message.promo.activated=§eТы уже активировал данный §aпромокод
+message.promo.error=§l§cERROR!§r§7 Неверный промокод
+
+## --- АНТИЧИТ ---
+message.anticheat.detectItem=попытался взять запрещенный предмет, предмет:
+message.acticheat.detectEchant.1=попытался зачаровать
+message.acticheat.detectEchant.2=на
+message.acticheat.detectEchant.3=уровень
+
+## --- ОЧИСТКА ПРЕДМЕТОВ ---
+message.clearItem.title=§l§eОчистка мусора
+message.clearItem.subtitle=§l§eУдалено предметов: §a
+
+## --- СОБЫТИЯ ---
+message.event.gift_event=§l>> §eНа карте §aпоявился подарок! Кто сможет §bпервым§e его §aподобрать§e?
+message.event.gift_event.end= §aподобрал §eподарок!
+message.event.haste_event=§gполучил(а) спешку на 10 сек
+message.event.mythic_chest=§l >> §rНа PvP арене появился мистик! Поспеши залутать его первым!
+message.event.rain_event=§l >> §bНачинается дождь из монет!
+message.event.rain_event.end=§l >> §bДождь окончен!
+
+## --- КОМАНДЫ И ИСПОЛЬЗОВАНИЕ ---
+commands.list.desc=§8-----§f Список команд §8-----§f
+commands.help.desc=§7Показывает список доступных команд
+commands.spawn.desc=§7Телепортирует на спавн
+commands.emotes.desc=§7Показывает список доступных эмодзи
+commands.msg.desc=§7Отправляет сообщение игроку
+commands.gm1.desc=§7Устанавливает творческий режим (Creative)
+commands.gm2.desc=§7Устанавливает режим приключения (Adventure)
+commands.gm6.desc=§7Устанавливает режим наблюдателя (Spectator)
+commands.fly.desc=§7Включает§8/§7выключает возможность летать
+commands.clearchat.desc=§7Очищает чат
+commands.bot.desc=§7Призывает бота
+commands.stick.desc=§7Выдаёт §cПалочку админа
+commands.invis.desc=§7Включает§8/§7выключает невидимость
+commands.timeset.desc=§7Устанавливет время на сервере
+commands.prefix.desc=§7Управляет префиксами игроков
+commands.tag.desc=§7Управляет тегами игроков
+commands.scoreboard.desc=§7Управляет базой данных команды /scoreboard
+commands.kick.desc=§7Выгоняет игрока с сервера
+
+message.cmd.error.1=§l§cERROR!§r§7 Неизвестная команда:
+message.cmd.error.2=Напиши §e!help§7, чтобы узнать список команд
+message.cmd.error.3=§l§cERROR!§r§7 У вас нет прав для выполнения этой команды!
+
+message.cmd.spawn=§aВы телепортированы на §bспавн
+message.cmd.emotes=§8-----§f Список эмодзи §8-----§f
+message.cmd.msg.use=§aИспользование: §b!msg §a<§bигрок§a> <§bсообщение§a>
+message.cmd.gm1=§aРежим игры изменён на §bКреатив
+message.cmd.gm2=§aРежим игры изменён на §bПриключение
+message.cmd.gm6=§aРежим игры изменён на §bНаблюдение
+message.cmd.fly.on=§aРежим полёта §bвключен
+message.cmd.fly.off=§aРежим полёта §bвыключен
+message.cmd.fly.use=§aИспользование: §b!fly §a<§bon§a/§boff§a>
+message.cmd.clearchat=§aОчистка чата...
+message.cmd.stick=§aВы получили §bПалочку админа
+message.cmd.invis.on=§aВы стали §bневидимым
+message.cmd.invis.off=§aВы больше §bне невидимы
+message.cmd.invis.use=§aИспользование: §b!invis §a<§bon§a/§boff§a>
+message.cmd.timeset.use=§aИспользование: §b!timeset §a<§bsunrise§a; §bday§a; §bnoon§a; §bsunset§a; §bnight§a; §bmidnight§a>
+message.cmd.prefix.use=§aИспользование: §b!prefix §a<§bигрок§a> <§bset§a/§btake§a> <§bпрефикс§a>
+message.cmd.tag.use=§aИспользование: §b!tag §a<§bигрок§a> <§badd§a/§bremove§a> <§bтег§a>
+message.cmd.scoreboard.use=§aИспользование: §b!scoreboard §a<§bигрок§a> <§badd§a/§bremove§a> <§bцель§a> <§bколичество§a>
+message.cmd.kick=был кикнут. Причина: 
+message.cmd.kick.no_reason=не указана
+message.cmd.kick.use=§aИспользование: §b!kick §a<§bигрок§a> <§bпричина §a(§bне обязательно§a)>
+
+## --- НАГРАДЫ МАГАЗИНА ---
+message.shop.enchant.efficiency=§7Успешно приобретено§f: §eЭффективность§f (+1)
+message.shop.enchant.fortune=§7Успешно приобретено§f: §eУдача§f (+1)
+message.shop.kit.iron=§7Успешно приобретено§f: Железный комплект
+message.shop.kit.diamond=§7Успешно приобретено§f: Алмазный комплект
+message.shop.kit.netherite=§7Успешно приобретено§f: Незеритовый комплект
+
+## --- АДМИН-ПАЛОЧКА ---
+message.kick=§r§c исключен администратором§f
+
+## --- СКОРБОРД ---
+scoreboards.map=§l[] Магазин за руду§r
+scoreboards.profile=§l[] §7Профиль§f: §r
+scoreboards.money=§l[] §eБаланс§f: 
+scoreboards.money2=§l[] §gVIP Монеты§f: 
+scoreboards.xp=[] §aОпыт§f: 
+scoreboards.lvl=[] §2Уровень§f: 
+scoreboards.lvl.max=§aМАКС.§f
+scoreboards.rebirth=[] §dРебитх§f: 
+scoreboards.online=[] §6Онлайн§f: 
+scoreboards.x2boost= §l§ax2 буст
+scoreboards.x4boost= §l§bx4 буст
+
+## --- ОШИБКИ ЧАТА ---
+message.chat.antiflood=§l§cERROR!§r§7 Ваше сообщение слишком длинное!
+message.chat.antispam=§l§cERROR!§r§7 Не спамьте в чате!
