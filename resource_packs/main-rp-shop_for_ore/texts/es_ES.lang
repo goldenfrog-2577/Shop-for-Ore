@@ -1,0 +1,511 @@
+## =============================
+##  Shop for Ore: LOCALIZACIÓN ESPAÑOLA
+##  Autor: kapycta1231484 & Copilot
+##  Última actualización: 2026-01-06
+##  Este archivo contiene todos los textos del mapa Shop for Ore en español.
+##  ¡Por favor, mantén las secciones y comentarios para facilitar la navegación!
+## =============================
+
+## --- PICOLES ---
+item.stick.name=§lPico §aNivel§b 1
+item.wooden_pickaxe.name=§lPico §aNivel§b 2
+item.stone_pickaxe.name=§lPico §aNivel§b 3
+item.iron_pickaxe.name=§lPico §aNivel§b 8
+item.diamond_pickaxe.name=§lPico §aNivel§b 13
+item.netherite_pickaxe.name=§lPico §aNivel§b 15
+
+## --- OBJETOS Y BLOQUES ---
+tile.dirt.name=Tierra
+tile.cobblestone.name=Roca
+titem.coal.name=Carbón
+item.raw_iron.name=Hierro en bruto
+item.raw_copper.name=Cobre en bruto
+item.redstone.name=Redstone
+item.raw_gold.name=Oro en bruto
+item.lapis_lazuli.name=Lapis Lazuli
+item.diamond.name=Diamante
+item.emerald.name=Esmeralda
+tile.netherrack.name=Netherrack
+tile.magma.name=Bloque de magma
+item.quartz.name=Cuarzo
+item.gold_nugget.name=Pepita de oro
+tile.ancient_debris.name=Escombros antiguos
+tile.netherite_block.name=Bloque de netherita
+tile.obsidian.name=Obsidiana
+tile.crying_obsidian.name=Obsidiana llorosa
+item.amethyst_shard.name=Fragmento de amatista
+item.gold_ingot.name=§eMoneda§r
+tile.emerald_block.name=§2Regalo§r
+
+## --- OBJETOS DEL SERVIDOR ---
+item.server:menu=§eMenú del servidor §7[Pulsa para abrir§7]§r
+item.server:menu_new=§eMenú del servidor §7[Pulsa para abrir§7]§r
+item.server:admin_menu=§eMenú de admin §7[Pulsa para abrir§7]§r
+item.server:admin_stick=§cVara de admin§r
+item.spawn_egg.entity.server:floating_text.name=Huevo de holograma
+
+## --- SISTEMA Y UI ---
+accessibility.chat.tts.autocomplete=Autocompletar
+accessibility.chat.tts.autocompleteBack=Autocompletar inverso
+accessibility.chat.tts.nextMessage=Siguiente mensaje
+accessibility.chat.tts.previousMessage=Mensaje anterior
+advMode.setCommand.success=§r
+button.deleteText=Eliminar texto
+button.kickPlayer=Expulsar jugador
+chat.title=Chat
+chat.title.cheats=Chat y comandos
+chat.recipient=Tú
+commandBlock.entherCommand=Introduce el comando aquí...
+commands.scoreboard.players.offlinePlayerName= §cDesconectado
+death.attack.explosion= %1$s §r§cexplotó
+death.attack.flyIntoWall= %1$s §r§cse estrelló con el élytra
+death.attack.generic= %1$s §r§cmurió misteriosamente
+death.attack.outOfWorld= %1$s §r§ccayó al vacío
+death.attack.player= %1$s §r§cfue asesinado por  jugador§r %2$s
+death.attack.player.item= %1$s §r§cfue asesinado por  jugador§r %2$s §r§cusando§r %3$s
+disconnect.kicked=Fuiste expulsado del servidor
+disconnect.kicked.reason=Fuiste expulsado por:
+disconnectionScreen.disconnected=Conexión perdida, tal vez el host apagó el servidor
+disconnectionScreen.unexpectedPacket=§lFuiste expulsado por§c un admin
+entity.server:floating_text.name=Holograma
+map.position=Coordenadas: %s %s %s
+multiplayer.player.changeToPersona=§b%s §r§bcambió su personaje
+multiplayer.player.changeToSkin=§b%s §r§bcambió su skin
+multiplayer.player.joined.realms=§r %s §r§7se unió
+multiplayer.player.joined=§r %s §r§7se unió
+multiplayer.player.left.realms=§r %s §r§7salió
+multiplayer.player.left=§r %s §r§7salió
+
+## --- INFORMACIÓN DEL PACK ---
+pack.name=Datapack para el mapa §lShop for Ore§r (E)
+pack.description=Incluye pequeñas mejoras para una experiencia más cómoda. §c¡No se recomienda desactivar!
+
+## --- MENSAJES DE CONEXIÓN ---
+progressScreen.message.building=Usa el menú en la ranura 9 de tu barra para desbloquear más funciones
+progressScreen.message.locating=Antes de hacer muchas preguntas, lee los carteles en el spawn
+progressScreen.message.resourceLoading=Host Omlet: @waxenjaguar2209
+
+## --- TRADUCCIÓN Y BOTONES DE UI ---
+admin.menu.background.1=§8[§cNo funciona§8]
+admin.menu.background.2=§8[§7Pulsa para invocar§8]
+admin.menu.button.back=§8Atrás
+menu.background=§8[§7Pulsa para abrir§8]
+menu.body.development=§7En desarrollo...
+menu.button.back=§8 Atrás
+
+## --- MENÚ PRINCIPAL ---
+menu.title=§l§8Menú del servidor
+menu.body=§7Creador del menú§f: kapycta1231484
+menu.button.1=§8 Sobre el mapa
+menu.button.2=§8 Tienda
+menu.button.3=§8 Ajustes
+menu.button.4=§8 Banco
+menu.button.5=§8 Reglas
+menu.button.6=§8 Códigos promocionales
+menu.button.7=§8 Teletransportes
+menu.button.8=§8 Mejoras
+
+## --- MENÚ SOBRE EL MAPA ---
+mapInfo.title=§l§8Menú del servidor |  Sobre el mapa
+mapInfo.body=§7Elige lo que necesitas.
+mapInfo.button.1=§8 Niveles
+mapInfo.button.2=§f⩆ §8¿Cómo jugar?
+mapInfo.button.3=§f⩇ §8Creador
+mapInfo.button.4=§8 Versión del mapa
+
+## --- MENÚ DE NIVELES ---
+lvlsInfo.title=§l§8Menú del servidor |  Niveles
+lvlsInfo.body.lvl.1=Nivel 1 - Tierra y Palo
+lvlsInfo.body.lvl.2=Nivel 2 - Roca y Pico de madera
+lvlsInfo.body.lvl.3=Nivel 3 - Carbón y Pico de piedra
+lvlsInfo.body.lvl.4=Nivel 4 - (nada)
+lvlsInfo.body.lvl.5=Nivel 5 - Hierro
+lvlsInfo.body.lvl.6=Nivel 6 - Cobre
+lvlsInfo.body.lvl.7=Nivel 7 - (nada)
+lvlsInfo.body.lvl.8=Nivel 8 - Redstone y Pico de hierro
+lvlsInfo.body.lvl.9=Nivel 9 - (nada)
+lvlsInfo.body.lvl.10=Nivel 10 - Oro
+lvlsInfo.body.lvl.11=Nivel 11 - Lapis Lazuli
+lvlsInfo.body.lvl.12=Nivel 12 - (nada)
+lvlsInfo.body.lvl.13=Nivel 13 - Diamantes y §bPico de diamante§r
+lvlsInfo.body.lvl.14=Nivel 14 - (nada)
+lvlsInfo.body.lvl.15=Nivel 15 - Esmeraldas y §5Pico de netherita§r
+lvlsInfo.body.lvl.16=Nivel 16 - Netherrack y Nueva ubicación: §cNether§r
+lvlsInfo.body.lvl.17=Nivel 17 - Magma
+lvlsInfo.body.lvl.18=Nivel 18 - Cuarzo
+lvlsInfo.body.lvl.19=Nivel 19 - Pepitas de oro
+lvlsInfo.body.lvl.20=Nivel 20 - Escombros antiguos
+lvlsInfo.body.lvl.21=Nivel 21 - (nada)
+lvlsInfo.body.lvl.22=Nivel 22 - Bloque de netherita
+lvlsInfo.body.lvl.23=Nivel 23 - (nada)
+lvlsInfo.body.lvl.24=Nivel 24 - Obsidiana
+lvlsInfo.body.lvl.25=Nivel 25 - Obsidiana llorosa (§a¡NIVEL MÁXIMO!§r)
+
+## --- CÓMO JUGAR / TUTORIAL ---
+howtoplay.title=§l§8Menú del servidor | §f⩆§8 ¿Cómo jugar?
+howtoplay.text.1=§l§7Tutorial
+howtoplay.text.2=§r§7• Para subir de nivel, vende minerales y bloques. Cada nivel desbloquea nuevos picos y minerales. Más en  Niveles
+howtoplay.text.3=• Para desbloquear un pico, también vende minerales y bloques
+howtoplay.text.4=• Para vender minerales o bloques, párate sobre un bloque de oro
+howtoplay.text.5=§l§cNota:§r§c Si robaste un mineral que no puedes picar, no podrás venderlo
+howtoplay.text.6=§l§7Comprar VIP
+howtoplay.text.7=§r§7VIP es un privilegio con nuevos minerales y tienda VIP
+howtoplay.text.8=VIP cuesta 125K
+howtoplay.text.9=Se compra en Menú »  Mejoras
+howtoplay.text.10=§l§7Reinicio
+howtoplay.text.11=§r§7Reinicio es volver a jugar el mapa con un efecto de prisa permanente
+howtoplay.text.12=El reinicio se desbloquea después de 16 
+howtoplay.text.13=Se mejora en Menú »  Mejoras
+howtoplay.text.14=§l§7 ¿Qué significan los iconos a la izquierda?
+howtoplay.text.15=§r§7 - tu Apodo (nombre en el juego)
+howtoplay.text.16= - tu Dinero / Monedas
+howtoplay.text.17= - tus monedas VIP
+howtoplay.text.18= - tu Nivel y el siguiente 
+howtoplay.text.19= - tu XP y cuánto  para el siguiente 
+howtoplay.text.20= - tu Reinicio, característica: prisa
+howtoplay.text.21= - Online actual del servidor
+
+mapCreator.title=§l§8Menú del servidor | §f⩇§8 Creador
+
+mapVersion.title=§l§8Menú del servidor |  Versión del mapa
+mapVersion.text.1=§l§7Aquí encontrarás información sobre la última actualización del mapa
+mapVersion.text.2=§lActualización 0.1.8 del 22 de diciembre de 2024§r
+mapVersion.text.3=• El número de bloques de comandos en el mapa se ha minimizado
+mapVersion.text.4=• La mayoría de los archivos §7.mcfunction§r ahora funcionan de forma autónoma, sin bloques de comandos
+mapVersion.text.5=• Casi todos los archivos del addon y del paquete de recursos han sido optimizados, su tamaño reducido y se ha eliminado código innecesario
+mapVersion.text.6=• Menú del servidor actualizado:
+mapVersion.text.7=- Ahora se pueden introducir códigos promocionales dentro del menú
+mapVersion.text.8=- Corregido un error que permitía farmear monedas en el Menú del banco
+mapVersion.text.9=• Chat del servidor actualizado:
+mapVersion.text.10=- Comandos personalizados añadidos, ver §e!help§r
+mapVersion.text.11=- Emotes personalizados añadidos, ver §e!emotes§r
+mapVersion.text.12=- Protección añadida contra spam, flood y mensajes de más de 200 caracteres
+
+## --- MENÚ TIENDA ---
+shop.title=§l§8Menú del servidor |  Tienda
+shop.body=§7¿Qué quieres comprar?
+shop.button.1=§8Encantamientos
+shop.button.2=§8Kits PvP
+shop.button.3=§8Potenciadores
+
+shop.enchants.title=§l§8 Tienda | Encantamientos
+shop.enchants.body.1=§7Elige qué encantamiento quieres comprar.
+shop.enchants.body.2=§l§cNota: §r§7Si compras una vez, tendrás §e1§7 nivel de encantamiento. Si compras de nuevo, el nivel aumentará.
+shop.enchants.button.1=§8Eficiencia
+shop.enchants.button.2=§8Fortuna
+
+shop.kits.title=§l§8 Tienda | Kits PvP
+shop.kits.body=§7Al comprar un kit, recibirás armadura y espada
+shop.kits.button.1=§8Kit de hierro
+shop.kits.button.2=§8Kit de diamante
+shop.kits.button.3=§8Kit de netherita
+
+shop.boost.title=§l§8 Tienda | Potenciadores
+shop.boost.body.1=§7Elige qué potenciador quieres comprar
+shop.boost.body.2=§l§cNota: §r§7El potenciador dura §e5§7 minutos tras la compra
+shop.boost.button.1=§2 x2 potenciador
+shop.boost.button.2=§3 x4 potenciador
+
+## --- MENÚ AJUSTES ---
+settings.title=§l§8Menú del servidor |  Ajustes
+settings.body=§7Elige tus ajustes:
+settings.default.1=§7Por defecto - §2Activado
+settings.default.2=§7Por defecto - §4Desactivado
+settingsSelect.button.1=§8Marcador
+settingsSelect.button.2=§8Partículas al vender
+settingsSelect.button.3=§8Sonidos al vender
+
+settingsTable.title=§l§8 Ajustes | Marcador
+settingsTable.body=§7Pulsa §2activar§7/§4desactivar§7 abajo para mostrar u ocultar el marcador del servidor
+
+settings.button.1=§2Activar
+settings.button.2=§4Desactivar
+settings.button.3=§gSolo emotes
+
+settingsParticle.title=§l§8 Ajustes | Partículas
+settingsParticle.body=§7Pulsa §2activar§7/§4desactivar§7 abajo para mostrar u ocultar partículas al vender
+
+settingsSound.title=§l§8 Ajustes | Sonidos
+settingsSound.body=§7Pulsa §2activar§7/§4desactivar§7 abajo para mostrar u ocultar sonidos al vender
+
+settingsChanged.1= §7Ajuste cambiado a - §2Activado
+settingsChanged.2= §7Ajuste cambiado a - §4Desactivado
+settingsChanged.3= §7Ajuste cambiado a - §gSolo emotes
+
+## --- MENÚ BANCO ---
+bank.title=§l§8Menú del servidor |  Banco
+bank.text.1=§rCantidad que quieres enviar:
+bank.text.2=§7Escribe aquí...
+bank.text.3=§l§cERROR!§r§7 ¡Saldo insuficiente!
+bank.text.4=§aTransferencia exitosa al jugador 
+bank.text.5=§aHas recibido de 
+bank.text.6= cantidad: 
+bank.text.7=§rElige un jugador:
+bank.text.8=§eSaldo§r:
+bank.text.9=§l§cERROR!§r§7 No se puede transferir valores negativos
+
+## --- MENÚ REGLAS ---
+rules.title=§l§8Menú del servidor |  Reglas
+rules.body.1=§l§7Reglas del servidor:
+rules.body.2=§r§7Al leer estas reglas, aceptas automáticamente el castigo por romper alguna. El desconocimiento no exime del castigo.
+rules.text.1=§l1.§r§7 No hacer spam/flood en el chat • Silencio 2-5 min
+rules.text.2=§l2.§r§7 No insultar a jugadores/familia • Silencio 7-10 min
+rules.text.3=§l3.§r§7 Compórtate adecuadamente
+rules.text.4=§l4.§r§7 No pidas recursos, derechos de operador, modo creativo, comandos ni resource packs • Expulsión
+rules.text.5=§l5.§r§7 No pidas a jugadores seguir enlaces/streams/suscribirse a cuentas promocionadas • Expulsión
+rules.text.6=§l6.§r§7 No hacer trampas • Ban
+
+## --- MENÚ CÓDIGOS PROMOCIONALES ---
+promo.title=§l§8Menú del servidor |  Códigos promocionales
+promo.text.1=§7Los códigos promocionales pueden encontrarse en cualquier parte. Están marcados en carteles con este §2color§7.
+promo.text.2=§7Si encuentras uno, introdúcelo abajo, respetando mayúsculas y minúsculas, o no funcionará.
+promo.textField=§7Introduce el código promocional...
+
+## --- MENÚ TELETRANSPORTES ---
+warps.title=§l§8Menú del servidor |  Teletransportes
+warps.body=§7¿A dónde quieres teletransportarte?
+warps.button.1=§8Spawn
+warps.button.2=§8Mini-juegos
+
+## --- MENÚ MEJORAS ---
+upgrading.title=§l§8Menú del servidor |  Mejoras
+upgrading.body=§7Elige tu camino de mejora:
+upgrading.button.1=§2VIP
+upgrading.button.2=§5Reinicio
+
+## --- MENÚ REGISTRO ---
+reg.title=§lRegistro de cuenta
+reg.toggle=Acepto las reglas del servidor y confirmo §cno§r usar trampas
+reg.text.1=§cPor favor, confirma §bno trampas§c para jugar en el servidor
+reg.text.2=§aHola.
+reg.text.3=§a¡Bienvenido al servidor! ¡Diviértete :)
+reg.text.4=§6Información de la cuenta§r:
+reg.text.5=§6Contraseña§r: 
+reg.text.6=§aRecuerda estos datos o haz una captura para entrar después.
+
+## --- MENÚ INICIO DE SESIÓN ---
+login.title=§lInicio de sesión
+login.text.1=Bienvenido
+login.text.2=§ral servidor §l[] Shop for Ore§r. Crea e introduce una contraseña para registrarte
+login.text.3=§gIntroduce la contraseña que usaste al registrarte
+login.text.4=§7Introduce la contraseña...
+login.text.5=§a¡Inicio de sesión exitoso! ¡Bienvenido!
+login.text.6=§cTu §bcontraseña§c es incorrecta, ¡revisa tus datos!
+
+## --- MENÚ ADMIN ---
+admin.menu.title=§l§8Menú de admin
+admin.menu.button.1=§8Modo de juego
+admin.menu.button.2=§8Establecer hora
+admin.menu.button.3=§8Teletransportes
+admin.menu.button.4=§8Efectos
+admin.menu.button.5=§8Herramientas
+admin.menu.button.6=§8Anuncios
+admin.menu.button.7=§8Wipe
+admin.menu.button.8=§8Invocar bot
+
+## --- ADMIN: MODOS DE JUEGO ---
+gm.title=§l§8Menú de admin | Modo de juego
+gm.body=§7Lista de modos de juego:
+gm.button.1=§8Creativo
+gm.button.2=§8Aventura
+gm.button.3=§8Espectador
+gm.button.4=§8Volar
+
+## --- ADMIN: HORA ---
+timeSet.title=§l§8Menú de admin | Establecer hora
+timeSet.body=§7Elige la hora a establecer:
+timeSet.button.1=§8Amanecer
+timeSet.button.2=§8Día
+timeSet.button.3=§8Mediodía
+timeSet.button.4=§8Atardecer
+timeSet.button.5=§8Noche
+timeSet.button.6=§8Medianoche
+
+## --- ADMIN: TELETRANSPORTES ---
+warp.title=§l§8Menú de admin | Teletransportes
+warp.body=§7Lista de teletransportes:
+warp.button.1=§8Mina
+warp.button.2=§8Ubicación VIP
+warp.button.3=§8CMD Zone
+warp.button.4=§8/tp a @r
+
+## --- ADMIN: EFECTOS ---
+effects.title=§l§8Menú de admin | Efectos
+effects.body=§7Lista de efectos:
+effects.button.1=§8Invisibilidad
+effects.button.2=§8Resistencia
+effects.button.3=§8Fuerza
+effects.button.4=§8Prisa
+effects.button.5=§8Limpiar efectos
+
+## --- ADMIN: HERRAMIENTAS ---
+tools.title=§l§8Menú de admin | Herramientas
+tools.body=§7Elige lo que necesitas:
+tools.button.1=§5Bloque de comandos
+tools.button.2=§5Bloque de permiso
+tools.button.3=§5Bloque de denegación
+tools.button.4=§5Bloque de estructura
+tools.button.5=§5Estructura vacía
+tools.button.6=§5Barrera
+tools.button.7=§5Límite
+tools.button.8=§5Bloque de luz
+tools.button.9=§5Huevo de NPC
+tools.button.10=§5Huevo de holograma
+tools.button.11=§cVara de admin
+tools.button.12=§8Limpiar inventario
+
+## --- ADMIN: ANUNCIOS ---
+sayServer.title=§l§8Menú de admin | Anuncios
+sayServer.body=§gEscribe abajo lo que quieras decir. Lo verá todo el servidor
+sayServer.textField=§7Escribe el texto...
+sayServer.message=§l§eAnuncio:§r
+
+## --- ADMIN: WIPE ---
+wipe.title=§l§8Advertencia
+wipe.body=§7El wipe reiniciará todas las estadísticas, pero no afectará etiquetas ni inventarios. ¿Seguro?
+wipe.button.1=§2Sí
+wipe.button.2=§4No
+wipe.message.success=§a¡Estadísticas reiniciadas con éxito!
+
+## --- MENSAJES DE NIVEL Y SISTEMA ---
+message.lvlup.lvl.2= §rsubió a nivel §a2§f. Pico mejorado: Palo >> Pico de madera
+message.lvlup.lvl.3= §rsubió a nivel §a3§f. Pico mejorado: Pico de madera >> Pico de piedra
+message.lvlup.lvl.4= §rsubió a nivel §a4
+message.lvlup.lvl.5= §rsubió a nivel §a5
+message.lvlup.lvl.6= §rsubió a nivel §a6
+message.lvlup.lvl.7= §rsubió a nivel §a7
+message.lvlup.lvl.8= §rsubió a nivel §a8§f. Pico mejorado: Pico de piedra >> Pico de hierro
+message.lvlup.lvl.9= §rsubió a nivel §a9
+message.lvlup.lvl.10= §rsubió a nivel §a10
+message.lvlup.lvl.11= §rsubió a nivel §a11
+message.lvlup.lvl.12= §rsubió a nivel §a12
+message.lvlup.lvl.13= §rsubió a nivel §a13§f. Pico mejorado: Pico de hierro >> §bPico de diamante
+message.lvlup.lvl.14= §rsubió a nivel §a14
+message.lvlup.lvl.15= §rsubió a nivel §a15§f. Pico mejorado: §bPico de diamante§f >> §5Pico de netherita
+message.lvlup.lvl.16= §rsubió a nivel §a16§f. Nueva ubicación desbloqueada: §cNether
+message.lvlup.lvl.17= §rsubió a nivel §a17
+message.lvlup.lvl.18= §rsubió a nivel §a18
+message.lvlup.lvl.19= §rsubió a nivel §a19
+message.lvlup.lvl.20= §rsubió a nivel §a20
+message.lvlup.lvl.21= §rsubió a nivel §a21
+message.lvlup.lvl.22= §rsubió a nivel §a22
+message.lvlup.lvl.23= §rsubió a nivel §a23
+message.lvlup.lvl.24= §rsubió a nivel §a24
+message.lvlup.lvl.25= §rsubió a nivel §a25§f. ¡Este es el §aNIVEL MÁXIMO§f!
+
+## --- VIP Y REINICIO ---
+message.basic.error=§l§cERROR!§r§7 No tienes suficientes 
+message.lvlup.error.1=§l§cERROR!§r§7 No tienes suficientes  o tu nivel es menor a 25 
+message.lvlup.error.2=§l§cERROR!§r§7 Tu nivel no es 16-25 
+message.lvlup.haveVIP=§l§cERROR!§r§7 Ya tienes §aVIP
+message.lvlup.haveRebirth=§l§cERROR!§r§7 ¡Nivel máximo de reinicio!
+message.lvlup.rebirth.1= §r§dhizo su primer §5Reinicio
+message.lvlup.rebirth.2= §dSubiste tu nivel de §5reinicio§d a: §5
+message.lvlup.vip= §rsubió a nivel §aVIP
+message.lvlup.vip.success=¡Felicidades por comprar §aVIP§f! Para ir a la §aisla VIP§f, usa §eMenú del servidor
+
+## --- POTENCIADORES ---
+message.boost.end.1=§a x2 potenciador terminado. ¡Puedes comprar uno nuevo en la Tienda!
+message.boost.end.2=§b x4 potenciador terminado. ¡Puedes comprar uno nuevo en la Tienda!
+message.boost.error=§l§cERROR!§r§7 No puedes §ccomprar un potenciador§7 ahora. ¡Espera a que termine el anterior!
+message.x2boost=§a compró  x2 potenciador. ¡Tienes §25 minutos§a para mejorar!
+message.x4boost=§b compró  x4 potenciador. ¡Tienes §35 minutos§b para mejorar!
+
+## --- PREMIOS PROMOCIONALES ---
+message.promo.1=§eactivó un código promocional y obtuvo 500 
+message.promo.2=§eactivó un código promocional y obtuvo 500 
+message.promo.3=§eactivó un código promocional y obtuvo 25k 
+message.promo.4=§eactivó un código promocional y obtuvo 100 
+message.promo.activated=§eYa has activado este §acódigo promocional
+message.promo.error=§l§cERROR!§r§7 Código promocional inválido
+
+## --- ANTITRAMPAS ---
+message.anticheat.detectItem=intentó tomar un objeto prohibido, objeto:
+message.acticheat.detectEchant.1=intentó encantar
+message.acticheat.detectEchant.2=con
+message.acticheat.detectEchant.3=nivel
+
+## --- LIMPIEZA DE OBJETOS ---
+message.clearItem.title=§l§eLimpieza de objetos
+message.clearItem.subtitle=§l§eObjetos eliminados: §a
+
+## --- EVENTOS ---
+message.event.gift_event=§l>> §e¡Apareció un regalo en el mapa! ¿Quién lo §brecogerá§e §bprimero§e?
+message.event.gift_event.end= §arecogió el §eregalo!
+message.event.haste_event=§gobtuvo prisa por 10 seg
+message.event.mythic_chest=§l >> §r¡Apareció un cofre mítico en la arena PvP! ¡Apresúrate a saquearlo primero!
+message.event.rain_event=§l >> §b¡Está lloviendo monedas!
+message.event.rain_event.end=§l >> §b¡La lluvia terminó!
+
+## --- COMANDOS Y USO ---
+commands.list.desc=§8-----§f Lista de comandos §8-----§f
+commands.help.desc=§7Muestra la lista de comandos disponibles
+commands.spawn.desc=§7Teletransporta al spawn
+commands.emotes.desc=§7Muestra la lista de emotes disponibles
+commands.msg.desc=§7Envía un mensaje a un jugador
+commands.gm1.desc=§7Establece modo creativo
+commands.gm2.desc=§7Establece modo aventura
+commands.gm6.desc=§7Establece modo espectador
+commands.fly.desc=§7Activa§8/§7desactiva el vuelo
+commands.clearchat.desc=§7Limpia el chat
+commands.bot.desc=§7Invoca un bot
+commands.stick.desc=§7Da §cVara de admin
+commands.invis.desc=§7Activa§8/§7desactiva invisibilidad
+commands.timeset.desc=§7Establece la hora del servidor
+commands.prefix.desc=§7Gestiona los prefijos de los jugadores
+commands.tag.desc=§7Gestiona las etiquetas de los jugadores
+commands.scoreboard.desc=§7Gestiona la base de datos /scoreboard
+commands.kick.desc=§7Expulsa a un jugador del servidor
+
+message.cmd.error.1=§l§cERROR!§r§7 Comando desconocido:
+message.cmd.error.2=Escribe §e!help§7 para ver la lista de comandos
+message.cmd.error.3=§l§cERROR!§r§7 ¡No tienes permiso para usar este comando!
+
+message.cmd.spawn=§aFuiste teletransportado al §bspawn
+message.cmd.emotes=§8-----§f Lista de emotes §8-----§f
+message.cmd.msg.use=§aUso: §b!msg §a<§bjugador§a> <§bmensaje§a>
+message.cmd.gm1=§aModo de juego cambiado a §bCreativo
+message.cmd.gm2=§aModo de juego cambiado a §bAventura
+message.cmd.gm6=§aModo de juego cambiado a §bEspectador
+message.cmd.fly.on=§aModo vuelo §bactivado
+message.cmd.fly.off=§aModo vuelo §bdesactivado
+message.cmd.fly.use=§aUso: §b!fly §a<§bon§a/§boff§a>
+message.cmd.clearchat=§aChat limpiado...
+message.cmd.stick=§aRecibiste §bVara de admin
+message.cmd.invis.on=§aAhora eres §binvisible
+message.cmd.invis.off=§aYa no eres §binvisible
+message.cmd.invis.use=§aUso: §b!invis §a<§bon§a/§boff§a>
+message.cmd.timeset.use=§aUso: §b!timeset §a<§bamanecer§a; §bdía§a; §bmediodía§a; §batardecer§a; §bnoche§a; §bmedianoche§a>
+message.cmd.prefix.use=§aUso: §b!prefix §a<§bjugador§a> <§bset§a/§btake§a> <§bprefijo§a>
+message.cmd.tag.use=§aUso: §b!tag §a<§bjugador§a> <§badd§a/§bremove§a> <§betiqueta§a>
+message.cmd.scoreboard.use=§aUso: §b!scoreboard §a<§bjugador§a> <§badd§a/§bremove§a> <§bobjetivo§a> <§bcantidad§a>
+message.cmd.kick=fue expulsado. Razón: 
+message.cmd.kick.no_reason=no especificado
+message.cmd.kick.use=§aUso: §b!kick §a<§bjugador§a> <§brazón §a(§bopcional§a)>
+
+## --- PREMIOS DE TIENDA ---
+message.shop.enchant.efficiency=§7Comprado con éxito§f: §eEficiencia§f (+1)
+message.shop.enchant.fortune=§7Comprado con éxito§f: §eFortuna§f (+1)
+message.shop.kit.iron=§7Comprado con éxito§f: Kit de hierro
+message.shop.kit.diamond=§7Comprado con éxito§f: Kit de diamante
+message.shop.kit.netherite=§7Comprado con éxito§f: Kit de netherita
+
+## --- VARA ADMIN ---
+message.kick=§r§c expulsado por admin§f
+
+## --- MARCADOR ---
+scoreboards.map=§l[] Shop for Orel§r
+scoreboards.profile=§l[] §7Perfil§f: §r
+scoreboards.money=§l[] §eSaldo§f: 
+scoreboards.money2=§l[] §gMonedas VIP§f: 
+scoreboards.xp=[] §aXP§f: 
+scoreboards.lvl=[] §2Nivel§f: 
+scoreboards.lvl.max=§aMÁX§f
+scoreboards.rebirth=[] §dReinicio§f: 
+scoreboards.online=[] §6Online§f: 
+scoreboards.x2boost= §l§ax2 potenciador
+scoreboards.x4boost= §l§bx4 potenciador
+
+## --- ERRORES DE CHAT ---
+message.chat.antiflood=§l§cERROR!§r§7 ¡Tu mensaje es demasiado largo!
+message.chat.antispam=§l§cERROR!§r§7 ¡No hagas spam en el chat!
