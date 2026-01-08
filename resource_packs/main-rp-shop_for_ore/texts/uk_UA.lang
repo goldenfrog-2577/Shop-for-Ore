@@ -1,0 +1,511 @@
+## =============================
+##  Shop for Ore: УКРАЇНСЬКА ЛОКАЛІЗАЦІЯ
+##  Автор: kapycta1231484 & Copilot
+##  Останнє оновлення: 2026-01-06
+##  У цьому файлі всі ігрові тексти для карти Shop for Ore українською мовою.
+##  Будь ласка, зберігайте секції та коментарі для зручної навігації!
+## =============================
+
+## --- КІРКИ ---
+item.stick.name=§lКирка §a1§b рівня
+item.wooden_pickaxe.name=§lКирка §a2§b рівня
+item.stone_pickaxe.name=§lКирка §a3§b рівня
+item.iron_pickaxe.name=§lКирка §a8§b рівня
+item.diamond_pickaxe.name=§lКирка §a13§b рівня
+item.netherite_pickaxe.name=§lКирка §a15§b рівня
+
+## --- ПРЕДМЕТИ І БЛОКИ ---
+tile.dirt.name=Земля
+tile.cobblestone.name=Бруківка
+item.coal.name=Вугілля
+item.raw_iron.name=Сире залізо
+item.raw_copper.name=Сира мідь
+item.redstone.name=Редстоун
+item.raw_gold.name=Сире золото
+item.lapis_lazuli.name=Лазурит
+item.diamond.name=Діамант
+item.emerald.name=Смарагд
+tile.netherrack.name=Незерак
+tile.magma.name=Блок магми
+item.quartz.name=Кварц
+item.gold_nugget.name=Золотий злиток
+tile.ancient_debris.name=Давні уламки
+tile.netherite_block.name=Незеритовий блок
+tile.obsidian.name=Обсидіан
+tile.crying_obsidian.name=Плакучий обсидіан
+item.amethyst_shard.name=Аметистовий уламок
+item.gold_ingot.name=§eМонета§r
+tile.emerald_block.name=§2Подарунок§r
+
+## --- СЕРВЕРНІ ПРЕДМЕТИ ---
+item.server:menu=§eМеню сервера §7[Натисніть, щоб відкрити§7]§r
+item.server:menu_new=§eМеню сервера §7[Натисніть, щоб відкрити§7]§r
+item.server:admin_menu=§eМеню адміна §7[Натисніть, щоб відкрити§7]§r
+item.server:admin_stick=§cПалочка адміна§r
+item.spawn_egg.entity.server:floating_text.name=Яйце призову голограми
+
+## --- СИСТЕМА ТА ІНТЕРФЕЙС ---
+accessibility.chat.tts.autocomplete=Автозаповнення
+accessibility.chat.tts.autocompleteBack=Зворотне автозаповнення
+accessibility.chat.tts.nextMessage=Наступне повідомлення
+accessibility.chat.tts.previousMessage=Попереднє повідомлення
+advMode.setCommand.success=§r
+button.deleteText=Видалити текст
+button.kickPlayer=Вигнати гравця
+chat.title=Чат
+chat.title.cheats=Чат і команди
+chat.recipient=Ви
+commandBlock.entherCommand=Введіть команду сюди...
+commands.scoreboard.players.offlinePlayerName= §cOffline
+death.attack.explosion= %1$s §r§cвибухнув
+death.attack.flyIntoWall= %1$s §r§cрозбився на елітрах
+death.attack.generic= %1$s §r§cзагадково помер
+death.attack.outOfWorld= %1$s §r§cпотрапив у порожнечу
+death.attack.player= %1$s §r§cбув убитий  гравцем§r %2$s
+death.attack.player.item= %1$s §r§cбув убитий  гравцем§r %2$s §r§cза допомогою§r %3$s
+disconnect.kicked=Вас було кікнуто з сервера
+disconnect.kicked.reason=Вас було кікнуто з сервера з причини:
+disconnectionScreen.disconnected=Втрачено з'єднання, можливо хост вимкнув сервер
+disconnectionScreen.unexpectedPacket=§lВас виключив§c адміністратор
+entity.server:floating_text.name=Голограма
+map.position=Координати: %s %s %s
+multiplayer.player.changeToPersona=§b%s §r§bзмінив свій скін
+multiplayer.player.changeToSkin=§b%s §r§bзмінив свій скін
+multiplayer.player.joined.realms=§r %s §r§7приєднався
+multiplayer.player.joined=§r %s §r§7приєднався
+multiplayer.player.left.realms=§r %s §r§7вийшов
+multiplayer.player.left=§r %s §r§7вийшов
+
+## --- ІНФОРМАЦІЯ ПРО ПАК ---
+pack.name=Дата-пак для карти §lShop for Ore§r (U)
+pack.description=Містить невеликі покращення для комфортної гри. §cНе рекомендується вимикати!
+
+## --- ПОВІДОМЛЕННЯ ПРИ ПІДКЛЮЧЕННІ ---
+progressScreen.message.building=Використовуйте меню в 9 слоті інвентаря, щоб відкрити більше функцій
+progressScreen.message.locating=Перш ніж ставити багато питань, прочитайте таблички на спавні
+progressScreen.message.resourceLoading=Omlet хоста: @waxenjaguar2209
+
+## --- ПЕРЕКЛАД ТА КНОПКИ ІНТЕРФЕЙСУ ---
+admin.menu.background.1=§8[§cНе працює§8]
+admin.menu.background.2=§8[§7Натисніть, щоб призвати§8]
+admin.menu.button.back=§8Назад
+menu.background=§8[§7Натисніть, щоб відкрити§8]
+menu.body.development=§7В розробці...
+menu.button.back=§8 Назад
+
+## --- ГОЛОВНЕ МЕНЮ ---
+menu.title=§l§8Меню сервера
+menu.body=§7Творець меню§f: kapycta1231484
+menu.button.1=§8 Про карту
+menu.button.2=§8 Магазин
+menu.button.3=§8 Налаштування
+menu.button.4=§8 Банк
+menu.button.5=§8 Правила
+menu.button.6=§8 Промокоди
+menu.button.7=§8 Телепортації
+menu.button.8=§8 Прокачка
+
+## --- МЕНЮ ПРО КАРТУ ---
+mapInfo.title=§l§8Меню сервера |  Про карту
+mapInfo.body=§7Вибери, що тобі потрібно.
+mapInfo.button.1=§8 Рівні
+mapInfo.button.2=§f⩆ §8Як грати?
+mapInfo.button.3=§f⩇ §8Творець
+mapInfo.button.4=§8 Версія карти
+
+## --- МЕНЮ РІВНІВ ---
+lvlsInfo.title=§l§8Меню сервера |  Рівні
+lvlsInfo.body.lvl.1=1 рівень - Земля і Палиця
+lvlsInfo.body.lvl.2=2 рівень - Камінь і Дерев'яна кирка
+lvlsInfo.body.lvl.3=3 рівень - Вугілля і Кам'яна кирка
+lvlsInfo.body.lvl.4=4 рівень - (нічого)
+lvlsInfo.body.lvl.5=5 рівень - Залізо
+lvlsInfo.body.lvl.6=6 рівень - Мідь
+lvlsInfo.body.lvl.7=7 рівень - (нічого)
+lvlsInfo.body.lvl.8=8 рівень - Редстоун і Залізна кирка
+lvlsInfo.body.lvl.9=9 рівень - (нічого)
+lvlsInfo.body.lvl.10=10 рівень - Золото
+lvlsInfo.body.lvl.11=11 рівень - Лазурит
+lvlsInfo.body.lvl.12=12 рівень - (нічого)
+lvlsInfo.body.lvl.13=13 рівень - Діаманти і §bДіамантова кирка§r
+lvlsInfo.body.lvl.14=14 рівень - (нічого)
+lvlsInfo.body.lvl.15=15 рівень - Смарагди і §5Незеритова кирка§r
+lvlsInfo.body.lvl.16=16 рівень - Незерак і Нова локація: §cНезер§r
+lvlsInfo.body.lvl.17=17 рівень - Магма
+lvlsInfo.body.lvl.18=18 рівень - Кварц
+lvlsInfo.body.lvl.19=19 рівень - Золоті злитки
+lvlsInfo.body.lvl.20=20 рівень - Давні уламки
+lvlsInfo.body.lvl.21=21 рівень - (нічого)
+lvlsInfo.body.lvl.22=22 рівень - Незеритовий блок
+lvlsInfo.body.lvl.23=23 рівень - (нічого)
+lvlsInfo.body.lvl.24=24 рівень - Обсидіан
+lvlsInfo.body.lvl.25=25 рівень - Плакучий обсидіан (§aМАКСИМАЛЬНИЙ!!!§r)
+
+## --- НАВЧАННЯ / ЯК ГРАТИ ---
+howtoplay.title=§l§8Меню сервера | §f⩆§8 Як грати?
+howtoplay.text.1=§l§7Навчання
+howtoplay.text.2=§r§7• Щоб підняти рівень, потрібно продавати руду і блоки. З кожним рівнем відкриватимуться нові кирки і руди. Детальніше у  Рівні
+howtoplay.text.3=• Щоб відкрити кирку, також потрібно продавати руду і блоки
+howtoplay.text.4=• Щоб продати руду або блоки, стань на золотий блок
+howtoplay.text.5=§l§cПримітка:§r§c Якщо ти вкрав руду, яку не можеш копати, ти не зможеш її продати
+howtoplay.text.6=§l§7Покупка VIP
+howtoplay.text.7=§r§7VIP — це привілей з перевагами у вигляді нової руди і VIP магазину
+howtoplay.text.8=Вартість VIP — 125K
+howtoplay.text.9=Купується у Меню »  Прокачка
+howtoplay.text.10=§l§7Ребітх
+howtoplay.text.11=§r§7Ребітх — це перепроходження карти з довічним ефектом поспіху
+howtoplay.text.12=Відкривається ребітх після 16 
+howtoplay.text.13=Прокачується у Меню »  Прокачка
+howtoplay.text.14=§l§7 Що означають смайлики зліва збоку?
+howtoplay.text.15=§r§7 — ваш Нікнейм (ім'я у грі)
+howtoplay.text.16= — ваші Гроші / Монети / Коїни
+howtoplay.text.17= — ваші VIP коїни / монети
+howtoplay.text.18= — ваш Рівень і який  наступний
+howtoplay.text.19= — ваш Досвід / XP і скільки  до наступного 
+howtoplay.text.20= — ваш Ребітх, особливість: поспіх
+howtoplay.text.21= — поточний Онлайн сервера
+
+mapCreator.title=§l§8Меню сервера | §f⩇§8 Творець
+
+mapVersion.title=§l§8Меню сервера |  Версія карти
+mapVersion.text.1=§l§7Тут написано про останнє оновлення карти
+mapVersion.text.2=§lОновлення 0.1.8 від 22 грудня 2024 року§r
+mapVersion.text.3=• Кількість командних блоків на карті зменшено до мінімуму
+mapVersion.text.4=• Більшість §7.mcfunction§r файлів тепер працюють автономно, без використання командних блоків
+mapVersion.text.5=• Практично всі файли аддона і ресурс-паку карти були оптимізовані, їх вага зменшена і прибрано зайві рядки коду
+mapVersion.text.6=• Оновлено Меню сервера:
+mapVersion.text.7=- Промокоди тепер можна вводити всередині меню
+mapVersion.text.8=- Виправлена помилка, через яку у Меню банку можна було накручувати монети
+mapVersion.text.9=• Оновлено Чат сервера:
+mapVersion.text.10=- Додані користувацькі команди, детальніше у §e!help§r
+mapVersion.text.11=- Додані користувацькі емодзі, детальніше у §e!emotes§r
+mapVersion.text.12=- Додано захист від спаму, флуду і повідомлень довжиною понад 200 символів у чаті
+
+## --- МЕНЮ МАГАЗИНУ ---
+shop.title=§l§8Меню сервера |  Магазин
+shop.body=§7Що ти хочеш купити?
+shop.button.1=§8Зачарування
+shop.button.2=§8PvP Набори
+shop.button.3=§8Бустери
+
+shop.enchants.title=§l§8 Магазин | Зачарування
+shop.enchants.body.1=§7Вибери, яке зачарування хочеш купити.
+shop.enchants.body.2=§l§cПримітка: §r§7Якщо ти купиш один раз, у тебе буде §e1§7 рівень зачарування. Якщо купити повторно, рівень зачарування збільшиться.
+shop.enchants.button.1=§8Ефективність
+shop.enchants.button.2=§8Удача
+
+shop.kits.title=§l§8 Магазин | PvP Набори
+shop.kits.body=§7Купуючи один із наборів, ти отримаєш броню і меч
+shop.kits.button.1=§8Залізний набір
+shop.kits.button.2=§8Діамантовий набір
+shop.kits.button.3=§8Незеритовий набір
+
+shop.boost.title=§l§8 Магазин | Бустери
+shop.boost.body.1=§7Вибери, який бустер хочеш купити
+shop.boost.body.2=§l§cПримітка: §r§7Бустер діє протягом §e5§7 хвилин після покупки
+shop.boost.button.1=§2 x2 бустер
+shop.boost.button.2=§3 x4 бустер
+
+## --- МЕНЮ НАЛАШТУВАНЬ ---
+settings.title=§l§8Меню сервера |  Налаштування
+settings.body=§7Вибір налаштувань:
+settings.default.1=§7За замовчуванням - §2Увімкнено
+settings.default.2=§7За замовчуванням - §4Вимкнено
+settingsSelect.button.1=§8Таблиця
+settingsSelect.button.2=§8Частинки при продажу
+settingsSelect.button.3=§8Звуки при продажу
+
+settingsTable.title=§l§8 Налаштування | Таблиця
+settingsTable.body=§7Натисни §2увімкнути§7/§4вимкнути§7 нижче, щоб показати або приховати табличку сервера
+
+settings.button.1=§2Увімкнути
+settings.button.2=§4Вимкнути
+settings.button.3=§gТільки смайлики
+
+settingsParticle.title=§l§8 Налаштування | Частинки
+settingsParticle.body=§7Натисни §2увімкнути§7/§4вимкнути§7 нижче, щоб увімкнути або вимкнути відображення частинок при продажу
+
+settingsSound.title=§l§8 Налаштування | Звуки
+settingsSound.body=§7Натисни §2увімкнути§7/§4вимкнути§7 нижче, щоб увімкнути або вимкнути звуки при продажу
+
+settingsChanged.1= §7Налаштування змінено на - §2Увімкнено
+settingsChanged.2= §7Налаштування змінено на - §4Вимкнено
+settingsChanged.3= §7Налаштування змінено на - §gТільки смайлики
+
+## --- МЕНЮ БАНКУ ---
+bank.title=§l§8Меню сервера |  Банк
+bank.text.1=§rСума, яку ти хочеш відправити:
+bank.text.2=§7Введи сюди...
+bank.text.3=§l§cERROR!§r§7 Твого балансу недостатньо!
+bank.text.4=§aУспішний переказ гравцю 
+bank.text.5=§aВам переказав 
+bank.text.6= сума: 
+bank.text.7=§rВибери гравця:
+bank.text.8=§eБаланс§r:
+bank.text.9=§l§cERROR!§r§7 Неможливо здійснити переказ гравцю, використовуючи від'ємні значення
+
+## --- МЕНЮ ПРАВИЛ ---
+rules.title=§l§8Меню сервера |  Правила
+rules.body.1=§l§7Правила сервера:
+rules.body.2=§r§7Прочитавши ці правила, ви автоматично погоджуєтеся з прийняттям покарання за порушення одного з пунктів правил. Незнання їх не звільняє від покарання.
+rules.text.1=§l1.§r§7 Не спамити / флудити у чаті • Мут 2-5 хв
+rules.text.2=§l2.§r§7 Не ображати гравців сервера / переходити на родину • Мут 7-10 хв
+rules.text.3=§l3.§r§7 Поводьтесь адекватно
+rules.text.4=§l4.§r§7 Не просити ресурси, права оператора, режим креативу, команди і ресурс-паки • Кік
+rules.text.5=§l5.§r§7 Не просити гравців перейти за посиланням / перейти на стрім / підписатися на рекламований акаунт • Кік
+rules.text.6=§l6.§r§7 Не грати з читами • Бан
+
+## --- МЕНЮ ПРОМОКОДІВ ---
+promo.title=§l§8Меню сервера |  Промокоди
+promo.text.1=§7Промокоди можна знайти будь-де. Вони позначені на табличках §2таким§7 кольором.
+promo.text.2=§7Якщо ти знайшов такий, введи його у поле нижче, дотримуючись регістру, інакше промокод не спрацює.
+promo.textField=§7Введи промокод...
+
+## --- МЕНЮ ТЕЛЕПОРТАЦІЙ ---
+warps.title=§l§8Меню сервера |  Телепортації
+warps.body=§7Куди хочеш телепортуватися?
+warps.button.1=§8Спавн
+warps.button.2=§8Міні-ігри
+
+## --- МЕНЮ ПРОКАЧКИ ---
+upgrading.title=§l§8Меню сервера |  Прокачка
+upgrading.body=§7Вибери свій шлях розвитку:
+upgrading.button.1=§2VIР
+upgrading.button.2=§5Ребітх
+
+## --- МЕНЮ РЕЄСТРАЦІЇ ---
+reg.title=§lРеєстрація акаунта
+reg.toggle=Я погоджуюсь з правилами сервера і підтверджую §cвідсутність§r читів
+reg.text.1=§cБудь ласка, підтвердіть §bвідсутність читів§c щоб грати на сервері
+reg.text.2=§aВітаю
+reg.text.3=§aЛаскаво просимо на сервер! Гарної гри :)
+reg.text.4=§6Інформація про акаунт§r:
+reg.text.5=§6Пароль§r: 
+reg.text.6=§aЗапам'ятай ці дані або зроби скріншот, щоб потім зайти у гру
+
+## --- МЕНЮ ВХОДУ ---
+login.title=§lВхід в акаунт
+login.text.1=Вітаю
+login.text.2=§rна сервері §l[] Shop for Ore§r. Придумай і введи пароль для реєстрації
+login.text.3=§gВведи пароль, який ти вводив при реєстрації
+login.text.4=§7Введі пароль...
+login.text.5=§aУспішний вхід в акаунт! Ласкаво просимо!
+login.text.6=§cТвій §bпароль§c невірний, перевір правильність своїх даних ще раз!
+
+## --- МЕНЮ АДМІНА ---
+admin.menu.title=§l§8Меню адміна
+admin.menu.button.1=§8Режим гри
+admin.menu.button.2=§8Встановити час
+admin.menu.button.3=§8Телепортації
+admin.menu.button.4=§8Ефекти
+admin.menu.button.5=§8Інструменти
+admin.menu.button.6=§8Оголошення
+admin.menu.button.7=§8Вайп
+admin.menu.button.8=§8Призвати бота
+
+## --- АДМІН: РЕЖИМИ ГРИ ---
+gm.title=§l§8Меню адміна | Режим гри
+gm.body=§7Список режимів гри:
+gm.button.1=§8Креатив
+gm.button.2=§8Пригода
+gm.button.3=§8Спостерігач
+gm.button.4=§8Політ
+
+## --- АДМІН: ВСТАНОВЛЕННЯ ЧАСУ ---
+timeSet.title=§l§8Меню адміна | Встановлення часу
+timeSet.body=§7Вибери час, який хочеш встановити:
+timeSet.button.1=§8Світанок
+timeSet.button.2=§8День
+timeSet.button.3=§8Полудень
+timeSet.button.4=§8Захід
+timeSet.button.5=§8Ніч
+timeSet.button.6=§8Північ
+
+## --- АДМІН: ТЕЛЕПОРТАЦІЇ ---
+warp.title=§l§8Меню адміна | Телепортації
+warp.body=§7Список телепортацій:
+warp.button.1=§8Шахта
+warp.button.2=§8VIP локація
+warp.button.3=§8СMD Zone
+warp.button.4=§8/tp to @r
+
+## --- АДМІН: ЕФЕКТИ ---
+effects.title=§l§8Меню адміна | Ефекти
+effects.body=§7Список ефектів:
+effects.button.1=§8Невидимість
+effects.button.2=§8Стійкість
+effects.button.3=§8Сила
+effects.button.4=§8Поспіх
+effects.button.5=§8Очистити ефекти
+
+## --- АДМІН: ІНСТРУМЕНТИ ---
+tools.title=§l§8Меню адміна | Інструменти
+tools.body=§7Вибери те, що тобі потрібно:
+tools.button.1=§5Командний блок
+tools.button.2=§5Блок дозволу
+tools.button.3=§5Блок заборони
+tools.button.4=§5Структурний блок
+tools.button.5=§5Структурна порожнеча
+tools.button.6=§5Бар'єр
+tools.button.7=§5Межа
+tools.button.8=§5Блок світла
+tools.button.9=§5Яйце призову NPC
+tools.button.10=§5Яйце призову голограми
+tools.button.11=§cПалочка адміна
+tools.button.12=§8Очистити інвентар
+
+## --- АДМІН: ОГОЛОШЕННЯ ---
+sayServer.title=§l§8Меню адміна | Оголошення
+sayServer.body=§gНапиши у рядок нижче все, що хочеш сказати. Це побачать усі на сервері
+sayServer.textField=§7Введи текст...
+sayServer.message=§l§eОголошення:§r
+
+## --- АДМІН: ВАЙП ---
+wipe.title=§l§8Попередження
+wipe.body=§7Вайп призведе до скидання всієї статистики, але не зачепить теги та інвентарі гравців. Ви впевнені?
+wipe.button.1=§2Так
+wipe.button.2=§4Ні
+wipe.message.success=§aСкидання статистики пройшло успішно
+
+## --- СИСТЕМНІ ТА РІВНЕВІ ПОВІДОМЛЕННЯ ---
+message.lvlup.lvl.2= §rпідвищив свій рівень до §a2§f. Його кирка покращена з Палиця >> Дерев'яна кирка
+message.lvlup.lvl.3= §rпідвищив свій рівень до §a3§f. Його кирка покращена з Дерев'яна кирка >> Кам'яна кирка
+message.lvlup.lvl.4= §rпідвищив свій рівень до §a4
+message.lvlup.lvl.5= §rпідвищив свій рівень до §a5
+message.lvlup.lvl.6= §rпідвищив свій рівень до §a6
+message.lvlup.lvl.7= §rпідвищив свій рівень до §a7
+message.lvlup.lvl.8= §rпідвищив свій рівень до §a8§f. Його кирка покращена з Кам'яна кирка >> Залізна кирка
+message.lvlup.lvl.9= §rпідвищив свій рівень до §a9
+message.lvlup.lvl.10= §rпідвищив свій рівень до §a10
+message.lvlup.lvl.11= §rпідвищив свій рівень до §a11
+message.lvlup.lvl.12= §rпідвищив свій рівень до §a12
+message.lvlup.lvl.13= §rпідвищив свій рівень до §a13§f. Його кирка покращена з Залізна кирка >> §bДіамантова кирка
+message.lvlup.lvl.14= §rпідвищив свій рівень до §a14
+message.lvlup.lvl.15= §rпідвищив свій рівень до §a15§f. Його кирка покращена з §bДіамантова кирка§f >> §5Незеритова кирка
+message.lvlup.lvl.16= §rпідвищив свій рівень до §a16§f. Відкрита нова локація: §cНезер
+message.lvlup.lvl.17= §rпідвищив свій рівень до §a17
+message.lvlup.lvl.18= §rпідвищив свій рівень до §a18
+message.lvlup.lvl.19= §rпідвищив свій рівень до §a19
+message.lvlup.lvl.20= §rпідвищив свій рівень до §a20
+message.lvlup.lvl.21= §rпідвищив свій рівень до §a21
+message.lvlup.lvl.22= §rпідвищив свій рівень до §a22
+message.lvlup.lvl.23= §rпідвищив свій рівень до §a23
+message.lvlup.lvl.24= §rпідвищив свій рівень до §a24
+message.lvlup.lvl.25= §rпідвищив свій рівень до §a25§f. Цей рівень §aМАКСИМАЛЬНИЙ§f!!!
+
+## --- VIP І РЕБІТХ ---
+message.basic.error=§l§cERROR!§r§7 Недостатньо 
+message.lvlup.error.1=§l§cERROR!§r§7 Недостатньо  або ваш рівень менше 25 
+message.lvlup.error.2=§l§cERROR!§r§7 Ваш рівень не 16-25 
+message.lvlup.haveVIP=§l§cERROR!§r§7 У тебе вже є §aVIP
+message.lvlup.haveRebirth=§l§cERROR!§r§7 Максимальний рівень ребітха!
+message.lvlup.rebirth.1= §r§dзробив свій перший §5Ребітх
+message.lvlup.rebirth.2= §dТи підвищив рівень §5ребітха§d до: §5
+message.lvlup.vip= §rпідвищив свій рівень до §aVIP
+message.lvlup.vip.success=Вітаємо з покупкою §aVIP§f. Щоб переміститися на §aVIP острів§f, використовуйте §eМеню сервера
+
+## --- БУСТИ ---
+message.boost.end.1=§a x2 бустер закінчився. Новий можна знову купити у Магазині!
+message.boost.end.2=§b x4 бустер закінчився. Новий можна знову купити у Магазині!
+message.boost.error=§l§cERROR!§r§7 Неможливо §cкупити бустер§7 зараз. Дочекайся закінчення попереднього!
+message.x2boost=§a купив  x2 бустер. У вас є §25 хвилин§a, щоб прокачатися!
+message.x4boost=§b купив  x4 бустер. У вас є §35 хвилин§b, щоб прокачатися!
+
+## --- НАГОРОДИ ЗА ПРОМОКОДИ ---
+message.promo.1=§eактивував(ла) промокод і отримав(ла) 500 
+message.promo.2=§eактивував(ла) промокод і отримав(ла) 500 
+message.promo.3=§eактивував(ла) промокод і отримав(ла) 25k 
+message.promo.4=§eактивував(ла) промокод і отримав(ла) 100 
+message.promo.activated=§eТи вже активував цей §aпромокод
+message.promo.error=§l§cERROR!§r§7 Невірний промокод
+
+## --- АНТИЧИТ ---
+message.anticheat.detectItem=спробував взяти заборонений предмет, предмет:
+message.acticheat.detectEchant.1=спробував зачарувати
+message.acticheat.detectEchant.2=на
+message.acticheat.detectEchant.3=рівень
+
+## --- ОЧИСТКА ПРЕДМЕТІВ ---
+message.clearItem.title=§l§eОчищення сміття
+message.clearItem.subtitle=§l§eВидалено предметів: §a
+
+## --- ПОДІЇ ---
+message.event.gift_event=§l>> §eНа карті §aз'явився подарунок! Хто зможе §bпершим§e його §aпідібрати§e?
+message.event.gift_event.end= §aпідібрав §eподарунок!
+message.event.haste_event=§gотримав(ла) поспіх на 10 сек
+message.event.mythic_chest=§l >> §rНа PvP арені з'явився містик! Поспіши залутати його першим!
+message.event.rain_event=§l >> §bПочинається дощ із монет!
+message.event.rain_event.end=§l >> §bДощ закінчено!
+
+## --- КОМАНДИ ТА ВИКОРИСТАННЯ ---
+commands.list.desc=§8-----§f Список команд §8-----§f
+commands.help.desc=§7Показує список доступних команд
+commands.spawn.desc=§7Телепортує на спавн
+commands.emotes.desc=§7Показує список доступних емодзі
+commands.msg.desc=§7Відправляє повідомлення гравцю
+commands.gm1.desc=§7Встановлює творчий режим (Creative)
+commands.gm2.desc=§7Встановлює режим пригоди (Adventure)
+commands.gm6.desc=§7Встановлює режим спостерігача (Spectator)
+commands.fly.desc=§7Вмикає§8/§7вимикає можливість літати
+commands.clearchat.desc=§7Очищає чат
+commands.bot.desc=§7Призиває бота
+commands.stick.desc=§7Видає §cПалочку адміна
+commands.invis.desc=§7Вмикає§8/§7вимикає невидимість
+commands.timeset.desc=§7Встановлює час на сервері
+commands.prefix.desc=§7Керує префіксами гравців
+commands.tag.desc=§7Керує тегами гравців
+commands.scoreboard.desc=§7Керує базою даних команди /scoreboard
+commands.kick.desc=§7Вигоняє гравця з сервера
+
+message.cmd.error.1=§l§cERROR!§r§7 Невідома команда:
+message.cmd.error.2=Напиши §e!help§7, щоб дізнатися список команд
+message.cmd.error.3=§l§cERROR!§r§7 У вас немає прав для виконання цієї команди!
+
+message.cmd.spawn=§aВи телепортовані на §bспавн
+message.cmd.emotes=§8-----§f Список емодзі §8-----§f
+message.cmd.msg.use=§aВикористання: §b!msg §a<§bгравець§a> <§bповідомлення§a>
+message.cmd.gm1=§aРежим гри змінено на §bКреатив
+message.cmd.gm2=§aРежим гри змінено на §bПригода
+message.cmd.gm6=§aРежим гри змінено на §bСпостереження
+message.cmd.fly.on=§aРежим польоту §bувімкнено
+message.cmd.fly.off=§aРежим польоту §bвимкнено
+message.cmd.fly.use=§aВикористання: §b!fly §a<§bon§a/§boff§a>
+message.cmd.clearchat=§aОчищення чату...
+message.cmd.stick=§aВи отримали §bПалочку адміна
+message.cmd.invis.on=§aВи стали §bневидимим
+message.cmd.invis.off=§aВи більше §bне невидимі
+message.cmd.invis.use=§aВикористання: §b!invis §a<§bon§a/§boff§a>
+message.cmd.timeset.use=§aВикористання: §b!timeset §a<§bsunrise§a; §bday§a; §bnoon§a; §bsunset§a; §bnight§a; §bmidnight§a>
+message.cmd.prefix.use=§aВикористання: §b!prefix §a<§bгравець§a> <§bset§a/§btake§a> <§bпрефікс§a>
+message.cmd.tag.use=§aВикористання: §b!tag §a<§bгравець§a> <§badd§a/§bremove§a> <§bтег§a>
+message.cmd.scoreboard.use=§aВикористання: §b!scoreboard §a<§bгравець§a> <§badd§a/§bremove§a> <§bціль§a> <§bкількість§a>
+message.cmd.kick=був кікнутий. Причина: 
+message.cmd.kick.no_reason=не вказано
+message.cmd.kick.use=§aВикористання: §b!kick §a<§bгравець§a> <§bпричина §a(§bне обов'язково§a)>
+
+## --- НАГОРОДИ МАГАЗИНУ ---
+message.shop.enchant.efficiency=§7Успішно придбано§f: §eЕфективність§f (+1)
+message.shop.enchant.fortune=§7Успішно придбано§f: §eУдача§f (+1)
+message.shop.kit.iron=§7Успішно придбано§f: Залізний комплект
+message.shop.kit.diamond=§7Успішно придбано§f: Діамантовий комплект
+message.shop.kit.netherite=§7Успішно придбано§f: Незеритовий комплект
+
+## --- АДМІН-ПАЛОЧКА ---
+message.kick=§r§c виключений адміністратором§f
+
+## --- СКОРБОРД ---
+scoreboards.map=§l[] Магазин за руду§r
+scoreboards.profile=§l[] §7Профіль§f: §r
+scoreboards.money=§l[] §eБаланс§f: 
+scoreboards.money2=§l[] §gVIP Монети§f: 
+scoreboards.xp=[] §aДосвід§f: 
+scoreboards.lvl=[] §2Рівень§f: 
+scoreboards.lvl.max=§aМАКС.§f
+scoreboards.rebirth=[] §dРебітх§f: 
+scoreboards.online=[] §6Онлайн§f: 
+scoreboards.x2boost= §l§ax2 бустер
+scoreboards.x4boost= §l§bx4 бустер
+
+## --- ПОМИЛКИ ЧАТУ ---
+message.chat.antiflood=§l§cERROR!§r§7 Ваше повідомлення занадто довге!
+message.chat.antispam=§l§cERROR!§r§7 Не спамте у чаті!
