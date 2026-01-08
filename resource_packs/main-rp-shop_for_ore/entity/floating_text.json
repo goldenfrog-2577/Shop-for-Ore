@@ -1,0 +1,30 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "server:floating_text",
+			"materials": {
+				"default": "entity_alphablend",
+				"other": "entity_emissive_alpha"
+			},
+			"textures": {
+				"default": "textures/entities/floating_text",
+				"other": "textures/entities/other"
+			},
+			"geometry": {
+				"default": "geometry.floating_text"
+			},
+			"scripts": {
+				"animate": ["facing"]
+			},
+			"animations": {
+				"facing": "animation.facing"
+			},
+			"render_controllers": ["controller.render.floating_text", "controller.render.other"],
+			"spawn_egg": {
+				"texture": "floating_text",
+				"texture_index": 0
+			}
+		}
+	}
+}
