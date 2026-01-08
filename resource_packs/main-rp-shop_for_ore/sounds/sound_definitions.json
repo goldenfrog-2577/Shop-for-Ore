@@ -1,0 +1,32 @@
+{
+	"minecraft.challenge.complete": {
+		"category": "neutral",
+		"sounds": [{
+			"name": "sounds/minecraft/challenge.complete",
+			"volume": 1.0
+		}]
+	},
+	"minecraft.tnt.explode": {
+		"category": "neutral",
+		"sounds": [{
+			"name": "sounds/minecraft/tnt.explode",
+			"volume": 1.0
+		}]
+	},
+	"minecraft.glass.broke": {
+		"category": "neutral",
+		"sounds": [{
+			"name": "sounds/minecraft/glass.broke",
+			"volume": 1.0
+		}]
+	},
+	"music.game": {
+		"category": "music",
+		"sounds": [{
+			"name": "sounds/music/main.theme",
+			"stream": true,
+			"volume": 0.4,
+			"load_on_low_memory": true
+		}]
+	}
+}
