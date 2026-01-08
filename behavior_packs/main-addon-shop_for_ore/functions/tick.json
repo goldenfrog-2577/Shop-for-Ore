@@ -1,0 +1,10 @@
+{
+	"values": [
+		"ranks/rank_lvl_add",
+		"ranks/rank_lvl_remove",
+		"ranks/rank_lvl_reset",
+		"system/scoreboards",
+		"system/system",
+		"system/qx"
+	]
+}
