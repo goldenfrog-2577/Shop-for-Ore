@@ -1,0 +1,519 @@
+## =============================
+##  Shop for Ore: ENGLISH LOCALE
+##  Author: kapycta1231484 & Copilot
+##  Last updated: 2026-01-06
+##  This file contains all in-game texts for the Shop for Ore map in English.
+##  Please keep sections and comments for easy navigation!
+## =============================
+
+## --- PICKAXES ---
+item.stick.name=§lPickaxe §aLevel§b 1
+item.wooden_pickaxe.name=§lPickaxe §aLevel§b 2
+item.stone_pickaxe.name=§lPickaxe §aLevel§b 3
+item.iron_pickaxe.name=§lPickaxe §aLevel§b 8
+item.diamond_pickaxe.name=§lPickaxe §aLevel§b 13
+item.netherite_pickaxe.name=§lPickaxe §aLevel§b 15
+
+## --- ITEMS & BLOCKS ---
+tile.dirt.name=Dirt
+tile.cobblestone.name=Cobblestone
+item.coal.name=Coal
+item.raw_iron.name=Raw Iron
+item.raw_copper.name=Raw Copper
+item.redstone.name=Redstone
+item.raw_gold.name=Raw Gold
+item.lapis_lazuli.name=Lapis Lazuli
+item.diamond.name=Diamond
+item.emerald.name=Emerald
+tile.netherrack.name=Netherrack
+tile.magma.name=Magma Block
+item.quartz.name=Quartz
+item.gold_nugget.name=Gold Nugget
+tile.ancient_debris.name=Ancient Debris
+tile.netherite_block.name=Netherite Block
+tile.obsidian.name=Obsidian
+tile.crying_obsidian.name=Crying Obsidian
+item.amethyst_shard.name=Amethyst Shard
+item.gold_ingot.name=§eCoin§r
+tile.emerald_block.name=§2Gift§r
+
+## --- SERVER ITEMS ---
+item.server:menu=§eServer Menu §7[Press to open§7]§r
+item.server:menu_new=§eServer Menu §7[Press to open§7]§r
+item.server:admin_menu=§eAdmin Menu §7[Press to open§7]§r
+item.server:admin_stick=§cAdmin Stick§r
+item.spawn_egg.entity.server:floating_text.name=Hologram Spawn Egg
+
+## --- SYSTEM & UI ---
+accessibility.chat.tts.autocomplete=Autocomplete
+accessibility.chat.tts.autocompleteBack=Reverse Autocomplete
+accessibility.chat.tts.nextMessage=Next Message
+accessibility.chat.tts.previousMessage=Previous Message
+advMode.setCommand.success=§r
+button.deleteText=Delete Text
+button.kickPlayer=Kick Player
+chat.title=Chat
+chat.title.cheats=Chat & Commands
+chat.recipient=You
+commandBlock.entherCommand=Enter command here...
+commands.scoreboard.players.offlinePlayerName= §cOffline
+death.attack.explosion= %1$s §r§cblew up
+death.attack.flyIntoWall= %1$s §r§ccrashed with elytra
+death.attack.generic= %1$s §r§cmysteriously died
+death.attack.outOfWorld= %1$s §r§cfell into the void
+death.attack.player= %1$s §r§cwas slain by  player§r %2$s
+death.attack.player.item= %1$s §r§cwas slain by  player§r %2$s §r§cusing§r %3$s
+disconnect.kicked=You were kicked from the server
+disconnect.kicked.reason=You were kicked for:
+disconnectionScreen.disconnected=Connection lost, maybe the host shut down the server
+disconnectionScreen.unexpectedPacket=§lYou were kicked by§c an admin
+entity.server:floating_text.name=Hologram
+map.position=Coordinates: %s %s %s
+multiplayer.player.changeToPersona=§b%s §r§bchanged their persona
+multiplayer.player.changeToSkin=§b%s §r§bchanged their skin
+multiplayer.player.joined.realms=§r %s §r§7joined
+multiplayer.player.joined=§r %s §r§7joined
+multiplayer.player.left.realms=§r %s §r§7left
+multiplayer.player.left=§r %s §r§7left
+
+## --- PACK INFO ---
+pack.name=Datapack for map §lShop for Ore§r (R)
+pack.description=Includes some small improvements for a smoother game. §cNot recommended to disable!
+
+## --- GAME CONNECTION MESSAGES ---
+progressScreen.message.building=Use the menu in slot 9 of your hotbar to unlock more features
+progressScreen.message.locating=Before asking too many questions, read the signs at spawn
+progressScreen.message.resourceLoading=Host Omlet: @waxenjaguar2209
+
+## --- TRANSLATION & UI BUTTONS ---
+admin.menu.background.1=§8[§cNot working§8]
+admin.menu.background.2=§8[§7Press to summon§8]
+admin.menu.button.back=§8Back
+menu.background=§8[§7Press to open§8]
+menu.body.development=§7In development...
+menu.button.back=§8 Back
+
+## --- MAIN MENU ---
+menu.title=§l§8Server Menu
+menu.body=§7Menu creator§f: kapycta1231484
+menu.button.1=§8 About the Map
+menu.button.2=§8 Shop
+menu.button.3=§8 Settings
+menu.button.4=§8 Bank
+menu.button.5=§8 Rules
+menu.button.6=§8 Promo Codes
+menu.button.7=§8 Warps
+menu.button.8=§8 Upgrades
+
+## --- MAP INFO MENU ---
+mapInfo.title=§l§8Server Menu |  About the Map
+mapInfo.body=§7Choose what you need.
+mapInfo.button.1=§8 Levels
+mapInfo.button.2=§f⩆ §8How to Play?
+mapInfo.button.3=§f⩇ §8Creator
+mapInfo.button.4=§8 Map Version
+
+## --- LEVELS MENU ---
+lvlsInfo.title=§l§8Server Menu |  Levels
+lvlsInfo.body.lvl.1=Level 1 - Dirt and Stick
+lvlsInfo.body.lvl.2=Level 2 - Stone and Wooden Pickaxe
+lvlsInfo.body.lvl.3=Level 3 - Coal and Stone Pickaxe
+lvlsInfo.body.lvl.4=Level 4 - (nothing)
+lvlsInfo.body.lvl.5=Level 5 - Iron
+lvlsInfo.body.lvl.6=Level 6 - Copper
+lvlsInfo.body.lvl.7=Level 7 - (nothing)
+lvlsInfo.body.lvl.8=Level 8 - Redstone and Iron Pickaxe
+lvlsInfo.body.lvl.9=Level 9 - (nothing)
+lvlsInfo.body.lvl.10=Level 10 - Gold
+lvlsInfo.body.lvl.11=Level 11 - Lapis Lazuli
+lvlsInfo.body.lvl.12=Level 12 - (nothing)
+lvlsInfo.body.lvl.13=Level 13 - Diamonds and §bDiamond Pickaxe§r
+lvlsInfo.body.lvl.14=Level 14 - (nothing)
+lvlsInfo.body.lvl.15=Level 15 - Emeralds and §5Netherite Pickaxe§r
+lvlsInfo.body.lvl.16=Level 16 - Netherrack and New Location: §cNether§r
+lvlsInfo.body.lvl.17=Level 17 - Magma
+lvlsInfo.body.lvl.18=Level 18 - Quartz
+lvlsInfo.body.lvl.19=Level 19 - Gold Nuggets
+lvlsInfo.body.lvl.20=Level 20 - Ancient Debris
+lvlsInfo.body.lvl.21=Level 21 - (nothing)
+lvlsInfo.body.lvl.22=Level 22 - Netherite Block
+lvlsInfo.body.lvl.23=Level 23 - (nothing)
+lvlsInfo.body.lvl.24=Level 24 - Obsidian
+lvlsInfo.body.lvl.25=Level 25 - Crying Obsidian (§aMAX LEVEL!!!§r)
+
+## --- HOW TO PLAY / TUTORIAL ---
+howtoplay.title=§l§8Server Menu | §f⩆§8 How to Play?
+howtoplay.text.1=§l§7Tutorial
+howtoplay.text.2=§r§7• To level up, sell ores and blocks. Each level unlocks new pickaxes and ores. More in  Levels
+howtoplay.text.3=• To unlock a pickaxe, also sell ores and blocks
+howtoplay.text.4=• To sell ores or blocks, stand on a gold block
+howtoplay.text.5=§l§cNote:§r§c If you stole ore you can't mine, you can't sell it
+howtoplay.text.6=§l§7Buying VIP
+howtoplay.text.7=§r§7VIP is a privilege with new ores and a VIP shop
+howtoplay.text.8=VIP costs 125K
+howtoplay.text.9=Buy it in Menu »  Upgrades
+howtoplay.text.10=§l§7Rebirth
+howtoplay.text.11=§r§7Rebirth is replaying the map with a permanent haste effect
+howtoplay.text.12=Rebirth unlocks after 16 
+howtoplay.text.13=Upgrade in Menu »  Upgrades
+howtoplay.text.14=§l§7 What do the icons on the left mean?
+howtoplay.text.15=§r§7 - your Nickname (in-game name)
+howtoplay.text.16= - your Money / Coins
+howtoplay.text.17= - your VIP coins
+howtoplay.text.18= - your Level and next 
+howtoplay.text.19= - your XP and how much  to next 
+howtoplay.text.20= - your Rebirth, feature: haste
+howtoplay.text.21= - current Server Online
+
+mapCreator.title=§l§8Server Menu | §f⩇§8 Creator
+
+mapVersion.title=§l§8Server Menu |  Map Version
+mapVersion.text.1=§l§7Here you'll find info about the latest map update
+mapVersion.text.2=§lUpdate 0.1.8 from December 22, 2024§r
+mapVersion.text.3=• The number of command blocks on the map has been minimized
+mapVersion.text.4=• Most §7.mcfunction§r files now work autonomously, without command blocks
+mapVersion.text.5=• Almost all addon and resource pack files have been optimized, their size reduced and unnecessary code removed
+mapVersion.text.6=• Server Menu updated:
+mapVersion.text.7=- Promo codes can now be entered inside the menu
+mapVersion.text.8=- Fixed a bug where you could farm coins in the Bank Menu
+mapVersion.text.9=• Server Chat updated:
+mapVersion.text.10=- Added custom commands, see §e!help§r
+mapVersion.text.11=- Added custom emotes, see §e!emotes§r
+mapVersion.text.12=- Added protection from spam, flood, and messages longer than 200 characters
+
+## --- SHOP MENU ---
+shop.title=§l§8Server Menu |  Shop
+shop.body=§7What do you want to buy?
+shop.button.1=§8Enchantments
+shop.button.2=§8PvP Kits
+shop.button.3=§8Boosts
+
+shop.enchants.title=§l§8 Shop | Enchantments
+shop.enchants.body.1=§7Choose which enchantment you want to buy.
+shop.enchants.body.2=§l§cNote: §r§7If you buy once, you'll get §e1§7 level of the enchantment. Buy again to increase the level.
+shop.enchants.button.1=§8Efficiency
+shop.enchants.button.2=§8Fortune
+
+shop.kits.title=§l§8 Shop | PvP Kits
+shop.kits.body=§7Buy a kit to get armor and a sword
+shop.kits.button.1=§8Iron Kit
+shop.kits.button.2=§8Diamond Kit
+shop.kits.button.3=§8Netherite Kit
+
+shop.boost.title=§l§8 Shop | Boosts
+shop.boost.body.1=§7Choose which boost you want to buy
+shop.boost.body.2=§l§cNote: §r§7Boost lasts for §e5§7 minutes after purchase
+shop.boost.button.1=§2 x2 Boost
+shop.boost.button.2=§3 x4 Boost
+
+## --- SETTINGS MENU ---
+settings.title=§l§8Server Menu |  Settings
+settings.body=§7Choose your settings:
+settings.default.1=§7Default - §2Enabled
+settings.default.2=§7Default - §4Disabled
+settingsSelect.button.1=§8Scoreboard
+settingsSelect.button.2=§8Particles on Sell
+settingsSelect.button.3=§8Sounds on Sell
+
+settingsTable.title=§l§8 Settings | Scoreboard
+settingsTable.body=§7Click §2enable§7/§4disable§7 below to show or hide the server scoreboard
+
+settings.button.1=§2Enable
+settings.button.2=§4Disable
+settings.button.3=§gEmotes Only
+
+settingsParticle.title=§l§8 Settings | Particles
+settingsParticle.body=§7Click §2enable§7/§4disable§7 below to turn particles on or off when selling
+
+settingsSound.title=§l§8 Settings | Sounds
+settingsSound.body=§7Click §2enable§7/§4disable§7 below to turn sounds on or off when selling
+
+settingsChanged.1= §7Setting changed to - §2Enabled
+settingsChanged.2= §7Setting changed to - §4Disabled
+settingsChanged.3= §7Setting changed to - §gEmotes Only
+
+## --- BANK MENU ---
+bank.title=§l§8Server Menu |  Bank
+bank.text.1=§rAmount you want to send:
+bank.text.2=§7Enter here...
+bank.text.3=§l§cERROR!§r§7 Not enough balance!
+bank.text.4=§aSuccessfully sent to player 
+bank.text.5=§aYou received from 
+bank.text.6= amount: 
+bank.text.7=§rChoose a player:
+bank.text.8=§eBalance§r:
+bank.text.9=§l§cERROR!§r§7 Cannot send negative values
+
+## --- RULES MENU ---
+rules.title=§l§8Server Menu |  Rules
+rules.body.1=§l§7Server Rules:
+rules.body.2=§r§7By reading these rules, you automatically agree to accept punishment for breaking any of them. Ignorance is not an excuse.
+rules.text.1=§l1.§r§7 No spamming/flooding in chat • Mute 2-5 min
+rules.text.2=§l2.§r§7 No insulting players/family • Mute 7-10 min
+rules.text.3=§l3.§r§7 Behave adequately
+rules.text.4=§l4.§r§7 Don't ask for resources, operator rights, creative mode, commands, or resource packs • Kick
+rules.text.5=§l5.§r§7 Don't ask players to follow links/streams/subscribe to promoted accounts • Kick
+rules.text.6=§l6.§r§7 No cheating • Ban
+
+## --- PROMO CODES MENU ---
+promo.title=§l§8Server Menu |  Promo Codes
+promo.text.1=§7Promo codes can be found anywhere. They're marked on signs in §2this§7 color.
+promo.text.2=§7If you find one, enter it below, case-sensitive, or it won't work.
+promo.textField=§7Enter promo code...
+
+## --- WARPS MENU ---
+warps.title=§l§8Server Menu |  Warps
+warps.body=§7Where do you want to teleport?
+warps.button.1=§8Spawn
+warps.button.2=§8Mini-games
+
+## --- UPGRADES MENU ---
+upgrading.title=§l§8Server Menu |  Upgrades
+upgrading.body=§7Choose your upgrade path:
+upgrading.button.1=§2VIP
+upgrading.button.2=§5Rebirth
+
+## --- REGISTRATION MENU ---
+reg.title=§lAccount Registration
+reg.toggle=I agree to the server rules and confirm §cno§r cheats
+reg.text.1=§cPlease confirm §bno cheats§c to play on the server
+reg.text.2=§aHello.
+reg.text.3=§aWelcome to the server! Have fun :)
+reg.text.4=§6Account Info§r:
+reg.text.5=§6Password§r: 
+reg.text.6=§aRemember these details or take a screenshot to log in later.
+
+## --- LOGIN MENU ---
+login.title=§lAccount Login
+login.text.1=Welcome
+login.text.2=§rto the server §l[] Shop for Ore§r. Come up with and enter a password to register
+login.text.3=§gEnter the password you used during registration
+login.text.4=§7Enter password...
+login.text.5=§aLogin successful! Welcome!
+login.text.6=§cYour §bpassword§c is incorrect, check your details again!
+
+## --- ADMIN MENU ---
+admin.menu.title=§l§8Admin Menu
+admin.menu.button.1=§8Gamemode
+admin.menu.button.2=§8Set Time
+admin.menu.button.3=§8Warps
+admin.menu.button.4=§8Effects
+admin.menu.button.5=§8Tools
+admin.menu.button.6=§8Announcements
+admin.menu.button.7=§8Wipe
+admin.menu.button.8=§8Summon Bot
+
+## --- ADMIN: GAMEMODES ---
+gm.title=§l§8Admin Menu | Gamemode
+gm.body=§7List of gamemodes:
+gm.button.1=§8Creative
+gm.button.2=§8Adventure
+gm.button.3=§8Spectator
+gm.button.4=§8Fly
+
+## --- ADMIN: TIME SETTING ---
+timeSet.title=§l§8Admin Menu | Set Time
+timeSet.body=§7Choose the time to set:
+timeSet.button.1=§8Sunrise
+timeSet.button.2=§8Day
+timeSet.button.3=§8Noon
+timeSet.button.4=§8Sunset
+timeSet.button.5=§8Night
+timeSet.button.6=§8Midnight
+
+## --- ADMIN: WARPS ---
+warp.title=§l§8Admin Menu | Warps
+warp.body=§7List of warps:
+warp.button.1=§8Mine
+warp.button.2=§8VIP Location
+warp.button.3=§8CMD Zone
+warp.button.4=§8/tp to @r
+
+## --- ADMIN: EFFECTS ---
+effects.title=§l§8Admin Menu | Effects
+effects.body=§7List of effects:
+effects.button.1=§8Invisibility
+effects.button.2=§8Resistance
+effects.button.3=§8Strength
+effects.button.4=§8Haste
+effects.button.5=§8Clear Effects
+
+## --- ADMIN: TOOLS ---
+tools.title=§l§8Admin Menu | Tools
+tools.body=§7Choose what you need:
+tools.button.1=§5Command Block
+tools.button.2=§5Allow Block
+tools.button.3=§5Deny Block
+tools.button.4=§5Structure Block
+tools.button.5=§5Structure Void
+tools.button.6=§5Barrier
+tools.button.7=§5Border
+tools.button.8=§5Light Block
+tools.button.9=§5NPC Spawn Egg
+tools.button.10=§5Hologram Spawn Egg
+tools.button.11=§cAdmin Stick
+tools.button.12=§8Clear Inventory
+
+## --- ADMIN: ANNOUNCEMENTS ---
+sayServer.title=§l§8Admin Menu | Announcements
+sayServer.body=§gType below anything you want to say. It will be shown to the whole server
+sayServer.textField=§7Enter text...
+sayServer.message=§l§eAnnouncement:§r
+
+## --- ADMIN: WIPE ---
+wipe.title=§l§8Warning
+wipe.body=§7Wipe will reset all stats, but won't affect tags or inventories. Are you sure?
+wipe.button.1=§2Yes
+wipe.button.2=§4No
+wipe.message.success=§aStats reset successfully
+
+## --- LEVEL-UP & SYSTEM MESSAGES ---
+message.lvlup.lvl.2= §rleveled up to §a2§f. Pickaxe upgraded: Stick >> Wooden Pickaxe
+message.lvlup.lvl.3= §rleveled up to §a3§f. Pickaxe upgraded: Wooden Pickaxe >> Stone Pickaxe
+message.lvlup.lvl.4= §rleveled up to §a4
+message.lvlup.lvl.5= §rleveled up to §a5
+message.lvlup.lvl.6= §rleveled up to §a6
+message.lvlup.lvl.7= §rleveled up to §a7
+message.lvlup.lvl.8= §rleveled up to §a8§f. Pickaxe upgraded: Stone Pickaxe >> Iron Pickaxe
+message.lvlup.lvl.9= §rleveled up to §a9
+message.lvlup.lvl.10= §rleveled up to §a10
+message.lvlup.lvl.11= §rleveled up to §a11
+message.lvlup.lvl.12= §rleveled up to §a12
+message.lvlup.lvl.13= §rleveled up to §a13§f. Pickaxe upgraded: Iron Pickaxe >> §bDiamond Pickaxe
+message.lvlup.lvl.14= §rleveled up to §a14
+message.lvlup.lvl.15= §rleveled up to §a15§f. Pickaxe upgraded: §bDiamond Pickaxe§f >> §5Netherite Pickaxe
+message.lvlup.lvl.16= §rleveled up to §a16§f. New location unlocked: §cNether
+message.lvlup.lvl.17= §rleveled up to §a17
+message.lvlup.lvl.18= §rleveled up to §a18
+message.lvlup.lvl.19= §rleveled up to §a19
+message.lvlup.lvl.20= §rleveled up to §a20
+message.lvlup.lvl.21= §rleveled up to §a21
+message.lvlup.lvl.22= §rleveled up to §a22
+message.lvlup.lvl.23= §rleveled up to §a23
+message.lvlup.lvl.24= §rleveled up to §a24
+message.lvlup.lvl.25= §rleveled up to §a25§f. This is the §aMAX LEVEL§f!!!
+
+## --- VIP & REBIRTH MESSAGES ---
+message.basic.error=§l§cERROR!§r§7 Not enough 
+message.lvlup.error.1=§l§cERROR!§r§7 Not enough  or your level is below 25 
+message.lvlup.error.2=§l§cERROR!§r§7 Your level is not 16-25 
+message.lvlup.haveVIP=§l§cERROR!§r§7 You already have §aVIP
+message.lvlup.haveRebirth=§l§cERROR!§r§7 Max rebirth level!
+message.lvlup.rebirth.1= §r§ddid their first §5Rebirth
+message.lvlup.rebirth.2= §dYou increased your §5rebirth§d level to: §5
+message.lvlup.vip= §rleveled up to §aVIP
+message.lvlup.vip.success=Congrats on buying §aVIP§f. To go to the §aVIP island§f, use §eServer Menu
+
+## --- BOOST MESSAGES ---
+message.boost.end.1=§a x2 boost ended. You can buy a new one in the Shop!
+message.boost.end.2=§b x4 boost ended. You can buy a new one in the Shop!
+message.boost.error=§l§cERROR!§r§7 Can't §cbuy a boost§7 right now. Wait for the previous one to end!
+message.x2boost=§a bought  x2 boost. You have §25 minutes§a to level up!
+message.x4boost=§b bought  x4 boost. You have §35 minutes§b to level up!
+
+## --- PROMO REWARDS ---
+message.promo.1=§eactivated a promo code and got 500 
+message.promo.2=§eactivated a promo code and got 500 
+message.promo.3=§eactivated a promo code and got 25k 
+message.promo.4=§eactivated a promo code and got 100 
+message.promo.activated=§eYou've already activated this §apromo code
+message.promo.error=§l§cERROR!§r§7 Invalid promo code
+
+## --- ANTICHEAT MESSAGES ---
+message.anticheat.detectItem=tried to take a forbidden item, item:
+message.acticheat.detectEchant.1=tried to enchant
+message.acticheat.detectEchant.2=on
+message.acticheat.detectEchant.3=level
+
+## --- CLEAR ITEMS ---
+message.clearItem.title=§l§eItem Cleanup
+message.clearItem.subtitle=§l§eItems removed: §a
+
+## --- EVENT MESSAGES ---
+message.event.gift_event=§l>> §eA gift appeared on the map! Who will §bgrab§e it §afirst§e?
+message.event.gift_event.end= §apicked up the §egift!
+message.event.haste_event=§ggot haste for 10 sec
+message.event.mythic_chest=§l >> §rA mythic chest appeared in the PvP arena! Hurry to loot it first!
+message.event.rain_event=§l >> §bIt's raining coins!
+message.event.rain_event.end=§l >> §bThe rain is over!
+
+## --- COMMANDS & USAGE ---
+commands.list.desc=§8-----§f Command List §8-----§f
+commands.help.desc=§7Shows the list of available commands
+commands.spawn.desc=§7Teleports to spawn
+commands.emotes.desc=§7Shows the list of available emotes
+commands.msg.desc=§7Sends a message to a player
+commands.gm1.desc=§7Sets creative mode
+commands.gm2.desc=§7Sets adventure mode
+commands.gm6.desc=§7Sets spectator mode
+commands.fly.desc=§7Turns flight §8on§7/§8off
+commands.clearchat.desc=§7Clears the chat
+commands.bot.desc=§7Summons a bot
+commands.stick.desc=§7Gives §cAdmin Stick
+commands.invis.desc=§7Turns invisibility §8on§7/§8off
+commands.timeset.desc=§7Sets the server time
+commands.prefix.desc=§7Manages player prefixes
+commands.tag.desc=§7Manages player tags
+commands.scoreboard.desc=§7Manages the /scoreboard database
+commands.kick.desc=§7Kicks a player from the server
+
+message.cmd.error.1=§l§cERROR!§r§7 Unknown command:
+message.cmd.error.2=Type §e!help§7 to see the list of commands
+message.cmd.error.3=§l§cERROR!§r§7 You don't have permission to use this command!
+
+message.cmd.spawn=§aYou were teleported to §bspawn
+message.cmd.emotes=§8-----§f Emote List §8-----§f
+message.cmd.msg.use=§aUsage: §b!msg §a<§bplayer§a> <§bmessage§a>
+message.cmd.gm1=§aGamemode changed to §bCreative
+message.cmd.gm2=§aGamemode changed to §bAdventure
+message.cmd.gm6=§aGamemode changed to §bSpectator
+message.cmd.fly.on=§aFlight mode §benabled
+message.cmd.fly.off=§aFlight mode §bdisabled
+message.cmd.fly.use=§aUsage: §b!fly §a<§bon§a/§boff§a>
+message.cmd.clearchat=§aChat cleared...
+message.cmd.stick=§aYou received §bAdmin Stick
+message.cmd.invis.on=§aYou are now §binvisible
+message.cmd.invis.off=§aYou are no longer §binvisible
+message.cmd.invis.use=§aUsage: §b!invis §a<§bon§a/§boff§a>
+message.cmd.timeset.use=§aUsage: §b!timeset §a<§bsunrise§a; §bday§a; §bnoon§a; §bsunset§a; §bnight§a; §bmidnight§a>
+message.cmd.prefix.use=§aUsage: §b!prefix §a<§bplayer§a> <§bset§a/§btake§a> <§bprefix§a>
+message.cmd.tag.use=§aUsage: §b!tag §a<§bplayer§a> <§badd§a/§bremove§a> <§btag§a>
+message.cmd.scoreboard.use=§aUsage: §b!scoreboard §a<§bplayer§a> <§badd§a/§bremove§a> <§bobjective§a> <§bamount§a>
+message.cmd.kick=was kicked. Reason: 
+message.cmd.kick.no_reason=not specified
+message.cmd.kick.use=§aUsage: §b!kick §a<§bplayer§a> <§breason §a(§boptional§a)>
+
+## --- SHOP REWARDS ---
+message.shop.enchant.efficiency=§7Successfully bought§f: §eEfficiency§f (+1)
+message.shop.enchant.fortune=§7Successfully bought§f: §eFortune§f (+1)
+message.shop.kit.iron=§7Successfully bought§f: Iron Kit
+message.shop.kit.diamond=§7Successfully bought§f: Diamond Kit
+message.shop.kit.netherite=§7Successfully bought§f: Netherite Kit
+
+## --- ADMIN STICK ---
+message.kick=§r§c kicked by admin§f
+
+## --- SCOREBOARD ---
+scoreboards.map=§l[] Shop for Ore§r
+scoreboards.profile=§l[] §7Profile§f: §r
+scoreboards.money=§l[] §eBalance§f: 
+scoreboards.money2=§l[] §gVIP Coins§f: 
+scoreboards.xp=[] §aXP§f: 
+scoreboards.lvl=[] §2Level§f: 
+scoreboards.lvl.max=§aMAX§f
+scoreboards.rebirth=[] §dRebirth§f: 
+scoreboards.online=[] §6Online§f: 
+scoreboards.x2boost= §l§ax2 Boost
+scoreboards.x4boost= §l§bx4 Boost
+
+scoreboard.objective.money= Coins
+scoreboard.objective.money2= VIP Coins
+scoreboard.objective.lvl= LvL
+scoreboard.objective.xp= XP
+scoreboard.objective.rebirth= Rebirth
+scoreboard.objective.efficiency= Efficiency
+scoreboard.objective.fortune= Fortune
+
+## --- CHAT ERRORS ---
+message.chat.antiflood=§l§cERROR!§r§7 Your message is too long!
+message.chat.antispam=§l§cERROR!§r§7 Don't spam the chat!
