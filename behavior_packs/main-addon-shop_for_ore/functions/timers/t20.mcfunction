@@ -55,3 +55,7 @@ tag @a[tag=player:tp_ore,scores={tpore=..0}] remove player:tp_ore
 
 # Подарок «в игре» (events/gift_event): обратный отсчёт, пока его не подобрали
 execute if score gift system matches 1.. run scoreboard players remove gift system 1
+
+# Голод только на PvP-арене (группы компонентов в entities/player.json, см. system/system)
+event entity @a[tag=!player:pvp] server:hunger_off
+event entity @a[tag=player:pvp] server:hunger_on
