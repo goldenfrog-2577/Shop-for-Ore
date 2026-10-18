@@ -120,7 +120,8 @@ function mapCreator(player) {
 	.button('§2Хbox\n§7kapycta123#1484',
 		'textures/server_icons/xbox')
 	mapCreator.show(player).then(tb => {
-		// Все кнопки возвращают к информации о карте
+		// Все кнопки возвращают к информации о карте; крестик просто закрывает меню
+		if (tb.selection === undefined) return;
 		mapInfo(player)
 	});
 }
@@ -384,9 +385,11 @@ const promocodeRewards = {
  * @returns {boolean} - true если промокод валиден.
  */
 function validatePromoCode(code, player) {
-	if (!(code in promocodeRewards)) return false;
+	// Без учёта регистра: «Kapycta» и «vipbonus» тоже подходят
+	const key = Object.keys(promocodeRewards).find(k => k.toLowerCase() === String(code ?? '').toLowerCase());
+	if (!key) return false;
 
-	const promo = promocodeRewards[code];
+	const promo = promocodeRewards[key];
 	const scoreboard = promo.scoreboard;
 
 	const commandCheck = `execute if score @s ${scoreboard} matches 0`;

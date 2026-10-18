@@ -247,6 +247,8 @@ bank.received=§aHas recibido de §e%1$s§a, cantidad: §e%2$s
 bank.text.7=§rElige un jugador:
 bank.text.8=§eSaldo§r:
 bank.text.9=§l§cERROR!§r§7 No se puede transferir valores negativos
+bank.error.amount=§l§cERROR!§r§7 La cantidad debe ser un número entero positivo
+bank.error.self=§l§cERROR!§r§7 No puedes enviarte dinero a ti mismo
 
 ## --- MENÚ REGLAS ---
 rules.title=§l§8Menú del servidor |  Reglas
@@ -474,6 +476,7 @@ commands.wipe.desc=§7Reinicia el progreso de todos los jugadores
 message.cmd.error.1=§l§cERROR!§r§7 Comando desconocido:
 message.cmd.error.2=Escribe §e!help§7 para ver la lista de comandos
 message.cmd.error.3=§l§cERROR!§r§7 ¡No tienes permiso para usar este comando!
+message.cmd.notfound=§l§cERROR!§r§7 El jugador §f%1$s§7 no está conectado
 
 message.cmd.spawn=§aFuiste teletransportado al §bspawn
 message.cmd.emotes=§8-----§f Lista de emotes §8-----§f

@@ -2,7 +2,7 @@
 // Импортируем необходимые модули
 import { world } from '@minecraft/server';
 import { ModalFormData } from '@minecraft/server-ui';
-import { getScore, rawTranslate } from '../DataBase.js';
+import { getScore, rawTranslate, run, findPlayer } from '../DataBase.js';
 import { menu } from './menu.js';
 
 // --- Основная функция банка ---
@@ -26,28 +26,39 @@ export function bank(player) {
 		// Форма закрыта крестиком — formValues нет
 		if (!r.formValues) return;
 		let target = operations[r.formValues[0]];
-		let amount = Number(r.formValues[1]);
+		const raw = String(r.formValues[1] ?? '').trim();
+		let amount = Number(raw);
 		let playerScore = getScore(player, "money");
 
-		// Проверка на корректность суммы
-		if (isNaN(amount) || amount <= 0) {
-			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"bank.text.9"}]}');
+		// Сумма — целое положительное число в пределах табло (раньше дробная или огромная сумма
+		// «отправлялась» в сообщении, а команды scoreboard не срабатывали)
+		if (!/^\d+$/.test(raw) || !Number.isSafeInteger(amount) || amount <= 0 || amount > 2147483647) {
+			run(player, 'tellraw @s {"rawtext":[{"translate":"bank.error.amount"}]}');
+			return;
+		}
+		// Самому себе переводить нельзя
+		if (target === player.name) {
+			run(player, 'tellraw @s {"rawtext":[{"translate":"bank.error.self"}]}');
+			return;
+		}
+		// Получатель мог выйти, пока форма была открыта: тогда деньги ушли бы «фейковому игроку» с его ником
+		const targetPlayer = findPlayer(target);
+		if (!targetPlayer) {
+			run(player, `tellraw @s ${rawTranslate('message.cmd.notfound', target)}`);
 			return;
 		}
 		// Проверка на достаточность средств
 		if (playerScore < amount) {
-			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"bank.text.3"}]}');
-		} else {
-			// Сообщение отправителю
-			player.runCommandAsync(`tellraw @s ${rawTranslate('bank.sent', target, amount)}`);
-			// Зачисление денег получателю
-			player.runCommandAsync(`scoreboard players add "${target}" money ${amount}`);
-			// Сообщение получателю
-			player.runCommandAsync(`tellraw "${target}" ${rawTranslate('bank.received', player.name, amount)}`);
-			// Списание денег у отправителя
-			player.runCommandAsync(`scoreboard players remove @s money ${amount}`);
-			// Звук успешного перевода
-			player.runCommandAsync('playsound note.bell @s');
+			run(player, 'tellraw @s {"rawtext":[{"translate":"bank.text.3"}]}');
+			return;
 		}
+		// Сначала списание у отправителя; зачисление — только если списание прошло
+		run(player, `scoreboard players remove @s money ${amount}`).then((res) => {
+			if (res === undefined) return;
+			run(targetPlayer, `scoreboard players add @s money ${amount}`);
+			run(player, `tellraw @s ${rawTranslate('bank.sent', targetPlayer.name, amount)}`);
+			run(targetPlayer, `tellraw @s ${rawTranslate('bank.received', player.name, amount)}`);
+			run(player, 'playsound note.bell @s');
+		});
 	});
 }

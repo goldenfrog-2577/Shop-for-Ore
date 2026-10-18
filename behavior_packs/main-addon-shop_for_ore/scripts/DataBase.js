@@ -22,9 +22,14 @@ export function getScore(entity, objective) {
  */
 export function metricNumbers(value) {
 	const types = ["","K","M","B","T","P","E","Z","Y"];
-	const selectType = (Math.log10(value) / 3) | 0;
+	let selectType = (Math.log10(value) / 3) | 0;
 	if (selectType == 0) return value;
 	let scaled = value / Math.pow(10, selectType * 3);
+	// 999 999 → «1.0M», а не «1000.0K»
+	if (scaled.toFixed(1) === "1000.0" && selectType < types.length - 1) {
+		selectType++;
+		scaled /= 1000;
+	}
 	return scaled.toFixed(1) + types[selectType];
 };
 
@@ -38,6 +43,39 @@ export function metricNumbers(value) {
  */
 export function rawTranslate(key, ...args) {
 	return JSON.stringify({ rawtext: [{ translate: key, with: args.map(String) }] });
+};
+
+/**
+ * Выполнить команду и не ронять ошибку в ContentLog, если она не сработала
+ * (например, tellraw игроку, который уже вышел). Промис: результат команды или undefined при ошибке.
+ * @param {Entity} entity
+ * @param {string} command
+ */
+export function run(entity, command) {
+	return entity.runCommandAsync(command).then((r) => r ?? {}, () => undefined);
+};
+
+/**
+ * Найти игрока онлайн по имени (без учёта регистра).
+ * @param {string} name
+ * @returns {Player|undefined}
+ */
+export function findPlayer(name) {
+	if (!name) return undefined;
+	const lower = name.toLowerCase();
+	for (const p of world.getPlayers()) {
+		if (p.name.toLowerCase() === lower) return p;
+	}
+	return undefined;
+};
+
+/**
+ * JSON для tellraw из готового текста: кавычки и обратные слэши экранируются.
+ * @param {string} text
+ * @returns {string}
+ */
+export function rawText(text) {
+	return JSON.stringify({ rawtext: [{ text: String(text) }] });
 };
 
 /**

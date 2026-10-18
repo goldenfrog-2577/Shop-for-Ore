@@ -247,6 +247,8 @@ bank.received=§aYou received from §e%1$s§a, amount: §e%2$s
 bank.text.7=§rChoose a player:
 bank.text.8=§eBalance§r:
 bank.text.9=§l§cERROR!§r§7 Cannot send negative values
+bank.error.amount=§l§cERROR!§r§7 The amount must be a positive whole number
+bank.error.self=§l§cERROR!§r§7 You can't send money to yourself
 
 ## --- RULES MENU ---
 rules.title=§l§8Server Menu |  Rules
@@ -474,6 +476,7 @@ commands.wipe.desc=§7Resets all players' progress
 message.cmd.error.1=§l§cERROR!§r§7 Unknown command:
 message.cmd.error.2=Type §e!help§7 to see the list of commands
 message.cmd.error.3=§l§cERROR!§r§7 You don't have permission to use this command!
+message.cmd.notfound=§l§cERROR!§r§7 Player §f%1$s§7 is not online
 
 message.cmd.spawn=§aYou were teleported to §bspawn
 message.cmd.emotes=§8-----§f Emote List §8-----§f
