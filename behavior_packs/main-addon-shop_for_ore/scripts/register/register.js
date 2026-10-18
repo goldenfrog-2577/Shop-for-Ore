@@ -1,29 +1,19 @@
 // --- UI регистрации нового игрока ---
-// Показывает форму для создания пароля и подтверждения регистрации
+// Форму вызывает register/system.js (раньше — отдельная проверка тега 'onRegister' каждый тик)
 
-import { world } from '@minecraft/server';
 import { ModalFormData } from '@minecraft/server-ui';
-
-// Проверяем игроков на наличие тега 'onRegister' каждый тик
-world.events.tick.subscribe(() => {
-	for (let player of world.getPlayers()) {
-		if (player.hasTag('onRegister')) {
-			RegisterUI(player);
-			player.runCommandAsync('tag @s remove onRegister')
-		}
-	}
-});
 
 /**
  * Показывает форму регистрации игроку.
  * @param {Player} player 
+ * @returns {Promise<void>} завершается, когда игрок закрыл форму
  */
-function RegisterUI(player) {
+export function RegisterUI(player) {
 	const register = new ModalFormData()
 		.title('%reg.title')
 		.textField(`\n%login.text.1 ${player.name} %login.text.2`,'%login.text.4')
 		.toggle('%reg.toggle', false);
-	register.show(player).then(r => {
+	return register.show(player).then(r => {
 		// Форма закрыта — через ~2 с она покажется снова
 		if (!r.formValues) return;
 		let password = r.formValues[0];

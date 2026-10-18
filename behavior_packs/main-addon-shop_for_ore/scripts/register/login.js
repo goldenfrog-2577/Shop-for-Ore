@@ -1,28 +1,18 @@
 // --- UI авторизации игрока при входе ---
-// Показывает форму для ввода пароля, если у игрока есть тег 'onLogin'
+// Форму вызывает register/system.js (раньше — отдельная проверка тега 'onLogin' каждый тик)
 
-import { world } from '@minecraft/server';
 import { ModalFormData } from '@minecraft/server-ui';
-
-// Проверяем игроков на наличие тега 'onLogin' каждый тик
-world.events.tick.subscribe(() => {
-	for (let player of world.getPlayers()) {
-		if (player.hasTag('onLogin')) {
-			LoginUI(player);
-			player.runCommandAsync('tag @s remove onLogin')
-		}
-	}
-});
 
 /**
  * Показывает форму логина игроку.
  * @param {Player} player 
+ * @returns {Promise<void>} завершается, когда игрок закрыл форму
  */
-function LoginUI(player) {
+export function LoginUI(player) {
 	const login = new ModalFormData()
 		.title('%login.title')
 		.textField('%login.text.3', '%login.text.4');
-	login.show(player).then(r => {
+	return login.show(player).then(r => {
 		// Форма закрыта — через ~2 с она покажется снова
 		if (!r.formValues) return;
 		let password = r.formValues[0];
