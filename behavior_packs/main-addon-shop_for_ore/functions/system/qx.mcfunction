@@ -1,4 +1,4 @@
-scoreboard objectives add qx dummy System
+# Стоимость следующего уровня. Вызывается из timers/t20 и сразу после повышения (system/levelup_apply)
 scoreboard players set @a[scores={lvl=1..1}] qx 100
 scoreboard players set @a[scores={lvl=2..2}] qx 125
 scoreboard players set @a[scores={lvl=3..3}] qx 250

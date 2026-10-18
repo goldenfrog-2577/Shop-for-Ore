@@ -206,6 +206,7 @@ shop.boost.body.1=§7Elige qué potenciador quieres comprar
 shop.boost.body.2=§l§cNota: §r§7El potenciador dura §e5§7 minutos tras la compra
 shop.boost.button.1=§2 x2 potenciador
 shop.boost.button.2=§3 x4 potenciador
+shop.boost.button.3=§6 Imán de mineral
 
 ## --- MENÚ AJUSTES ---
 settings.title=§l§8Menú del servidor |  Ajustes
@@ -416,6 +417,11 @@ message.boost.end.2=§b x4 potenciador terminado. ¡Puedes comprar uno nuevo 
 message.boost.error=§l§cERROR!§r§7 No puedes §ccomprar un potenciador§7 ahora. ¡Espera a que termine el anterior!
 message.x2boost=§a compró  x2 potenciador. ¡Tienes §25 minutos§a para mejorar!
 message.x4boost=§b compró  x4 potenciador. ¡Tienes §35 minutos§b para mejorar!
+message.shop.enchant.max=§l§cERROR!§r§7 Ya tienes el nivel §emáximo§7 de este encantamiento
+message.lvlup.rebirth.max=§l§cERROR!§r§7 Ya tienes el §5Reinicio máximo§7 (5)
+message.tp_ore.buy=§6 Imán de mineral activado durante §e5 minutos§6: el mineral que cae cerca vuela hacia ti
+message.tp_ore.active=§l§cERROR!§r§7 El imán de mineral ya está activo. Segundos restantes: §e
+message.tp_ore.end=§6 El imán de mineral se ha agotado. Puedes comprar otro en Tienda → Potenciadores
 
 ## --- PREMIOS PROMOCIONALES ---
 message.promo.1=§eactivó un código promocional y obtuvo 500 

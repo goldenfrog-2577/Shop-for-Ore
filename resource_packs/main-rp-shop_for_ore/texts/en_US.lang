@@ -206,6 +206,7 @@ shop.boost.body.1=§7Choose which boost you want to buy
 shop.boost.body.2=§l§cNote: §r§7Boost lasts for §e5§7 minutes after purchase
 shop.boost.button.1=§2 x2 Boost
 shop.boost.button.2=§3 x4 Boost
+shop.boost.button.3=§6 Ore Magnet
 
 ## --- SETTINGS MENU ---
 settings.title=§l§8Server Menu |  Settings
@@ -416,6 +417,11 @@ message.boost.end.2=§b x4 boost ended. You can buy a new one in the Shop!
 message.boost.error=§l§cERROR!§r§7 Can't §cbuy a boost§7 right now. Wait for the previous one to end!
 message.x2boost=§a bought  x2 boost. You have §25 minutes§a to level up!
 message.x4boost=§b bought  x4 boost. You have §35 minutes§b to level up!
+message.shop.enchant.max=§l§cERROR!§r§7 You already have the §emaximum§7 level of this enchantment
+message.lvlup.rebirth.max=§l§cERROR!§r§7 You already have the §5maximum Rebirth§7 (5)
+message.tp_ore.buy=§6 Ore Magnet is on for §e5 minutes§6: ore dropped nearby flies to you
+message.tp_ore.active=§l§cERROR!§r§7 Ore Magnet is already active. Seconds left: §e
+message.tp_ore.end=§6 Ore Magnet has run out. You can buy a new one in Shop → Boosts
 
 ## --- PROMO REWARDS ---
 message.promo.1=§eactivated a promo code and got 500 
