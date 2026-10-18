@@ -296,7 +296,7 @@ login.text.5=§a¡Inicio de sesión exitoso! ¡Bienvenido!
 login.text.6=§cTu §bcontraseña§c es incorrecta, ¡revisa tus datos!
 login.required=§cPrimero inicia sesión o regístrate
 login.legacy=§eTu cuenta es de la antigua plataforma: crea una nueva contraseña, tu progreso se conserva
-reg.text.length=§cLa contraseña debe tener entre 3 y 32 caracteres
+reg.text.length=§cLa contraseña debe tener entre 5 y 32 caracteres
 
 ## --- MENÚ ADMIN ---
 admin.menu.title=§l§8Menú de admin

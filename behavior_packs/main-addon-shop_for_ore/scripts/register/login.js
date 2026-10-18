@@ -2,6 +2,7 @@
 // Форму вызывает register/system.js (раньше — отдельная проверка тега 'onLogin' каждый тик)
 
 import { ModalFormData } from '@minecraft/server-ui';
+import { checkPassword } from './password.js';
 
 /**
  * Показывает форму логина игроку.
@@ -16,9 +17,10 @@ export function LoginUI(player) {
 		// Форма закрыта — через ~2 с она покажется снова
 		if (!r.formValues) return;
 		const password = String(r.formValues[0] ?? '').trim();
-		// Проверка пароля по тегу. Теги меняем синхронно (addTag/removeTag),
-		// а не командой tag — иначе тег снимался с задержкой и форма открывалась повторно
-		if (password && player.hasTag(`password:${password}`)) {
+		// Проверка пароля по хешу (старый открытый пароль при успехе сразу переводится в хеш).
+		// Теги меняем синхронно (addTag/removeTag), а не командой tag — иначе тег снимался
+		// с задержкой и форма открывалась повторно
+		if (password && checkPassword(player, password)) {
 			player.removeTag('chekLogin');
 			player.tell('\n%login.text.5\n ');
 			player.runCommandAsync('playsound random.levelup @s');

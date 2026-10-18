@@ -2,10 +2,7 @@
 // Форму вызывает register/system.js (раньше — отдельная проверка тега 'onRegister' каждый тик)
 
 import { ModalFormData } from '@minecraft/server-ui';
-
-// Допустимая длина пароля
-const PASSWORD_MIN = 3;
-const PASSWORD_MAX = 32;
+import { PASSWORD_MIN, PASSWORD_MAX, setPassword } from './password.js';
 
 /**
  * Показывает форму регистрации игроку.
@@ -33,13 +30,10 @@ export function RegisterUI(player) {
 			player.runCommandAsync('playsound note.bass @s');
 			return;
 		}
-		// Теги ставим синхронно и в правильном порядке: сначала пароль, потом hasRegister.
+		// Теги ставим синхронно и в правильном порядке: сначала пароль (соль + хеш), потом hasRegister.
 		// Раньше это были отдельные команды tag: если команда с паролем падала
 		// (например, из-за кавычки в пароле), игрок становился «зарегистрированным» без пароля
-		for (const tag of player.getTags()) {
-			if (tag.startsWith('password:')) player.removeTag(tag);
-		}
-		player.addTag(`password:${password}`);
+		setPassword(player, password);
 		player.addTag('hasRegister');
 		player.removeTag('chekRegister');
 		player.tell(`\n%reg.text.2 §b${player.name}\n\n%reg.text.3\n\n%reg.text.4\n %reg.text.5 §b${password}\n\n%reg.text.6\n `);
