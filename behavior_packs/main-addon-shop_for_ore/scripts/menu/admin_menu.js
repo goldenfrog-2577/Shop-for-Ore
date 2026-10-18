@@ -3,6 +3,7 @@
 
 import { world } from '@minecraft/server';
 import { ActionFormData, ModalFormData, MessageFormData } from '@minecraft/server-ui';
+import { isPending } from '../DataBase.js';
 
 // --- Открытие админ-меню по использованию специального предмета ---
 world.events.beforeItemUse.subscribe(data => {
@@ -10,6 +11,8 @@ world.events.beforeItemUse.subscribe(data => {
 	if (data.item.typeId == 'server:admin_menu') {
 		// Только для хоста: предмет можно получить через /give
 		if (!player.hasTag('host')) return;
+		// Хост тоже сначала входит в аккаунт
+		if (isPending(player)) return;
 		admin_menu(player)
 	}
 });

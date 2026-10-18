@@ -15,10 +15,11 @@ export function LoginUI(player) {
 	return login.show(player).then(r => {
 		// Форма закрыта — через ~2 с она покажется снова
 		if (!r.formValues) return;
-		let password = r.formValues[0];
-		// Проверка пароля по тегу
-		if (player.hasTag(`password:${password}`)) {
-			player.runCommandAsync('tag @s remove chekLogin');
+		const password = String(r.formValues[0] ?? '').trim();
+		// Проверка пароля по тегу. Теги меняем синхронно (addTag/removeTag),
+		// а не командой tag — иначе тег снимался с задержкой и форма открывалась повторно
+		if (password && player.hasTag(`password:${password}`)) {
+			player.removeTag('chekLogin');
 			player.tell('\n%login.text.5\n ');
 			player.runCommandAsync('playsound random.levelup @s');
 		} else {

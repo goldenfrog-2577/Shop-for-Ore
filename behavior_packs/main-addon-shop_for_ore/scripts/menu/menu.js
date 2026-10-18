@@ -3,11 +3,18 @@
 import { world } from '@minecraft/server';
 import { ActionFormData, ModalFormData } from '@minecraft/server-ui';
 import { bank } from './bank_menu.js';
+import { isPending } from '../DataBase.js';
 
 // --- Открытие меню при использовании специального предмета ---
 world.events.beforeItemUse.subscribe(data => {
 	const player = data.source
 	if (data.item.typeId == 'server:menu') {
+		// До входа в аккаунт меню недоступно
+		if (isPending(player)) {
+			data.cancel = true;
+			player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"login.required"}]}`);
+			return;
+		}
 		menu(player)
 	}
 });
