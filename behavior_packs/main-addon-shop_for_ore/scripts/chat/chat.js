@@ -18,6 +18,9 @@ const FLOOD_TIME = 10000;       // Период для антифлуда (мс)
 
 const playerMessages = new Map(); // Хранилище сообщений игроков
 
+// Игрок вышел — его история сообщений больше не нужна
+world.events.playerLeave.subscribe((data) => playerMessages.delete(data.playerName));
+
 /**
  * Проверка на спам и флуд.
  * @param {string} playerName - Имя игрока.
@@ -35,13 +38,15 @@ function isSpamming(playerName, message) {
 	}
 
 	const data = playerMessages.get(playerName);
-	if (data.lastMessage === message) {
+	data.timestamps = data.timestamps.filter((ts) => now - ts <= FLOOD_TIME);
+	// Повтор того же сообщения запрещён только в пределах FLOOD_TIME
+	// (раньше — навсегда, пока игрок не напишет что-то другое)
+	if (data.lastMessage === message && data.timestamps.length > 0) {
 		return true;
 	}
 
 	data.lastMessage = message;
 	data.timestamps.push(now);
-	data.timestamps = data.timestamps.filter((ts) => now - ts <= FLOOD_TIME);
 
 	if (data.timestamps.length > FLOOD_LIMIT) {
 		return true;

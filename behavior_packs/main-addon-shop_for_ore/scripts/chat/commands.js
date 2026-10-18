@@ -1,7 +1,7 @@
 // --- Обработка пользовательских команд чата для Shop for Ore ---
 // Импортируем необходимые данные и списки команд
 import { world } from '@minecraft/server';
-import { commandsList, emotes, emotesList, rawTranslate, isPending } from '../DataBase.js';
+import { commandsList, emotes, emotesList, rawTranslate, rawText, isPending, run, findPlayer } from '../DataBase.js';
 
 // --- Главный обработчик команд чата ---
 world.events.beforeChat.subscribe((data) => {
@@ -18,8 +18,8 @@ world.events.beforeChat.subscribe((data) => {
 	const args = message.slice(1).split(/\s+/);
 	const command = args.shift().toLowerCase();
 
-	// Поиск команды в списке
-	const findCommand = commandsList.find(cmd => cmd.command.startsWith(`!${command}`));
+	// Поиск команды в списке — по точному имени (раньше «!f» находило «!fly», «!g» — «!gm1»)
+	const findCommand = commandsList.find(cmd => cmd.command.split(' ')[0] === `!${command}`);
 	if (!findCommand) {
 		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"message.cmd.error.1"},{"text":" §c!${command}§7. "},{"translate":"message.cmd.error.2"}]}`);
 		return;
@@ -57,14 +57,20 @@ world.events.beforeChat.subscribe((data) => {
 			let privateMessage = args.slice(1).join(" ");
 
 			if (recipient && privateMessage) {
+				const target = findPlayer(recipient);
+				if (!target) {
+					run(player, `tellraw @s ${rawTranslate('message.cmd.notfound', recipient)}`);
+					break;
+				}
 				// Замена текстовых кодов эмодзи на символы
 				for (const [name, symbol] of Object.entries(emotes)) {
 					privateMessage = privateMessage.replaceAll(name, symbol);
 				}
 
-				// Форматированное личное сообщение с иконкой облачка
-				player.runCommandAsync(`tellraw "${recipient}" {"rawtext":[{"text":"\ue11d ${player.name}:§r ${privateMessage}"}]}`);
-				player.runCommandAsync(`tellraw @s {"rawtext":[{"text":"\ue11d "},{"translate":"chat.recipient"},{"text":" \ue170 ${recipient}:§r ${privateMessage}"}]}`);
+				// Форматированное личное сообщение с иконкой облачка.
+				// JSON собирается через JSON.stringify: кавычки в сообщении больше не ломают tellraw
+				run(target, `tellraw @s ${rawText(`\ue11d ${player.name}:§r ${privateMessage}`)}`);
+				run(player, `tellraw @s ${JSON.stringify({ rawtext: [{ text: "\ue11d " }, { translate: "chat.recipient" }, { text: ` \ue170 ${target.name}:§r ${privateMessage}` }] })}`);
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.msg.use"}]}');
 			}
@@ -115,7 +121,8 @@ world.events.beforeChat.subscribe((data) => {
 				player.runCommandAsync("effect @s invisibility 3600 255 true");
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.invis.on"}]}');
 			} else if (invisState === "off") {
-				player.runCommandAsync("effect @s clear");
+				// Только невидимость (раньше снимались все эффекты)
+				player.runCommandAsync("effect @s invisibility 0");
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.invis.off"}]}');
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.invis.use"}]}');
@@ -150,10 +157,11 @@ world.events.beforeChat.subscribe((data) => {
 			const prefixAction = args[1];
 			const prefixName = args.slice(2).join(" ");
 			if (["set", "take"].includes(prefixAction) && prefixName) {
-				const prefixTag = `rank:${prefixName}`;
+				// Тег в кавычках — префикс может содержать пробелы («Super Admin»)
+				const prefixTag = JSON.stringify(`rank:${prefixName}`);
 				const command = prefixAction === "set"
 				? `tag "${prefixPlayer}" add ${prefixTag}`: `tag "${prefixPlayer}" remove ${prefixTag}`;
-				player.runCommandAsync(command);
+				run(player, command);
 				player.runCommandAsync(`tellraw @s ${rawTranslate(prefixAction === "set" ? 'message.cmd.prefix.set' : 'message.cmd.prefix.take', prefixName, prefixPlayer)}`);
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.prefix.use"}]}');
@@ -166,8 +174,8 @@ world.events.beforeChat.subscribe((data) => {
 			const tagAction = args[1];
 			const tagName = args[2];
 			if (["add", "remove"].includes(tagAction) && tagName) {
-				const tagCommand = `tag "${tagTarget}" ${tagAction} ${tagName}`;
-				player.runCommandAsync(tagCommand);
+				const tagCommand = `tag "${tagTarget}" ${tagAction} ${JSON.stringify(tagName)}`;
+				run(player, tagCommand);
 				player.runCommandAsync(`tellraw @s ${rawTranslate(`message.cmd.tag.${tagAction}`, tagName, tagTarget)}`);
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.tag.use"}]}');
@@ -181,7 +189,7 @@ world.events.beforeChat.subscribe((data) => {
 			const sbObjective = args[2];
 			const sbAmount = parseInt(args[3], 10);
 			if (["add", "remove"].includes(sbAction) && sbObjective && !isNaN(sbAmount)) {
-				player.runCommandAsync(`scoreboard players ${sbAction} "${sbTarget}" ${sbObjective} ${sbAmount}`);
+				run(player, `scoreboard players ${sbAction} "${sbTarget}" ${sbObjective} ${sbAmount}`);
 				player.runCommandAsync(`tellraw @s ${rawTranslate(`message.cmd.scoreboard.${sbAction}`, sbTarget, sbObjective, sbAmount)}`);
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.scoreboard.use"}]}');
@@ -191,10 +199,17 @@ world.events.beforeChat.subscribe((data) => {
 		case "kick":
 			// Кик игрока с причиной
 			const kickTarget = args[0];
-			const kickReason = args.slice(1).join(" ") || "%message.cmd.kick.no_reason";
+			const kickReason = args.slice(1).join(" ");
 			if (kickTarget) {
-				player.runCommandAsync(`kick "${kickTarget}" ${kickReason}`);
-				player.runCommandAsync(`tellraw @a {"rawtext":[{"text":"§c${kickTarget} "},{"translate":"message.cmd.kick"},{"translate":"${kickReason}"}]}`);
+				const target = findPlayer(kickTarget);
+				if (!target) {
+					run(player, `tellraw @s ${rawTranslate('message.cmd.notfound', kickTarget)}`);
+					break;
+				}
+				// Без причины — стандартное сообщение игры (раньше выгнанный видел сырой ключ %message.cmd.kick.no_reason)
+				run(player, kickReason ? `kick "${target.name}" ${kickReason}` : `kick "${target.name}"`);
+				// JSON через JSON.stringify: кавычки в причине больше не ломают сообщение
+				run(player, `tellraw @a ${JSON.stringify({ rawtext: [{ text: `§c${target.name} ` }, { translate: "message.cmd.kick" }, kickReason ? { text: kickReason } : { translate: "message.cmd.kick.no_reason" }] })}`);
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.kick.use"}]}');
 			}
@@ -213,8 +228,13 @@ world.events.beforeChat.subscribe((data) => {
 			}
 			
 			// Телепорт указанного игрока к вызывающему
-			player.runCommandAsync(`tp "${targetName}" @s`);
-			player.runCommandAsync(`tellraw @s ${rawTranslate('message.cmd.tp.done', targetName)}`);
+			const tpTarget = findPlayer(targetName);
+			if (!tpTarget) {
+				run(player, `tellraw @s ${rawTranslate('message.cmd.notfound', targetName)}`);
+				return;
+			}
+			run(player, `tp "${tpTarget.name}" @s`);
+			run(player, `tellraw @s ${rawTranslate('message.cmd.tp.done', tpTarget.name)}`);
 			break;
 		}	
 

@@ -31,6 +31,21 @@ const bannedItems = new Set([
 	"minecraft:command_block_minecart"
 ])
 
+// --- Предметы VIP-лавки (VIP-остров, x −84…−74) с чарами выше ванильного максимума ---
+// Кирки (эффективность до 30, удача до 15) и головы (защита X) продаются намеренно,
+// поэтому их не считаем читерскими. Сверяются тип и имя предмета из сундуков лавки.
+const vipItems = new Set([
+	"minecraft:netherite_pickaxe|§r§lЗачарованая кирка #1",
+	"minecraft:netherite_pickaxe|§r§lЗачарованая кирка #2",
+	"minecraft:netherite_pickaxe|§r§lЗачарованая кирка #3",
+	"minecraft:skull|§r§eЧереп скелета",
+	"minecraft:skull|§r§eЧереп скелета-иссушителя",
+	"minecraft:skull|§r§eГолова зомби",
+	"minecraft:skull|§r§eГолова игрока",
+	"minecraft:skull|§r§eГолова крипера",
+	"minecraft:skull|§r§eГолова дракона Края"
+]);
+
 // --- Пустой предмет для очистки слота ---
 const air = new ItemStack(Items.get("minecraft:stick"), 0)
 
@@ -54,6 +69,9 @@ system.runSchedule(() => {
 				world.say(`§7[§cAnti-Cheat§7] §4${player.name} §c%message.anticheat.detectItem §4${item.typeId}`);
 				continue;
 			}
+
+			// Предмет из VIP-лавки — чары выше максимума у него законные
+			if (vipItems.has(`${item.typeId}|${item.nameTag ?? ''}`)) continue;
 
 			// Уровень чар выше максимального (у части предметов компонента нет)
 			const enchantComponent = item.getComponent("enchantments");

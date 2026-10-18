@@ -247,6 +247,8 @@ bank.received=§aВам перевел §e%1$s§a, сумма: §e%2$s
 bank.text.7=§rВыбери игрока:
 bank.text.8=§eБаланс§r:
 bank.text.9=§l§cERROR!§r§7 Невозможно совершить перевод игроку, используя отрицательные значения
+bank.error.amount=§l§cERROR!§r§7 Сумма должна быть целым положительным числом
+bank.error.self=§l§cERROR!§r§7 Нельзя переводить деньги самому себе
 
 ## --- МЕНЮ ПРАВИЛ ---
 rules.title=§l§8Меню сервера |  Правила
@@ -474,6 +476,7 @@ commands.wipe.desc=§7Полностью сбрасывает прогресс �
 message.cmd.error.1=§l§cERROR!§r§7 Неизвестная команда:
 message.cmd.error.2=Напиши §e!help§7, чтобы узнать список команд
 message.cmd.error.3=§l§cERROR!§r§7 У вас нет прав для выполнения этой команды!
+message.cmd.notfound=§l§cERROR!§r§7 Игрок §f%1$s§7 не в сети
 
 message.cmd.spawn=§aВы телепортированы на §bспавн
 message.cmd.emotes=§8-----§f Список эмодзи §8-----§f
