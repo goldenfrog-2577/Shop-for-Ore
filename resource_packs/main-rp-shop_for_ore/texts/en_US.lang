@@ -296,7 +296,7 @@ login.text.5=§aLogin successful! Welcome!
 login.text.6=§cYour §bpassword§c is incorrect, check your details again!
 login.required=§cLog in or register first
 login.legacy=§eYour account is from the old platform: set a new password, your progress is kept
-reg.text.length=§cPassword must be 3 to 32 characters long
+reg.text.length=§cPassword must be 5 to 32 characters long
 
 ## --- ADMIN MENU ---
 admin.menu.title=§l§8Admin Menu

@@ -4,6 +4,7 @@
 import { world } from '@minecraft/server';
 import { LoginUI } from './login.js';
 import { RegisterUI } from './register.js';
+import { hasPassword } from './password.js';
 
 // Через сколько тиков после входа показывать форму (и повторять, пока игрок не вошёл)
 const FORM_DELAY_TICKS = 40;
@@ -15,11 +16,6 @@ const EFFECT_REFRESH_TICKS = 20;
 const waitTicks = new Map();
 // Игроки, у которых сейчас открыта форма, — чтобы не открывать её поверх
 const formOpen = new Set();
-
-/** Есть ли у игрока сохранённый пароль */
-function hasPassword(player) {
-	return player.getTags().some((tag) => tag.startsWith('password:'));
-}
 
 /** Может ли игрок войти по паролю (иначе ему нужна регистрация) */
 function canLogin(player) {
