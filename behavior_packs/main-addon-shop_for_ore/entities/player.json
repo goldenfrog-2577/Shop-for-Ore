@@ -104,6 +104,24 @@
 					"damage_per_tick": 4
 				}]
 			},
+			"minecraft:damage_sensor": {
+				"triggers": [{
+					"on_damage": {
+						"filters": {
+							"all_of": [
+								{ "test": "is_family", "subject": "other", "value": "player" },
+								{ "none_of": [
+									{ "all_of": [
+										{ "test": "has_tag", "subject": "self", "value": "player:pvp" },
+										{ "test": "has_tag", "subject": "other", "value": "player:pvp" }
+									]}
+								]}
+							]
+						}
+					},
+					"deals_damage": false
+				}]
+			},
 			"minecraft:attack": {
 				"damage": 1
 			},

@@ -67,19 +67,15 @@ execute as @a[scores={rebirth=4..4}] run effect @s haste 2 3 true
 execute as @a[scores={rebirth=5..}] run effect @s haste 2 4 true
 
 ## --- PVP AREA MANAGEMENT ---
+# Урон между игроками блокирует minecraft:damage_sensor в entities/player.json:
+# игрок может ранить игрока, только если у ОБОИХ есть тег player:pvp.
+# Здесь только выдаём/снимаем тег по координатам арены — эффекты больше не нужны.
+# Арена: x=236..363, y=-32..0, z=240..367
 
-# 1. Всем, кто находится ВНУТРИ зоны, выдаем тег и убираем сопротивление
-execute as @a[x=236,y=-32,z=240,dx=127,dy=32,dz=127,tag=!player:pvp] run tag @s add player:pvp
-execute as @a[tag=player:pvp,x=236,y=-32,z=240,dx=127,dy=32,dz=127] run effect @s resistance 0 0
+tag @a[x=236,y=-32,z=240,dx=127,dy=32,dz=127,tag=!player:pvp] add player:pvp
+execute as @a[tag=player:pvp] unless entity @s[x=236,y=-32,z=240,dx=127,dy=32,dz=127] run tag @s remove player:pvp
 
-# 2. Всем, кто ВЫШЕЛ из зоны (имеет тег, но физически не в координатах), снимаем тег и возвращаем бафф
-# Сначала находим тех, кто ушел
-execute as @a[tag=player:pvp] at @s unless entity @s[x=236,y=-32,z=240,dx=127,dy=32,dz=127] run tag @s add player:left_pvp
-
-# Выдаем им сопротивление и удаляем оба тега
-execute as @a[tag=player:left_pvp] run effect @s resistance 99999 255 true
-execute as @a[tag=player:left_pvp] run tag @s remove player:pvp
-execute as @a[tag=player:left_pvp] run tag @s remove player:left_pvp
-
-# 3. Страховка для спавна (на всякий случай, если игрок тепнулся)
-execute as @a[x=-5,y=0,z=-5,dx=10,dy=10,dz=10] run effect @s resistance 99999 255 true
+# Разовая миграция: снимаем старую «защиту» resistance 99999 255, которую выдавала прошлая версия.
+# Тег pvp:v2 ставится один раз, поэтому сопротивление от админ-меню потом не сбрасывается
+effect @a[tag=!pvp:v2] resistance 0 0
+tag @a[tag=!pvp:v2] add pvp:v2
