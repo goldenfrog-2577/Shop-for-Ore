@@ -48,7 +48,6 @@
 		],
 		"anchor_from": "right_middle",
 		"anchor_to": "right_middle",
-		"ignored": "$scoreboards_feature_disabled",
 		"controls": [{
 			"main": {
 				"type": "image",
@@ -157,7 +156,7 @@
 		],
 		"focus_container": true,
 		"use_last_focus": true,
-		"focus_nagivation_mode_right": "contained",
+		"focus_navigation_mode_right": "contained",
 		"controls": [{
 			"vertical_padding_0@pause.vertical_padding": {
 				"size": [
