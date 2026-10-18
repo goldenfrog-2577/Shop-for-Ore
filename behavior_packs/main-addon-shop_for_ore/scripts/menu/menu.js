@@ -122,7 +122,7 @@ function mapCreator(player) {
 function mapVersion(player) {
 	const mapVersion = new ActionFormData()
 	.title('%mapVersion.title')
-	.body('%mapVersion.text.1\n\n§r§2Vesrion Map:§a 0.1.8_20241222r§r\n%mapVersion.text.2\n\n%mapVersion.text.3\n%mapVersion.text.4\n%mapVersion.text.5\n%mapVersion.text.6\n%mapVersion.text.7\n%mapVersion.text.8\n%mapVersion.text.9\n%mapVersion.text.10\n%mapVersion.text.11\n%mapVersion.text.12')
+	.body('%mapVersion.text.1\n\n§r%mapVersion.label §a0.1.8_20241222r§r\n%mapVersion.text.2\n\n%mapVersion.text.3\n%mapVersion.text.4\n%mapVersion.text.5\n%mapVersion.text.6\n%mapVersion.text.7\n%mapVersion.text.8\n%mapVersion.text.9\n%mapVersion.text.10\n%mapVersion.text.11\n%mapVersion.text.12')
 	.button('%menu.button.back')
 	mapVersion.show(player).then(tb => {
 		if (tb.selection == 0) {

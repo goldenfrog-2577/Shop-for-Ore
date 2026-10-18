@@ -28,6 +28,18 @@ export function metricNumbers(value) {
 	return scaled.toFixed(1) + types[selectType];
 };
 
+/**
+ * Собирает JSON для tellraw с переводимым ключом и параметрами.
+ * Параметры подставляются в %1$s, %2$s… строки .lang — так каждый язык сам
+ * выбирает порядок слов, а кавычки в нике/тексте не ломают JSON.
+ * @param {string} key - Ключ из .lang (без %).
+ * @param {...(string|number)} args - Значения для %1$s, %2$s…
+ * @returns {string}
+ */
+export function rawTranslate(key, ...args) {
+	return JSON.stringify({ rawtext: [{ translate: key, with: args.map(String) }] });
+};
+
 // Список эмодзи для чата и интерфейса
 export const emotes = {
 	":smile:": "\ue1f0",

@@ -169,6 +169,7 @@ mapCreator.title=§l§8Server Menu | §f⩇§8 Creator
 
 mapVersion.title=§l§8Server Menu |  Map Version
 mapVersion.text.1=§l§7Here you'll find info about the latest map update
+mapVersion.label=§2Map Version:
 mapVersion.text.2=§lUpdate 0.1.8 from December 22, 2024§r
 mapVersion.text.3=• The number of command blocks on the map has been minimized
 mapVersion.text.4=• Most §7.mcfunction§r files now work autonomously, without command blocks
@@ -240,6 +241,8 @@ bank.text.3=§l§cERROR!§r§7 Not enough balance!
 bank.text.4=§aSuccessfully sent to player 
 bank.text.5=§aYou received from 
 bank.text.6= amount: 
+bank.sent=§aSuccessfully sent to player §e%1$s§a, amount: §e%2$s
+bank.received=§aYou received from §e%1$s§a, amount: §e%2$s
 bank.text.7=§rChoose a player:
 bank.text.8=§eBalance§r:
 bank.text.9=§l§cERROR!§r§7 Cannot send negative values
@@ -485,6 +488,14 @@ message.cmd.kick=was kicked. Reason:
 message.cmd.kick.no_reason=not specified
 message.cmd.kick.use=§aUsage: §b!kick §a<§bplayer§a> <§breason §a(§boptional§a)>
 message.cmd.tp.use=§aUsage: §b!tp §a<§bplayer§a>
+message.cmd.timeset.done=§8[§7CMD@host§8]§7: time changed to §f%1$s
+message.cmd.prefix.set=§8[§7CMD@host§8]§7: prefix %1$s§r§7 added for §f%2$s
+message.cmd.prefix.take=§8[§7CMD@host§8]§7: prefix %1$s§r§7 removed for §f%2$s
+message.cmd.tag.add=§8[§7CMD@host§8]§7: tag §f%1$s§7 added for §f%2$s
+message.cmd.tag.remove=§8[§7CMD@host§8]§7: tag §f%1$s§7 removed for §f%2$s
+message.cmd.scoreboard.add=§8[§7CMD@host§8]§7: added §f%3$s§7 to §f%2$s§7 for §f%1$s
+message.cmd.scoreboard.remove=§8[§7CMD@host§8]§7: removed §f%3$s§7 from §f%2$s§7 for §f%1$s
+message.cmd.tp.done=§8[§7CMD@host§8]§7: teleported §f%1$s§7 to you
 
 ## --- SHOP REWARDS ---
 message.shop.enchant.efficiency=§7Successfully bought§f: §eEfficiency§f (+1)

@@ -169,6 +169,7 @@ mapCreator.title=§l§8Меню сервера | §f⩇§8 Творець
 
 mapVersion.title=§l§8Меню сервера |  Версія карти
 mapVersion.text.1=§l§7Тут написано про останнє оновлення карти
+mapVersion.label=§2Версія карти:
 mapVersion.text.2=§lОновлення 0.1.8 від 22 грудня 2024 року§r
 mapVersion.text.3=• Кількість командних блоків на карті зменшено до мінімуму
 mapVersion.text.4=• Більшість §7.mcfunction§r файлів тепер працюють автономно, без використання командних блоків
@@ -240,6 +241,8 @@ bank.text.3=§l§cERROR!§r§7 Твого балансу недостатньо!
 bank.text.4=§aУспішний переказ гравцю 
 bank.text.5=§aВам переказав 
 bank.text.6= сума: 
+bank.sent=§aУспішний переказ гравцю §e%1$s§a, сума: §e%2$s
+bank.received=§aВам переказав §e%1$s§a, сума: §e%2$s
 bank.text.7=§rВибери гравця:
 bank.text.8=§eБаланс§r:
 bank.text.9=§l§cERROR!§r§7 Неможливо здійснити переказ гравцю, використовуючи від'ємні значення
@@ -485,6 +488,14 @@ message.cmd.kick=був кікнутий. Причина:
 message.cmd.kick.no_reason=не вказано
 message.cmd.kick.use=§aВикористання: §b!kick §a<§bгравець§a> <§bпричина §a(§bне обов'язково§a)>
 message.cmd.tp.use=§aВикористання: §b!tp §a<§bгравець§a>
+message.cmd.timeset.done=§8[§7CMD@host§8]§7: час змінено на §f%1$s
+message.cmd.prefix.set=§8[§7CMD@host§8]§7: префікс %1$s§r§7 видано гравцю §f%2$s
+message.cmd.prefix.take=§8[§7CMD@host§8]§7: префікс %1$s§r§7 знято з гравця §f%2$s
+message.cmd.tag.add=§8[§7CMD@host§8]§7: тег §f%1$s§7 видано гравцю §f%2$s
+message.cmd.tag.remove=§8[§7CMD@host§8]§7: тег §f%1$s§7 знято з гравця §f%2$s
+message.cmd.scoreboard.add=§8[§7CMD@host§8]§7: гравцю §f%1$s§7 нараховано §f%3$s§7 у §f%2$s
+message.cmd.scoreboard.remove=§8[§7CMD@host§8]§7: з гравця §f%1$s§7 списано §f%3$s§7 з §f%2$s
+message.cmd.tp.done=§8[§7CMD@host§8]§7: гравця §f%1$s§7 телепортовано до вас
 
 ## --- НАГОРОДИ МАГАЗИНУ ---
 message.shop.enchant.efficiency=§7Успішно придбано§f: §eЕфективність§f (+1)
@@ -508,6 +519,14 @@ scoreboards.rebirth=[] §dРебітх§f:
 scoreboards.online=[] §6Онлайн§f: 
 scoreboards.x2boost= §l§ax2 бустер
 scoreboards.x4boost= §l§bx4 бустер
+
+scoreboard.objective.money= Монети
+scoreboard.objective.money2= VIP Монети
+scoreboard.objective.lvl= Рівень
+scoreboard.objective.xp= Досвід
+scoreboard.objective.rebirth= Ребітх
+scoreboard.objective.efficiency= Ефективність
+scoreboard.objective.fortune= Удача
 
 ## --- ПОМИЛКИ ЧАТУ ---
 message.chat.antiflood=§l§cERROR!§r§7 Ваше повідомлення занадто довге!
