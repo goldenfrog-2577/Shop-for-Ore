@@ -22,6 +22,7 @@ import './chat/commands.js'     // Команды чата
 // Импорт других вспомогательных модулей
 import './system/anticheat.js'   // Античит
 import './system/spawnbot.js'    // Спавн бота
+import './system/tools.js'       // Неразрушаемая кирка уровня
 
 // Импорт загрузчика скриптов
 import './register/loadScript.js'
