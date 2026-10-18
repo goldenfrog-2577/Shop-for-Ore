@@ -1,7 +1,7 @@
 // --- Обработка пользовательских команд чата для Shop for Ore ---
 // Импортируем необходимые данные и списки команд
 import { world } from '@minecraft/server';
-import { commandsList, emotes, emotesList } from '../DataBase.js';
+import { commandsList, emotes, emotesList, rawTranslate } from '../DataBase.js';
 
 // --- Главный обработчик команд чата ---
 world.events.beforeChat.subscribe((data) => {
@@ -136,7 +136,7 @@ world.events.beforeChat.subscribe((data) => {
 			const time = args[0];
 			if (time === "sunrise" || time === "day" || time === "noon" || time === "sunset" || time === "night" || time === "midnight") {
 				player.runCommandAsync(`time set ${time}`);
-				player.runCommandAsync(`tellraw @s {"rawtext":[{"text":"§8[§7CMD@host§8]§7: time changed to ${time}"}]}`);
+				player.runCommandAsync(`tellraw @s ${rawTranslate('message.cmd.timeset.done', time)}`);
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.timeset.use"}]}');
 			}
@@ -152,7 +152,7 @@ world.events.beforeChat.subscribe((data) => {
 				const command = prefixAction === "set"
 				? `tag "${prefixPlayer}" add ${prefixTag}`: `tag "${prefixPlayer}" remove ${prefixTag}`;
 				player.runCommandAsync(command);
-				player.runCommandAsync(`tellraw @s {"rawtext":[{"text":"§8[§7CMD@host§8]§7: prefix ${prefixName}§7 ${prefixAction === "set" ? "added": "removed"} for ${prefixPlayer}§r"}]}`);
+				player.runCommandAsync(`tellraw @s ${rawTranslate(prefixAction === "set" ? 'message.cmd.prefix.set' : 'message.cmd.prefix.take', prefixName, prefixPlayer)}`);
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.prefix.use"}]}');
 			}
@@ -166,7 +166,7 @@ world.events.beforeChat.subscribe((data) => {
 			if (["add", "remove"].includes(tagAction) && tagName) {
 				const tagCommand = `tag "${tagTarget}" ${tagAction} ${tagName}`;
 				player.runCommandAsync(tagCommand);
-				player.runCommandAsync(`tellraw @s {"rawtext":[{"text":"§8[§7CMD@host§8]§7: tag ${tagName} ${tagAction}ed for ${tagTarget}§r"}]}`);
+				player.runCommandAsync(`tellraw @s ${rawTranslate(`message.cmd.tag.${tagAction}`, tagName, tagTarget)}`);
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.tag.use"}]}');
 			}
@@ -180,7 +180,7 @@ world.events.beforeChat.subscribe((data) => {
 			const sbAmount = parseInt(args[3], 10);
 			if (["add", "remove"].includes(sbAction) && sbObjective && !isNaN(sbAmount)) {
 				player.runCommandAsync(`scoreboard players ${sbAction} "${sbTarget}" ${sbObjective} ${sbAmount}`);
-				player.runCommandAsync(`tellraw @s {"rawtext":[{"text":"§8[§7CMD@host§8]§7: ${sbAction} ${sbAmount} to ${sbObjective} for ${sbTarget}"}]}`);
+				player.runCommandAsync(`tellraw @s ${rawTranslate(`message.cmd.scoreboard.${sbAction}`, sbTarget, sbObjective, sbAmount)}`);
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.scoreboard.use"}]}');
 			}
@@ -212,7 +212,7 @@ world.events.beforeChat.subscribe((data) => {
 			
 			// Телепорт указанного игрока к вызывающему
 			player.runCommandAsync(`tp "${targetName}" @s`);
-			player.runCommandAsync(`tellraw @s {"rawtext":[{"text":"§8[§7CMD@host§8]§7: teleported §f${targetName}§7 to you"}]}`);
+			player.runCommandAsync(`tellraw @s ${rawTranslate('message.cmd.tp.done', targetName)}`);
 			break;
 		}	
 

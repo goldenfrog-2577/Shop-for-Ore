@@ -169,6 +169,7 @@ mapCreator.title=§l§8Меню сервера | §f⩇§8 Создатель
 
 mapVersion.title=§l§8Меню сервера |  Версия карты
 mapVersion.text.1=§l§7Тут написано про последнее обновление карты
+mapVersion.label=§2Версия карты:
 mapVersion.text.2=§lОбновление 0.1.8 от 22 декабря 2024 года§r
 mapVersion.text.3=• Количество командных блоков на карте уменьшено до минимума
 mapVersion.text.4=• Большинство §7.mcfunction§r файлов теперь работают автономно, без использования командных блоков
@@ -240,6 +241,8 @@ bank.text.3=§l§cERROR!§r§7 Твоего баланса недостаточ�
 bank.text.4=§aУспешный перевод игроку 
 bank.text.5=§aВам перевел 
 bank.text.6= сумма: 
+bank.sent=§aУспешный перевод игроку §e%1$s§a, сумма: §e%2$s
+bank.received=§aВам перевел §e%1$s§a, сумма: §e%2$s
 bank.text.7=§rВыбери игрока:
 bank.text.8=§eБаланс§r:
 bank.text.9=§l§cERROR!§r§7 Невозможно совершить перевод игроку, используя отрицательные значения
@@ -485,6 +488,14 @@ message.cmd.kick=был кикнут. Причина:
 message.cmd.kick.no_reason=не указана
 message.cmd.kick.use=§aИспользование: §b!kick §a<§bигрок§a> <§bпричина §a(§bне обязательно§a)>
 message.cmd.tp.use=§aИспользование: §b!tp §a<§bигрок§a>
+message.cmd.timeset.done=§8[§7CMD@host§8]§7: время изменено на §f%1$s
+message.cmd.prefix.set=§8[§7CMD@host§8]§7: префикс %1$s§r§7 выдан игроку §f%2$s
+message.cmd.prefix.take=§8[§7CMD@host§8]§7: префикс %1$s§r§7 снят у игрока §f%2$s
+message.cmd.tag.add=§8[§7CMD@host§8]§7: тег §f%1$s§7 выдан игроку §f%2$s
+message.cmd.tag.remove=§8[§7CMD@host§8]§7: тег §f%1$s§7 снят у игрока §f%2$s
+message.cmd.scoreboard.add=§8[§7CMD@host§8]§7: игроку §f%1$s§7 начислено §f%3$s§7 в §f%2$s
+message.cmd.scoreboard.remove=§8[§7CMD@host§8]§7: у игрока §f%1$s§7 списано §f%3$s§7 из §f%2$s
+message.cmd.tp.done=§8[§7CMD@host§8]§7: игрок §f%1$s§7 телепортирован к вам
 
 ## --- НАГРАДЫ МАГАЗИНА ---
 message.shop.enchant.efficiency=§7Успешно приобретено§f: §eЭффективность§f (+1)
@@ -508,6 +519,14 @@ scoreboards.rebirth=[] §dРебитх§f:
 scoreboards.online=[] §6Онлайн§f: 
 scoreboards.x2boost= §l§ax2 буст
 scoreboards.x4boost= §l§bx4 буст
+
+scoreboard.objective.money= Монеты
+scoreboard.objective.money2= VIP Монеты
+scoreboard.objective.lvl= Уровень
+scoreboard.objective.xp= Опыт
+scoreboard.objective.rebirth= Ребитх
+scoreboard.objective.efficiency= Эффективность
+scoreboard.objective.fortune= Удача
 
 ## --- ОШИБКИ ЧАТА ---
 message.chat.antiflood=§l§cERROR!§r§7 Ваше сообщение слишком длинное!

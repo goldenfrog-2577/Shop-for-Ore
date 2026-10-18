@@ -2,7 +2,7 @@
 // Импортируем необходимые модули
 import { world } from '@minecraft/server';
 import { ModalFormData } from '@minecraft/server-ui';
-import { getScore } from '../DataBase.js';
+import { getScore, rawTranslate } from '../DataBase.js';
 import { menu } from './menu.js';
 
 // --- Основная функция банка ---
@@ -39,11 +39,11 @@ export function bank(player) {
 			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"bank.text.3"}]}');
 		} else {
 			// Сообщение отправителю
-			player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"bank.text.4"},{"text":"§e${target}§a,"},{"translate":"bank.text.6"},{"text":"§e${amount}"}]}`);
+			player.runCommandAsync(`tellraw @s ${rawTranslate('bank.sent', target, amount)}`);
 			// Зачисление денег получателю
 			player.runCommandAsync(`scoreboard players add "${target}" money ${amount}`);
 			// Сообщение получателю
-			player.runCommandAsync(`tellraw "${target}" {"rawtext":[{"translate":"bank.text.5"},{"text":"§e${player.name}§a,"},{"translate":"bank.text.6"},{"text":"§e${amount}"}]}`);
+			player.runCommandAsync(`tellraw "${target}" ${rawTranslate('bank.received', player.name, amount)}`);
 			// Списание денег у отправителя
 			player.runCommandAsync(`scoreboard players remove @s money ${amount}`);
 			// Звук успешного перевода

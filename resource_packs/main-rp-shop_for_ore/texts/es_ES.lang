@@ -17,7 +17,7 @@ item.netherite_pickaxe.name=§lPico §aNivel§b 15
 ## --- OBJETOS Y BLOQUES ---
 tile.dirt.name=Tierra
 tile.cobblestone.name=Roca
-titem.coal.name=Carbón
+item.coal.name=Carbón
 item.raw_iron.name=Hierro en bruto
 item.raw_copper.name=Cobre en bruto
 item.redstone.name=Redstone
@@ -169,6 +169,7 @@ mapCreator.title=§l§8Menú del servidor | §f⩇§8 Creador
 
 mapVersion.title=§l§8Menú del servidor |  Versión del mapa
 mapVersion.text.1=§l§7Aquí encontrarás información sobre la última actualización del mapa
+mapVersion.label=§2Versión del mapa:
 mapVersion.text.2=§lActualización 0.1.8 del 22 de diciembre de 2024§r
 mapVersion.text.3=• El número de bloques de comandos en el mapa se ha minimizado
 mapVersion.text.4=• La mayoría de los archivos §7.mcfunction§r ahora funcionan de forma autónoma, sin bloques de comandos
@@ -240,6 +241,8 @@ bank.text.3=§l§cERROR!§r§7 ¡Saldo insuficiente!
 bank.text.4=§aTransferencia exitosa al jugador 
 bank.text.5=§aHas recibido de 
 bank.text.6= cantidad: 
+bank.sent=§aTransferencia exitosa al jugador §e%1$s§a, cantidad: §e%2$s
+bank.received=§aHas recibido de §e%1$s§a, cantidad: §e%2$s
 bank.text.7=§rElige un jugador:
 bank.text.8=§eSaldo§r:
 bank.text.9=§l§cERROR!§r§7 No se puede transferir valores negativos
@@ -477,7 +480,7 @@ message.cmd.stick=§aRecibiste §bVara de admin
 message.cmd.invis.on=§aAhora eres §binvisible
 message.cmd.invis.off=§aYa no eres §binvisible
 message.cmd.invis.use=§aUso: §b!invis §a<§bon§a/§boff§a>
-message.cmd.timeset.use=§aUso: §b!timeset §a<§bamanecer§a; §bdía§a; §bmediodía§a; §batardecer§a; §bnoche§a; §bmedianoche§a>
+message.cmd.timeset.use=§aUso: §b!timeset §a<§bsunrise§a; §bday§a; §bnoon§a; §bsunset§a; §bnight§a; §bmidnight§a>
 message.cmd.prefix.use=§aUso: §b!prefix §a<§bjugador§a> <§bset§a/§btake§a> <§bprefijo§a>
 message.cmd.tag.use=§aUso: §b!tag §a<§bjugador§a> <§badd§a/§bremove§a> <§betiqueta§a>
 message.cmd.scoreboard.use=§aUso: §b!scoreboard §a<§bjugador§a> <§badd§a/§bremove§a> <§bobjetivo§a> <§bcantidad§a>
@@ -485,6 +488,14 @@ message.cmd.kick=fue expulsado. Razón:
 message.cmd.kick.no_reason=no especificado
 message.cmd.kick.use=§aUso: §b!kick §a<§bjugador§a> <§brazón §a(§bopcional§a)>
 message.cmd.tp.use=§aUso: §b!tp §a<§bjugador§a>
+message.cmd.timeset.done=§8[§7CMD@host§8]§7: hora cambiada a §f%1$s
+message.cmd.prefix.set=§8[§7CMD@host§8]§7: prefijo %1$s§r§7 añadido a §f%2$s
+message.cmd.prefix.take=§8[§7CMD@host§8]§7: prefijo %1$s§r§7 quitado a §f%2$s
+message.cmd.tag.add=§8[§7CMD@host§8]§7: etiqueta §f%1$s§7 añadida a §f%2$s
+message.cmd.tag.remove=§8[§7CMD@host§8]§7: etiqueta §f%1$s§7 quitada a §f%2$s
+message.cmd.scoreboard.add=§8[§7CMD@host§8]§7: añadido §f%3$s§7 a §f%2$s§7 de §f%1$s
+message.cmd.scoreboard.remove=§8[§7CMD@host§8]§7: quitado §f%3$s§7 de §f%2$s§7 de §f%1$s
+message.cmd.tp.done=§8[§7CMD@host§8]§7: §f%1$s§7 teletransportado hacia ti
 
 ## --- PREMIOS DE TIENDA ---
 message.shop.enchant.efficiency=§7Comprado con éxito§f: §eEficiencia§f (+1)
@@ -508,6 +519,14 @@ scoreboards.rebirth=[] §dReinicio§f:
 scoreboards.online=[] §6Online§f: 
 scoreboards.x2boost= §l§ax2 potenciador
 scoreboards.x4boost= §l§bx4 potenciador
+
+scoreboard.objective.money= Monedas
+scoreboard.objective.money2= Monedas VIP
+scoreboard.objective.lvl= Nivel
+scoreboard.objective.xp= XP
+scoreboard.objective.rebirth= Reinicio
+scoreboard.objective.efficiency= Eficiencia
+scoreboard.objective.fortune= Fortuna
 
 ## --- ERRORES DE CHAT ---
 message.chat.antiflood=§l§cERROR!§r§7 ¡Tu mensaje es demasiado largo!
