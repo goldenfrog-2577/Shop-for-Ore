@@ -1,7 +1,10 @@
 # Планировщик: заменяет повторяющиеся командные блоки с задержкой (x=56 и x=58, z≈53..58).
 # Счётчики — «фейковые игроки» tN в табло timer; каждый тик +1, на N — запуск timers/tN и сброс.
 # Табло создаются один раз (system/setup), а не каждый тик
-execute unless score setup system matches 1 run function system/setup
+# В Bedrock «execute if/unless score» с несуществующим счётом не срабатывает ни в одном варианте,
+# поэтому счёт сначала создаётся через «add 0».
+scoreboard players add setup system 0
+execute if score setup system matches 0 run function system/setup
 
 # Каждый тик: конец «золотого дождя»
 # было: командный блок (56, 4, 56)

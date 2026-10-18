@@ -2,6 +2,9 @@
 # Кирка выдаётся только если уровень изменился с прошлой выдачи (табло pick) или нужной кирки
 # нет в слоте (например, сломалась). Раньше она заменялась у всех каждые 5 с: сбивалось
 # копание и слетали зачарования до следующего наложения.
+# В Bedrock «execute if/unless score» с несуществующим счётом не срабатывает ни в одном варианте,
+# поэтому счёт сначала создаётся через «add 0».
+scoreboard players add @a pick 0
 execute as @a unless score @s pick = @s lvl run tag @s add pick:update
 tag @a[scores={lvl=1..1},hasitem={item=stick,location=slot.hotbar,slot=0,quantity=0}] add pick:update
 tag @a[scores={lvl=2..2},hasitem={item=wooden_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add pick:update
