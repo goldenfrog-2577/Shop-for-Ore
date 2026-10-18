@@ -456,6 +456,8 @@ commands.prefix.desc=§7Manages player prefixes
 commands.tag.desc=§7Manages player tags
 commands.scoreboard.desc=§7Manages the /scoreboard database
 commands.kick.desc=§7Kicks a player from the server
+commands.tp.desc=§7Teleports a player to you
+commands.wipe.desc=§7Resets all players' progress
 
 message.cmd.error.1=§l§cERROR!§r§7 Unknown command:
 message.cmd.error.2=Type §e!help§7 to see the list of commands
@@ -482,6 +484,7 @@ message.cmd.scoreboard.use=§aUsage: §b!scoreboard §a<§bplayer§a> <§badd§a
 message.cmd.kick=was kicked. Reason: 
 message.cmd.kick.no_reason=not specified
 message.cmd.kick.use=§aUsage: §b!kick §a<§bplayer§a> <§breason §a(§boptional§a)>
+message.cmd.tp.use=§aUsage: §b!tp §a<§bplayer§a>
 
 ## --- SHOP REWARDS ---
 message.shop.enchant.efficiency=§7Successfully bought§f: §eEfficiency§f (+1)

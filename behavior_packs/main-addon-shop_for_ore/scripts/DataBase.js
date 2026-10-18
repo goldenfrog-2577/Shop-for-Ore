@@ -117,7 +117,7 @@ export const commandsList = [
 	},
 	{
 		command: "!tp §7<§fplayer§7>",
-		description: "%commads.tp.desc",
+		description: "%commands.tp.desc",
 		hostOnly: true
 	},
 
@@ -158,7 +158,7 @@ export const commandsList = [
 	// ===== Админские: системные =====
 	{
 		command: "!wipe",
-		description: "%commads.wipe.desc",
+		description: "%commands.wipe.desc",
 		hostOnly: true
 	}
 ];

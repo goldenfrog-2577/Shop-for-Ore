@@ -23,6 +23,8 @@ function LoginUI(player) {
 		.title('%login.title')
 		.textField('%login.text.3', '%login.text.4');
 	login.show(player).then(r => {
+		// Форма закрыта — через ~2 с она покажется снова
+		if (!r.formValues) return;
 		let password = r.formValues[0];
 		// Проверка пароля по тегу
 		if (player.hasTag(`password:${password}`)) {

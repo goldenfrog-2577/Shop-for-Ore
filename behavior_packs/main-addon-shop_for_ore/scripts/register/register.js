@@ -24,6 +24,8 @@ function RegisterUI(player) {
 		.textField(`\n%login.text.1 ${player.name} %login.text.2`,'%login.text.4')
 		.toggle('%reg.toggle', false);
 	register.show(player).then(r => {
+		// Форма закрыта — через ~2 с она покажется снова
+		if (!r.formValues) return;
 		let password = r.formValues[0];
 		// Если игрок подтвердил регистрацию
 		if (r.formValues[1] == true) {

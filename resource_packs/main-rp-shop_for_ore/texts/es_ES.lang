@@ -456,6 +456,8 @@ commands.prefix.desc=§7Gestiona los prefijos de los jugadores
 commands.tag.desc=§7Gestiona las etiquetas de los jugadores
 commands.scoreboard.desc=§7Gestiona la base de datos /scoreboard
 commands.kick.desc=§7Expulsa a un jugador del servidor
+commands.tp.desc=§7Teletransporta a un jugador hacia ti
+commands.wipe.desc=§7Reinicia el progreso de todos los jugadores
 
 message.cmd.error.1=§l§cERROR!§r§7 Comando desconocido:
 message.cmd.error.2=Escribe §e!help§7 para ver la lista de comandos
@@ -482,6 +484,7 @@ message.cmd.scoreboard.use=§aUso: §b!scoreboard §a<§bjugador§a> <§badd§a/
 message.cmd.kick=fue expulsado. Razón: 
 message.cmd.kick.no_reason=no especificado
 message.cmd.kick.use=§aUso: §b!kick §a<§bjugador§a> <§brazón §a(§bopcional§a)>
+message.cmd.tp.use=§aUso: §b!tp §a<§bjugador§a>
 
 ## --- PREMIOS DE TIENDA ---
 message.shop.enchant.efficiency=§7Comprado con éxito§f: §eEficiencia§f (+1)
