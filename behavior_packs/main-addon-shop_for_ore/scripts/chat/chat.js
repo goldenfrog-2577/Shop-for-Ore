@@ -3,12 +3,6 @@
 import { world } from '@minecraft/server';
 import { getScore, metricNumbers, emotes } from '../DataBase.js';
 
-// --- Счётчик тиков для возможного использования времени ---
-let ticks = 0;
-world.events.tick.subscribe(() => {
-	ticks++;
-});
-
 // --- Значения по умолчанию для тегов игрока ---
 const rank = "rank:";
 const rankDefault = "§7Player";
@@ -141,9 +135,13 @@ world.events.beforeChat.subscribe((data) => {
 });
 
 // --- Обновление nameTag игрока (отображение информации над головой) ---
+// Раз в секунду и только если текст изменился (раньше — каждый тик для всех игроков)
+const NAMETAG_REFRESH_TICKS = 20;
+let nameTagTick = 0;
 world.events.tick.subscribe(() => {
+	if (++nameTagTick % NAMETAG_REFRESH_TICKS !== 0) return;
 	for (let player of world.getPlayers()) {
-		let playerRank = player.getTags().find((tag) => tag.startsWith("name:"))?.substring(5) ?? `${nameDefault}`;
-		player.nameTag = `§7${player.name}\n§f - ${metricNumbers(getScore(player,"lvl"))}\n§f - ${metricNumbers(getScore(player,"xp"))}/${metricNumbers(getScore(player,"qx"))}\n§f - ${metricNumbers(getScore(player,"money"))}\n§f - ${metricNumbers(getScore(player,"rebirth"))}`;
+		const nameTag = `§7${player.name}\n§f - ${metricNumbers(getScore(player,"lvl"))}\n§f - ${metricNumbers(getScore(player,"xp"))}/${metricNumbers(getScore(player,"qx"))}\n§f - ${metricNumbers(getScore(player,"money"))}\n§f - ${metricNumbers(getScore(player,"rebirth"))}`;
+		if (player.nameTag !== nameTag) player.nameTag = nameTag;
 	}
 });
