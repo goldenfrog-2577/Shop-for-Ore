@@ -27,6 +27,9 @@ function canLogin(player) {
 // с обоими сразу — старый код показывал им две формы одновременно
 world.events.playerJoin.subscribe((data) => {
 	const player = data.player;
+	// Кик админ-палкой (событие server:kick в player.json) ставит тег kick, из-за которого
+	// игрок исчезает с сервера. Раньше тег не снимался, и кик действовал как вечный бан
+	player.removeTag('kick');
 	// Старые аккаунты (эпоха Omlet Arcade): hasRegister есть, а пароля нет —
 	// войти невозможно, поэтому просим задать пароль заново. Прогресс не трогаем
 	if (player.hasTag('hasRegister') && !hasPassword(player)) {
