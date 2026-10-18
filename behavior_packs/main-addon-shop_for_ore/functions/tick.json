@@ -6,6 +6,7 @@
 		"system/scoreboards",
 		"system/system",
 		"system/qx",
-		"system/levelup"
+		"system/levelup",
+		"system/timers"
 	]
 }
