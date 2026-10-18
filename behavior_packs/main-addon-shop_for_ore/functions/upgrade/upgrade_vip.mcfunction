@@ -13,7 +13,7 @@ execute as @s[scores={lvl=25,money=..124999}] run tellraw @s {"rawtext":[{"trans
 execute as @s[scores={lvl=25,money=125000..}] run tag @s add buy:ok
 scoreboard players remove @s[tag=buy:ok] money 125000
 scoreboard players set @s[tag=buy:ok] lvl 26
-execute as @s[tag=buy:ok] run tellraw @a {"rawtext":[{"text":"[ §aLvL UP§r] "},{"selector":"@s"},{"translate":"message.lvlup.vip"}]}
+execute as @s[tag=buy:ok] run tellraw @a {"rawtext":[{"translate":"message.lvlup.vip","with":{"rawtext":[{"selector":"@s"}]}}]}
 execute as @s[tag=buy:ok] positioned as @a run playsound minecraft.challenge.complete @a
 execute as @s[tag=buy:ok] run tellraw @s {"rawtext":[{"translate":"message.lvlup.vip.success"}]}
 tag @s remove buy:ok

@@ -3,7 +3,7 @@
 import { world } from '@minecraft/server';
 import { ActionFormData, ModalFormData } from '@minecraft/server-ui';
 import { bank } from './bank_menu.js';
-import { isPending } from '../DataBase.js';
+import { isPending, rawTranslate } from '../DataBase.js';
 
 // --- Открытие меню при использовании специального предмета ---
 world.events.beforeItemUse.subscribe(data => {
@@ -353,28 +353,28 @@ const promocodeRewards = {
 		reward: {
 			type: "xp", amount: 500
 		},
-		message: "%message.promo.1"
+		message: "message.promo.1"
 	},
 	"parkour": {
 		scoreboard: "promo2",
 		reward: {
 			type: "money", amount: 500
 		},
-		message: "%message.promo.2"
+		message: "message.promo.2"
 	},
 	"hellbonus": {
 		scoreboard: "promo3",
 		reward: {
 			type: "xp", amount: 25000
 		},
-		message: "%message.promo.3"
+		message: "message.promo.3"
 	},
 	"VIPbonus": {
 		scoreboard: "promo4",
 		reward: {
 			type: "money2", amount: 100
 		},
-		message: "%message.promo.4"
+		message: "message.promo.4"
 	},
 }
 
@@ -399,7 +399,7 @@ function validatePromoCode(code, player) {
 		? `scoreboard players add @s xp ${promo.reward.amount}`: `scoreboard players add @s ${promo.reward.type} ${promo.reward.amount}`;
 		player.runCommandAsync(rewardCommand);
 		player.runCommandAsync(`scoreboard players set @s ${scoreboard} 1`);
-		world.say(`§a${player.name} ${promo.message}`);
+		player.runCommandAsync(`tellraw @a ${rawTranslate(promo.message, player.name)}`).catch(() => undefined);
 	}).catch(() => {
 		player.tell('%message.promo.activated');
 	});

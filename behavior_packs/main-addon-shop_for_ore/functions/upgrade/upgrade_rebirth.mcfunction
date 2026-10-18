@@ -14,11 +14,11 @@ execute as @s[tag=rebirth:now] run tag @s add rebirth
 scoreboard players add @s[tag=rebirth:now] rebirth 1
 
 # Если только что получен первый rebirth — сообщение всем и звук
-execute as @s[tag=rebirth:now,scores={rebirth=1}] run tellraw @a {"rawtext":[{"text":" §5"},{"selector":"@s"},{"translate":"message.lvlup.rebirth.1"}]}
+execute as @s[tag=rebirth:now,scores={rebirth=1}] run tellraw @a {"rawtext":[{"translate":"message.lvlup.rebirth.1","with":{"rawtext":[{"selector":"@s"}]}}]}
 execute as @s[tag=rebirth:now,scores={rebirth=1}] positioned as @a run playsound mob.enderdragon.death @a ~~~ 0.7
 
 # Сообщение игроку о текущем уровне rebirth (2 и выше)
-execute as @s[tag=rebirth:now] run tellraw @s {"rawtext":[{"translate":"message.lvlup.rebirth.2"},{"score":{"name":"@s","objective":"rebirth"}}]}
+execute as @s[tag=rebirth:now] run tellraw @s {"rawtext":[{"translate":"message.lvlup.rebirth.2","with":{"rawtext":[{"score":{"name":"@s","objective":"rebirth"}}]}}]}
 
 # Звук для rebirth 2 и выше
 execute as @s[tag=rebirth:now,scores={rebirth=2..}] run playsound mob.enderdragon.death @s ~~~ 0.5

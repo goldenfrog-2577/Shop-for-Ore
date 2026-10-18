@@ -189,7 +189,7 @@ execute at @a[scores={lvl=1..26},hasitem={item=gold_ingot}] run clear @p gold_in
 
 # --- Gift (Изумрудный блок) ---
 # Подарок из events/gift_event: первый, кто подобрал, объявляется всем (gift system > 0, пока подарок не найден)
-execute if score gift system matches 1.. as @a[hasitem={item=emerald_block}] run tellraw @a {"rawtext":[{"text":"§l >>§b "},{"selector":"@s"},{"translate":"message.event.gift_event.end"}]}
+execute if score gift system matches 1.. as @a[hasitem={item=emerald_block}] run tellraw @a {"rawtext":[{"translate":"message.event.gift_event.end","with":{"rawtext":[{"selector":"@s"}]}}]}
 execute if score gift system matches 1.. if entity @a[hasitem={item=emerald_block}] run scoreboard players set gift system 0
 # Продажа изумрудного блока: много денег (@s — сам владелец блока; раньше @p искал ближайшего к точке запуска функции)
 execute as @a[scores={lvl=1..26},hasitem={item=emerald_block}] run scoreboard players add @s money 150

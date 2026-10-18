@@ -4,6 +4,6 @@
 scoreboard players set "item" system 0
 execute as @e[type=item] run scoreboard players add "item" system 1
 titleraw @a title {"rawtext":[{"translate":"message.clearItem.title"}]}
-titleraw @a subtitle {"rawtext":[{"translate":"message.clearItem.subtitle"},{"score":{"name":"item","objective":"system"}}]}
+titleraw @a subtitle {"rawtext":[{"translate":"message.clearItem.subtitle","with":{"rawtext":[{"score":{"name":"item","objective":"system"}}]}}]}
 kill @e[type=item]
 scoreboard players set "item" system 0

@@ -3,7 +3,7 @@
 
 import { world } from '@minecraft/server';
 import { ActionFormData, ModalFormData, MessageFormData } from '@minecraft/server-ui';
-import { isPending } from '../DataBase.js';
+import { isPending, rawTranslate } from '../DataBase.js';
 
 // --- Открытие админ-меню по использованию специального предмета ---
 world.events.beforeItemUse.subscribe(data => {
@@ -215,7 +215,7 @@ function sayServer(player) {
 	sayServer.show(player).then(r => {
 		if (!r.formValues) return;
 		let message = r.formValues[0]
-		world.say(`%sayServer.message ${message}`)
+		player.runCommandAsync(`tellraw @a ${rawTranslate('sayServer.message', message)}`).catch(() => undefined)
 	});
 }
 
