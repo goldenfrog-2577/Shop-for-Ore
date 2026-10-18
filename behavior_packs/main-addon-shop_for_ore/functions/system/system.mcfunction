@@ -48,6 +48,19 @@ replaceitem entity @a[hasitem={item=server:menu,location=slot.hotbar,slot=8,quan
 tag @a[x=236,y=-32,z=240,dx=127,dy=32,dz=127,tag=!player:pvp] add player:pvp
 execute as @a[tag=player:pvp] unless entity @s[x=236,y=-32,z=240,dx=127,dy=32,dz=127] run tag @s remove player:pvp
 
+## --- ГОЛОД ТОЛЬКО НА PVP-АРЕНЕ ---
+# Вне арены у игрока группа server:hunger_off (entities/player.json): все exhaustion_values = 0,
+# голод не тратится. На арене — server:hunger_normal (ванильные значения).
+# Сами события group on/off шлются раз в секунду из timers/t20 (повторное событие безвредно,
+# а если player.json ещё не перечитан — сработает после перезахода).
+# Здесь только разово восполняем голод при выходе с арены; тег hunger:off это и отмечает.
+execute as @a[tag=!player:pvp,tag=!hunger:off] run effect @s saturation 1 20 true
+tag @a[tag=!player:pvp,tag=!hunger:off] add hunger:off
+tag @a[tag=player:pvp,tag=hunger:off] remove hunger:off
+
+# Опыт с руд (и с игроков при смерти) не нужен: свои очки опыта — табло xp
+kill @e[type=xp_orb]
+
 # Разовая миграция: снимаем старую «защиту» resistance 99999 255, которую выдавала прошлая версия.
 # Тег pvp:v2 ставится один раз, поэтому сопротивление от админ-меню потом не сбрасывается
 effect @a[tag=!pvp:v2] resistance 0 0
