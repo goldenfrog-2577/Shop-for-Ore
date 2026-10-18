@@ -16,13 +16,33 @@ const waitTicks = new Map();
 // Игроки, у которых сейчас открыта форма, — чтобы не открывать её поверх
 const formOpen = new Set();
 
-// При входе игрока: определяем, что ему показывать — логин или регистрацию
+/** Есть ли у игрока сохранённый пароль */
+function hasPassword(player) {
+	return player.getTags().some((tag) => tag.startsWith('password:'));
+}
+
+/** Может ли игрок войти по паролю (иначе ему нужна регистрация) */
+function canLogin(player) {
+	return player.hasTag('hasRegister') && hasPassword(player);
+}
+
+// При входе игрока: определяем, что ему показывать — логин или регистрацию.
+// Ставим ровно один из тегов chekLogin/chekRegister: в мире встречались игроки
+// с обоими сразу — старый код показывал им две формы одновременно
 world.events.playerJoin.subscribe((data) => {
-	if (data.player.hasTag("hasRegister")) {
-		data.player.addTag("chekLogin")
+	const player = data.player;
+	// Старые аккаунты (эпоха Omlet Arcade): hasRegister есть, а пароля нет —
+	// войти невозможно, поэтому просим задать пароль заново. Прогресс не трогаем
+	if (player.hasTag('hasRegister') && !hasPassword(player)) {
+		player.removeTag('hasRegister');
+		player.tell('\n%login.legacy\n ');
 	}
-	if (!data.player.hasTag("hasRegister")) {
-		data.player.addTag("chekRegister")
+	if (canLogin(player)) {
+		player.removeTag('chekRegister');
+		player.addTag('chekLogin');
+	} else {
+		player.removeTag('chekLogin');
+		player.addTag('chekRegister');
 	}
 });
 
@@ -68,7 +88,9 @@ world.events.tick.subscribe(() => {
 		if (waited >= FORM_DELAY_TICKS) {
 			waitTicks.set(player.name, 0);
 			if (!formOpen.has(player.name)) {
-				openForm(player, needLogin ? LoginUI : RegisterUI);
+				// Форма выбирается по состоянию аккаунта, а не по тегу: даже если остались оба тега,
+				// показывается одна форма
+				openForm(player, canLogin(player) ? LoginUI : RegisterUI);
 			}
 		} else {
 			waitTicks.set(player.name, waited);

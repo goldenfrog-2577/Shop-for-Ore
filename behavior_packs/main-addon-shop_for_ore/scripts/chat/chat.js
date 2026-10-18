@@ -1,7 +1,7 @@
 // --- Чат-логика и антиспам для Shop for Ore ---
 // Импортируем необходимые функции и данные
 import { world } from '@minecraft/server';
-import { getScore, metricNumbers, emotes } from '../DataBase.js';
+import { getScore, metricNumbers, emotes, isPending } from '../DataBase.js';
 
 // --- Значения по умолчанию для тегов игрока ---
 const rank = "rank:";
@@ -100,6 +100,13 @@ world.events.beforeChat.subscribe((data) => {
 	const playerName = data.sender.name;
 	const message = data.message.trim();
 	let player = data.sender;
+
+	// До входа в аккаунт чат и !-команды недоступны (команды отменяет commands.js)
+	if (isPending(player)) {
+		data.cancel = true;
+		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"login.required"}]}`);
+		return;
+	}
 
 	// Не обрабатывать команды (начинаются с '!')
 	if (message.startsWith('!')) {

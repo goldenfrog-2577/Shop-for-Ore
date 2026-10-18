@@ -40,6 +40,15 @@ export function rawTranslate(key, ...args) {
 	return JSON.stringify({ rawtext: [{ translate: key, with: args.map(String) }] });
 };
 
+/**
+ * Игрок ещё не вошёл в аккаунт (ждёт логина или регистрации).
+ * @param {Player} player
+ * @returns {boolean}
+ */
+export function isPending(player) {
+	return player.hasTag('chekLogin') || player.hasTag('chekRegister');
+};
+
 // Список эмодзи для чата и интерфейса
 export const emotes = {
 	":smile:": "\ue1f0",

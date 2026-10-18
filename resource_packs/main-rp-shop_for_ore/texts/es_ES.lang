@@ -294,6 +294,9 @@ login.text.3=§gIntroduce la contraseña que usaste al registrarte
 login.text.4=§7Introduce la contraseña...
 login.text.5=§a¡Inicio de sesión exitoso! ¡Bienvenido!
 login.text.6=§cTu §bcontraseña§c es incorrecta, ¡revisa tus datos!
+login.required=§cPrimero inicia sesión o regístrate
+login.legacy=§eTu cuenta es de la antigua plataforma: crea una nueva contraseña, tu progreso se conserva
+reg.text.length=§cLa contraseña debe tener entre 3 y 32 caracteres
 
 ## --- MENÚ ADMIN ---
 admin.menu.title=§l§8Menú de admin

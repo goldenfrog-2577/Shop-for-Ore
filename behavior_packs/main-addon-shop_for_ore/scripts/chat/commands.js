@@ -1,7 +1,7 @@
 // --- Обработка пользовательских команд чата для Shop for Ore ---
 // Импортируем необходимые данные и списки команд
 import { world } from '@minecraft/server';
-import { commandsList, emotes, emotesList, rawTranslate } from '../DataBase.js';
+import { commandsList, emotes, emotesList, rawTranslate, isPending } from '../DataBase.js';
 
 // --- Главный обработчик команд чата ---
 world.events.beforeChat.subscribe((data) => {
@@ -11,6 +11,8 @@ world.events.beforeChat.subscribe((data) => {
 	// Если не команда (не начинается с "!") — не обрабатываем
 	if (!message.startsWith("!")) return;
 	data.cancel = true;
+	// До входа в аккаунт команды недоступны (сообщение игроку показывает chat.js)
+	if (isPending(player)) return;
 
 	// Парсим команду и аргументы
 	const args = message.slice(1).split(/\s+/);
