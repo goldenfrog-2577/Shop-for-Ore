@@ -1,0 +1,258 @@
+{
+	"content" : [{
+		"path" : "ui/structure_editor_screen.json"
+	    },
+		{
+			"path" : "ui/_global_variables.json"
+		},
+		{
+			"path" : "textures/ui/title.png"
+		},
+		{
+			"path" : "ui/anvil_screen.json"
+		},
+		{
+			"path" : "textures/ui/chat/previous_message.png"
+		},
+		{
+			"path" : "textures/ui/chat/next_message.png"
+		},
+		{
+			"path" : "textures/ui/chat/autocomplete_back.png"
+		},
+		{
+			"path" : "textures/ui/chat/autocomplete.png"
+		},
+		{
+			"path" : "textures/server_icons/ore.png"
+		},
+		{
+			"path" : "textures/server_icons/xbox.png"
+		},
+		{
+			"path" : "textures/server_icons/omlet.png"
+		},
+		{
+			"path" : "textures/server_icons/discord.png"
+		},
+		{
+			"path" : "ui/chat_screen.json"
+		},
+		{
+			"path" : "textures/server_icons/creator.png"
+		},
+		{
+			"path" : "textures/server_icons/command_block.png"
+		},
+		{
+			"path" : "textures/server_icons/bot.png"
+		},
+		{
+			"path" : "textures/server_icons/allow.png"
+		},
+		{
+			"path" : "textures/items/menu.png"
+		},
+		{
+			"path" : "ui/scoreboards.json"
+		},
+		{
+			"path" : "textures/entities/other.png"
+		},
+		{
+			"path" : "textures/item_texture.json"
+		},
+		{
+			"path" : "texts/uk_UA.lang"
+		},
+		{
+			"path" : "texts/es_ES.lang"
+		},
+		{
+			"path" : "sounds/sound_definitions.json"
+		},
+		{
+			"path" : "sounds/music/main.theme.ogg"
+		},
+		{
+			"path" : "sounds/minecraft/tnt.explode.ogg"
+		},
+		{
+			"path" : "render_controllers/floating_text.render_controllers.json"
+		},
+		{
+			"path" : "pack_icon.png"
+		},
+		{
+			"path" : "font/glyph_21.png"
+		},
+		{
+			"path" : "font/glyph_28.png"
+		},
+		{
+			"path" : "font/glyph_FE.png"
+		},
+		{
+			"path" : "font/glyph_A7.png"
+		},
+		{
+			"path" : "textures/entities/floating_text.png"
+		},
+		{
+			"path" : "blocks.json"
+		},
+		{
+			"path" : "font/glyph_2E.png"
+		},
+		{
+			"path" : "ui/npc_interact_screen.json"
+		},
+		{
+			"path" : "font/glyph_2B.png"
+		},
+		{
+			"path" : "textures/ui/hud_tip_text_background.png"
+		},
+		{
+			"path" : "font/glyph_20.png"
+		},
+		{
+			"path" : "font/glyph_2A.png"
+		},
+		{
+			"path" : "models/entity/floating_text.geo.json"
+		},
+		{
+			"path" : "textures/items/floating_text.png"
+		},
+		{
+			"path" : "texts/ru_RU.lang"
+		},
+		{
+			"path" : "manifest.json"
+		},
+		{
+			"path" : "font/glyph_26.png"
+		},
+		{
+			"path" : "ui/hud_screen.json"
+		},
+		{
+			"path" : "font/glyph_A6.png"
+		},
+		{
+			"path" : "font/glyph_06.png"
+		},
+		{
+			"path" : "font/glyph_2C.png"
+		},
+		{
+			"path" : "textures/server_icons/deny.png"
+		},
+		{
+			"path" : "font/glyph_24.png"
+		},
+		{
+			"path" : "font/glyph_03.png"
+		},
+		{
+			"path" : "font/glyph_01.png"
+		},
+		{
+			"path" : "font/glyph_1D.png"
+		},
+		{
+			"path" : "font/glyph_22.png"
+		},
+		{
+			"path" : "contents.json"
+		},
+		{
+			"path" : "textures/server_icons/border.png"
+		},
+		{
+			"path" : "font/glyph_FB.png"
+		},
+		{
+			"path" : "font/glyph_1E.png"
+		},
+		{
+			"path" : "textures/server_icons/structure_block.png"
+		},
+		{
+			"path" : "font/glyph_E1.png"
+		},
+		{
+			"path" : "texts/en_US.lang"
+		},
+		{
+			"path" : "font/glyph_25.png"
+		},
+		{
+			"path" : "font/glyph_23.png"
+		},
+		{
+			"path" : "textures/items/gold_ingot.png"
+		},
+		{
+			"path" : "sounds/minecraft/glass.broke.ogg"
+		},
+		{
+			"path" : "font/glyph_0E.png"
+		},
+		{
+			"path" : "ui/old_hud_screen.json"
+		},
+		{
+			"path" : "font/glyph_07.png"
+		},
+		{
+			"path" : "font/glyph_05.png"
+		},
+		{
+			"path" : "sounds/minecraft/challenge.complete.ogg"
+		},
+		{
+			"path" : "font/glyph_02.png"
+		},
+		{
+			"path" : "font/glyph_27.png"
+		},
+		{
+			"path" : "font/glyph_04.png"
+		},
+		{
+			"path" : "texts/languages.json"
+		},
+		{
+			"path" : "ui/command_block_screen.json"
+		},
+		{
+			"path" : "font/default8.png"
+		},
+		{
+			"path" : "entity/floating_text.json"
+		},
+		{
+			"path" : "textures/server_icons/structure_void.png"
+		},
+		{
+			"path" : "font/glyph_10.png"
+		},
+		{
+			"path" : "ui/anvil_screen_pocket.json"
+		},
+		{
+			"path" : "textures/server_icons/telegram.png"
+		},
+		{
+			"path" : "textures/items/admin_menu.png"
+		},
+		{
+			"path" : "font/glyph_00.png"
+		},
+		{
+			"path" : "animations/facing.animation.json"
+		}],
+	"version" : 1
+}

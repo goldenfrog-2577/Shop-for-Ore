@@ -1,0 +1,171 @@
+{
+	"content" : [{
+		"path" : "texts/uk_UA.lang"
+	},
+		{
+			"path" : "texts/languages.json"
+		},
+		{
+			"path" : "texts/es_ES.lang"
+		},
+		{
+			"path" : "scripts/register/system.js"
+		},
+		{
+			"path" : "scripts/register/register.js"
+		},
+		{
+			"path" : "scripts/register/login.js"
+		},
+		{
+			"path" : "functions/system/system.mcfunction"
+		},
+		{
+			"path" : "scripts/other/spawnbot.js"
+		},
+		{
+			"path" : "functions/events/gift_event.mcfunction"
+		},
+		{
+			"path" : "scripts/menu/menu.js"
+		},
+		{
+			"path" : "scripts/menu/bank_menu.js"
+		},
+		{
+			"path" : "scripts/register/loadScript.js"
+		},
+		{
+			"path" : "functions/system/pickaxe_lvl.mcfunction"
+		},
+		{
+			"path" : "scripts/chat/commands.js"
+		},
+		{
+			"path" : "scripts/DataBase.js"
+		},
+		{
+			"path" : "scripts/other/anticheat.js"
+		},
+		{
+			"path" : "items/menu/menu_new.json"
+		},
+		{
+			"path" : "scripts/menu/admin_menu.js"
+		},
+		{
+			"path" : "functions/shop/pvp_kits/diamond.mcfunction"
+		},
+		{
+			"path" : "functions/system/qx.mcfunction"
+		},
+		{
+			"path" : "items/menu/menu.json"
+		},
+		{
+			"path" : "items/adminTools/admin_stick.json"
+		},
+		{
+			"path" : "items/adminTools/admin_menu.json"
+		},
+		{
+			"path" : "functions/events/haste_event.mcfunction"
+		},
+		{
+			"path" : "functions/tp_ore/tp_ore_ru.mcfunction"
+		},
+		{
+			"path" : "functions/tp_ore/tp_ore_en.mcfunction"
+		},
+		{
+			"path" : "functions/upgrade/upgrade_vip.mcfunction"
+		},
+		{
+			"path" : "functions/upgrade/upgrade_rebirth.mcfunction"
+		},
+		{
+			"path" : "functions/ranks/rank_lvl_reset.mcfunction"
+		},
+		{
+			"path" : "functions/tick.json"
+		},
+		{
+			"path" : "functions/system/spawnbot.mcfunction"
+		},
+		{
+			"path" : "functions/system/wipe.mcfunction"
+		},
+		{
+			"path" : "texts/ru_RU.lang"
+		},
+		{
+			"path" : "manifest.json"
+		},
+		{
+			"path" : "texts/en_US.lang"
+		},
+		{
+			"path" : "entities/floating_text.json"
+		},
+		{
+			"path" : "functions/boost/X4boost.mcfunction"
+		},
+		{
+			"path" : "contents.json"
+		},
+		{
+			"path" : "functions/shop/pvp_kits/netherite.mcfunction"
+		},
+		{
+			"path" : "functions/system/promocodes.mcfunction"
+		},
+		{
+			"path" : "scripts/chat/emotes.js"
+		},
+		{
+			"path" : "entities/player.json"
+		},
+		{
+			"path" : "functions/system/autosale.mcfunction"
+		},
+		{
+			"path" : "functions/shop/enchants/fortune.mcfunction"
+		},
+		{
+			"path" : "structures/server/bot.mcstructure"
+		},
+		{
+			"path" : "scripts/chat/chat.js"
+		},
+		{
+			"path" : "functions/shop/enchants/efficiency.mcfunction"
+		},
+		{
+			"path" : "pack_icon.png"
+		},
+		{
+			"path" : "functions/ranks/rank_lvl_remove.mcfunction"
+		},
+		{
+			"path" : "scripts/import.js"
+		},
+		{
+			"path" : "functions/boost/X2boost.mcfunction"
+		},
+		{
+			"path" : "functions/shop/pvp_kits/iron.mcfunction"
+		},
+		{
+			"path" : "functions/ranks/rank_lvl_add.mcfunction"
+		},
+		{
+			"path" : "functions/system/scoreboards.mcfunction"
+		},
+		{
+			"path" : "functions/system/automine.mcfunction"
+		},
+		{
+			"path" : "animation_controllers/floating_text.animation_controllers.json"
+		}],
+	"version" : 1
+}

@@ -1,0 +1,33 @@
+{
+	"content" : [{
+		"path" : "manifest.json"
+	},
+		{
+			"path" : "contents.json"
+		},
+		{
+			"path" : "ui/scoreboards.json"
+		},
+		{
+			"path" : "ui/hud_screen.json"
+		},
+		{
+			"path" : "textures/ui/server/server_scoreboard_entry.json"
+		},
+		{
+			"path" : "pack_icon.png"
+		},
+		{
+			"path" : "texts/ru_RU.lang"
+		},
+		{
+			"path" : "textures/ui/server/server_scoreboard_entry.png"
+		},
+		{
+			"path" : "texts/languages.json"
+		},
+		{
+			"path" : "texts/en_US.lang"
+		}],
+	"version" : 1
+}
