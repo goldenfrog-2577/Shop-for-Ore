@@ -32,14 +32,16 @@
 * **Progress Reset**: сброс уровня, опыта, денег и прокачки зачарований; счётчик перерождений сохраняется.
 
 ### 🔨 2. Dynamic Tool Evolution
-Автоматическая выдача инструмента под уровень игрока (`functions/system/pickaxe_lvl.mcfunction`).
+Автоматическая выдача инструмента под уровень игрока (`functions/system/pickaxe_lvl.mcfunction`, раз в секунду): кирка меняется только при смене уровня или если её нет в слоте.
 * **Item Locking**: компонент `item_lock` (`lock_in_slot`) — инструмент нельзя выбросить или переместить.
 * **Block Sensitivity**: 18 ступеней инструмента на 25 уровней игрока, у каждой свой список `can_destroy` — от земли до аметистового кластера.
 * **Keep Inventory**: компонент `keep_on_death` — инструмент не теряется при смерти.
 
 ### 📊 3. Smart Economy & UI
 * **Autosale**: продажа добытого через `.mcfunction` (`functions/system/autosale.mcfunction`) — игрок встаёт на золотой блок, руда превращается в деньги и опыт с учётом бустов X2/X4.
-* **Boosts & Upgrades**: бусты X2/X4, VIP-уровень, зачарования (эффективность, удача), PvP-киты.
+* **Boosts & Upgrades**: общие бусты X2/X4, личный «Магнит руды» (5 минут, предметы рядом летят к игроку), VIP-уровень, зачарования (эффективность до 5, удача до 3), PvP-киты.
+* **Events**: «Ускорение», «Золотой дождь» и «Подарок» по таймерам; по умолчанию выключены, включаются командой `/scoreboard players set <haste|rain|gift> settings 1`.
+* **Timers**: `tick.json` запускает только `system/system`, `system/levelup` и планировщик `system/timers`, который вызывает `timers/tN` раз в N тиков (5, 20, 40, 80, 500, 600, 3600, 4800, 6000).
 * **Custom HUD**: собственный scoreboard с иконками (профиль, деньги, опыт, уровень, перерождения, онлайн).
 * **Multilingual Support**: все игровые сообщения через `.lang` под язык клиента.
 
@@ -47,9 +49,9 @@
 ```
 behavior_packs/
   main-addon-shop_for_ore/     # Behavior pack
-    functions/                 # Командная логика (system, ranks, upgrade, shop, boost, events, tp_ore, settings)
+    functions/                 # Командная логика (system, timers, ranks, upgrade, shop, boost, events, settings)
     scripts/                   # Script API: меню, чат, регистрация, античит
-    entities/ items/ structures/ animation_controllers/
+    entities/ items/ structures/
     texts/                     # Локализация названий пака
 resource_packs/
   main-rp-shop_for_ore/        # Основной resource pack: UI, текстуры, сущности, локализация сообщений

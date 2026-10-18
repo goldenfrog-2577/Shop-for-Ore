@@ -216,6 +216,7 @@ function boosts(player) {
 	.body('%shop.boost.body.1\n\n%shop.boost.body.2')
 	.button('%shop.boost.button.1\n§810.0K ')
 	.button('%shop.boost.button.2\n§850.0K ')
+	.button('%shop.boost.button.3\n§820.0K ')
 	.button('%menu.button.back')
 	boosts.show(player).then(tb => {
 		if (tb.selection == 0) {
@@ -223,6 +224,9 @@ function boosts(player) {
 		} else if (tb.selection == 1) {
 			player.runCommandAsync('function boost/X4boost')
 		} else if (tb.selection == 2) {
+			// «Магнит руды» — личный, на 5 минут (functions/shop/tp_ore)
+			player.runCommandAsync('function shop/tp_ore')
+		} else if (tb.selection == 3) {
 			shop(player)
 		}
 	});

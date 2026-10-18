@@ -12,11 +12,13 @@ scoreboard players reset * promo2
 scoreboard players reset * promo3
 scoreboard players reset * promo4
 scoreboard players reset * qx
-scoreboard players reset * ticks
+scoreboard players reset * tpore
+scoreboard players reset * pick
 
 # Удаление тегов player и rebirth у всех сущностей
 tag @e remove player
 tag @e remove rebirth
+tag @e remove player:tp_ore
 
 # Воспроизведение звука и сообщение об успешном вайпе
 playsound random.levelup @s

@@ -1,7 +1,11 @@
-# --- Событие "Подарок": выдача награды и уведомления игрокам ---
-
-execute as @a positioned ~~~ run playsound note.bell @a ~~~ 1.0 0.75
-tellraw @a {"rawtext":[{"translate":"message.event.gift_event"}]}
-structure load gift 0 -50 0
-execute as @e[type=item,name="%tile.emerald_block.name"] run execute positioned as @r[tag=!host] run tp @s ~~5~
-execute as @a[hasitem={item=minecraft:emerald_block}] run tellraw @a {"rawtext":[{"text":"§l >>§b "},{"selector":"@p[hasitem={item=minecraft:emerald_block}]"},{"translate":"message.event.gift_event.end"}]}
+# --- Событие «Подарок»: над случайным игроком появляется изумрудный блок, кто первый подберёт ---
+# Запускается из timers/t4800, если включено: /scoreboard players set gift settings 1
+# Структура gift — один предмет «изумрудный блок». gift system — сколько секунд подарок «в игре»
+# (60, уменьшается в timers/t20); пока он больше 0, очистка предметов не трогает его,
+# а первый подобравший объявляется в system/autosale (там же блок продаётся за 150).
+# Раньше блок появлялся под картой (0 -50 0), искался по локализованному имени,
+# а объявление «подобрал» срабатывало в тот же тик, до того как его кто-то подобрал.
+execute if entity @a[tag=player,tag=!host] run scoreboard players set gift system 60
+execute if entity @a[tag=player,tag=!host] at @r[tag=player,tag=!host] run structure load gift ~ ~3 ~
+execute if entity @a[tag=player,tag=!host] run tellraw @a {"rawtext":[{"translate":"message.event.gift_event"}]}
+execute if entity @a[tag=player,tag=!host] as @a at @s run playsound note.bell @s ~~~ 1.0 0.75

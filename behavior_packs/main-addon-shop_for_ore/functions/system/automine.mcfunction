@@ -1,3 +1,24 @@
+# Перезаливка шахт (раз в 500 тиков = 25 с). Вызывается из timers/t500.
+# Перед заливкой игроков внутри шахты поднимаем на её поверхность (y=1),
+# иначе их замуровывало в блоках.
+execute as @a[x=-11,y=-4,z=7,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=-11,y=-4,z=0,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=-11,y=-4,z=-7,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=-11,y=-4,z=-14,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=-4,y=-4,z=-14,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=3,y=-4,z=-14,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=10,y=-4,z=-14,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=10,y=-4,z=-7,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=10,y=-4,z=0,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=10,y=-4,z=7,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=-11,y=-4,z=-28,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=-11,y=-4,z=-35,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=-11,y=-4,z=-42,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=-11,y=-4,z=-49,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=-4,y=-4,z=-49,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=3,y=-4,z=-49,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=10,y=-4,z=-49,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
+execute as @a[x=10,y=-4,z=-42,dx=2,dy=4,dz=2] at @s run tp @s ~ 1 ~
 fill -11 -4 9 -9 0 7 dirt
 fill -11 -4 0 -9 0 2 stone
 fill -11 -4 -5 -9 0 -7 coal_ore

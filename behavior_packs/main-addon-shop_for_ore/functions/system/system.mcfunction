@@ -12,21 +12,9 @@ execute as @a at @s if block ~~~ warped_planks run tp @s 0 5 -33
 execute as @a[x=-103,y=0,z=-51,r=1] at @s run tp @s 292 -25 259
 execute as @a[x=-115,y=0,z=-51,r=1] at @s run tp @s 500 3 500
 
-# Управление погодой через сущность rainEvent
-execute as @e[name="rainEvent",scores={system=1..30}] run weather rain
-execute as @e[name="rainEvent",scores={system=-1..0}] run weather clear
-
-# Подсчёт предметов типа item
-execute as @e[type=item] run scoreboard players set item system 0
-execute as @e[type=item] run scoreboard players add item system 1
-
 # Установка режима приключения и снятие опыта
-gamemode a @a[tag=!host]
-xp -100l @a
-
-# Обновление счётчика онлайн-игроков
-execute as @a run scoreboard players set @a online 0
-execute as @a run scoreboard players add @a online 1
+gamemode a @a[tag=!host,m=!a]
+xp -100l @a[lm=1]
 
 # Сброс значений для новых игроков (без тега player)
 # promo1-4: "add 0" только создаёт счёт новичку и не обнуляет его после перерождения,
@@ -43,28 +31,13 @@ scoreboard players set @a[tag=!player] efficiency 0
 scoreboard players set @a[tag=!player] fortune 0
 scoreboard players set @a[tag=!rebirth] rebirth 0
 
-# Выдача меню администратора и обычного меню
-replaceitem entity @a[tag=host] slot.hotbar 7 server:admin_menu 1 0 {"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
-replaceitem entity @a slot.hotbar 8 server:menu 1 0 {"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
+# Выдача меню администратора и обычного меню — только если его нет в слоте
+# (раньше предмет перевыдавался каждый тик всем игрокам)
+replaceitem entity @a[tag=host,hasitem={item=server:admin_menu,location=slot.hotbar,slot=7,quantity=0}] slot.hotbar 7 server:admin_menu 1 0 {"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
+replaceitem entity @a[hasitem={item=server:menu,location=slot.hotbar,slot=8,quantity=0}] slot.hotbar 8 server:menu 1 0 {"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
 
-# Автоматическое наложение зачарования эффективность по уровню
-execute as @a[scores={efficiency=1..1}] run enchant @s efficiency 1
-execute as @a[scores={efficiency=2..2}] run enchant @s efficiency 2
-execute as @a[scores={efficiency=3..3}] run enchant @s efficiency 3
-execute as @a[scores={efficiency=4..4}] run enchant @s efficiency 4
-execute as @a[scores={efficiency=5..}] run enchant @s efficiency 5
-
-# Автоматическое наложение зачарования удача по уровню
-execute as @a[scores={fortune=1..1}] run enchant @s fortune 1
-execute as @a[scores={fortune=2..2}] run enchant @s fortune 2
-execute as @a[scores={fortune=3..}] run enchant @s fortune 3
-
-# Эффект спешки в зависимости от количества перерождений
-execute as @a[scores={rebirth=1..1}] run effect @s haste 2 0 true
-execute as @a[scores={rebirth=2..2}] run effect @s haste 2 1 true
-execute as @a[scores={rebirth=3..3}] run effect @s haste 2 2 true
-execute as @a[scores={rebirth=4..4}] run effect @s haste 2 3 true
-execute as @a[scores={rebirth=5..}] run effect @s haste 2 4 true
+# Зачарования, спешка за ребитхи, погода, онлайн — раз в секунду в timers/t20;
+# счёт предметов — в system/clear_items
 
 ## --- PVP AREA MANAGEMENT ---
 # Урон между игроками блокирует minecraft:damage_sensor в entities/player.json:
