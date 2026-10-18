@@ -9,7 +9,6 @@
 		"offset": "$scoreboard_offset",
 		"anchor_from": "$scoreboard_alignment",
 		"anchor_to": "$scoreboard_alignment",
-		"ignored": "$scoreboards_feature_disabled",
 		"controls": [{
 			"players": {
 				"type": "stack_panel",
