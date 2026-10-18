@@ -5,6 +5,7 @@
 		"ranks/rank_lvl_reset",
 		"system/scoreboards",
 		"system/system",
-		"system/qx"
+		"system/qx",
+		"system/levelup"
 	]
 }
