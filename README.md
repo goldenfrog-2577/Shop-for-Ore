@@ -72,8 +72,8 @@ resource_packs/
 
 ---
 ## 👥 Авторство
-* **[GoldenFrog](https://github.com/goldenfrog-2577)** (в Minecraft Bedrock — `kapycta1231484`) — автор карты и аддона
-* **NastyaXs00** — соавтор скриптов
+* **[GoldenFrog](https://github.com/goldenfrog-2577)** (в Minecraft Bedrock — `kapycta1231484`) — автор карты и аддона, командная логика (`functions/`), развитие скриптов
+* **NastyaXs00** — основа JS-скриптов (Script API)
 * **GitHub Copilot** — помощь в разработке
 * **Claude (Anthropic)** — сопровождение репозитория: синхронизация паков, исправление путей, README, лицензия
 
