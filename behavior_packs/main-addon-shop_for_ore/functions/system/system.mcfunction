@@ -29,14 +29,16 @@ execute as @a run scoreboard players set @a online 0
 execute as @a run scoreboard players add @a online 1
 
 # Сброс значений для новых игроков (без тега player)
+# promo1-4: "add 0" только создаёт счёт новичку и не обнуляет его после перерождения,
+# иначе промокоды снова срабатывают после каждого rebirth
 scoreboard players set @a[tag=!player] xp 0
 scoreboard players set @a[tag=!player] money 0
 scoreboard players set @a[tag=!player] money2 0
 scoreboard players set @a[tag=!player] lvl 1
-scoreboard players set @a[tag=!player] promo1 0
-scoreboard players set @a[tag=!player] promo2 0
-scoreboard players set @a[tag=!player] promo3 0
-scoreboard players set @a[tag=!player] promo4 0
+scoreboard players add @a promo1 0
+scoreboard players add @a promo2 0
+scoreboard players add @a promo3 0
+scoreboard players add @a promo4 0
 scoreboard players set @a[tag=!player] efficiency 0
 scoreboard players set @a[tag=!player] fortune 0
 scoreboard players set @a[tag=!rebirth] rebirth 0

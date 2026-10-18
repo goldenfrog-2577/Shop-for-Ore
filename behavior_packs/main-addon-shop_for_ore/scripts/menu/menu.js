@@ -324,7 +324,8 @@ function promocodes(player) {
 	.textField('%promo.text.1\n\n%promo.text.2',
 		'%promo.textField')
 	promocodes.show(player).then(r => {
-		if (r.isCanceled) return;
+		// Форма закрыта крестиком — formValues нет (надёжнее, чем isCanceled/canceled: имя менялось между версиями API)
+		if (!r.formValues) return;
 
 		const enteredCode = r.formValues[0]?.trim();
 		if (validatePromoCode(enteredCode, player)) {} else {

@@ -23,21 +23,23 @@ export function bank(player) {
 
 	// Показываем форму игроку
 	menu.show(player).then((r) => {
+		// Форма закрыта крестиком — formValues нет
+		if (!r.formValues) return;
 		let target = operations[r.formValues[0]];
 		let amount = Number(r.formValues[1]);
 		let playerScore = getScore(player, "money");
 
 		// Проверка на корректность суммы
 		if (isNaN(amount) || amount <= 0) {
-			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"%bank.text.9"}]}');
+			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"bank.text.9"}]}');
 			return;
 		}
 		// Проверка на достаточность средств
 		if (playerScore < amount) {
-			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"%bank.text.3"}]}');
+			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"bank.text.3"}]}');
 		} else {
 			// Сообщение отправителю
-			player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"%bank.text.4"},{"text":"§e${target}§a,"},{"translate":"bank.text.6"},{"text":"§e${amount}"}]}`);
+			player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"bank.text.4"},{"text":"§e${target}§a,"},{"translate":"bank.text.6"},{"text":"§e${amount}"}]}`);
 			// Зачисление денег получателю
 			player.runCommandAsync(`scoreboard players add "${target}" money ${amount}`);
 			// Сообщение получателю

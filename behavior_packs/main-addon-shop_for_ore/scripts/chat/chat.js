@@ -108,7 +108,7 @@ world.events.beforeChat.subscribe((data) => {
 	let player = data.sender;
 
 	// Не обрабатывать команды (начинаются с '!')
-	if (data.message.startsWith('!')) {
+	if (message.startsWith('!')) {
 		return;
 	}
 
@@ -133,9 +133,9 @@ world.events.beforeChat.subscribe((data) => {
 	const ranks = getRanks(data.sender).join("§r§8] | [§r");
 	const nameColor = getNames(data.sender);
 	const textColor = getTexts(data.sender);
-	const now = new Date();
-	now.setHours(now.getHours() + 3); // Смещение времени (например, для МСК)
-	const time = `${now.getHours().toString().padStart(1, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+	// Московское время (UTC+3) считаем от UTC, чтобы не зависеть от часового пояса движка/устройства
+	const now = new Date(Date.now() + 3 * 60 * 60 * 1000);
+	const time = `${now.getUTCHours()}:${now.getUTCMinutes().toString().padStart(2, '0')}`;
 	const formatMessage = replaceEmotes(message);
 	world.say(` §7${time} §8[${ranks}§8]§r ${nameColor}${playerName}  ${textColor}${formatMessage}`);
 });

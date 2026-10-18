@@ -8,6 +8,8 @@ import { ActionFormData, ModalFormData, MessageFormData } from '@minecraft/serve
 world.events.beforeItemUse.subscribe(data => {
 	const player = data.source
 	if (data.item.typeId == 'server:admin_menu') {
+		// Только для хоста: предмет можно получить через /give
+		if (!player.hasTag('host')) return;
 		admin_menu(player)
 	}
 });
@@ -208,6 +210,7 @@ function sayServer(player) {
 	.title('%sayServer.title')
 	.textField('%sayServer.body', '%sayServer.textField')
 	sayServer.show(player).then(r => {
+		if (!r.formValues) return;
 		let message = r.formValues[0]
 		world.say(`%sayServer.message ${message}`)
 	});

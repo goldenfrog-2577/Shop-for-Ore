@@ -456,6 +456,8 @@ commands.prefix.desc=§7Керує префіксами гравців
 commands.tag.desc=§7Керує тегами гравців
 commands.scoreboard.desc=§7Керує базою даних команди /scoreboard
 commands.kick.desc=§7Вигоняє гравця з сервера
+commands.tp.desc=§7Телепортує гравця до вас
+commands.wipe.desc=§7Повністю скидає прогрес усіх гравців
 
 message.cmd.error.1=§l§cERROR!§r§7 Невідома команда:
 message.cmd.error.2=Напиши §e!help§7, щоб дізнатися список команд
@@ -482,6 +484,7 @@ message.cmd.scoreboard.use=§aВикористання: §b!scoreboard §a<§bг
 message.cmd.kick=був кікнутий. Причина: 
 message.cmd.kick.no_reason=не вказано
 message.cmd.kick.use=§aВикористання: §b!kick §a<§bгравець§a> <§bпричина §a(§bне обов'язково§a)>
+message.cmd.tp.use=§aВикористання: §b!tp §a<§bгравець§a>
 
 ## --- НАГОРОДИ МАГАЗИНУ ---
 message.shop.enchant.efficiency=§7Успішно придбано§f: §eЕфективність§f (+1)
