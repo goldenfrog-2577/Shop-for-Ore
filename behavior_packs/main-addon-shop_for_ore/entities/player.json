@@ -308,7 +308,7 @@
 			"server:kick": {
 				"run_command": {
 					"command": [
-						"tellraw @a {\"rawtext\":[{\"selector\":\"@s\"},{\"translate\":\"message.kick\"}]}",
+						"tellraw @a {\"rawtext\":[{\"translate\":\"message.kick\",\"with\":{\"rawtext\":[{\"selector\":\"@s\"}]}}]}",
 						"tag @s add kick"
 					]
 				}

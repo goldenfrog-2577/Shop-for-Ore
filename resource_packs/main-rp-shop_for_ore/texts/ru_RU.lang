@@ -54,8 +54,7 @@ button.deleteText=Удалить текст
 button.kickPlayer=Выгнать игрока
 chat.title=Чат
 chat.title.cheats=Чат и команды
-chat.recipient=Вы
-commandBlock.entherCommand=Введите команду сюда...
+commandBlock.entherCommand=Введи команду сюда...
 commands.scoreboard.players.offlinePlayerName= §cOffline
 death.attack.explosion= %1$s §r§cвзорвался
 death.attack.flyIntoWall= %1$s §r§cразбился на элитрах
@@ -86,11 +85,9 @@ progressScreen.message.locating=Прежде чем задавать много 
 progressScreen.message.resourceLoading=Omlet хоста: @waxenjaguar2209
 
 ## --- ПЕРЕВОД И КНОПКИ ИНТЕРФЕЙСА ---
-admin.menu.background.1=§8[§cНе работает§8]
 admin.menu.background.2=§8[§7Нажмите чтобы призвать§8]
 admin.menu.button.back=§8Назад
 menu.background=§8[§7Нажмите чтобы открыть§8]
-menu.body.development=§7В разработке...
 menu.button.back=§8 Назад
 
 ## --- ГЛАВНОЕ МЕНЮ ---
@@ -157,12 +154,12 @@ howtoplay.text.11=§r§7Ребитх - это перепрохождение к�
 howtoplay.text.12=Открывается ребитх после 16 
 howtoplay.text.13=Прокачивается в Меню »  Прокачка
 howtoplay.text.14=§l§7 Что означают смайлики слева сбоку?
-howtoplay.text.15=§r§7 - ваш Никнейм (имя в игре)
+howtoplay.text.15=§r§7 - твой Никнейм (имя в игре)
 howtoplay.text.16= - ваши Деньги / Монеты / Коины
 howtoplay.text.17= - ваши VIP коины / монеты
-howtoplay.text.18= - ваш Уровень и какой  следующий
-howtoplay.text.19= - ваш Опыт / XP и сколько  до следующего 
-howtoplay.text.20= - ваш Ребитх, особенность: спешка
+howtoplay.text.18= - твой Уровень и какой  следующий
+howtoplay.text.19= - твой Опыт / XP и сколько  до следующего 
+howtoplay.text.20= - твой Ребитх, особенность: спешка
 howtoplay.text.21= - текущий Онлайн сервера
 
 mapCreator.title=§l§8Меню сервера | §f⩇§8 Создатель
@@ -230,30 +227,26 @@ settingsParticle.body=§7Нажми §2включить§7/§4выключить
 settingsSound.title=§l§8 Настройки | Звуки
 settingsSound.body=§7Нажми §2включить§7/§4выключить§7 ниже, чтобы включить или выключить звуки при продаже
 
-settingsChanged.1= §7Настройка изменена на - §2Включено
-settingsChanged.2= §7Настройка изменена на - §4Выключено
-settingsChanged.3= §7Настройка изменена на - §gТолько смайлики
+settingsChanged.1=§f[ §3Настройки§f ]§r  §7Настройка изменена на - §2Включено
+settingsChanged.2=§f[ §3Настройки§f ]§r  §7Настройка изменена на - §4Выключено
+settingsChanged.3=§f[ §3Настройки§f ]§r  §7Настройка изменена на - §gТолько смайлики
 
 ## --- МЕНЮ БАНКА ---
 bank.title=§l§8Меню сервера |  Банк
 bank.text.1=§rСумма, которую ты хочешь отправить:
 bank.text.2=§7Введи сюда...
-bank.text.3=§l§cERROR!§r§7 Твоего баланса недостаточно!
-bank.text.4=§aУспешный перевод игроку 
-bank.text.5=§aВам перевел 
-bank.text.6= сумма: 
-bank.sent=§aУспешный перевод игроку §e%1$s§a, сумма: §e%2$s
-bank.received=§aВам перевел §e%1$s§a, сумма: §e%2$s
+bank.text.3=§l§cERROR!§r§7 На балансе недостаточно денег
+bank.sent=§f[ §2Банк§f ]§r §7Перевод игроку §e%1$s§7: §e%2$s
+bank.received=§f[ §2Банк§f ]§r §e%1$s§7 перевёл(а) тебе §e%2$s
 bank.text.7=§rВыбери игрока:
 bank.text.8=§eБаланс§r:
-bank.text.9=§l§cERROR!§r§7 Невозможно совершить перевод игроку, используя отрицательные значения
 bank.error.amount=§l§cERROR!§r§7 Сумма должна быть целым положительным числом
 bank.error.self=§l§cERROR!§r§7 Нельзя переводить деньги самому себе
 
 ## --- МЕНЮ ПРАВИЛ ---
 rules.title=§l§8Меню сервера |  Правила
 rules.body.1=§l§7Правила сервера:
-rules.body.2=§r§7Прочитав эти правила вы автоматически соглашаетесь с принятием наказания за нарушение одного из пункта правил. Незнание их не освобождает от наказания.
+rules.body.2=§r§7Прочитав эти правила, ты автоматически соглашаешься с принятием наказания за нарушение одного из пункта правил. Незнание их не освобождает от наказания.
 rules.text.1=§l1.§r§7 Не спамить / флудить в чате • Мут 2-5 мин
 rules.text.2=§l2.§r§7 Не оскорблять игроков сервера / переходить на родню • Мут 7-10 мин
 rules.text.3=§l3.§r§7 Вести себя адекватно
@@ -282,7 +275,7 @@ upgrading.button.2=§5Ребитх
 ## --- МЕНЮ РЕГИСТРАЦИИ ---
 reg.title=§lРегистрация аккаунта
 reg.toggle=Я соглашаюсь с правилами сервера и потверждаю §cотсутствие§r читов
-reg.text.1=§cПожалуйста подтвердите §bотсутствие читов§c чтобы играть на сервере
+reg.text.1=§l§cERROR!§r§7 Подтверди §bотсутствие читов§7, чтобы играть на сервере
 reg.text.2=§aПриветствую
 reg.text.3=§aДобро пожаловать на сервер! Приятной игры :)
 reg.text.4=§6Информация об аккаунте§r:
@@ -295,11 +288,11 @@ login.text.1=Приветствую
 login.text.2=§rна сервере §l[] Shop for Ore§r. Придумай и введи пароль для регистрации
 login.text.3=§gВведи пароль, который ты вводил при регистрации
 login.text.4=§7Введи пароль...
-login.text.5=§aУспешный вход в аккаунт! Добро пожаловать!
-login.text.6=§cТвой §bпароль§c неверный, проверь верность своих данных еще раз!
-login.required=§cСначала войди в аккаунт или зарегистрируйся
-login.legacy=§eТвой аккаунт со старой платформы: придумай новый пароль, прогресс сохранится
-reg.text.length=§cПароль должен быть от 5 до 32 символов
+login.text.5=§f[ §9Аккаунт§f ]§r §aВход выполнен! Добро пожаловать!
+login.text.6=§l§cERROR!§r§7 Неверный пароль, попробуй ещё раз
+login.required=§l§cERROR!§r§7 Сначала войди в аккаунт или зарегистрируйся
+login.legacy=§f[ §9Аккаунт§f ]§r §eАккаунт со старой платформы: придумай новый пароль, прогресс сохранится
+reg.text.length=§l§cERROR!§r§7 Пароль должен быть от 5 до 32 символов
 
 ## --- МЕНЮ АДМИНА ---
 admin.menu.title=§l§8Меню админа
@@ -367,89 +360,86 @@ tools.button.12=§8Очистить инвентарь
 sayServer.title=§l§8Меню админа | Объявления
 sayServer.body=§gНапиши в строку ниже, все что хочешь сказать. Это отобразится всему серверу
 sayServer.textField=§7Введи текст...
-sayServer.message=§l§eОбъявление:§r
+sayServer.message=§f[ §eОбъявление§f ]§r %1$s
 
 ## --- АДМИН: ВАЙП ---
 wipe.title=§l§8Предупреждение
 wipe.body=§7Вайп приведет к сбросу всей статистики, но не заденет теги и инвентари игроков. Вы уверены?
 wipe.button.1=§2Да
 wipe.button.2=§4Нет
-wipe.message.success=§aСброс статистики прошёл успешно
+wipe.message.success=§f[ §cСервер§f ]§r §aСтатистика всех игроков сброшена
 
 ## --- СИСТЕМНЫЕ И УРОВНЕВЫЕ СООБЩЕНИЯ ---
-message.lvlup.lvl.2= §rповысил свой уровень до §a2§f. Его кирка улучшена с Палка >> Деревянная кирка
-message.lvlup.lvl.3= §rповысил свой уровень до §a3§f. Его кирка улучшена с Деревянная кирка >> Каменная кирка
-message.lvlup.lvl.4= §rповысил свой уровень до §a4
-message.lvlup.lvl.5= §rповысил свой уровень до §a5
-message.lvlup.lvl.6= §rповысил свой уровень до §a6
-message.lvlup.lvl.7= §rповысил свой уровень до §a7
-message.lvlup.lvl.8= §rповысил свой уровень до §a8§f. Его кирка улучшена с Каменная кирка >> Железная кирка
-message.lvlup.lvl.9= §rповысил свой уровень до §a9
-message.lvlup.lvl.10= §rповысил свой уровень до §a10
-message.lvlup.lvl.11= §rповысил свой уровень до §a11
-message.lvlup.lvl.12= §rповысил свой уровень до §a12
-message.lvlup.lvl.13= §rповысил свой уровень до §a13§f. Его кирка улучшена с Железная кирка >> §bАлмазная кирка
-message.lvlup.lvl.14= §rповысил свой уровень до §a14
-message.lvlup.lvl.15= §rповысил свой уровень до §a15§f. Его кирка улучшена с §bАлмазная кирка§f >> §5Незеритовая кирка
-message.lvlup.lvl.16= §rповысил свой уровень до §a16§f. Открыта новая локация: §cНезер
-message.lvlup.lvl.17= §rповысил свой уровень до §a17
-message.lvlup.lvl.18= §rповысил свой уровень до §a18
-message.lvlup.lvl.19= §rповысил свой уровень до §a19
-message.lvlup.lvl.20= §rповысил свой уровень до §a20
-message.lvlup.lvl.21= §rповысил свой уровень до §a21
-message.lvlup.lvl.22= §rповысил свой уровень до §a22
-message.lvlup.lvl.23= §rповысил свой уровень до §a23
-message.lvlup.lvl.24= §rповысил свой уровень до §a24
-message.lvlup.lvl.25= §rповысил свой уровень до §a25§f. Этот уровень §aМАКСИМАЛЬНЫЙ§f!!!
+message.lvlup.lvl.2=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a2§f. Его кирка улучшена с Палка >> Деревянная кирка
+message.lvlup.lvl.3=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a3§f. Его кирка улучшена с Деревянная кирка >> Каменная кирка
+message.lvlup.lvl.4=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a4
+message.lvlup.lvl.5=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a5
+message.lvlup.lvl.6=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a6
+message.lvlup.lvl.7=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a7
+message.lvlup.lvl.8=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a8§f. Его кирка улучшена с Каменная кирка >> Железная кирка
+message.lvlup.lvl.9=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a9
+message.lvlup.lvl.10=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a10
+message.lvlup.lvl.11=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a11
+message.lvlup.lvl.12=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a12
+message.lvlup.lvl.13=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a13§f. Его кирка улучшена с Железная кирка >> §bАлмазная кирка
+message.lvlup.lvl.14=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a14
+message.lvlup.lvl.15=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a15§f. Его кирка улучшена с §bАлмазная кирка§f >> §5Незеритовая кирка
+message.lvlup.lvl.16=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a16§f. Открыта новая локация: §cНезер
+message.lvlup.lvl.17=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a17
+message.lvlup.lvl.18=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a18
+message.lvlup.lvl.19=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a19
+message.lvlup.lvl.20=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a20
+message.lvlup.lvl.21=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a21
+message.lvlup.lvl.22=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a22
+message.lvlup.lvl.23=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a23
+message.lvlup.lvl.24=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a24
+message.lvlup.lvl.25=§f[ §aLvL UP§f ]§r %1$s §rповысил свой уровень до §a25§f. Этот уровень §aМАКСИМАЛЬНЫЙ§f!!!
 
 ## --- VIP И РЕБИТХ ---
 message.basic.error=§l§cERROR!§r§7 Недостаточно 
-message.lvlup.error.1=§l§cERROR!§r§7 Недостаточно  или ваш уровень меньше 25 
-message.lvlup.error.2=§l§cERROR!§r§7 Ваш уровень не 16-25 
+message.lvlup.error.1=§l§cERROR!§r§7 Для §aVIP§7 нужен 25 уровень  и 125 000 
+message.lvlup.error.2=§l§cERROR!§r§7 Ребитх доступен с 16 по 25 уровень 
 message.lvlup.haveVIP=§l§cERROR!§r§7 У тебя уже есть §aVIP
-message.lvlup.haveRebirth=§l§cERROR!§r§7 Максимальный уровень ребитха!
-message.lvlup.rebirth.1= §r§dсделал свой первый §5Ребитх
-message.lvlup.rebirth.2= §dТы повысил уровень §5ребитха§d до: §5
-message.lvlup.vip= §rповысил свой уровень до §aVIP
-message.lvlup.vip.success=Поздравляем с покупкой §aVIP§f. Чтобы переместиться на §aVIP остров§f, используйте §eМеню сервера
+message.lvlup.rebirth.1=§f[ §dРебитх§f ]§r %1$s§r§7 сделал(а) свой первый §5ребитх§7!
+message.lvlup.rebirth.2=§f[ §dРебитх§f ]§r §7Твой уровень ребитха: §5%1$s
+message.lvlup.vip=§f[ §aLvL UP§f ]§r %1$s§r§7 купил(а) §aVIP§7!
+message.lvlup.vip.success=§f[ §aLvL UP§f ]§r §7Поздравляем с §aVIP§7! Чтобы попасть на §aVIP-остров§7, открой §eМеню сервера
 
 ## --- БУСТЫ ---
-message.boost.end.1=§a x2 буст закончился. Новый можно снова купить в Магазине!
-message.boost.end.2=§b x4 буст закончился. Новый можно снова купить в Магазине!
-message.boost.error=§l§cERROR!§r§7 Невозможно §cкупить буст§7 в данный момент. Дождись окончания предыдущего!
-message.x2boost=§a купил  x2 буст. У вас есть §25 минут§a, чтобы прокачаться!
-message.x4boost=§b купил  x4 буст. У вас есть §35 минут§b, чтобы прокачаться!
+message.boost.end.1=§f[ §bБуст§f ]§r §ax2 буст§7 закончился. Новый можно купить в §eМагазин → Бусты
+message.boost.end.2=§f[ §bБуст§f ]§r §bx4 буст§7 закончился. Новый можно купить в §eМагазин → Бусты
+message.boost.error=§l§cERROR!§r§7 Сейчас уже идёт буст. Дождись его окончания!
+message.x2boost=§f[ §bБуст§f ]§r %1$s§r§7 купил(а) §ax2 буст§7 для всех на §e5 минут§7!
+message.x4boost=§f[ §bБуст§f ]§r %1$s§r§7 купил(а) §bx4 буст§7 для всех на §e5 минут§7!
 message.shop.enchant.max=§l§cERROR!§r§7 У тебя уже §eмаксимальный§7 уровень этого зачарования
 message.lvlup.rebirth.max=§l§cERROR!§r§7 У тебя уже §5максимальный ребитх§7 (5)
-message.tp_ore.buy=§6 Магнит руды включён на §e5 минут§6: выпавшая рядом руда сама летит к тебе
-message.tp_ore.active=§l§cERROR!§r§7 Магнит руды уже работает. Осталось секунд: §e
-message.tp_ore.end=§6 Магнит руды закончился. Новый можно купить в Магазине → Бусты
+message.tp_ore.buy=§f[ §eМагазин§f ]§r §6Магнит руды§7 включён на §e5 минут§7: выпавшие рядом предметы летят к тебе
+message.tp_ore.active=§l§cERROR!§r§7 §6Магнит руды§7 уже работает. Осталось секунд: §e%1$s
+message.tp_ore.end=§f[ §eМагазин§f ]§r §6Магнит руды§7 закончился. Новый можно купить в §eМагазин → Бусты
 
 ## --- НАГРАДЫ ЗА ПРОМОКОДЫ ---
-message.promo.1=§eактивировал(а) промокод и получил(а) 500 
-message.promo.2=§eактивировал(а) промокод и получил(а) 500 
-message.promo.3=§eактивировал(а) промокод и получил(а) 25k 
-message.promo.4=§eактивировал(а) промокод и получил(а) 100 
-message.promo.activated=§eТы уже активировал данный §aпромокод
+message.promo.1=§f[ §aПромокод§f ]§r %1$s§r§7 активировал(а) промокод и получил(а) §e500 
+message.promo.2=§f[ §aПромокод§f ]§r %1$s§r§7 активировал(а) промокод и получил(а) §e500 
+message.promo.3=§f[ §aПромокод§f ]§r %1$s§r§7 активировал(а) промокод и получил(а) §e25k 
+message.promo.4=§f[ §aПромокод§f ]§r %1$s§r§7 активировал(а) промокод и получил(а) §e100 
+message.promo.activated=§l§cERROR!§r§7 Ты уже активировал(а) этот §aпромокод
 message.promo.error=§l§cERROR!§r§7 Неверный промокод
 
 ## --- АНТИЧИТ ---
-message.anticheat.detectItem=попытался взять запрещенный предмет, предмет:
-message.acticheat.detectEchant.1=попытался зачаровать
-message.acticheat.detectEchant.2=на
-message.acticheat.detectEchant.3=уровень
 
 ## --- ОЧИСТКА ПРЕДМЕТОВ ---
 message.clearItem.title=§l§eОчистка мусора
-message.clearItem.subtitle=§l§eУдалено предметов: §a
+message.anticheat.item=§f[ §cAnti-Cheat§f ]§r %1$s§r§7 пытался взять запрещённый предмет: §c%2$s
+message.anticheat.enchant=§f[ §cAnti-Cheat§f ]§r %1$s§r§7: у предмета §c%2$s§7 уровень чар §c%3$s§7 выше допустимого
+message.clearItem.subtitle=§l§eУдалено предметов: §a%1$s
 
 ## --- СОБЫТИЯ ---
-message.event.gift_event=§l>> §eНа карте §aпоявился подарок! Кто сможет §bпервым§e его §aподобрать§e?
-message.event.gift_event.end= §aподобрал §eподарок!
+message.event.gift_event=§f[ §6Ивент§f ]§r §7На карте §aпоявился подарок§7! Кто подберёт его §bпервым§7?
+message.event.gift_event.end=§f[ §6Ивент§f ]§r %1$s§r§7 подобрал(а) §aподарок§7!
 message.event.haste_event=§gполучил(а) спешку на 10 сек
 message.event.mythic_chest=§l >> §rНа PvP арене появился мистик! Поспеши залутать его первым!
-message.event.rain_event=§l >> §bНачинается дождь из монет!
-message.event.rain_event.end=§l >> §bДождь окончен!
+message.event.rain_event=§f[ §6Ивент§f ]§r §bНачинается дождь из монет!
+message.event.rain_event.end=§f[ §6Ивент§f ]§r §bДождь из монет закончился!
 
 ## --- КОМАНДЫ И ИСПОЛЬЗОВАНИЕ ---
 commands.list.desc=§8-----§f Список команд §8-----§f
@@ -470,54 +460,55 @@ commands.prefix.desc=§7Управляет префиксами игроков
 commands.tag.desc=§7Управляет тегами игроков
 commands.scoreboard.desc=§7Управляет базой данных команды /scoreboard
 commands.kick.desc=§7Выгоняет игрока с сервера
-commands.tp.desc=§7Телепортирует игрока к вам
+commands.tp.desc=§7Телепортирует игрока к тебе
 commands.wipe.desc=§7Полностью сбрасывает прогресс всех игроков
 
-message.cmd.error.1=§l§cERROR!§r§7 Неизвестная команда:
-message.cmd.error.2=Напиши §e!help§7, чтобы узнать список команд
-message.cmd.error.3=§l§cERROR!§r§7 У вас нет прав для выполнения этой команды!
+message.cmd.error.3=§l§cERROR!§r§7 У тебя нет прав на эту команду
+message.cmd.unknown=§l§cERROR!§r§7 Неизвестная команда: §c%1$s§7. Напиши §e!help§7, чтобы узнать список команд
 message.cmd.notfound=§l§cERROR!§r§7 Игрок §f%1$s§7 не в сети
 
-message.cmd.spawn=§aВы телепортированы на §bспавн
+message.cmd.spawn=§f[ §cСервер§f ]§r §7Ты на §bспавне
 message.cmd.emotes=§8-----§f Список эмодзи §8-----§f
 message.cmd.msg.use=§aИспользование: §b!msg §a<§bигрок§a> <§bсообщение§a>
-message.cmd.gm1=§aРежим игры изменён на §bКреатив
-message.cmd.gm2=§aРежим игры изменён на §bПриключение
-message.cmd.gm6=§aРежим игры изменён на §bНаблюдение
-message.cmd.fly.on=§aРежим полёта §bвключен
-message.cmd.fly.off=§aРежим полёта §bвыключен
+message.cmd.msg.received=§7 %1$s:§r %2$s
+message.cmd.msg.sent=§7 Ты  %1$s:§r %2$s
+message.cmd.gm1=§f[ §7CMD§f ]§r §aРежим игры изменён на §bКреатив
+message.cmd.gm2=§f[ §7CMD§f ]§r §aРежим игры изменён на §bПриключение
+message.cmd.gm6=§f[ §7CMD§f ]§r §aРежим игры изменён на §bНаблюдение
+message.cmd.fly.on=§f[ §7CMD§f ]§r §aРежим полёта §bвключен
+message.cmd.fly.off=§f[ §7CMD§f ]§r §aРежим полёта §bвыключен
 message.cmd.fly.use=§aИспользование: §b!fly §a<§bon§a/§boff§a>
-message.cmd.clearchat=§aОчистка чата...
-message.cmd.stick=§aВы получили §bПалочку админа
-message.cmd.invis.on=§aВы стали §bневидимым
-message.cmd.invis.off=§aВы больше §bне невидимы
+message.cmd.clearchat=§f[ §7CMD§f ]§r §aОчистка чата...
+message.cmd.stick=§f[ §7CMD§f ]§r §aТы получил(а) §bПалочку админа
+message.cmd.invis.on=§f[ §7CMD§f ]§r §aТы стал(а) §bневидимым
+message.cmd.invis.off=§f[ §7CMD§f ]§r §aТы больше §bне невидим(а)
 message.cmd.invis.use=§aИспользование: §b!invis §a<§bon§a/§boff§a>
 message.cmd.timeset.use=§aИспользование: §b!timeset §a<§bsunrise§a; §bday§a; §bnoon§a; §bsunset§a; §bnight§a; §bmidnight§a>
 message.cmd.prefix.use=§aИспользование: §b!prefix §a<§bигрок§a> <§bset§a/§btake§a> <§bпрефикс§a>
 message.cmd.tag.use=§aИспользование: §b!tag §a<§bигрок§a> <§badd§a/§bremove§a> <§bтег§a>
 message.cmd.scoreboard.use=§aИспользование: §b!scoreboard §a<§bигрок§a> <§badd§a/§bremove§a> <§bцель§a> <§bколичество§a>
-message.cmd.kick=был кикнут. Причина: 
+message.cmd.kick=§f[ §cСервер§f ]§r %1$s§r§7 кикнут(а). Причина: §f%2$s
 message.cmd.kick.no_reason=не указана
 message.cmd.kick.use=§aИспользование: §b!kick §a<§bигрок§a> <§bпричина §a(§bне обязательно§a)>
 message.cmd.tp.use=§aИспользование: §b!tp §a<§bигрок§a>
-message.cmd.timeset.done=§8[§7CMD@host§8]§7: время изменено на §f%1$s
-message.cmd.prefix.set=§8[§7CMD@host§8]§7: префикс %1$s§r§7 выдан игроку §f%2$s
-message.cmd.prefix.take=§8[§7CMD@host§8]§7: префикс %1$s§r§7 снят у игрока §f%2$s
-message.cmd.tag.add=§8[§7CMD@host§8]§7: тег §f%1$s§7 выдан игроку §f%2$s
-message.cmd.tag.remove=§8[§7CMD@host§8]§7: тег §f%1$s§7 снят у игрока §f%2$s
-message.cmd.scoreboard.add=§8[§7CMD@host§8]§7: игроку §f%1$s§7 начислено §f%3$s§7 в §f%2$s
-message.cmd.scoreboard.remove=§8[§7CMD@host§8]§7: у игрока §f%1$s§7 списано §f%3$s§7 из §f%2$s
-message.cmd.tp.done=§8[§7CMD@host§8]§7: игрок §f%1$s§7 телепортирован к вам
+message.cmd.timeset.done=§f[ §7CMD§f ]§r §7Время изменено на §f%1$s
+message.cmd.prefix.set=§f[ §7CMD§f ]§r §7Префикс %1$s§r§7 выдан игроку §f%2$s
+message.cmd.prefix.take=§f[ §7CMD§f ]§r §7Префикс %1$s§r§7 снят у игрока §f%2$s
+message.cmd.tag.add=§f[ §7CMD§f ]§r §7Тег §f%1$s§7 выдан игроку §f%2$s
+message.cmd.tag.remove=§f[ §7CMD§f ]§r §7Тег §f%1$s§7 снят у игрока §f%2$s
+message.cmd.scoreboard.add=§f[ §7CMD§f ]§r §7Игроку §f%1$s§7 начислено §f%3$s§7 в §f%2$s
+message.cmd.scoreboard.remove=§f[ §7CMD§f ]§r §7У игрока §f%1$s§7 списано §f%3$s§7 из §f%2$s
+message.cmd.tp.done=§f[ §7CMD§f ]§r §7Игрок §f%1$s§7 телепортирован к тебе
 
 ## --- НАГРАДЫ МАГАЗИНА ---
-message.shop.enchant.efficiency=§7Успешно приобретено§f: §eЭффективность§f (+1)
-message.shop.enchant.fortune=§7Успешно приобретено§f: §eУдача§f (+1)
-message.shop.kit.iron=§7Успешно приобретено§f: Железный комплект
-message.shop.kit.diamond=§7Успешно приобретено§f: Алмазный комплект
-message.shop.kit.netherite=§7Успешно приобретено§f: Незеритовый комплект
+message.shop.enchant.efficiency=§f[ §eМагазин§f ]§r §7Куплено: §eЭффективность§7 (+1)
+message.shop.enchant.fortune=§f[ §eМагазин§f ]§r §7Куплено: §eУдача§7 (+1)
+message.shop.kit.iron=§f[ §eМагазин§f ]§r §7Куплено: §fЖелезный набор
+message.shop.kit.diamond=§f[ §eМагазин§f ]§r §7Куплено: §bАлмазный набор
+message.shop.kit.netherite=§f[ §eМагазин§f ]§r §7Куплено: §5Незеритовый набор
 
 ## --- АДМИН-ПАЛОЧКА ---
-message.kick=§r§c исключен администратором§f
+message.kick=§f[ §cСервер§f ]§r %1$s§r§7 исключён(а) администратором
 
 ## --- СКОРБОРД ---
 scoreboards.map=§l[] Магазин за руду§r
@@ -541,5 +532,5 @@ scoreboard.objective.efficiency= Эффективность
 scoreboard.objective.fortune= Удача
 
 ## --- ОШИБКИ ЧАТА ---
-message.chat.antiflood=§l§cERROR!§r§7 Ваше сообщение слишком длинное!
-message.chat.antispam=§l§cERROR!§r§7 Не спамьте в чате!
+message.chat.antiflood=§l§cERROR!§r§7 Сообщение слишком длинное (больше 200 символов)
+message.chat.antispam=§l§cERROR!§r§7 Не спамь в чате!

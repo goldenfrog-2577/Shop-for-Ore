@@ -54,7 +54,6 @@ button.deleteText=Eliminar texto
 button.kickPlayer=Expulsar jugador
 chat.title=Chat
 chat.title.cheats=Chat y comandos
-chat.recipient=Tú
 commandBlock.entherCommand=Introduce el comando aquí...
 commands.scoreboard.players.offlinePlayerName= §cDesconectado
 death.attack.explosion= %1$s §r§cexplotó
@@ -86,11 +85,9 @@ progressScreen.message.locating=Antes de hacer muchas preguntas, lee los cartele
 progressScreen.message.resourceLoading=Host Omlet: @waxenjaguar2209
 
 ## --- TRADUCCIÓN Y BOTONES DE UI ---
-admin.menu.background.1=§8[§cNo funciona§8]
 admin.menu.background.2=§8[§7Pulsa para invocar§8]
 admin.menu.button.back=§8Atrás
 menu.background=§8[§7Pulsa para abrir§8]
-menu.body.development=§7En desarrollo...
 menu.button.back=§8 Atrás
 
 ## --- MENÚ PRINCIPAL ---
@@ -230,23 +227,19 @@ settingsParticle.body=§7Pulsa §2activar§7/§4desactivar§7 abajo para mostrar
 settingsSound.title=§l§8 Ajustes | Sonidos
 settingsSound.body=§7Pulsa §2activar§7/§4desactivar§7 abajo para mostrar u ocultar sonidos al vender
 
-settingsChanged.1= §7Ajuste cambiado a - §2Activado
-settingsChanged.2= §7Ajuste cambiado a - §4Desactivado
-settingsChanged.3= §7Ajuste cambiado a - §gSolo emotes
+settingsChanged.1=§f[ §3Ajustes§f ]§r  §7Ajuste cambiado a - §2Activado
+settingsChanged.2=§f[ §3Ajustes§f ]§r  §7Ajuste cambiado a - §4Desactivado
+settingsChanged.3=§f[ §3Ajustes§f ]§r  §7Ajuste cambiado a - §gSolo emotes
 
 ## --- MENÚ BANCO ---
 bank.title=§l§8Menú del servidor |  Banco
 bank.text.1=§rCantidad que quieres enviar:
 bank.text.2=§7Escribe aquí...
-bank.text.3=§l§cERROR!§r§7 ¡Saldo insuficiente!
-bank.text.4=§aTransferencia exitosa al jugador 
-bank.text.5=§aHas recibido de 
-bank.text.6= cantidad: 
-bank.sent=§aTransferencia exitosa al jugador §e%1$s§a, cantidad: §e%2$s
-bank.received=§aHas recibido de §e%1$s§a, cantidad: §e%2$s
+bank.text.3=§l§cERROR!§r§7 No tienes suficiente dinero
+bank.sent=§f[ §2Banco§f ]§r §7Enviado a §e%1$s§7: §e%2$s
+bank.received=§f[ §2Banco§f ]§r §e%1$s§7 te envió §e%2$s
 bank.text.7=§rElige un jugador:
 bank.text.8=§eSaldo§r:
-bank.text.9=§l§cERROR!§r§7 No se puede transferir valores negativos
 bank.error.amount=§l§cERROR!§r§7 La cantidad debe ser un número entero positivo
 bank.error.self=§l§cERROR!§r§7 No puedes enviarte dinero a ti mismo
 
@@ -282,7 +275,7 @@ upgrading.button.2=§5Reinicio
 ## --- MENÚ REGISTRO ---
 reg.title=§lRegistro de cuenta
 reg.toggle=Acepto las reglas del servidor y confirmo §cno§r usar trampas
-reg.text.1=§cPor favor, confirma §bno trampas§c para jugar en el servidor
+reg.text.1=§l§cERROR!§r§7 Confirma que §bno usas trampas§7 para jugar en el servidor
 reg.text.2=§aHola.
 reg.text.3=§a¡Bienvenido al servidor! ¡Diviértete :)
 reg.text.4=§6Información de la cuenta§r:
@@ -295,11 +288,11 @@ login.text.1=Bienvenido
 login.text.2=§ral servidor §l[] Shop for Ore§r. Crea e introduce una contraseña para registrarte
 login.text.3=§gIntroduce la contraseña que usaste al registrarte
 login.text.4=§7Introduce la contraseña...
-login.text.5=§a¡Inicio de sesión exitoso! ¡Bienvenido!
-login.text.6=§cTu §bcontraseña§c es incorrecta, ¡revisa tus datos!
-login.required=§cPrimero inicia sesión o regístrate
-login.legacy=§eTu cuenta es de la antigua plataforma: crea una nueva contraseña, tu progreso se conserva
-reg.text.length=§cLa contraseña debe tener entre 5 y 32 caracteres
+login.text.5=§f[ §9Cuenta§f ]§r §a¡Sesión iniciada! ¡Bienvenido!
+login.text.6=§l§cERROR!§r§7 Contraseña incorrecta, inténtalo de nuevo
+login.required=§l§cERROR!§r§7 Primero inicia sesión o regístrate
+login.legacy=§f[ §9Cuenta§f ]§r §eCuenta de la antigua plataforma: crea una contraseña nueva, tu progreso se conserva
+reg.text.length=§l§cERROR!§r§7 La contraseña debe tener entre 5 y 32 caracteres
 
 ## --- MENÚ ADMIN ---
 admin.menu.title=§l§8Menú de admin
@@ -367,89 +360,86 @@ tools.button.12=§8Limpiar inventario
 sayServer.title=§l§8Menú de admin | Anuncios
 sayServer.body=§gEscribe abajo lo que quieras decir. Lo verá todo el servidor
 sayServer.textField=§7Escribe el texto...
-sayServer.message=§l§eAnuncio:§r
+sayServer.message=§f[ §eAnuncio§f ]§r %1$s
 
 ## --- ADMIN: WIPE ---
 wipe.title=§l§8Advertencia
 wipe.body=§7El wipe reiniciará todas las estadísticas, pero no afectará etiquetas ni inventarios. ¿Seguro?
 wipe.button.1=§2Sí
 wipe.button.2=§4No
-wipe.message.success=§a¡Estadísticas reiniciadas con éxito!
+wipe.message.success=§f[ §cServidor§f ]§r §aSe han reiniciado las estadísticas de todos los jugadores
 
 ## --- MENSAJES DE NIVEL Y SISTEMA ---
-message.lvlup.lvl.2= §rsubió a nivel §a2§f. Pico mejorado: Palo >> Pico de madera
-message.lvlup.lvl.3= §rsubió a nivel §a3§f. Pico mejorado: Pico de madera >> Pico de piedra
-message.lvlup.lvl.4= §rsubió a nivel §a4
-message.lvlup.lvl.5= §rsubió a nivel §a5
-message.lvlup.lvl.6= §rsubió a nivel §a6
-message.lvlup.lvl.7= §rsubió a nivel §a7
-message.lvlup.lvl.8= §rsubió a nivel §a8§f. Pico mejorado: Pico de piedra >> Pico de hierro
-message.lvlup.lvl.9= §rsubió a nivel §a9
-message.lvlup.lvl.10= §rsubió a nivel §a10
-message.lvlup.lvl.11= §rsubió a nivel §a11
-message.lvlup.lvl.12= §rsubió a nivel §a12
-message.lvlup.lvl.13= §rsubió a nivel §a13§f. Pico mejorado: Pico de hierro >> §bPico de diamante
-message.lvlup.lvl.14= §rsubió a nivel §a14
-message.lvlup.lvl.15= §rsubió a nivel §a15§f. Pico mejorado: §bPico de diamante§f >> §5Pico de netherita
-message.lvlup.lvl.16= §rsubió a nivel §a16§f. Nueva ubicación desbloqueada: §cNether
-message.lvlup.lvl.17= §rsubió a nivel §a17
-message.lvlup.lvl.18= §rsubió a nivel §a18
-message.lvlup.lvl.19= §rsubió a nivel §a19
-message.lvlup.lvl.20= §rsubió a nivel §a20
-message.lvlup.lvl.21= §rsubió a nivel §a21
-message.lvlup.lvl.22= §rsubió a nivel §a22
-message.lvlup.lvl.23= §rsubió a nivel §a23
-message.lvlup.lvl.24= §rsubió a nivel §a24
-message.lvlup.lvl.25= §rsubió a nivel §a25§f. ¡Este es el §aNIVEL MÁXIMO§f!
+message.lvlup.lvl.2=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a2§f. Pico mejorado: Palo >> Pico de madera
+message.lvlup.lvl.3=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a3§f. Pico mejorado: Pico de madera >> Pico de piedra
+message.lvlup.lvl.4=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a4
+message.lvlup.lvl.5=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a5
+message.lvlup.lvl.6=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a6
+message.lvlup.lvl.7=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a7
+message.lvlup.lvl.8=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a8§f. Pico mejorado: Pico de piedra >> Pico de hierro
+message.lvlup.lvl.9=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a9
+message.lvlup.lvl.10=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a10
+message.lvlup.lvl.11=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a11
+message.lvlup.lvl.12=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a12
+message.lvlup.lvl.13=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a13§f. Pico mejorado: Pico de hierro >> §bPico de diamante
+message.lvlup.lvl.14=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a14
+message.lvlup.lvl.15=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a15§f. Pico mejorado: §bPico de diamante§f >> §5Pico de netherita
+message.lvlup.lvl.16=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a16§f. Nueva ubicación desbloqueada: §cNether
+message.lvlup.lvl.17=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a17
+message.lvlup.lvl.18=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a18
+message.lvlup.lvl.19=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a19
+message.lvlup.lvl.20=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a20
+message.lvlup.lvl.21=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a21
+message.lvlup.lvl.22=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a22
+message.lvlup.lvl.23=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a23
+message.lvlup.lvl.24=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a24
+message.lvlup.lvl.25=§f[ §aLvL UP§f ]§r %1$s §rsubió a nivel §a25§f. ¡Este es el §aNIVEL MÁXIMO§f!
 
 ## --- VIP Y REINICIO ---
 message.basic.error=§l§cERROR!§r§7 No tienes suficientes 
-message.lvlup.error.1=§l§cERROR!§r§7 No tienes suficientes  o tu nivel es menor a 25 
-message.lvlup.error.2=§l§cERROR!§r§7 Tu nivel no es 16-25 
+message.lvlup.error.1=§l§cERROR!§r§7 Para §aVIP§7 necesitas nivel 25  y 125 000 
+message.lvlup.error.2=§l§cERROR!§r§7 El Reinicio está disponible del nivel 16 al 25 
 message.lvlup.haveVIP=§l§cERROR!§r§7 Ya tienes §aVIP
-message.lvlup.haveRebirth=§l§cERROR!§r§7 ¡Nivel máximo de reinicio!
-message.lvlup.rebirth.1= §r§dhizo su primer §5Reinicio
-message.lvlup.rebirth.2= §dSubiste tu nivel de §5reinicio§d a: §5
-message.lvlup.vip= §rsubió a nivel §aVIP
-message.lvlup.vip.success=¡Felicidades por comprar §aVIP§f! Para ir a la §aisla VIP§f, usa §eMenú del servidor
+message.lvlup.rebirth.1=§f[ §dReinicio§f ]§r ¡%1$s§r§7 hizo su primer §5Reinicio§7!
+message.lvlup.rebirth.2=§f[ §dReinicio§f ]§r §7Tu nivel de Reinicio: §5%1$s
+message.lvlup.vip=§f[ §aLvL UP§f ]§r ¡%1$s§r§7 compró §aVIP§7!
+message.lvlup.vip.success=§f[ §aLvL UP§f ]§r §7¡Felicidades por el §aVIP§7! Para ir a la §aisla VIP§7, abre el §eMenú del servidor
 
 ## --- POTENCIADORES ---
-message.boost.end.1=§a x2 potenciador terminado. ¡Puedes comprar uno nuevo en la Tienda!
-message.boost.end.2=§b x4 potenciador terminado. ¡Puedes comprar uno nuevo en la Tienda!
-message.boost.error=§l§cERROR!§r§7 No puedes §ccomprar un potenciador§7 ahora. ¡Espera a que termine el anterior!
-message.x2boost=§a compró  x2 potenciador. ¡Tienes §25 minutos§a para mejorar!
-message.x4boost=§b compró  x4 potenciador. ¡Tienes §35 minutos§b para mejorar!
+message.boost.end.1=§f[ §bPotenciador§f ]§r §7El §apotenciador x2§7 terminó. Compra otro en §eTienda → Potenciadores
+message.boost.end.2=§f[ §bPotenciador§f ]§r §7El §bpotenciador x4§7 terminó. Compra otro en §eTienda → Potenciadores
+message.boost.error=§l§cERROR!§r§7 Ya hay un potenciador activo. ¡Espera a que termine!
+message.x2boost=§f[ §bPotenciador§f ]§r ¡%1$s§r§7 compró un §apotenciador x2§7 para todos durante §e5 minutos§7!
+message.x4boost=§f[ §bPotenciador§f ]§r ¡%1$s§r§7 compró un §bpotenciador x4§7 para todos durante §e5 minutos§7!
 message.shop.enchant.max=§l§cERROR!§r§7 Ya tienes el nivel §emáximo§7 de este encantamiento
 message.lvlup.rebirth.max=§l§cERROR!§r§7 Ya tienes el §5Reinicio máximo§7 (5)
-message.tp_ore.buy=§6 Imán de mineral activado durante §e5 minutos§6: el mineral que cae cerca vuela hacia ti
-message.tp_ore.active=§l§cERROR!§r§7 El imán de mineral ya está activo. Segundos restantes: §e
-message.tp_ore.end=§6 El imán de mineral se ha agotado. Puedes comprar otro en Tienda → Potenciadores
+message.tp_ore.buy=§f[ §eTienda§f ]§r §7El §6Imán de mineral§7 está activo §e5 minutos§7: los objetos cercanos vuelan hacia ti
+message.tp_ore.active=§l§cERROR!§r§7 El §6Imán de mineral§7 ya está activo. Segundos restantes: §e%1$s
+message.tp_ore.end=§f[ §eTienda§f ]§r §7El §6Imán de mineral§7 se agotó. Compra otro en §eTienda → Potenciadores
 
 ## --- PREMIOS PROMOCIONALES ---
-message.promo.1=§eactivó un código promocional y obtuvo 500 
-message.promo.2=§eactivó un código promocional y obtuvo 500 
-message.promo.3=§eactivó un código promocional y obtuvo 25k 
-message.promo.4=§eactivó un código promocional y obtuvo 100 
-message.promo.activated=§eYa has activado este §acódigo promocional
+message.promo.1=§f[ §aPromo§f ]§r %1$s§r§7 activó un código promocional y obtuvo §e500 
+message.promo.2=§f[ §aPromo§f ]§r %1$s§r§7 activó un código promocional y obtuvo §e500 
+message.promo.3=§f[ §aPromo§f ]§r %1$s§r§7 activó un código promocional y obtuvo §e25k 
+message.promo.4=§f[ §aPromo§f ]§r %1$s§r§7 activó un código promocional y obtuvo §e100 
+message.promo.activated=§l§cERROR!§r§7 Ya has activado este §acódigo promocional
 message.promo.error=§l§cERROR!§r§7 Código promocional inválido
 
 ## --- ANTITRAMPAS ---
-message.anticheat.detectItem=intentó tomar un objeto prohibido, objeto:
-message.acticheat.detectEchant.1=intentó encantar
-message.acticheat.detectEchant.2=con
-message.acticheat.detectEchant.3=nivel
 
 ## --- LIMPIEZA DE OBJETOS ---
 message.clearItem.title=§l§eLimpieza de objetos
-message.clearItem.subtitle=§l§eObjetos eliminados: §a
+message.anticheat.item=§f[ §cAnti-Cheat§f ]§r %1$s§r§7 intentó coger un objeto prohibido: §c%2$s
+message.anticheat.enchant=§f[ §cAnti-Cheat§f ]§r %1$s§r§7: el objeto §c%2$s§7 tiene nivel de encantamiento §c%3$s§7 por encima del límite
+message.clearItem.subtitle=§l§eObjetos eliminados: §a%1$s
 
 ## --- EVENTOS ---
-message.event.gift_event=§l>> §e¡Apareció un regalo en el mapa! ¿Quién lo §brecogerá§e §bprimero§e?
-message.event.gift_event.end= §arecogió el §eregalo!
+message.event.gift_event=§f[ §6Evento§f ]§r §7¡Ha §aaparecido un regalo§7 en el mapa! ¿Quién lo cogerá §bprimero§7?
+message.event.gift_event.end=§f[ §6Evento§f ]§r ¡%1$s§r§7 cogió el §aregalo§7!
 message.event.haste_event=§gobtuvo prisa por 10 seg
 message.event.mythic_chest=§l >> §r¡Apareció un cofre mítico en la arena PvP! ¡Apresúrate a saquearlo primero!
-message.event.rain_event=§l >> §b¡Está lloviendo monedas!
-message.event.rain_event.end=§l >> §b¡La lluvia terminó!
+message.event.rain_event=§f[ §6Evento§f ]§r §b¡Empieza la lluvia de monedas!
+message.event.rain_event.end=§f[ §6Evento§f ]§r §b¡La lluvia de monedas terminó!
 
 ## --- COMANDOS Y USO ---
 commands.list.desc=§8-----§f Lista de comandos §8-----§f
@@ -473,51 +463,52 @@ commands.kick.desc=§7Expulsa a un jugador del servidor
 commands.tp.desc=§7Teletransporta a un jugador hacia ti
 commands.wipe.desc=§7Reinicia el progreso de todos los jugadores
 
-message.cmd.error.1=§l§cERROR!§r§7 Comando desconocido:
-message.cmd.error.2=Escribe §e!help§7 para ver la lista de comandos
-message.cmd.error.3=§l§cERROR!§r§7 ¡No tienes permiso para usar este comando!
+message.cmd.error.3=§l§cERROR!§r§7 No tienes permiso para usar este comando
+message.cmd.unknown=§l§cERROR!§r§7 Comando desconocido: §c%1$s§7. Escribe §e!help§7 para ver la lista de comandos
 message.cmd.notfound=§l§cERROR!§r§7 El jugador §f%1$s§7 no está conectado
 
-message.cmd.spawn=§aFuiste teletransportado al §bspawn
+message.cmd.spawn=§f[ §cServidor§f ]§r §7Estás en el §bspawn
 message.cmd.emotes=§8-----§f Lista de emotes §8-----§f
 message.cmd.msg.use=§aUso: §b!msg §a<§bjugador§a> <§bmensaje§a>
-message.cmd.gm1=§aModo de juego cambiado a §bCreativo
-message.cmd.gm2=§aModo de juego cambiado a §bAventura
-message.cmd.gm6=§aModo de juego cambiado a §bEspectador
-message.cmd.fly.on=§aModo vuelo §bactivado
-message.cmd.fly.off=§aModo vuelo §bdesactivado
+message.cmd.msg.received=§7 %1$s:§r %2$s
+message.cmd.msg.sent=§7 Tú  %1$s:§r %2$s
+message.cmd.gm1=§f[ §7CMD§f ]§r §aModo de juego cambiado a §bCreativo
+message.cmd.gm2=§f[ §7CMD§f ]§r §aModo de juego cambiado a §bAventura
+message.cmd.gm6=§f[ §7CMD§f ]§r §aModo de juego cambiado a §bEspectador
+message.cmd.fly.on=§f[ §7CMD§f ]§r §aModo vuelo §bactivado
+message.cmd.fly.off=§f[ §7CMD§f ]§r §aModo vuelo §bdesactivado
 message.cmd.fly.use=§aUso: §b!fly §a<§bon§a/§boff§a>
-message.cmd.clearchat=§aChat limpiado...
-message.cmd.stick=§aRecibiste §bVara de admin
-message.cmd.invis.on=§aAhora eres §binvisible
-message.cmd.invis.off=§aYa no eres §binvisible
+message.cmd.clearchat=§f[ §7CMD§f ]§r §aChat limpiado...
+message.cmd.stick=§f[ §7CMD§f ]§r §aRecibiste §bVara de admin
+message.cmd.invis.on=§f[ §7CMD§f ]§r §aAhora eres §binvisible
+message.cmd.invis.off=§f[ §7CMD§f ]§r §aYa no eres §binvisible
 message.cmd.invis.use=§aUso: §b!invis §a<§bon§a/§boff§a>
 message.cmd.timeset.use=§aUso: §b!timeset §a<§bsunrise§a; §bday§a; §bnoon§a; §bsunset§a; §bnight§a; §bmidnight§a>
 message.cmd.prefix.use=§aUso: §b!prefix §a<§bjugador§a> <§bset§a/§btake§a> <§bprefijo§a>
 message.cmd.tag.use=§aUso: §b!tag §a<§bjugador§a> <§badd§a/§bremove§a> <§betiqueta§a>
 message.cmd.scoreboard.use=§aUso: §b!scoreboard §a<§bjugador§a> <§badd§a/§bremove§a> <§bobjetivo§a> <§bcantidad§a>
-message.cmd.kick=fue expulsado. Razón: 
+message.cmd.kick=§f[ §cServidor§f ]§r %1$s§r§7 fue expulsado. Motivo: §f%2$s
 message.cmd.kick.no_reason=no especificado
 message.cmd.kick.use=§aUso: §b!kick §a<§bjugador§a> <§brazón §a(§bopcional§a)>
 message.cmd.tp.use=§aUso: §b!tp §a<§bjugador§a>
-message.cmd.timeset.done=§8[§7CMD@host§8]§7: hora cambiada a §f%1$s
-message.cmd.prefix.set=§8[§7CMD@host§8]§7: prefijo %1$s§r§7 añadido a §f%2$s
-message.cmd.prefix.take=§8[§7CMD@host§8]§7: prefijo %1$s§r§7 quitado a §f%2$s
-message.cmd.tag.add=§8[§7CMD@host§8]§7: etiqueta §f%1$s§7 añadida a §f%2$s
-message.cmd.tag.remove=§8[§7CMD@host§8]§7: etiqueta §f%1$s§7 quitada a §f%2$s
-message.cmd.scoreboard.add=§8[§7CMD@host§8]§7: añadido §f%3$s§7 a §f%2$s§7 de §f%1$s
-message.cmd.scoreboard.remove=§8[§7CMD@host§8]§7: quitado §f%3$s§7 de §f%2$s§7 de §f%1$s
-message.cmd.tp.done=§8[§7CMD@host§8]§7: §f%1$s§7 teletransportado hacia ti
+message.cmd.timeset.done=§f[ §7CMD§f ]§r §7Hora cambiada a §f%1$s
+message.cmd.prefix.set=§f[ §7CMD§f ]§r §7Prefijo %1$s§r§7 añadido a §f%2$s
+message.cmd.prefix.take=§f[ §7CMD§f ]§r §7Prefijo %1$s§r§7 quitado a §f%2$s
+message.cmd.tag.add=§f[ §7CMD§f ]§r §7Etiqueta §f%1$s§7 añadida a §f%2$s
+message.cmd.tag.remove=§f[ §7CMD§f ]§r §7Etiqueta §f%1$s§7 quitada a §f%2$s
+message.cmd.scoreboard.add=§f[ §7CMD§f ]§r §7Añadido §f%3$s§7 a §f%2$s§7 de §f%1$s
+message.cmd.scoreboard.remove=§f[ §7CMD§f ]§r §7Quitado §f%3$s§7 de §f%2$s§7 de §f%1$s
+message.cmd.tp.done=§f[ §7CMD§f ]§r §7§f%1$s§7 teletransportado hacia ti
 
 ## --- PREMIOS DE TIENDA ---
-message.shop.enchant.efficiency=§7Comprado con éxito§f: §eEficiencia§f (+1)
-message.shop.enchant.fortune=§7Comprado con éxito§f: §eFortuna§f (+1)
-message.shop.kit.iron=§7Comprado con éxito§f: Kit de hierro
-message.shop.kit.diamond=§7Comprado con éxito§f: Kit de diamante
-message.shop.kit.netherite=§7Comprado con éxito§f: Kit de netherita
+message.shop.enchant.efficiency=§f[ §eTienda§f ]§r §7Comprado: §eEficiencia§7 (+1)
+message.shop.enchant.fortune=§f[ §eTienda§f ]§r §7Comprado: §eFortuna§7 (+1)
+message.shop.kit.iron=§f[ §eTienda§f ]§r §7Comprado: §fKit de hierro
+message.shop.kit.diamond=§f[ §eTienda§f ]§r §7Comprado: §bKit de diamante
+message.shop.kit.netherite=§f[ §eTienda§f ]§r §7Comprado: §5Kit de netherita
 
 ## --- VARA ADMIN ---
-message.kick=§r§c expulsado por admin§f
+message.kick=§f[ §cServidor§f ]§r %1$s§r§7 fue expulsado por un administrador
 
 ## --- MARCADOR ---
 scoreboards.map=§l[] Shop for Orel§r
@@ -541,5 +532,5 @@ scoreboard.objective.efficiency= Eficiencia
 scoreboard.objective.fortune= Fortuna
 
 ## --- ERRORES DE CHAT ---
-message.chat.antiflood=§l§cERROR!§r§7 ¡Tu mensaje es demasiado largo!
+message.chat.antiflood=§l§cERROR!§r§7 Tu mensaje es demasiado largo (más de 200 caracteres)
 message.chat.antispam=§l§cERROR!§r§7 ¡No hagas spam en el chat!

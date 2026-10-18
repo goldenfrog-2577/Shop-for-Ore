@@ -1,7 +1,7 @@
 // --- Обработка пользовательских команд чата для Shop for Ore ---
 // Импортируем необходимые данные и списки команд
 import { world } from '@minecraft/server';
-import { commandsList, emotes, emotesList, rawTranslate, rawText, isPending, run, findPlayer } from '../DataBase.js';
+import { commandsList, emotes, emotesList, rawTranslate, isPending, run, findPlayer } from '../DataBase.js';
 
 // --- Главный обработчик команд чата ---
 world.events.beforeChat.subscribe((data) => {
@@ -21,7 +21,7 @@ world.events.beforeChat.subscribe((data) => {
 	// Поиск команды в списке — по точному имени (раньше «!f» находило «!fly», «!g» — «!gm1»)
 	const findCommand = commandsList.find(cmd => cmd.command.split(' ')[0] === `!${command}`);
 	if (!findCommand) {
-		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"message.cmd.error.1"},{"text":" §c!${command}§7. "},{"translate":"message.cmd.error.2"}]}`);
+		run(player, `tellraw @s ${rawTranslate('message.cmd.unknown', `!${command}`)}`);
 		return;
 	}
 
@@ -69,8 +69,8 @@ world.events.beforeChat.subscribe((data) => {
 
 				// Форматированное личное сообщение с иконкой облачка.
 				// JSON собирается через JSON.stringify: кавычки в сообщении больше не ломают tellraw
-				run(target, `tellraw @s ${rawText(`\ue11d ${player.name}:§r ${privateMessage}`)}`);
-				run(player, `tellraw @s ${JSON.stringify({ rawtext: [{ text: "\ue11d " }, { translate: "chat.recipient" }, { text: ` \ue170 ${target.name}:§r ${privateMessage}` }] })}`);
+				run(target, `tellraw @s ${rawTranslate('message.cmd.msg.received', player.name, privateMessage)}`);
+				run(player, `tellraw @s ${rawTranslate('message.cmd.msg.sent', target.name, privateMessage)}`);
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.msg.use"}]}');
 			}
@@ -209,7 +209,7 @@ world.events.beforeChat.subscribe((data) => {
 				// Без причины — стандартное сообщение игры (раньше выгнанный видел сырой ключ %message.cmd.kick.no_reason)
 				run(player, kickReason ? `kick "${target.name}" ${kickReason}` : `kick "${target.name}"`);
 				// JSON через JSON.stringify: кавычки в причине больше не ломают сообщение
-				run(player, `tellraw @a ${JSON.stringify({ rawtext: [{ text: `§c${target.name} ` }, { translate: "message.cmd.kick" }, kickReason ? { text: kickReason } : { translate: "message.cmd.kick.no_reason" }] })}`);
+				run(player, `tellraw @a ${JSON.stringify({ rawtext: [{ translate: "message.cmd.kick", with: { rawtext: [{ text: target.name }, kickReason ? { text: kickReason } : { translate: "message.cmd.kick.no_reason" }] } }] })}`);
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.kick.use"}]}');
 			}
@@ -240,6 +240,6 @@ world.events.beforeChat.subscribe((data) => {
 
 		default:
 			// Неизвестная команда
-			player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"message.cmd.error.1"},{"text":" §c!${command}§7. "},{"translate":"message.cmd.error.2"}]}`);
+			run(player, `tellraw @s ${rawTranslate('message.cmd.unknown', `!${command}`)}`);
 	}
 });

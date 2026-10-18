@@ -2,6 +2,7 @@
 // Проверяет инвентарь игроков на наличие запрещённых предметов и завышенных уровней чар
 
 import { world, system, Items, ItemStack } from '@minecraft/server';
+import { rawTranslate } from '../DataBase.js';
 
 // --- Список запрещённых предметов ---
 const bannedItems = new Set([
@@ -66,7 +67,7 @@ system.runSchedule(() => {
 			// Запрещённый предмет
 			if (bannedItems.has(item.typeId)) {
 				container.setItem(i, air);
-				world.say(`§7[§cAnti-Cheat§7] §4${player.name} §c%message.anticheat.detectItem §4${item.typeId}`);
+				player.runCommandAsync(`tellraw @a ${rawTranslate('message.anticheat.item', player.name, item.typeId)}`).catch(() => undefined);
 				continue;
 			}
 
@@ -79,7 +80,7 @@ system.runSchedule(() => {
 			for (const enchant of enchantComponent.enchantments) {
 				if (enchant.type.maxLevel >= enchant.level) continue;
 				container.setItem(i, air);
-				world.say(`§7[§cAnti-Cheat§7] §4${player.name} §c%message.acticheat.detectEchant.1 §4${item.typeId} §c%message.acticheat.detectEchant.2 §4${enchant.level} §c%message.acticheat.detectEchant.3`);
+				player.runCommandAsync(`tellraw @a ${rawTranslate('message.anticheat.enchant', player.name, item.typeId, enchant.level)}`).catch(() => undefined);
 				break;
 			}
 		}

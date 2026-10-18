@@ -17,7 +17,7 @@ execute as @s[tag=!x2boost,tag=!x4boost,scores={money=50000..}] run tag @s add b
 scoreboard players remove @s[tag=buy:ok] money 50000
 execute as @s[tag=buy:ok] positioned as @a run playsound note.bell @a
 execute as @s[tag=buy:ok] run scoreboard players set scoreboards.x4boost display 0
-execute as @s[tag=buy:ok] run tellraw @a {"rawtext":[{"text":"§3"},{"selector":"@s"},{"translate":"message.x4boost"}]}
+execute as @s[tag=buy:ok] run tellraw @a {"rawtext":[{"translate":"message.x4boost","with":{"rawtext":[{"selector":"@s"}]}}]}
 execute as @s[tag=buy:ok] run scoreboard players set @e[name="X4Boost"] system 300
 # Тег буста получают все онлайн; зашедшим позже его выдаёт timers/t20, пока таймер X4Boost идёт
 execute as @s[tag=buy:ok] run tag @a add x4boost
