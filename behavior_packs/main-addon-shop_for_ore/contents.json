@@ -163,9 +163,6 @@
 		},
 		{
 			"path" : "functions/system/automine.mcfunction"
-		},
-		{
-			"path" : "animation_controllers/floating_text.animation_controllers.json"
 		}],
 	"version" : 1
 }

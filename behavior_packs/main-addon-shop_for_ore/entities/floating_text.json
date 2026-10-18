@@ -5,13 +5,7 @@
 			"identifier": "server:floating_text",
 			"is_spawnable": true,
 			"is_summonable": true,
-			"is_experimental": false,
-			"scripts": {
-				"animate": ["commands"]
-			},
-			"animations": {
-				"commands": "controller.animation.commands"
-			}
+			"is_experimental": false
 		},
 		"component_groups": {
 			"remove": {
@@ -68,8 +62,8 @@
 				}
 			},
 			"minecraft:nameable": {
-				"allowNameTagRenaming": true,
-				"alwaysShow": true,
+				"allow_name_tag_renaming": true,
+				"always_show": true,
 				"default_trigger": {
 					"event": "off",
 					"target": "self"
