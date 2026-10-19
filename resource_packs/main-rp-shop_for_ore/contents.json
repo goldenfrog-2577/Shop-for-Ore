@@ -54,6 +54,9 @@
 			"path" : "textures/items/menu.png"
 		},
 		{
+			"path" : "ui/scoreboards.json"
+		},
+		{
 			"path" : "textures/entities/other.png"
 		},
 		{
