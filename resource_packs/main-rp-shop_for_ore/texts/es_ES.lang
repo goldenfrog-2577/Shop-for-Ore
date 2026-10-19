@@ -85,14 +85,12 @@ progressScreen.message.locating=Antes de hacer muchas preguntas, lee los cartele
 progressScreen.message.resourceLoading=Host Omlet: @waxenjaguar2209
 
 ## --- TRADUCCIÓN Y BOTONES DE UI ---
-admin.menu.background.2=§8[§7Pulsa para invocar§8]
 admin.menu.button.back=§8Atrás
-menu.background=§8[§7Pulsa para abrir§8]
 menu.button.back=§8 Atrás
 
 ## --- MENÚ PRINCIPAL ---
 menu.title=§l§8Menú del servidor
-menu.body=§7Creador del menú§f: kapycta1231484
+menu.body=§7Creador del menú: §fkapycta1231484
 menu.button.1=§8 Sobre el mapa
 menu.button.2=§8 Tienda
 menu.button.3=§8 Ajustes
@@ -103,7 +101,7 @@ menu.button.7=§8 Teletransportes
 menu.button.8=§8 Mejoras
 
 ## --- MENÚ SOBRE EL MAPA ---
-mapInfo.title=§l§8Menú del servidor |  Sobre el mapa
+mapInfo.title=§l§8Menú del servidor »  Sobre el mapa
 mapInfo.body=§7Elige lo que necesitas.
 mapInfo.button.1=§8 Niveles
 mapInfo.button.2=§f⩆ §8¿Cómo jugar?
@@ -111,7 +109,7 @@ mapInfo.button.3=§f⩇ §8Creadores
 mapInfo.button.4=§8 Versión del mapa
 
 ## --- MENÚ DE NIVELES ---
-lvlsInfo.title=§l§8Menú del servidor |  Niveles
+lvlsInfo.title=§l§8Menú del servidor »  Niveles
 lvlsInfo.body.lvl.1=Nivel 1 - Tierra y Palo
 lvlsInfo.body.lvl.2=Nivel 2 - Roca y Pico de madera
 lvlsInfo.body.lvl.3=Nivel 3 - Carbón y Pico de piedra
@@ -139,7 +137,7 @@ lvlsInfo.body.lvl.24=Nivel 24 - Obsidiana
 lvlsInfo.body.lvl.25=Nivel 25 - Obsidiana llorosa (§a¡NIVEL MÁXIMO!§r)
 
 ## --- CÓMO JUGAR / TUTORIAL ---
-howtoplay.title=§l§8Menú del servidor | §f⩆§8 ¿Cómo jugar?
+howtoplay.title=§l§8Menú del servidor » §f⩆§8 ¿Cómo jugar?
 howtoplay.text.1=§l§7Tutorial
 howtoplay.text.2=§r§7• Para subir de nivel, vende minerales y bloques. Cada nivel desbloquea nuevos picos y minerales. Más en  Niveles
 howtoplay.text.3=• Para desbloquear un pico, también vende minerales y bloques
@@ -162,9 +160,9 @@ howtoplay.text.19= - tu XP y cuánto  para el siguiente 
 howtoplay.text.20= - tu Reinicio, característica: prisa
 howtoplay.text.21= - Online actual del servidor
 
-mapCreator.title=§l§8Menú del servidor | §f⩇§8 Creadores
+mapCreator.title=§l§8Menú del servidor » §f⩇§8 Creadores
 
-mapVersion.title=§l§8Menú del servidor |  Versión del mapa
+mapVersion.title=§l§8Menú del servidor »  Versión del mapa
 mapVersion.text.1=§l§7Aquí encontrarás información sobre la última actualización del mapa
 mapVersion.label=§2Versión del mapa:
 mapVersion.text.2=§lActualización 0.2.0 del 18 de octubre de 2026§r
@@ -180,60 +178,60 @@ mapVersion.text.11=• El PvP ahora solo funciona en la arena: en el spawn y en 
 mapVersion.text.12=• Los scripts son más rápidos; se han corregido errores de interfaz y de traducción
 
 ## --- MENÚ TIENDA ---
-shop.title=§l§8Menú del servidor |  Tienda
+shop.title=§l§8Menú del servidor »  Tienda
 shop.body=§7¿Qué quieres comprar?
 shop.button.1=§8Encantamientos
 shop.button.2=§8Kits PvP
 shop.button.3=§8Potenciadores
 
-shop.enchants.title=§l§8 Tienda | Encantamientos
+shop.enchants.title=§l§8 Tienda » Encantamientos
 shop.enchants.body.1=§7Elige qué encantamiento quieres comprar.
 shop.enchants.body.2=§l§cNota: §r§7Si compras una vez, tendrás §e1§7 nivel de encantamiento. Si compras de nuevo, el nivel aumentará.
 shop.enchants.button.1=§8Eficiencia
 shop.enchants.button.2=§8Fortuna
 
-shop.kits.title=§l§8 Tienda | Kits PvP
+shop.kits.title=§l§8 Tienda » Kits PvP
 shop.kits.body=§7Al comprar un kit, recibirás armadura y espada
 shop.kits.button.1=§8Kit de hierro
 shop.kits.button.2=§8Kit de diamante
 shop.kits.button.3=§8Kit de netherita
 
-shop.boost.title=§l§8 Tienda | Potenciadores
+shop.boost.title=§l§8 Tienda » Potenciadores
 shop.boost.body.1=§7Elige qué potenciador quieres comprar
 shop.boost.body.2=§l§cNota: §r§7El potenciador dura §e5§7 minutos tras la compra
 shop.boost.button.1=§8 x2 potenciador
 shop.boost.button.2=§8 x4 potenciador
-shop.boost.button.3=§8 Imán de mineral
+shop.boost.button.3=§8⨾ Imán de mineral
 
 ## --- MENÚ AJUSTES ---
-settings.title=§l§8Menú del servidor |  Ajustes
+settings.title=§l§8Menú del servidor »  Ajustes
 settings.body=§7Elige tus ajustes:
-settings.default.1=§7Por defecto - §2Activado
-settings.default.2=§7Por defecto - §4Desactivado
+settings.default.1=§7Por defecto: §aactivado
+settings.default.2=§7Por defecto: §cdesactivado
 settingsSelect.button.1=§8Marcador
 settingsSelect.button.2=§8Partículas al vender
 settingsSelect.button.3=§8Sonidos al vender
 
-settingsTable.title=§l§8 Ajustes | Marcador
-settingsTable.body=§7Pulsa §2activar§7/§4desactivar§7 abajo para mostrar u ocultar el marcador del servidor
+settingsTable.title=§l§8 Ajustes » Marcador
+settingsTable.body=§7Pulsa activar/desactivar abajo para mostrar u ocultar el marcador del servidor
 
-settings.button.1=§2Activar
-settings.button.2=§4Desactivar
-settings.button.3=§gSolo emotes
+settings.button.1=§8Activar
+settings.button.2=§8Desactivar
+settings.button.3=§8Solo emotes
 
-settingsParticle.title=§l§8 Ajustes | Partículas
-settingsParticle.body=§7Pulsa §2activar§7/§4desactivar§7 abajo para mostrar u ocultar partículas al vender
+settingsParticle.title=§l§8 Ajustes » Partículas
+settingsParticle.body=§7Pulsa activar/desactivar abajo para mostrar u ocultar partículas al vender
 
-settingsSound.title=§l§8 Ajustes | Sonidos
-settingsSound.body=§7Pulsa §2activar§7/§4desactivar§7 abajo para mostrar u ocultar sonidos al vender
+settingsSound.title=§l§8 Ajustes » Sonidos
+settingsSound.body=§7Pulsa activar/desactivar abajo para mostrar u ocultar sonidos al vender
 
 settingsChanged.1= §3Ajustes §8» §7Ajuste cambiado: §aactivado
 settingsChanged.2= §3Ajustes §8» §7Ajuste cambiado: §cdesactivado
 settingsChanged.3= §3Ajustes §8» §7Ajuste cambiado: §esolo emotes
 
 ## --- MENÚ BANCO ---
-bank.title=§l§8Menú del servidor |  Banco
-bank.text.1=§rCantidad que quieres enviar:
+bank.title=§l§8Menú del servidor »  Banco
+bank.text.1=§7Cantidad que quieres enviar:
 bank.text.2=§7Escribe aquí...
 bank.text.3=⩕ §l§cERROR!§r §8» §7No tienes suficiente dinero
 bank.sent= §2Banco §8» §7Enviado a §f%1$s§r§7: §e%2$s§7
@@ -244,7 +242,7 @@ bank.error.amount=⩕ §l§cERROR!§r §8» §7La cantidad debe ser un número e
 bank.error.self=⩕ §l§cERROR!§r §8» §7No puedes enviarte dinero a ti mismo
 
 ## --- MENÚ REGLAS ---
-rules.title=§l§8Menú del servidor |  Reglas
+rules.title=§l§8Menú del servidor »  Reglas
 rules.body.1=§l§7Reglas del servidor:
 rules.body.2=§r§7Al leer estas reglas, aceptas automáticamente el castigo por romper alguna. El desconocimiento no exime del castigo.
 rules.text.1=§l1.§r§7 No hacer spam/flood en el chat • Silencio 2-5 min
@@ -255,25 +253,25 @@ rules.text.5=§l5.§r§7 No pidas a jugadores seguir enlaces/streams/suscribirse
 rules.text.6=§l6.§r§7 No hacer trampas • Ban
 
 ## --- MENÚ CÓDIGOS PROMOCIONALES ---
-promo.title=§l§8Menú del servidor |  Códigos promocionales
+promo.title=§l§8Menú del servidor »  Códigos promocionales
 promo.text.1=§7Los códigos promocionales pueden encontrarse en cualquier parte. Están marcados en carteles con este §2color§7.
 promo.text.2=§7Si encuentras uno, introdúcelo abajo, respetando mayúsculas y minúsculas, o no funcionará.
 promo.textField=§7Introduce el código promocional...
 
 ## --- MENÚ TELETRANSPORTES ---
-warps.title=§l§8Menú del servidor |  Teletransportes
+warps.title=§l§8Menú del servidor »  Teletransportes
 warps.body=§7¿A dónde quieres teletransportarte?
 warps.button.1=§8Spawn
 warps.button.2=§8Mini-juegos
 
 ## --- MENÚ MEJORAS ---
-upgrading.title=§l§8Menú del servidor |  Mejoras
+upgrading.title=§l§8Menú del servidor »  Mejoras
 upgrading.body=§7Elige tu camino de mejora:
-upgrading.button.1=§2VIP
-upgrading.button.2=§5Reinicio
+upgrading.button.1=§8 VIP
+upgrading.button.2=§8 Reinicio
 
 ## --- MENÚ REGISTRO ---
-reg.title=§lRegistro de cuenta
+reg.title=§l§8Registro de cuenta
 reg.toggle=Acepto las reglas del servidor y confirmo §cno§r usar trampas
 reg.text.1=⩕ §l§cERROR!§r §8» §7Confirma que §eno usas trampas§7 para jugar en el servidor
 reg.text.2=§aHola.
@@ -283,7 +281,7 @@ reg.text.5=§6Contraseña§r:
 reg.text.6=§aRecuerda estos datos o haz una captura para entrar después.
 
 ## --- MENÚ INICIO DE SESIÓN ---
-login.title=§lInicio de sesión
+login.title=§l§8Inicio de sesión
 login.text.1=Bienvenido
 login.text.2=§ral servidor §l[] Shop for Ore§r. Crea e introduce una contraseña para registrarte
 login.text.3=§gIntroduce la contraseña que usaste al registrarte
@@ -306,7 +304,7 @@ admin.menu.button.7=§8Wipe
 admin.menu.button.8=§8Invocar bot
 
 ## --- ADMIN: MODOS DE JUEGO ---
-gm.title=§l§8Menú de admin | Modo de juego
+gm.title=§l§8Menú de admin » Modo de juego
 gm.body=§7Lista de modos de juego:
 gm.button.1=§8Creativo
 gm.button.2=§8Aventura
@@ -314,7 +312,7 @@ gm.button.3=§8Espectador
 gm.button.4=§8Volar
 
 ## --- ADMIN: HORA ---
-timeSet.title=§l§8Menú de admin | Establecer hora
+timeSet.title=§l§8Menú de admin » Establecer hora
 timeSet.body=§7Elige la hora a establecer:
 timeSet.button.1=§8Amanecer
 timeSet.button.2=§8Día
@@ -324,7 +322,7 @@ timeSet.button.5=§8Noche
 timeSet.button.6=§8Medianoche
 
 ## --- ADMIN: TELETRANSPORTES ---
-warp.title=§l§8Menú de admin | Teletransportes
+warp.title=§l§8Menú de admin » Teletransportes
 warp.body=§7Lista de teletransportes:
 warp.button.1=§8Mina
 warp.button.2=§8Ubicación VIP
@@ -332,7 +330,7 @@ warp.button.3=§8CMD Zone
 warp.button.4=§8/tp a @r
 
 ## --- ADMIN: EFECTOS ---
-effects.title=§l§8Menú de admin | Efectos
+effects.title=§l§8Menú de admin » Efectos
 effects.body=§7Lista de efectos:
 effects.button.1=§8Invisibilidad
 effects.button.2=§8Resistencia
@@ -341,32 +339,32 @@ effects.button.4=§8Prisa
 effects.button.5=§8Limpiar efectos
 
 ## --- ADMIN: HERRAMIENTAS ---
-tools.title=§l§8Menú de admin | Herramientas
+tools.title=§l§8Menú de admin » Herramientas
 tools.body=§7Elige lo que necesitas:
-tools.button.1=§5Bloque de comandos
-tools.button.2=§5Bloque de permiso
-tools.button.3=§5Bloque de denegación
-tools.button.4=§5Bloque de estructura
-tools.button.5=§5Estructura vacía
-tools.button.6=§5Barrera
-tools.button.7=§5Límite
-tools.button.8=§5Bloque de luz
-tools.button.9=§5Huevo de NPC
-tools.button.10=§5Huevo de holograma
-tools.button.11=§cVara de admin
+tools.button.1=§8Bloque de comandos
+tools.button.2=§8Bloque de permiso
+tools.button.3=§8Bloque de denegación
+tools.button.4=§8Bloque de estructura
+tools.button.5=§8Estructura vacía
+tools.button.6=§8Barrera
+tools.button.7=§8Límite
+tools.button.8=§8Bloque de luz
+tools.button.9=§8Huevo de NPC
+tools.button.10=§8Huevo de holograma
+tools.button.11=§8Vara de admin
 tools.button.12=§8Limpiar inventario
 
 ## --- ADMIN: ANUNCIOS ---
-sayServer.title=§l§8Menú de admin | Anuncios
-sayServer.body=§gEscribe abajo lo que quieras decir. Lo verá todo el servidor
+sayServer.title=§l§8Menú de admin » Anuncios
+sayServer.body=§7Escribe abajo lo que quieras decir. Lo verá todo el servidor
 sayServer.textField=§7Escribe el texto...
 sayServer.message= §eAnuncio §8» §f%1$s
 
 ## --- ADMIN: WIPE ---
 wipe.title=§l§8Advertencia
 wipe.body=§7El wipe reiniciará todas las estadísticas, pero no afectará etiquetas ni inventarios. ¿Seguro?
-wipe.button.1=§2Sí
-wipe.button.2=§4No
+wipe.button.1=§8Sí
+wipe.button.2=§8No
 wipe.message.success= §cServidor §8» §7Se han reiniciado las estadísticas de todos los jugadores
 
 ## --- MENSAJES DE NIVEL Y SISTEMA ---

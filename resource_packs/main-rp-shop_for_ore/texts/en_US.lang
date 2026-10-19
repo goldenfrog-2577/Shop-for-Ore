@@ -85,14 +85,12 @@ progressScreen.message.locating=Before asking too many questions, read the signs
 progressScreen.message.resourceLoading=Host Omlet: @waxenjaguar2209
 
 ## --- TRANSLATION & UI BUTTONS ---
-admin.menu.background.2=§8[§7Press to summon§8]
 admin.menu.button.back=§8Back
-menu.background=§8[§7Press to open§8]
 menu.button.back=§8 Back
 
 ## --- MAIN MENU ---
 menu.title=§l§8Server Menu
-menu.body=§7Menu creator§f: kapycta1231484
+menu.body=§7Menu creator: §fkapycta1231484
 menu.button.1=§8 About the Map
 menu.button.2=§8 Shop
 menu.button.3=§8 Settings
@@ -103,7 +101,7 @@ menu.button.7=§8 Warps
 menu.button.8=§8 Upgrades
 
 ## --- MAP INFO MENU ---
-mapInfo.title=§l§8Server Menu |  About the Map
+mapInfo.title=§l§8Server Menu »  About the Map
 mapInfo.body=§7Choose what you need.
 mapInfo.button.1=§8 Levels
 mapInfo.button.2=§f⩆ §8How to Play?
@@ -111,7 +109,7 @@ mapInfo.button.3=§f⩇ §8Creators
 mapInfo.button.4=§8 Map Version
 
 ## --- LEVELS MENU ---
-lvlsInfo.title=§l§8Server Menu |  Levels
+lvlsInfo.title=§l§8Server Menu »  Levels
 lvlsInfo.body.lvl.1=Level 1 - Dirt and Stick
 lvlsInfo.body.lvl.2=Level 2 - Stone and Wooden Pickaxe
 lvlsInfo.body.lvl.3=Level 3 - Coal and Stone Pickaxe
@@ -139,7 +137,7 @@ lvlsInfo.body.lvl.24=Level 24 - Obsidian
 lvlsInfo.body.lvl.25=Level 25 - Crying Obsidian (§aMAX LEVEL!!!§r)
 
 ## --- HOW TO PLAY / TUTORIAL ---
-howtoplay.title=§l§8Server Menu | §f⩆§8 How to Play?
+howtoplay.title=§l§8Server Menu » §f⩆§8 How to Play?
 howtoplay.text.1=§l§7Tutorial
 howtoplay.text.2=§r§7• To level up, sell ores and blocks. Each level unlocks new pickaxes and ores. More in  Levels
 howtoplay.text.3=• To unlock a pickaxe, also sell ores and blocks
@@ -162,9 +160,9 @@ howtoplay.text.19= - your XP and how much  to next 
 howtoplay.text.20= - your Rebirth, feature: haste
 howtoplay.text.21= - current Server Online
 
-mapCreator.title=§l§8Server Menu | §f⩇§8 Creators
+mapCreator.title=§l§8Server Menu » §f⩇§8 Creators
 
-mapVersion.title=§l§8Server Menu |  Map Version
+mapVersion.title=§l§8Server Menu »  Map Version
 mapVersion.text.1=§l§7Here you'll find info about the latest map update
 mapVersion.label=§2Map Version:
 mapVersion.text.2=§lUpdate 0.2.0 from October 18, 2026§r
@@ -180,60 +178,60 @@ mapVersion.text.11=• PvP now works only in the arena: players can't damage eac
 mapVersion.text.12=• Scripts are faster; UI and translation errors have been fixed
 
 ## --- SHOP MENU ---
-shop.title=§l§8Server Menu |  Shop
+shop.title=§l§8Server Menu »  Shop
 shop.body=§7What do you want to buy?
 shop.button.1=§8Enchantments
 shop.button.2=§8PvP Kits
 shop.button.3=§8Boosts
 
-shop.enchants.title=§l§8 Shop | Enchantments
+shop.enchants.title=§l§8 Shop » Enchantments
 shop.enchants.body.1=§7Choose which enchantment you want to buy.
 shop.enchants.body.2=§l§cNote: §r§7If you buy once, you'll get §e1§7 level of the enchantment. Buy again to increase the level.
 shop.enchants.button.1=§8Efficiency
 shop.enchants.button.2=§8Fortune
 
-shop.kits.title=§l§8 Shop | PvP Kits
+shop.kits.title=§l§8 Shop » PvP Kits
 shop.kits.body=§7Buy a kit to get armor and a sword
 shop.kits.button.1=§8Iron Kit
 shop.kits.button.2=§8Diamond Kit
 shop.kits.button.3=§8Netherite Kit
 
-shop.boost.title=§l§8 Shop | Boosts
+shop.boost.title=§l§8 Shop » Boosts
 shop.boost.body.1=§7Choose which boost you want to buy
 shop.boost.body.2=§l§cNote: §r§7Boost lasts for §e5§7 minutes after purchase
 shop.boost.button.1=§8 x2 Boost
 shop.boost.button.2=§8 x4 Boost
-shop.boost.button.3=§8 Ore Magnet
+shop.boost.button.3=§8⨾ Ore Magnet
 
 ## --- SETTINGS MENU ---
-settings.title=§l§8Server Menu |  Settings
+settings.title=§l§8Server Menu »  Settings
 settings.body=§7Choose your settings:
-settings.default.1=§7Default - §2Enabled
-settings.default.2=§7Default - §4Disabled
+settings.default.1=§7Default: §aenabled
+settings.default.2=§7Default: §cdisabled
 settingsSelect.button.1=§8Scoreboard
 settingsSelect.button.2=§8Particles on Sell
 settingsSelect.button.3=§8Sounds on Sell
 
-settingsTable.title=§l§8 Settings | Scoreboard
-settingsTable.body=§7Click §2enable§7/§4disable§7 below to show or hide the server scoreboard
+settingsTable.title=§l§8 Settings » Scoreboard
+settingsTable.body=§7Click enable/disable below to show or hide the server scoreboard
 
-settings.button.1=§2Enable
-settings.button.2=§4Disable
-settings.button.3=§gEmotes Only
+settings.button.1=§8Enable
+settings.button.2=§8Disable
+settings.button.3=§8Emotes Only
 
-settingsParticle.title=§l§8 Settings | Particles
-settingsParticle.body=§7Click §2enable§7/§4disable§7 below to turn particles on or off when selling
+settingsParticle.title=§l§8 Settings » Particles
+settingsParticle.body=§7Click enable/disable below to turn particles on or off when selling
 
-settingsSound.title=§l§8 Settings | Sounds
-settingsSound.body=§7Click §2enable§7/§4disable§7 below to turn sounds on or off when selling
+settingsSound.title=§l§8 Settings » Sounds
+settingsSound.body=§7Click enable/disable below to turn sounds on or off when selling
 
 settingsChanged.1= §3Settings §8» §7Setting changed: §aenabled
 settingsChanged.2= §3Settings §8» §7Setting changed: §cdisabled
 settingsChanged.3= §3Settings §8» §7Setting changed: §eemotes Only
 
 ## --- BANK MENU ---
-bank.title=§l§8Server Menu |  Bank
-bank.text.1=§rAmount you want to send:
+bank.title=§l§8Server Menu »  Bank
+bank.text.1=§7Amount you want to send:
 bank.text.2=§7Enter here...
 bank.text.3=⩕ §l§cERROR!§r §8» §7Not enough money on your balance
 bank.sent= §2Bank §8» §7Sent to §f%1$s§r§7: §e%2$s§7
@@ -244,7 +242,7 @@ bank.error.amount=⩕ §l§cERROR!§r §8» §7The amount must be a positive who
 bank.error.self=⩕ §l§cERROR!§r §8» §7You can't send money to yourself
 
 ## --- RULES MENU ---
-rules.title=§l§8Server Menu |  Rules
+rules.title=§l§8Server Menu »  Rules
 rules.body.1=§l§7Server Rules:
 rules.body.2=§r§7By reading these rules, you automatically agree to accept punishment for breaking any of them. Ignorance is not an excuse.
 rules.text.1=§l1.§r§7 No spamming/flooding in chat • Mute 2-5 min
@@ -255,25 +253,25 @@ rules.text.5=§l5.§r§7 Don't ask players to follow links/streams/subscribe to 
 rules.text.6=§l6.§r§7 No cheating • Ban
 
 ## --- PROMO CODES MENU ---
-promo.title=§l§8Server Menu |  Promo Codes
+promo.title=§l§8Server Menu »  Promo Codes
 promo.text.1=§7Promo codes can be found anywhere. They're marked on signs in §2this§7 color.
 promo.text.2=§7If you find one, enter it below, case-sensitive, or it won't work.
 promo.textField=§7Enter promo code...
 
 ## --- WARPS MENU ---
-warps.title=§l§8Server Menu |  Warps
+warps.title=§l§8Server Menu »  Warps
 warps.body=§7Where do you want to teleport?
 warps.button.1=§8Spawn
 warps.button.2=§8Mini-games
 
 ## --- UPGRADES MENU ---
-upgrading.title=§l§8Server Menu |  Upgrades
+upgrading.title=§l§8Server Menu »  Upgrades
 upgrading.body=§7Choose your upgrade path:
-upgrading.button.1=§2VIP
-upgrading.button.2=§5Rebirth
+upgrading.button.1=§8 VIP
+upgrading.button.2=§8 Rebirth
 
 ## --- REGISTRATION MENU ---
-reg.title=§lAccount Registration
+reg.title=§l§8Account Registration
 reg.toggle=I agree to the server rules and confirm §cno§r cheats
 reg.text.1=⩕ §l§cERROR!§r §8» §7Confirm §eno cheats§7 to play on the server
 reg.text.2=§aHello.
@@ -283,7 +281,7 @@ reg.text.5=§6Password§r:
 reg.text.6=§aRemember these details or take a screenshot to log in later.
 
 ## --- LOGIN MENU ---
-login.title=§lAccount Login
+login.title=§l§8Account Login
 login.text.1=Welcome
 login.text.2=§rto the server §l[] Shop for Ore§r. Come up with and enter a password to register
 login.text.3=§gEnter the password you used during registration
@@ -306,7 +304,7 @@ admin.menu.button.7=§8Wipe
 admin.menu.button.8=§8Summon Bot
 
 ## --- ADMIN: GAMEMODES ---
-gm.title=§l§8Admin Menu | Gamemode
+gm.title=§l§8Admin Menu » Gamemode
 gm.body=§7List of gamemodes:
 gm.button.1=§8Creative
 gm.button.2=§8Adventure
@@ -314,7 +312,7 @@ gm.button.3=§8Spectator
 gm.button.4=§8Fly
 
 ## --- ADMIN: TIME SETTING ---
-timeSet.title=§l§8Admin Menu | Set Time
+timeSet.title=§l§8Admin Menu » Set Time
 timeSet.body=§7Choose the time to set:
 timeSet.button.1=§8Sunrise
 timeSet.button.2=§8Day
@@ -324,7 +322,7 @@ timeSet.button.5=§8Night
 timeSet.button.6=§8Midnight
 
 ## --- ADMIN: WARPS ---
-warp.title=§l§8Admin Menu | Warps
+warp.title=§l§8Admin Menu » Warps
 warp.body=§7List of warps:
 warp.button.1=§8Mine
 warp.button.2=§8VIP Location
@@ -332,7 +330,7 @@ warp.button.3=§8CMD Zone
 warp.button.4=§8/tp to @r
 
 ## --- ADMIN: EFFECTS ---
-effects.title=§l§8Admin Menu | Effects
+effects.title=§l§8Admin Menu » Effects
 effects.body=§7List of effects:
 effects.button.1=§8Invisibility
 effects.button.2=§8Resistance
@@ -341,32 +339,32 @@ effects.button.4=§8Haste
 effects.button.5=§8Clear Effects
 
 ## --- ADMIN: TOOLS ---
-tools.title=§l§8Admin Menu | Tools
+tools.title=§l§8Admin Menu » Tools
 tools.body=§7Choose what you need:
-tools.button.1=§5Command Block
-tools.button.2=§5Allow Block
-tools.button.3=§5Deny Block
-tools.button.4=§5Structure Block
-tools.button.5=§5Structure Void
-tools.button.6=§5Barrier
-tools.button.7=§5Border
-tools.button.8=§5Light Block
-tools.button.9=§5NPC Spawn Egg
-tools.button.10=§5Hologram Spawn Egg
-tools.button.11=§cAdmin Stick
+tools.button.1=§8Command Block
+tools.button.2=§8Allow Block
+tools.button.3=§8Deny Block
+tools.button.4=§8Structure Block
+tools.button.5=§8Structure Void
+tools.button.6=§8Barrier
+tools.button.7=§8Border
+tools.button.8=§8Light Block
+tools.button.9=§8NPC Spawn Egg
+tools.button.10=§8Hologram Spawn Egg
+tools.button.11=§8Admin Stick
 tools.button.12=§8Clear Inventory
 
 ## --- ADMIN: ANNOUNCEMENTS ---
-sayServer.title=§l§8Admin Menu | Announcements
-sayServer.body=§gType below anything you want to say. It will be shown to the whole server
+sayServer.title=§l§8Admin Menu » Announcements
+sayServer.body=§7Type below anything you want to say. It will be shown to the whole server
 sayServer.textField=§7Enter text...
 sayServer.message= §eAnnouncement §8» §f%1$s
 
 ## --- ADMIN: WIPE ---
 wipe.title=§l§8Warning
 wipe.body=§7Wipe will reset all stats, but won't affect tags or inventories. Are you sure?
-wipe.button.1=§2Yes
-wipe.button.2=§4No
+wipe.button.1=§8Yes
+wipe.button.2=§8No
 wipe.message.success= §cServer §8» §7All player stats have been reset
 
 ## --- LEVEL-UP & SYSTEM MESSAGES ---

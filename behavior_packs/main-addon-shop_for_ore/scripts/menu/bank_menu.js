@@ -18,7 +18,7 @@ export function bank(player) {
 	// Создаём форму банка
 	const menu = new ModalFormData()
 		.title('%bank.title')
-		.dropdown(`\n%bank.text.8 §a${getScore(player, "money")}\n%bank.text.7`, operations, 0)
+		.dropdown(`\n%bank.text.8 §e${getScore(player, "money")}\n%bank.text.7`, operations, 0)
 		.textField('%bank.text.1', '%bank.text.2');
 
 	// Показываем форму игроку
