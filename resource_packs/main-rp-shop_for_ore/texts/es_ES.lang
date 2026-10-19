@@ -85,7 +85,9 @@ progressScreen.message.locating=Antes de hacer muchas preguntas, lee los cartele
 progressScreen.message.resourceLoading=Host Omlet: @waxenjaguar2209
 
 ## --- TRADUCCIÓN Y BOTONES DE UI ---
+admin.menu.background.2=§8[§7Pulsa para invocar§8]
 admin.menu.button.back=§8Atrás
+menu.background=§8[§7Pulsa para abrir§8]
 menu.button.back=§8 Atrás
 
 ## --- MENÚ PRINCIPAL ---
@@ -191,21 +193,21 @@ shop.enchants.button.1=§8Eficiencia
 shop.enchants.button.2=§8Fortuna
 
 shop.kits.title=§l§8 Tienda » Kits PvP
-shop.kits.body=§7Al comprar un kit, recibirás armadura y espada
+shop.kits.body=§7Al comprar un kit, recibirás armadura y espada.
 shop.kits.button.1=§8Kit de hierro
 shop.kits.button.2=§8Kit de diamante
 shop.kits.button.3=§8Kit de netherita
 
 shop.boost.title=§l§8 Tienda » Potenciadores
-shop.boost.body.1=§7Elige qué potenciador quieres comprar
-shop.boost.body.2=§l§cNota: §r§7El potenciador dura §e5§7 minutos tras la compra
+shop.boost.body.1=§7Elige qué potenciador quieres comprar.
+shop.boost.body.2=§l§cNota: §r§7El potenciador dura §e5§7 minutos tras la compra.
 shop.boost.button.1=§8 x2 potenciador
 shop.boost.button.2=§8 x4 potenciador
 shop.boost.button.3=§8⨾ Imán de mineral
 
 ## --- MENÚ AJUSTES ---
 settings.title=§l§8Menú del servidor »  Ajustes
-settings.body=§7Elige tus ajustes:
+settings.body=§7Elige tus ajustes.
 settings.default.1=§7Por defecto: §aactivado
 settings.default.2=§7Por defecto: §cdesactivado
 settingsSelect.button.1=§8Marcador
@@ -213,17 +215,17 @@ settingsSelect.button.2=§8Partículas al vender
 settingsSelect.button.3=§8Sonidos al vender
 
 settingsTable.title=§l§8 Ajustes » Marcador
-settingsTable.body=§7Pulsa activar/desactivar abajo para mostrar u ocultar el marcador del servidor
+settingsTable.body=§7Pulsa activar/desactivar abajo para mostrar u ocultar el marcador del servidor.
 
-settings.button.1=§8Activar
-settings.button.2=§8Desactivar
-settings.button.3=§8Solo emotes
+settings.button.1=§2Activar
+settings.button.2=§4Desactivar
+settings.button.3=§gSolo emotes
 
 settingsParticle.title=§l§8 Ajustes » Partículas
-settingsParticle.body=§7Pulsa activar/desactivar abajo para mostrar u ocultar partículas al vender
+settingsParticle.body=§7Pulsa activar/desactivar abajo para mostrar u ocultar partículas al vender.
 
 settingsSound.title=§l§8 Ajustes » Sonidos
-settingsSound.body=§7Pulsa activar/desactivar abajo para mostrar u ocultar sonidos al vender
+settingsSound.body=§7Pulsa activar/desactivar abajo para mostrar u ocultar sonidos al vender.
 
 settingsChanged.1= §3Ajustes §8» §7Ajuste cambiado: §aactivado
 settingsChanged.2= §3Ajustes §8» §7Ajuste cambiado: §cdesactivado
@@ -266,9 +268,9 @@ warps.button.2=§8Mini-juegos
 
 ## --- MENÚ MEJORAS ---
 upgrading.title=§l§8Menú del servidor »  Mejoras
-upgrading.body=§7Elige tu camino de mejora:
-upgrading.button.1=§8 VIP
-upgrading.button.2=§8 Reinicio
+upgrading.body=§7Elige tu camino de mejora.
+upgrading.button.1=§2 VIP
+upgrading.button.2=§5 Reinicio
 
 ## --- MENÚ REGISTRO ---
 reg.title=§l§8Registro de cuenta
@@ -305,7 +307,7 @@ admin.menu.button.8=§8Invocar bot
 
 ## --- ADMIN: MODOS DE JUEGO ---
 gm.title=§l§8Menú de admin » Modo de juego
-gm.body=§7Lista de modos de juego:
+gm.body=§7Lista de modos de juego.
 gm.button.1=§8Creativo
 gm.button.2=§8Aventura
 gm.button.3=§8Espectador
@@ -313,7 +315,7 @@ gm.button.4=§8Volar
 
 ## --- ADMIN: HORA ---
 timeSet.title=§l§8Menú de admin » Establecer hora
-timeSet.body=§7Elige la hora a establecer:
+timeSet.body=§7Elige la hora a establecer.
 timeSet.button.1=§8Amanecer
 timeSet.button.2=§8Día
 timeSet.button.3=§8Mediodía
@@ -323,7 +325,7 @@ timeSet.button.6=§8Medianoche
 
 ## --- ADMIN: TELETRANSPORTES ---
 warp.title=§l§8Menú de admin » Teletransportes
-warp.body=§7Lista de teletransportes:
+warp.body=§7Lista de teletransportes.
 warp.button.1=§8Mina
 warp.button.2=§8Ubicación VIP
 warp.button.3=§8CMD Zone
@@ -331,7 +333,7 @@ warp.button.4=§8/tp a @r
 
 ## --- ADMIN: EFECTOS ---
 effects.title=§l§8Menú de admin » Efectos
-effects.body=§7Lista de efectos:
+effects.body=§7Lista de efectos.
 effects.button.1=§8Invisibilidad
 effects.button.2=§8Resistencia
 effects.button.3=§8Fuerza
@@ -340,7 +342,7 @@ effects.button.5=§8Limpiar efectos
 
 ## --- ADMIN: HERRAMIENTAS ---
 tools.title=§l§8Menú de admin » Herramientas
-tools.body=§7Elige lo que necesitas:
+tools.body=§7Elige lo que necesitas.
 tools.button.1=§8Bloque de comandos
 tools.button.2=§8Bloque de permiso
 tools.button.3=§8Bloque de denegación
@@ -351,20 +353,20 @@ tools.button.7=§8Límite
 tools.button.8=§8Bloque de luz
 tools.button.9=§8Huevo de NPC
 tools.button.10=§8Huevo de holograma
-tools.button.11=§8Vara de admin
+tools.button.11=§cVara de admin
 tools.button.12=§8Limpiar inventario
 
 ## --- ADMIN: ANUNCIOS ---
 sayServer.title=§l§8Menú de admin » Anuncios
-sayServer.body=§7Escribe abajo lo que quieras decir. Lo verá todo el servidor
+sayServer.body=§7Escribe abajo lo que quieras decir. Lo verá todo el servidor.
 sayServer.textField=§7Escribe el texto...
 sayServer.message= §eAnuncio §8» §f%1$s
 
 ## --- ADMIN: WIPE ---
 wipe.title=§l§8Advertencia
 wipe.body=§7El wipe reiniciará todas las estadísticas, pero no afectará etiquetas ni inventarios. ¿Seguro?
-wipe.button.1=§8Sí
-wipe.button.2=§8No
+wipe.button.1=§2Sí
+wipe.button.2=§4No
 wipe.message.success= §cServidor §8» §7Se han reiniciado las estadísticas de todos los jugadores
 
 ## --- MENSAJES DE NIVEL Y SISTEMA ---

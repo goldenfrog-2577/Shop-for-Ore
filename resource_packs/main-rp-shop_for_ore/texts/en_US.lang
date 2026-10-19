@@ -85,7 +85,9 @@ progressScreen.message.locating=Before asking too many questions, read the signs
 progressScreen.message.resourceLoading=Host Omlet: @waxenjaguar2209
 
 ## --- TRANSLATION & UI BUTTONS ---
+admin.menu.background.2=§8[§7Press to summon§8]
 admin.menu.button.back=§8Back
+menu.background=§8[§7Press to open§8]
 menu.button.back=§8 Back
 
 ## --- MAIN MENU ---
@@ -191,21 +193,21 @@ shop.enchants.button.1=§8Efficiency
 shop.enchants.button.2=§8Fortune
 
 shop.kits.title=§l§8 Shop » PvP Kits
-shop.kits.body=§7Buy a kit to get armor and a sword
+shop.kits.body=§7Buy a kit to get armor and a sword.
 shop.kits.button.1=§8Iron Kit
 shop.kits.button.2=§8Diamond Kit
 shop.kits.button.3=§8Netherite Kit
 
 shop.boost.title=§l§8 Shop » Boosts
-shop.boost.body.1=§7Choose which boost you want to buy
-shop.boost.body.2=§l§cNote: §r§7Boost lasts for §e5§7 minutes after purchase
+shop.boost.body.1=§7Choose which boost you want to buy.
+shop.boost.body.2=§l§cNote: §r§7Boost lasts for §e5§7 minutes after purchase.
 shop.boost.button.1=§8 x2 Boost
 shop.boost.button.2=§8 x4 Boost
 shop.boost.button.3=§8⨾ Ore Magnet
 
 ## --- SETTINGS MENU ---
 settings.title=§l§8Server Menu »  Settings
-settings.body=§7Choose your settings:
+settings.body=§7Choose your settings.
 settings.default.1=§7Default: §aenabled
 settings.default.2=§7Default: §cdisabled
 settingsSelect.button.1=§8Scoreboard
@@ -213,17 +215,17 @@ settingsSelect.button.2=§8Particles on Sell
 settingsSelect.button.3=§8Sounds on Sell
 
 settingsTable.title=§l§8 Settings » Scoreboard
-settingsTable.body=§7Click enable/disable below to show or hide the server scoreboard
+settingsTable.body=§7Click enable/disable below to show or hide the server scoreboard.
 
-settings.button.1=§8Enable
-settings.button.2=§8Disable
-settings.button.3=§8Emotes Only
+settings.button.1=§2Enable
+settings.button.2=§4Disable
+settings.button.3=§gEmotes Only
 
 settingsParticle.title=§l§8 Settings » Particles
-settingsParticle.body=§7Click enable/disable below to turn particles on or off when selling
+settingsParticle.body=§7Click enable/disable below to turn particles on or off when selling.
 
 settingsSound.title=§l§8 Settings » Sounds
-settingsSound.body=§7Click enable/disable below to turn sounds on or off when selling
+settingsSound.body=§7Click enable/disable below to turn sounds on or off when selling.
 
 settingsChanged.1= §3Settings §8» §7Setting changed: §aenabled
 settingsChanged.2= §3Settings §8» §7Setting changed: §cdisabled
@@ -266,9 +268,9 @@ warps.button.2=§8Mini-games
 
 ## --- UPGRADES MENU ---
 upgrading.title=§l§8Server Menu »  Upgrades
-upgrading.body=§7Choose your upgrade path:
-upgrading.button.1=§8 VIP
-upgrading.button.2=§8 Rebirth
+upgrading.body=§7Choose your upgrade path.
+upgrading.button.1=§2 VIP
+upgrading.button.2=§5 Rebirth
 
 ## --- REGISTRATION MENU ---
 reg.title=§l§8Account Registration
@@ -305,7 +307,7 @@ admin.menu.button.8=§8Summon Bot
 
 ## --- ADMIN: GAMEMODES ---
 gm.title=§l§8Admin Menu » Gamemode
-gm.body=§7List of gamemodes:
+gm.body=§7List of gamemodes.
 gm.button.1=§8Creative
 gm.button.2=§8Adventure
 gm.button.3=§8Spectator
@@ -313,7 +315,7 @@ gm.button.4=§8Fly
 
 ## --- ADMIN: TIME SETTING ---
 timeSet.title=§l§8Admin Menu » Set Time
-timeSet.body=§7Choose the time to set:
+timeSet.body=§7Choose the time to set.
 timeSet.button.1=§8Sunrise
 timeSet.button.2=§8Day
 timeSet.button.3=§8Noon
@@ -323,7 +325,7 @@ timeSet.button.6=§8Midnight
 
 ## --- ADMIN: WARPS ---
 warp.title=§l§8Admin Menu » Warps
-warp.body=§7List of warps:
+warp.body=§7List of warps.
 warp.button.1=§8Mine
 warp.button.2=§8VIP Location
 warp.button.3=§8CMD Zone
@@ -331,7 +333,7 @@ warp.button.4=§8/tp to @r
 
 ## --- ADMIN: EFFECTS ---
 effects.title=§l§8Admin Menu » Effects
-effects.body=§7List of effects:
+effects.body=§7List of effects.
 effects.button.1=§8Invisibility
 effects.button.2=§8Resistance
 effects.button.3=§8Strength
@@ -340,7 +342,7 @@ effects.button.5=§8Clear Effects
 
 ## --- ADMIN: TOOLS ---
 tools.title=§l§8Admin Menu » Tools
-tools.body=§7Choose what you need:
+tools.body=§7Choose what you need.
 tools.button.1=§8Command Block
 tools.button.2=§8Allow Block
 tools.button.3=§8Deny Block
@@ -351,20 +353,20 @@ tools.button.7=§8Border
 tools.button.8=§8Light Block
 tools.button.9=§8NPC Spawn Egg
 tools.button.10=§8Hologram Spawn Egg
-tools.button.11=§8Admin Stick
+tools.button.11=§cAdmin Stick
 tools.button.12=§8Clear Inventory
 
 ## --- ADMIN: ANNOUNCEMENTS ---
 sayServer.title=§l§8Admin Menu » Announcements
-sayServer.body=§7Type below anything you want to say. It will be shown to the whole server
+sayServer.body=§7Type below anything you want to say. It will be shown to the whole server.
 sayServer.textField=§7Enter text...
 sayServer.message= §eAnnouncement §8» §f%1$s
 
 ## --- ADMIN: WIPE ---
 wipe.title=§l§8Warning
 wipe.body=§7Wipe will reset all stats, but won't affect tags or inventories. Are you sure?
-wipe.button.1=§8Yes
-wipe.button.2=§8No
+wipe.button.1=§2Yes
+wipe.button.2=§4No
 wipe.message.success= §cServer §8» §7All player stats have been reset
 
 ## --- LEVEL-UP & SYSTEM MESSAGES ---

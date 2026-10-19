@@ -24,14 +24,14 @@ export function menu(player) {
 	const menu = new ActionFormData()
 	.title('%menu.title')
 	.body('%menu.body')
-	.button('%menu.button.1')
-	.button('%menu.button.2')
-	.button('%menu.button.3')
-	.button('%menu.button.4')
-	.button('%menu.button.5')
-	.button('%menu.button.6')
-	.button('%menu.button.7')
-	.button('%menu.button.8')
+	.button('%menu.button.1\n%menu.background')
+	.button('%menu.button.2\n%menu.background')
+	.button('%menu.button.3\n%menu.background')
+	.button('%menu.button.4\n%menu.background')
+	.button('%menu.button.5\n%menu.background')
+	.button('%menu.button.6\n%menu.background')
+	.button('%menu.button.7\n%menu.background')
+	.button('%menu.button.8\n%menu.background')
 	menu.show(player).then(m => {
 		if (m.selection == 0) {
 			mapInfo(player)
@@ -112,15 +112,15 @@ function mapCreator(player) {
 	.button('§8Сreator\n§8kapycta1231484',
 		'textures/server_icons/creator')
 	// Соавтор карты: иконки шрифта (glyph_E1) подписаны «BY'NASTYA»
-	.button('§8Сo-creator\n§8NastyaXs00',
+	.button('§5Сo-creator\n§8NastyaXs00',
 		'textures/server_icons/creator')
-	.button('§8Оmlet Arcade\n§8@waxenjaguar2209',
+	.button('§6Оmlet Arcade\n§8@waxenjaguar2209',
 		'textures/server_icons/omlet')
-	.button('§8Discоrd\n§8GoldenFrog#2577',
+	.button('§9Discоrd\n§8GoldenFrog#2577',
 		'textures/server_icons/discord')
-	.button('§8Тelegram\n§8@xdxd1338',
+	.button('§3Тelegram\n§8@xdxd1338',
 		'textures/server_icons/telegram')
-	.button('§8Хbox\n§8kapycta123#1484',
+	.button('§2Хbox\n§8kapycta123#1484',
 		'textures/server_icons/xbox')
 	mapCreator.show(player).then(tb => {
 		// Все кнопки возвращают к информации о карте; крестик просто закрывает меню
