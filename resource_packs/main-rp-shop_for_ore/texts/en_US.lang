@@ -343,16 +343,16 @@ effects.button.5=§8Clear Effects
 ## --- ADMIN: TOOLS ---
 tools.title=§l§8Admin Menu » Tools
 tools.body=§7Choose what you need.
-tools.button.1=§8Command Block
-tools.button.2=§8Allow Block
-tools.button.3=§8Deny Block
-tools.button.4=§8Structure Block
-tools.button.5=§8Structure Void
-tools.button.6=§8Barrier
-tools.button.7=§8Border
-tools.button.8=§8Light Block
-tools.button.9=§8NPC Spawn Egg
-tools.button.10=§8Hologram Spawn Egg
+tools.button.1=§5Command Block
+tools.button.2=§5Allow Block
+tools.button.3=§5Deny Block
+tools.button.4=§5Structure Block
+tools.button.5=§5Structure Void
+tools.button.6=§5Barrier
+tools.button.7=§5Border
+tools.button.8=§5Light Block
+tools.button.9=§5NPC Spawn Egg
+tools.button.10=§5Hologram Spawn Egg
 tools.button.11=§cAdmin Stick
 tools.button.12=§8Clear Inventory
 

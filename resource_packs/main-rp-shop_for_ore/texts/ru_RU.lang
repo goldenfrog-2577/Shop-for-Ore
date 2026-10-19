@@ -343,16 +343,16 @@ effects.button.5=§8Очистить эффекты
 ## --- АДМИН: ИНСТРУМЕНТЫ ---
 tools.title=§l§8Меню админа » Инструменты
 tools.body=§7Выбери инструмент.
-tools.button.1=§8Командный блок
-tools.button.2=§8Блок разрешения
-tools.button.3=§8Блок запрета
-tools.button.4=§8Структурный блок
-tools.button.5=§8Структурная пустота
-tools.button.6=§8Барьер
-tools.button.7=§8Граница
-tools.button.8=§8Блок света
-tools.button.9=§8Яйцо призыва NPC
-tools.button.10=§8Яйцо призыва голограммы
+tools.button.1=§5Командный блок
+tools.button.2=§5Блок разрешения
+tools.button.3=§5Блок запрета
+tools.button.4=§5Структурный блок
+tools.button.5=§5Структурная пустота
+tools.button.6=§5Барьер
+tools.button.7=§5Граница
+tools.button.8=§5Блок света
+tools.button.9=§5Яйцо призыва NPC
+tools.button.10=§5Яйцо призыва голограммы
 tools.button.11=§cПалочка админа
 tools.button.12=§8Очистить инвентарь
 

@@ -343,16 +343,16 @@ effects.button.5=§8Очистити ефекти
 ## --- АДМІН: ІНСТРУМЕНТИ ---
 tools.title=§l§8Меню адміна » Інструменти
 tools.body=§7Вибери те, що тобі потрібно.
-tools.button.1=§8Командний блок
-tools.button.2=§8Блок дозволу
-tools.button.3=§8Блок заборони
-tools.button.4=§8Структурний блок
-tools.button.5=§8Структурна порожнеча
-tools.button.6=§8Бар'єр
-tools.button.7=§8Межа
-tools.button.8=§8Блок світла
-tools.button.9=§8Яйце призову NPC
-tools.button.10=§8Яйце призову голограми
+tools.button.1=§5Командний блок
+tools.button.2=§5Блок дозволу
+tools.button.3=§5Блок заборони
+tools.button.4=§5Структурний блок
+tools.button.5=§5Структурна порожнеча
+tools.button.6=§5Бар'єр
+tools.button.7=§5Межа
+tools.button.8=§5Блок світла
+tools.button.9=§5Яйце призову NPC
+tools.button.10=§5Яйце призову голограми
 tools.button.11=§cПалочка адміна
 tools.button.12=§8Очистити інвентар
 

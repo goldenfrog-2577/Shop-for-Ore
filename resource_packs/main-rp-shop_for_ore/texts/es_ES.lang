@@ -343,16 +343,16 @@ effects.button.5=§8Limpiar efectos
 ## --- ADMIN: HERRAMIENTAS ---
 tools.title=§l§8Menú de admin » Herramientas
 tools.body=§7Elige lo que necesitas.
-tools.button.1=§8Bloque de comandos
-tools.button.2=§8Bloque de permiso
-tools.button.3=§8Bloque de denegación
-tools.button.4=§8Bloque de estructura
-tools.button.5=§8Estructura vacía
-tools.button.6=§8Barrera
-tools.button.7=§8Límite
-tools.button.8=§8Bloque de luz
-tools.button.9=§8Huevo de NPC
-tools.button.10=§8Huevo de holograma
+tools.button.1=§5Bloque de comandos
+tools.button.2=§5Bloque de permiso
+tools.button.3=§5Bloque de denegación
+tools.button.4=§5Bloque de estructura
+tools.button.5=§5Estructura vacía
+tools.button.6=§5Barrera
+tools.button.7=§5Límite
+tools.button.8=§5Bloque de luz
+tools.button.9=§5Huevo de NPC
+tools.button.10=§5Huevo de holograma
 tools.button.11=§cVara de admin
 tools.button.12=§8Limpiar inventario
 
