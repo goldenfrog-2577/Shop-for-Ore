@@ -109,7 +109,7 @@ world.events.beforeChat.subscribe((data) => {
 	// До входа в аккаунт чат и !-команды недоступны (команды отменяет commands.js)
 	if (isPending(player)) {
 		data.cancel = true;
-		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"login.required"}]}`);
+		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.account.error.login_required"}]}`);
 		return;
 	}
 
@@ -121,14 +121,14 @@ world.events.beforeChat.subscribe((data) => {
 	// Проверка на длину сообщения
 	if (message.length > MAX_MESSAGE_LENGTH) {
 		data.cancel = true;
-		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"message.chat.antiflood"}]}`);
+		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.error.too_long"}]}`);
 		return;
 	}
 
 	// Проверка на спам/флуд
 	if (isSpamming(playerName, message)) {
 		data.cancel = true;
-		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"message.chat.antispam"}]}`);
+		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.error.spam"}]}`);
 		return;
 	}
 

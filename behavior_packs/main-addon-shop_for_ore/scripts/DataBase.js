@@ -115,109 +115,109 @@ export const commandsList = [
 	// ===== Общедоступные команды =====
 	{
 		command: "!help",
-		description: "%commands.help.desc",
+		description: "%chat.help.help",
 		hostOnly: false
 	},
 	{
 		command: "!spawn",
-		description: "%commands.spawn.desc",
+		description: "%chat.help.spawn",
 		hostOnly: false
 	},
 	{
 		command: "!emotes",
-		description: "%commands.emotes.desc",
+		description: "%chat.help.emotes",
 		hostOnly: false
 	},
 	{
 		command: "!msg §7<§fplayer§7> <§fmessage§7>",
-		description: "%commands.msg.desc",
+		description: "%chat.help.msg",
 		hostOnly: false
 	},
 
 	// ===== Админские: режимы и способности =====
 	{
 		command: "!gm1",
-		description: "%commands.gm1.desc",
+		description: "%chat.help.gm1",
 		hostOnly: true
 	},
 	{
 		command: "!gm2",
-		description: "%commands.gm2.desc",
+		description: "%chat.help.gm2",
 		hostOnly: true
 	},
 	{
 		command: "!gm6",
-		description: "%commands.gm6.desc",
+		description: "%chat.help.gm6",
 		hostOnly: true
 	},
 	{
 		command: "!fly §7<§fon§8/§foff§7>",
-		description: "%commands.fly.desc",
+		description: "%chat.help.fly",
 		hostOnly: true
 	},
 	{
 		command: "!invis §7<§fon§8/§foff§7>",
-		description: "%commands.invis.desc",
+		description: "%chat.help.invis",
 		hostOnly: true
 	},
 
 	// ===== Админские: визуал и чат =====
 	{
 		command: "!clearchat",
-		description: "%commands.clearchat.desc",
+		description: "%chat.help.clearchat",
 		hostOnly: true
 	},
 
 	// ===== Админские: мир =====
 	{
 		command: "!timeset §7<§ftime§7>",
-		description: "%commands.timeset.desc",
+		description: "%chat.help.timeset",
 		hostOnly: true
 	},
 	{
 		command: "!tp §7<§fplayer§7>",
-		description: "%commands.tp.desc",
+		description: "%chat.help.tp",
 		hostOnly: true
 	},
 
 	// ===== Админские: сущности и предметы =====
 	{
 		command: "!bot",
-		description: "%commands.bot.desc",
+		description: "%chat.help.bot",
 		hostOnly: true
 	},
 	{
 		command: "!stick",
-		description: "%commands.stick.desc",
+		description: "%chat.help.stick",
 		hostOnly: true
 	},
 
 	// ===== Админские: управление игроками =====
 	{
 		command: "!prefix §7<§fplayer§7> <§fset§8/§ftake§7> <§fprefix§7>",
-		description: "%commands.prefix.desc",
+		description: "%chat.help.prefix",
 		hostOnly: true
 	},
 	{
 		command: "!tag §7<§fplayer§7> <§fadd§8/§fremove§7> <§ftag§7>",
-		description: "%commands.tag.desc",
+		description: "%chat.help.tag",
 		hostOnly: true
 	},
 	{
 		command: "!scoreboard §7<§fplayer§7> <§fadd§8/§fremove§7> <§fobjective§7> <§famount§7>",
-		description: "%commands.scoreboard.desc",
+		description: "%chat.help.scoreboard",
 		hostOnly: true
 	},
 	{
 		command: "!kick §7<§fplayer§7> <§freason§7>",
-		description: "%commands.kick.desc",
+		description: "%chat.help.kick",
 		hostOnly: true
 	},
 
 	// ===== Админские: системные =====
 	{
 		command: "!wipe",
-		description: "%commands.wipe.desc",
+		description: "%chat.help.wipe",
 		hostOnly: true
 	}
 ];

@@ -5,5 +5,5 @@
 tag @r[tag=player,tag=!host,scores={lvl=1..25,rebirth=0}] add player:haste
 effect @a[tag=player:haste] haste 10 4 true
 execute if entity @a[tag=player:haste] run titleraw @a title {"rawtext":[{"selector":"@a[tag=player:haste]"}]}
-execute if entity @a[tag=player:haste] run titleraw @a subtitle {"rawtext":[{"translate":"message.event.haste_event"}]}
+execute if entity @a[tag=player:haste] run titleraw @a subtitle {"rawtext":[{"translate":"screen.event.haste"}]}
 tag @a remove player:haste

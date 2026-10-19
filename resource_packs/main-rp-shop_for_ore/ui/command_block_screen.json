@@ -107,7 +107,7 @@
 									"100%",
 									"100%"
 								],
-								"text": "commandBlock.entherCommand",
+								"text": "ui.command_block.placeholder",
 								"alpha": "$alpha",
 								"bindings": [
 									{

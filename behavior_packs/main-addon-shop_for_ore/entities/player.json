@@ -230,7 +230,7 @@
 							"event": "server:kick"
 						},
 						"use_item": false,
-						"interact_text": "button.kickPlayer"
+						"interact_text": "admin.kick.button"
 					}
 				]
 			},
@@ -308,7 +308,7 @@
 			"server:kick": {
 				"run_command": {
 					"command": [
-						"tellraw @a {\"rawtext\":[{\"translate\":\"message.kick\",\"with\":{\"rawtext\":[{\"selector\":\"@s\"}]}}]}",
+						"tellraw @a {\"rawtext\":[{\"translate\":\"chat.server.kicked\",\"with\":{\"rawtext\":[{\"selector\":\"@s\"}]}}]}",
 						"tag @s add kick"
 					]
 				}

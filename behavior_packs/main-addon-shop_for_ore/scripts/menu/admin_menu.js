@@ -20,16 +20,16 @@ world.events.beforeItemUse.subscribe(data => {
 // --- Главное админ-меню ---
 function admin_menu(player) {
 	const admin_menu = new ActionFormData()
-	.title('%admin.menu.title')
-	.body('%menu.body')
-	.button('%admin.menu.button.1\n%menu.background', 'textures/ui/heart_new')
-	.button('%admin.menu.button.2\n%menu.background', 'textures/ui/time_4sunset')
-	.button('%admin.menu.button.3\n%menu.background', 'textures/ui/World')
-	.button('%admin.menu.button.4\n%menu.background', 'textures/items/potion_bottle_confusion')
-	.button('%admin.menu.button.5\n%menu.background', 'textures/ui/anvil_icon')
-	.button('%admin.menu.button.6\n%menu.background', 'textures/ui/comment')
-	.button('%admin.menu.button.7\n%menu.background', 'textures/ui/friend_glyph_desaturated')
-	.button('%admin.menu.button.8\n%admin.menu.background.2', 'textures/server_icons/bot')
+	.title('%admin.main.title')
+	.body('%menu.main.body')
+	.button('%admin.main.button.gamemode\n%menu.common.tap_to_open', 'textures/ui/heart_new')
+	.button('%admin.main.button.time\n%menu.common.tap_to_open', 'textures/ui/time_4sunset')
+	.button('%admin.main.button.warps\n%menu.common.tap_to_open', 'textures/ui/World')
+	.button('%admin.main.button.effects\n%menu.common.tap_to_open', 'textures/items/potion_bottle_confusion')
+	.button('%admin.main.button.tools\n%menu.common.tap_to_open', 'textures/ui/anvil_icon')
+	.button('%admin.main.button.announce\n%menu.common.tap_to_open', 'textures/ui/comment')
+	.button('%admin.main.button.wipe\n%menu.common.tap_to_open', 'textures/ui/friend_glyph_desaturated')
+	.button('%admin.main.button.bot\n%admin.common.tap_to_summon', 'textures/server_icons/bot')
 	admin_menu.show(player).then(m => {
 		if (m.selection == 0) {
 			gamemodes(player)
@@ -54,13 +54,13 @@ function admin_menu(player) {
 // --- Меню смены режима игры и способностей ---
 function gamemodes(player) {
 	const gamemodes = new ActionFormData()
-	.title('%gm.title')
-	.body('%gm.body')
-	.button('%gm.button.1', 'textures/ui/heart_new')
-	.button('%gm.button.2', 'textures/ui/absorption_heart')
-	.button('%gm.button.3', 'textures/ui/freeze_heart')
-	.button('%gm.button.4', 'textures/items/feather')
-	.button('%admin.menu.button.back', 'textures/ui/icon_import')
+	.title('%admin.gamemode.title')
+	.body('%admin.gamemode.body')
+	.button('%admin.gamemode.button.creative', 'textures/ui/heart_new')
+	.button('%admin.gamemode.button.adventure', 'textures/ui/absorption_heart')
+	.button('%admin.gamemode.button.spectator', 'textures/ui/freeze_heart')
+	.button('%admin.gamemode.button.fly', 'textures/items/feather')
+	.button('%admin.common.back', 'textures/ui/icon_import')
 	gamemodes.show(player).then(gm => {
 		if (gm.selection == 0) {
 			player.runCommandAsync('gamemode creative')
@@ -78,15 +78,15 @@ function gamemodes(player) {
 // --- Меню смены времени суток ---
 function timeSet(player) {
 	const timeSet = new ActionFormData()
-	.title('%timeSet.title')
-	.body('%timeSet.body')
-	.button('%timeSet.button.1', 'textures/ui/time_1sunrise')
-	.button('%timeSet.button.2', 'textures/ui/time_2day')
-	.button('%timeSet.button.3', 'textures/ui/time_3noon')
-	.button('%timeSet.button.4', 'textures/ui/time_4sunset')
-	.button('%timeSet.button.5', 'textures/ui/time_5night')
-	.button('%timeSet.button.6', 'textures/ui/time_6midnight')
-	.button('%admin.menu.button.back', 'textures/ui/icon_import')
+	.title('%admin.time.title')
+	.body('%admin.time.body')
+	.button('%admin.time.button.sunrise', 'textures/ui/time_1sunrise')
+	.button('%admin.time.button.day', 'textures/ui/time_2day')
+	.button('%admin.time.button.noon', 'textures/ui/time_3noon')
+	.button('%admin.time.button.sunset', 'textures/ui/time_4sunset')
+	.button('%admin.time.button.night', 'textures/ui/time_5night')
+	.button('%admin.time.button.midnight', 'textures/ui/time_6midnight')
+	.button('%admin.common.back', 'textures/ui/icon_import')
 	timeSet.show(player).then(tS => {
 		if (tS.selection == 0) {
 			player.runCommandAsync('time set sunrise')
@@ -108,14 +108,14 @@ function timeSet(player) {
 // --- Меню варпов (телепортаций) ---
 function warps(player) {
 	const warps = new ActionFormData()
-	.title('%warp.title')
-	.body('%warp.body')
-	.button('%warp.button.1', 'textures/ui/World')
-	.button('%warp.button.2', 'textures/ui/World')
-	.button('%warps.button.2', 'textures/ui/World')
-	.button('%warp.button.3', 'textures/ui/World')
-	.button('%warp.button.4', 'textures/ui/World')
-	.button('%admin.menu.button.back', 'textures/ui/icon_import')
+	.title('%admin.warps.title')
+	.body('%admin.warps.body')
+	.button('%admin.warps.button.mine', 'textures/ui/World')
+	.button('%admin.warps.button.vip', 'textures/ui/World')
+	.button('%menu.warps.button.minigames', 'textures/ui/World')
+	.button('%admin.warps.button.cmd_zone', 'textures/ui/World')
+	.button('%admin.warps.button.random_player', 'textures/ui/World')
+	.button('%admin.common.back', 'textures/ui/icon_import')
 	warps.show(player).then(tp => {
 		if (tp.selection == 0) {
 			player.runCommandAsync('tp @s 0 5 0')
@@ -135,14 +135,14 @@ function warps(player) {
 // --- Меню эффектов ---
 function effects(player) {
 	const effects = new ActionFormData()
-	.title('%effects.title')
-	.body('%effects.body')
-	.button('%effects.button.1', 'textures/ui/invisibility_effect')
-	.button('%effects.button.2', 'textures/ui/resistance_effect')
-	.button('%effects.button.3', 'textures/ui/strength_effect')
-	.button('%effects.button.4', 'textures/ui/haste_effect')
-	.button('%effects.button.5', 'textures/ui/cancel')
-	.button('%admin.menu.button.back', 'textures/ui/icon_import')
+	.title('%admin.effects.title')
+	.body('%admin.effects.body')
+	.button('%admin.effects.button.invisibility', 'textures/ui/invisibility_effect')
+	.button('%admin.effects.button.resistance', 'textures/ui/resistance_effect')
+	.button('%admin.effects.button.strength', 'textures/ui/strength_effect')
+	.button('%admin.effects.button.haste', 'textures/ui/haste_effect')
+	.button('%admin.effects.button.clear', 'textures/ui/cancel')
+	.button('%admin.common.back', 'textures/ui/icon_import')
 	effects.show(player).then(tb => {
 		if (tb.selection == 0) {
 			player.runCommandAsync('effect @s invisibility 3600 255 true')
@@ -162,21 +162,21 @@ function effects(player) {
 // --- Меню выдачи инструментов и предметов ---
 function tools(player) {
 	const tools = new ActionFormData()
-	.title('%tools.title')
-	.body('%tools.body')
-	.button('%tools.button.1', 'textures/server_icons/command_block')
-	.button('%tools.button.2', 'textures/server_icons/allow')
-	.button('%tools.button.3', 'textures/server_icons/deny')
-	.button('%tools.button.4', 'textures/server_icons/structure_block')
-	.button('%tools.button.5', 'textures/server_icons/structure_void')
-	.button('%tools.button.6', 'textures/blocks/barrier')
-	.button('%tools.button.7', 'textures/server_icons/border')
-	.button('%tools.button.8', 'textures/items/light_block_15')
-	.button('%tools.button.9', 'textures/items/egg_npc')
-	.button('%tools.button.10', 'textures/items/floating_text')
-	.button('%tools.button.11', 'textures/items/stick')
-	.button('%tools.button.12', 'textures/ui/cancel')
-	.button('%admin.menu.button.back', 'textures/ui/icon_import')
+	.title('%admin.tools.title')
+	.body('%admin.tools.body')
+	.button('%admin.tools.button.command_block', 'textures/server_icons/command_block')
+	.button('%admin.tools.button.allow', 'textures/server_icons/allow')
+	.button('%admin.tools.button.deny', 'textures/server_icons/deny')
+	.button('%admin.tools.button.structure_block', 'textures/server_icons/structure_block')
+	.button('%admin.tools.button.structure_void', 'textures/server_icons/structure_void')
+	.button('%admin.tools.button.barrier', 'textures/blocks/barrier')
+	.button('%admin.tools.button.border', 'textures/server_icons/border')
+	.button('%admin.tools.button.light', 'textures/items/light_block_15')
+	.button('%admin.tools.button.npc_egg', 'textures/items/egg_npc')
+	.button('%admin.tools.button.hologram_egg', 'textures/items/floating_text')
+	.button('%admin.tools.button.admin_stick', 'textures/items/stick')
+	.button('%admin.tools.button.clear_inventory', 'textures/ui/cancel')
+	.button('%admin.common.back', 'textures/ui/icon_import')
 	tools.show(player).then(tb => {
 		if (tb.selection == 0) {
 			player.runCommandAsync('give @s command_block')
@@ -210,22 +210,22 @@ function tools(player) {
 // --- Сообщение от сервера ---
 function sayServer(player) {
 	const sayServer = new ModalFormData()
-	.title('%sayServer.title')
-	.textField('%sayServer.body', '%sayServer.textField')
+	.title('%admin.announce.title')
+	.textField('%admin.announce.body', '%admin.announce.placeholder')
 	sayServer.show(player).then(r => {
 		if (!r.formValues) return;
 		let message = r.formValues[0]
-		player.runCommandAsync(`tellraw @a ${rawTranslate('sayServer.message', message)}`).catch(() => undefined)
+		player.runCommandAsync(`tellraw @a ${rawTranslate('chat.server.announce', message)}`).catch(() => undefined)
 	});
 }
 
 // --- Подтверждение вайпа мира ---
 function wipe(player) {
 	const wipe = new MessageFormData()
-	.title(' %wipe.title')
-	.body('%wipe.body')
-	.button1(' %wipe.button.1')
-	.button2(' %wipe.button.2')
+	.title(' %admin.wipe.title')
+	.body('%admin.wipe.body')
+	.button1(' %admin.wipe.button.yes')
+	.button2(' %admin.wipe.button.no')
 	wipe.show(player).then(tb => {
 		if (tb.selection == 1) {
 			player.runCommandAsync('function system/wipe')
