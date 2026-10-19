@@ -107,7 +107,7 @@ mapInfo.title=§l§8Menú del servidor |  Sobre el mapa
 mapInfo.body=§7Elige lo que necesitas.
 mapInfo.button.1=§8 Niveles
 mapInfo.button.2=§f⩆ §8¿Cómo jugar?
-mapInfo.button.3=§f⩇ §8Creador
+mapInfo.button.3=§f⩇ §8Creadores
 mapInfo.button.4=§8 Versión del mapa
 
 ## --- MENÚ DE NIVELES ---
@@ -162,7 +162,7 @@ howtoplay.text.19= - tu XP y cuánto  para el siguiente 
 howtoplay.text.20= - tu Reinicio, característica: prisa
 howtoplay.text.21= - Online actual del servidor
 
-mapCreator.title=§l§8Menú del servidor | §f⩇§8 Creador
+mapCreator.title=§l§8Menú del servidor | §f⩇§8 Creadores
 
 mapVersion.title=§l§8Menú del servidor |  Versión del mapa
 mapVersion.text.1=§l§7Aquí encontrarás información sobre la última actualización del mapa

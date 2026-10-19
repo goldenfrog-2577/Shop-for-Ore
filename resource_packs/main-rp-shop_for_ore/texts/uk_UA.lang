@@ -107,7 +107,7 @@ mapInfo.title=§l§8Меню сервера |  Про карту
 mapInfo.body=§7Вибери, що тобі потрібно.
 mapInfo.button.1=§8 Рівні
 mapInfo.button.2=§f⩆ §8Як грати?
-mapInfo.button.3=§f⩇ §8Творець
+mapInfo.button.3=§f⩇ §8Творці
 mapInfo.button.4=§8 Версія карти
 
 ## --- МЕНЮ РІВНІВ ---
@@ -162,7 +162,7 @@ howtoplay.text.19= — твій Досвід / XP і скільки  до 
 howtoplay.text.20= — твій Ребітх, особливість: поспіх
 howtoplay.text.21= — поточний Онлайн сервера
 
-mapCreator.title=§l§8Меню сервера | §f⩇§8 Творець
+mapCreator.title=§l§8Меню сервера | §f⩇§8 Творці
 
 mapVersion.title=§l§8Меню сервера |  Версія карти
 mapVersion.text.1=§l§7Тут написано про останнє оновлення карти
