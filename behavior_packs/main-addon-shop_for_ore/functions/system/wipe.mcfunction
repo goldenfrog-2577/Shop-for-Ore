@@ -22,4 +22,4 @@ tag @e remove player:tp_ore
 
 # Воспроизведение звука и сообщение об успешном вайпе
 playsound random.levelup @s
-tellraw @s {"rawtext":[{"translate":"wipe.message.success"}]}
+tellraw @s {"rawtext":[{"translate":"chat.server.wiped"}]}

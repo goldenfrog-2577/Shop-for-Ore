@@ -67,7 +67,7 @@ system.runSchedule(() => {
 			// Запрещённый предмет
 			if (bannedItems.has(item.typeId)) {
 				container.setItem(i, air);
-				player.runCommandAsync(`tellraw @a ${rawTranslate('message.anticheat.item', player.name, item.typeId)}`).catch(() => undefined);
+				player.runCommandAsync(`tellraw @a ${rawTranslate('chat.anticheat.item', player.name, item.typeId)}`).catch(() => undefined);
 				continue;
 			}
 
@@ -80,7 +80,7 @@ system.runSchedule(() => {
 			for (const enchant of enchantComponent.enchantments) {
 				if (enchant.type.maxLevel >= enchant.level) continue;
 				container.setItem(i, air);
-				player.runCommandAsync(`tellraw @a ${rawTranslate('message.anticheat.enchant', player.name, item.typeId, enchant.level)}`).catch(() => undefined);
+				player.runCommandAsync(`tellraw @a ${rawTranslate('chat.anticheat.enchant', player.name, item.typeId, enchant.level)}`).catch(() => undefined);
 				break;
 			}
 		}

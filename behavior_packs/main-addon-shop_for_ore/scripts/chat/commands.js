@@ -21,13 +21,13 @@ world.events.beforeChat.subscribe((data) => {
 	// Поиск команды в списке — по точному имени (раньше «!f» находило «!fly», «!g» — «!gm1»)
 	const findCommand = commandsList.find(cmd => cmd.command.split(' ')[0] === `!${command}`);
 	if (!findCommand) {
-		run(player, `tellraw @s ${rawTranslate('message.cmd.unknown', `!${command}`)}`);
+		run(player, `tellraw @s ${rawTranslate('chat.cmd.error.unknown', `!${command}`)}`);
 		return;
 	}
 
 	// Проверка на права хоста, если команда только для хоста
 	if (findCommand.hostOnly && !player.hasTag("host")) {
-		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"message.cmd.error.3"}]}`);
+		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.cmd.error.no_permission"}]}`);
 		return;
 	}
 
@@ -36,19 +36,19 @@ world.events.beforeChat.subscribe((data) => {
 		case "help":
 			// Вывод списка доступных команд
 			const helpMessage = commandsList.filter(cmd => !cmd.hostOnly || player.hasTag("host")).map(cmd => `§f${cmd.command} - ${cmd.description}`).join("\n");
-			player.tell(`%commands.list.desc\n${helpMessage}\n§8------------------------§f`);
+			player.tell(`%chat.help.header\n${helpMessage}\n§8------------------------§f`);
 			break;
 
 		case "spawn":
 			// Телепорт на спавн
 			player.runCommandAsync("tp @s 0 2 0");
-			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.spawn"}]}');
+			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.spawn"}]}');
 			break;
 
 		case "emotes":
 			// Вывод списка эмодзи
 			const emotesMessage = emotesList.map(emote => `${emote.name} - ${emote.symbol}`).join("\n");
-			player.tell(`%message.cmd.emotes\n${emotesMessage}\n§8------------------------§f`);
+			player.tell(`%chat.emotes.header\n${emotesMessage}\n§8------------------------§f`);
 			break;
 
 		case "msg":
@@ -59,7 +59,7 @@ world.events.beforeChat.subscribe((data) => {
 			if (recipient && privateMessage) {
 				const target = findPlayer(recipient);
 				if (!target) {
-					run(player, `tellraw @s ${rawTranslate('message.cmd.notfound', recipient)}`);
+					run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', recipient)}`);
 					break;
 				}
 				// Замена текстовых кодов эмодзи на символы
@@ -69,29 +69,29 @@ world.events.beforeChat.subscribe((data) => {
 
 				// Форматированное личное сообщение с иконкой облачка.
 				// JSON собирается через JSON.stringify: кавычки в сообщении больше не ломают tellraw
-				run(target, `tellraw @s ${rawTranslate('message.cmd.msg.received', player.name, privateMessage)}`);
-				run(player, `tellraw @s ${rawTranslate('message.cmd.msg.sent', target.name, privateMessage)}`);
+				run(target, `tellraw @s ${rawTranslate('chat.cmd.msg.received', player.name, privateMessage)}`);
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.msg.sent', target.name, privateMessage)}`);
 			} else {
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.msg.use"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.msg.use"}]}');
 			}
 			break;
 
 		case "gm1":
 			// Креатив
 			player.runCommandAsync("gamemode creative @s");
-			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.gm1"}]}');
+			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.gm1"}]}');
 			break;
 
 		case "gm2":
 			// Приключенческий режим
 			player.runCommandAsync("gamemode adventure @s");
-			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.gm2"}]}');
+			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.gm2"}]}');
 			break;
 
 		case "gm6":
 			// Наблюдатель
 			player.runCommandAsync("gamemode spectator @s");
-			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.gm6"}]}');
+			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.gm6"}]}');
 			break;
 
 		case "fly":
@@ -99,19 +99,19 @@ world.events.beforeChat.subscribe((data) => {
 			const flyState = args[0];
 			if (flyState === "on") {
 				player.runCommandAsync("ability @s mayfly true");
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.fly.on"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.fly.on"}]}');
 			} else if (flyState === "off") {
 				player.runCommandAsync("ability @s mayfly false");
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.fly.off"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.fly.off"}]}');
 			} else {
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.fly.use"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.fly.use"}]}');
 			}
 			break;
 
 		case "clearchat":
 			// Очистка чата для всех
 			player.runCommandAsync('tellraw @a {"rawtext":[{"text":"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"}]}');
-			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.clearchat"}]}');
+			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.clearchat"}]}');
 			break;
 
 		case "invis":
@@ -119,13 +119,13 @@ world.events.beforeChat.subscribe((data) => {
 			const invisState = args[0];
 			if (invisState === "on") {
 				player.runCommandAsync("effect @s invisibility 3600 255 true");
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.invis.on"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.invis.on"}]}');
 			} else if (invisState === "off") {
 				// Только невидимость (раньше снимались все эффекты)
 				player.runCommandAsync("effect @s invisibility 0");
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.invis.off"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.invis.off"}]}');
 			} else {
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.invis.use"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.invis.use"}]}');
 			}
 			break;
 
@@ -137,7 +137,7 @@ world.events.beforeChat.subscribe((data) => {
 		case "stick":
 			// Выдача админ-палки
 			player.runCommandAsync("give @s server:admin_stick");
-			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.stick"}]}');
+			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.stick"}]}');
 			break;
 
 		case 'timeset':
@@ -145,9 +145,9 @@ world.events.beforeChat.subscribe((data) => {
 			const time = args[0];
 			if (time === "sunrise" || time === "day" || time === "noon" || time === "sunset" || time === "night" || time === "midnight") {
 				player.runCommandAsync(`time set ${time}`);
-				player.runCommandAsync(`tellraw @s ${rawTranslate('message.cmd.timeset.done', time)}`);
+				player.runCommandAsync(`tellraw @s ${rawTranslate('chat.cmd.timeset.done', time)}`);
 			} else {
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.timeset.use"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.timeset.use"}]}');
 			}
 			break;
 
@@ -162,9 +162,9 @@ world.events.beforeChat.subscribe((data) => {
 				const command = prefixAction === "set"
 				? `tag "${prefixPlayer}" add ${prefixTag}`: `tag "${prefixPlayer}" remove ${prefixTag}`;
 				run(player, command);
-				player.runCommandAsync(`tellraw @s ${rawTranslate(prefixAction === "set" ? 'message.cmd.prefix.set' : 'message.cmd.prefix.take', prefixName, prefixPlayer)}`);
+				player.runCommandAsync(`tellraw @s ${rawTranslate(prefixAction === "set" ? 'chat.cmd.prefix.set' : 'chat.cmd.prefix.take', prefixName, prefixPlayer)}`);
 			} else {
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.prefix.use"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.prefix.use"}]}');
 			}
 			break;
 
@@ -176,9 +176,9 @@ world.events.beforeChat.subscribe((data) => {
 			if (["add", "remove"].includes(tagAction) && tagName) {
 				const tagCommand = `tag "${tagTarget}" ${tagAction} ${JSON.stringify(tagName)}`;
 				run(player, tagCommand);
-				player.runCommandAsync(`tellraw @s ${rawTranslate(`message.cmd.tag.${tagAction}`, tagName, tagTarget)}`);
+				player.runCommandAsync(`tellraw @s ${rawTranslate(`chat.cmd.tag.${tagAction}`, tagName, tagTarget)}`);
 			} else {
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.tag.use"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.tag.use"}]}');
 			}
 			break;
 
@@ -190,9 +190,9 @@ world.events.beforeChat.subscribe((data) => {
 			const sbAmount = parseInt(args[3], 10);
 			if (["add", "remove"].includes(sbAction) && sbObjective && !isNaN(sbAmount)) {
 				run(player, `scoreboard players ${sbAction} "${sbTarget}" ${sbObjective} ${sbAmount}`);
-				player.runCommandAsync(`tellraw @s ${rawTranslate(`message.cmd.scoreboard.${sbAction}`, sbTarget, sbObjective, sbAmount)}`);
+				player.runCommandAsync(`tellraw @s ${rawTranslate(`chat.cmd.scoreboard.${sbAction}`, sbTarget, sbObjective, sbAmount)}`);
 			} else {
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.scoreboard.use"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.scoreboard.use"}]}');
 			}
 			break;
 
@@ -203,15 +203,15 @@ world.events.beforeChat.subscribe((data) => {
 			if (kickTarget) {
 				const target = findPlayer(kickTarget);
 				if (!target) {
-					run(player, `tellraw @s ${rawTranslate('message.cmd.notfound', kickTarget)}`);
+					run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', kickTarget)}`);
 					break;
 				}
-				// Без причины — стандартное сообщение игры (раньше выгнанный видел сырой ключ %message.cmd.kick.no_reason)
+				// Без причины — стандартное сообщение игры (раньше выгнанный видел сырой ключ %chat.cmd.kick.no_reason)
 				run(player, kickReason ? `kick "${target.name}" ${kickReason}` : `kick "${target.name}"`);
 				// JSON через JSON.stringify: кавычки в причине больше не ломают сообщение
-				run(player, `tellraw @a ${JSON.stringify({ rawtext: [{ translate: "message.cmd.kick", with: { rawtext: [{ text: target.name }, kickReason ? { text: kickReason } : { translate: "message.cmd.kick.no_reason" }] } }] })}`);
+				run(player, `tellraw @a ${JSON.stringify({ rawtext: [{ translate: "chat.cmd.kick", with: { rawtext: [{ text: target.name }, kickReason ? { text: kickReason } : { translate: "chat.cmd.kick.no_reason" }] } }] })}`);
 			} else {
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.kick.use"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.kick.use"}]}');
 			}
 			break;
 
@@ -223,23 +223,23 @@ world.events.beforeChat.subscribe((data) => {
 			const targetName = args[0];
 			
 			if (!targetName) {
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"message.cmd.tp.use"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.tp.use"}]}');
 				return;
 			}
 			
 			// Телепорт указанного игрока к вызывающему
 			const tpTarget = findPlayer(targetName);
 			if (!tpTarget) {
-				run(player, `tellraw @s ${rawTranslate('message.cmd.notfound', targetName)}`);
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', targetName)}`);
 				return;
 			}
 			run(player, `tp "${tpTarget.name}" @s`);
-			run(player, `tellraw @s ${rawTranslate('message.cmd.tp.done', tpTarget.name)}`);
+			run(player, `tellraw @s ${rawTranslate('chat.cmd.tp.done', tpTarget.name)}`);
 			break;
 		}	
 
 		default:
 			// Неизвестная команда
-			run(player, `tellraw @s ${rawTranslate('message.cmd.unknown', `!${command}`)}`);
+			run(player, `tellraw @s ${rawTranslate('chat.cmd.error.unknown', `!${command}`)}`);
 	}
 });

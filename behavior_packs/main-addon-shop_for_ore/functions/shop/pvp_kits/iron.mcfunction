@@ -1,5 +1,5 @@
 # Ошибка: недостаточно денег для покупки железного набора
-execute as @s[scores={money=0..14999}] run tellraw @s {"rawtext":[{"translate":"message.basic.error"}]}
+execute as @s[scores={money=0..14999}] run tellraw @s {"rawtext":[{"translate":"chat.error.no_money"}]}
 
 # Выдача железной брони через replaceitem (заменяет текущую броню)
 execute as @s[scores={money=15000..}] run replaceitem entity @s slot.armor.head 0 iron_helmet
@@ -11,7 +11,7 @@ execute as @s[scores={money=15000..}] run replaceitem entity @s slot.armor.feet 
 execute as @s[scores={money=15000..}] run give @s iron_sword
 
 # Сообщение игроку о покупке набора
-execute as @s[scores={money=15000..}] run tellraw @s {"rawtext":[{"translate":"message.shop.kit.iron"}]}
+execute as @s[scores={money=15000..}] run tellraw @s {"rawtext":[{"translate":"chat.shop.kit.iron"}]}
 
 # Списание денег за набор
 execute as @s[scores={money=15000..}] run scoreboard players remove @s money 15000

@@ -17,9 +17,9 @@ export function bank(player) {
 
 	// Создаём форму банка
 	const menu = new ModalFormData()
-		.title('%bank.title')
-		.dropdown(`\n%bank.text.8 §e${getScore(player, "money")}\n%bank.text.7`, operations, 0)
-		.textField('%bank.text.1', '%bank.text.2');
+		.title('%menu.bank.title')
+		.dropdown(`\n%menu.bank.balance §e${getScore(player, "money")}\n%menu.bank.player`, operations, 0)
+		.textField('%menu.bank.amount', '%menu.bank.amount_placeholder');
 
 	// Показываем форму игроку
 	menu.show(player).then((r) => {
@@ -33,31 +33,31 @@ export function bank(player) {
 		// Сумма — целое положительное число в пределах табло (раньше дробная или огромная сумма
 		// «отправлялась» в сообщении, а команды scoreboard не срабатывали)
 		if (!/^\d+$/.test(raw) || !Number.isSafeInteger(amount) || amount <= 0 || amount > 2147483647) {
-			run(player, 'tellraw @s {"rawtext":[{"translate":"bank.error.amount"}]}');
+			run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.amount"}]}');
 			return;
 		}
 		// Самому себе переводить нельзя
 		if (target === player.name) {
-			run(player, 'tellraw @s {"rawtext":[{"translate":"bank.error.self"}]}');
+			run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.self"}]}');
 			return;
 		}
 		// Получатель мог выйти, пока форма была открыта: тогда деньги ушли бы «фейковому игроку» с его ником
 		const targetPlayer = findPlayer(target);
 		if (!targetPlayer) {
-			run(player, `tellraw @s ${rawTranslate('message.cmd.notfound', target)}`);
+			run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', target)}`);
 			return;
 		}
 		// Проверка на достаточность средств
 		if (playerScore < amount) {
-			run(player, 'tellraw @s {"rawtext":[{"translate":"bank.text.3"}]}');
+			run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.no_money"}]}');
 			return;
 		}
 		// Сначала списание у отправителя; зачисление — только если списание прошло
 		run(player, `scoreboard players remove @s money ${amount}`).then((res) => {
 			if (res === undefined) return;
 			run(targetPlayer, `scoreboard players add @s money ${amount}`);
-			run(player, `tellraw @s ${rawTranslate('bank.sent', targetPlayer.name, amount)}`);
-			run(targetPlayer, `tellraw @s ${rawTranslate('bank.received', player.name, amount)}`);
+			run(player, `tellraw @s ${rawTranslate('chat.bank.sent', targetPlayer.name, amount)}`);
+			run(targetPlayer, `tellraw @s ${rawTranslate('chat.bank.received', player.name, amount)}`);
 			run(player, 'playsound note.bell @s');
 		});
 	});

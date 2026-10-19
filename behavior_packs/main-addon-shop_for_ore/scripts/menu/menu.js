@@ -12,7 +12,7 @@ world.events.beforeItemUse.subscribe(data => {
 		// До входа в аккаунт меню недоступно
 		if (isPending(player)) {
 			data.cancel = true;
-			player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"login.required"}]}`);
+			player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.account.error.login_required"}]}`);
 			return;
 		}
 		menu(player)
@@ -22,16 +22,16 @@ world.events.beforeItemUse.subscribe(data => {
 // --- Главное меню ---
 export function menu(player) {
 	const menu = new ActionFormData()
-	.title('%menu.title')
-	.body('%menu.body')
-	.button('%menu.button.1\n%menu.background')
-	.button('%menu.button.2\n%menu.background')
-	.button('%menu.button.3\n%menu.background')
-	.button('%menu.button.4\n%menu.background')
-	.button('%menu.button.5\n%menu.background')
-	.button('%menu.button.6\n%menu.background')
-	.button('%menu.button.7\n%menu.background')
-	.button('%menu.button.8\n%menu.background')
+	.title('%menu.main.title')
+	.body('%menu.main.body')
+	.button('%menu.main.button.about\n%menu.common.tap_to_open')
+	.button('%menu.main.button.shop\n%menu.common.tap_to_open')
+	.button('%menu.main.button.settings\n%menu.common.tap_to_open')
+	.button('%menu.main.button.bank\n%menu.common.tap_to_open')
+	.button('%menu.main.button.rules\n%menu.common.tap_to_open')
+	.button('%menu.main.button.promo\n%menu.common.tap_to_open')
+	.button('%menu.main.button.warps\n%menu.common.tap_to_open')
+	.button('%menu.main.button.upgrades\n%menu.common.tap_to_open')
 	menu.show(player).then(m => {
 		if (m.selection == 0) {
 			mapInfo(player)
@@ -56,13 +56,13 @@ export function menu(player) {
 // --- Информация о карте ---
 function mapInfo(player) {
 	const mapInfo = new ActionFormData()
-	.title('%mapInfo.title')
-	.body('%mapInfo.body')
-	.button('%mapInfo.button.1')
-	.button('%mapInfo.button.2')
-	.button('%mapInfo.button.3')
-	.button('%mapInfo.button.4')
-	.button('%menu.button.back')
+	.title('%menu.about.title')
+	.body('%menu.about.body')
+	.button('%menu.about.button.levels')
+	.button('%menu.about.button.howtoplay')
+	.button('%menu.about.button.creators')
+	.button('%menu.about.button.version')
+	.button('%menu.common.back')
 	mapInfo.show(player).then(i => {
 		if (i.selection == 0) {
 			levelsInfo(player)
@@ -81,9 +81,9 @@ function mapInfo(player) {
 // --- Уровни карты ---
 function levelsInfo(player) {
 	const levelsInfo = new ActionFormData()
-	.title('%lvlsInfo.title')
-	.body('%lvlsInfo.body.lvl.1\n%lvlsInfo.body.lvl.2\n%lvlsInfo.body.lvl.3\n%lvlsInfo.body.lvl.4\n%lvlsInfo.body.lvl.5\n%lvlsInfo.body.lvl.6\n%lvlsInfo.body.lvl.7\n%lvlsInfo.body.lvl.8\n%lvlsInfo.body.lvl.9\n%lvlsInfo.body.lvl.10\n%lvlsInfo.body.lvl.11\n%lvlsInfo.body.lvl.12\n%lvlsInfo.body.lvl.13\n%lvlsInfo.body.lvl.14\n%lvlsInfo.body.lvl.15\n%lvlsInfo.body.lvl.16\n%lvlsInfo.body.lvl.17\n%lvlsInfo.body.lvl.18\n%lvlsInfo.body.lvl.19\n%lvlsInfo.body.lvl.20\n%lvlsInfo.body.lvl.21\n%lvlsInfo.body.lvl.22\n%lvlsInfo.body.lvl.23\n%lvlsInfo.body.lvl.24\n%lvlsInfo.body.lvl.25')
-	.button('%menu.button.back')
+	.title('%menu.levels.title')
+	.body('%menu.levels.line.1\n%menu.levels.line.2\n%menu.levels.line.3\n%menu.levels.line.4\n%menu.levels.line.5\n%menu.levels.line.6\n%menu.levels.line.7\n%menu.levels.line.8\n%menu.levels.line.9\n%menu.levels.line.10\n%menu.levels.line.11\n%menu.levels.line.12\n%menu.levels.line.13\n%menu.levels.line.14\n%menu.levels.line.15\n%menu.levels.line.16\n%menu.levels.line.17\n%menu.levels.line.18\n%menu.levels.line.19\n%menu.levels.line.20\n%menu.levels.line.21\n%menu.levels.line.22\n%menu.levels.line.23\n%menu.levels.line.24\n%menu.levels.line.25')
+	.button('%menu.common.back')
 	levelsInfo.show(player).then(tb => {
 		if (tb.selection == 0) {
 			mapInfo(player)
@@ -94,9 +94,9 @@ function levelsInfo(player) {
 // --- Как играть ---
 function howtoplay(player) {
 	const howtoplay = new ActionFormData()
-	.title('%howtoplay.title')
-	.body(' %howtoplay.text.1\n%howtoplay.text.2\n%howtoplay.text.3\n%howtoplay.text.4\n%howtoplay.text.5\n\n %howtoplay.text.6\n%howtoplay.text.7\n%howtoplay.text.8\n%howtoplay.text.9\n\n %howtoplay.text.10\n%howtoplay.text.11\n%howtoplay.text.12\n%howtoplay.text.13\n\n%howtoplay.text.14\n\n%howtoplay.text.15\n\n%howtoplay.text.16\n\n%howtoplay.text.17\n\n%howtoplay.text.18\n\n%howtoplay.text.19\n\n%howtoplay.text.20\n\n%howtoplay.text.21')
-	.button('%menu.button.back')
+	.title('%menu.howtoplay.title')
+	.body(' %menu.howtoplay.line.1\n%menu.howtoplay.line.2\n%menu.howtoplay.line.3\n%menu.howtoplay.line.4\n%menu.howtoplay.line.5\n\n %menu.howtoplay.line.6\n%menu.howtoplay.line.7\n%menu.howtoplay.line.8\n%menu.howtoplay.line.9\n\n %menu.howtoplay.line.10\n%menu.howtoplay.line.11\n%menu.howtoplay.line.12\n%menu.howtoplay.line.13\n\n%menu.howtoplay.line.14\n\n%menu.howtoplay.line.15\n\n%menu.howtoplay.line.16\n\n%menu.howtoplay.line.17\n\n%menu.howtoplay.line.18\n\n%menu.howtoplay.line.19\n\n%menu.howtoplay.line.20\n\n%menu.howtoplay.line.21')
+	.button('%menu.common.back')
 	howtoplay.show(player).then(tb => {
 		if (tb.selection == 0) {
 			mapInfo(player)
@@ -107,7 +107,7 @@ function howtoplay(player) {
 // --- Создатели карты ---
 function mapCreator(player) {
 	const mapCreator = new ActionFormData()
-	.title('%mapCreator.title')
+	.title('%menu.creators.title')
 	.body('')
 	.button('§8Сreator\n§8kapycta1231484',
 		'textures/server_icons/creator')
@@ -132,9 +132,9 @@ function mapCreator(player) {
 // --- Версия карты ---
 function mapVersion(player) {
 	const mapVersion = new ActionFormData()
-	.title('%mapVersion.title')
-	.body('%mapVersion.text.1\n\n§r%mapVersion.label §a0.2.0_20261018r§r\n%mapVersion.text.2\n\n%mapVersion.text.3\n%mapVersion.text.4\n%mapVersion.text.5\n%mapVersion.text.6\n%mapVersion.text.7\n%mapVersion.text.8\n%mapVersion.text.9\n%mapVersion.text.10\n%mapVersion.text.11\n%mapVersion.text.12')
-	.button('%menu.button.back')
+	.title('%menu.version.title')
+	.body('%menu.version.line.1\n\n§r%menu.version.label §a0.2.0_20261018r§r\n%menu.version.line.2\n\n%menu.version.line.3\n%menu.version.line.4\n%menu.version.line.5\n%menu.version.line.6\n%menu.version.line.7\n%menu.version.line.8\n%menu.version.line.9\n%menu.version.line.10\n%menu.version.line.11\n%menu.version.line.12')
+	.button('%menu.common.back')
 	mapVersion.show(player).then(tb => {
 		if (tb.selection == 0) {
 			mapInfo(player)
@@ -145,15 +145,15 @@ function mapVersion(player) {
 // --- Магазин ---
 function shop(player) {
 	const shop = new ActionFormData()
-	.title('%shop.title')
-	.body('%shop.body')
-	.button('%shop.button.1',
+	.title('%menu.shop.title')
+	.body('%menu.shop.body')
+	.button('%menu.shop.button.enchants',
 		'textures/items/book_enchanted')
-	.button('%shop.button.2',
+	.button('%menu.shop.button.kits',
 		'textures/items/diamond_chestplate')
-	.button('%shop.button.3',
+	.button('%menu.shop.button.boosts',
 		'textures/items/experience_bottle')
-	.button('%menu.button.back')
+	.button('%menu.common.back')
 	shop.show(player).then(tb => {
 		if (tb.selection == 0) {
 			enchants(player)
@@ -170,13 +170,13 @@ function shop(player) {
 // --- Покупка зачарований ---
 function enchants(player) {
 	const enchants = new ActionFormData()
-	.title('%shop.enchants.title')
-	.body('%shop.enchants.body.1\n%shop.enchants.body.2')
-	.button('%shop.enchants.button.1\n§825.0K ',
+	.title('%menu.shop.enchants.title')
+	.body('%menu.shop.enchants.body\n%menu.shop.enchants.note')
+	.button('%menu.shop.enchants.button.efficiency\n§825.0K ',
 		'textures/items/book_enchanted')
-	.button('%shop.enchants.button.2\n§810.0K ',
+	.button('%menu.shop.enchants.button.fortune\n§810.0K ',
 		'textures/items/book_enchanted')
-	.button('%menu.button.back');
+	.button('%menu.common.back');
 	enchants.show(player).then(tb => {
 		if (tb.selection == 0) {
 			player.runCommandAsync('function shop/enchants/efficiency');
@@ -191,15 +191,15 @@ function enchants(player) {
 // --- PvP-наборы ---
 function pvp_kits(player) {
 	const pvp_kits = new ActionFormData()
-	.title('%shop.kits.title')
-	.body('%shop.kits.body')
-	.button('%shop.kits.button.1\n§815.0K ',
+	.title('%menu.shop.kits.title')
+	.body('%menu.shop.kits.body')
+	.button('%menu.shop.kits.button.iron\n§815.0K ',
 		'textures/items/iron_chestplate')
-	.button('%shop.kits.button.2\n§835.0K ',
+	.button('%menu.shop.kits.button.diamond\n§835.0K ',
 		'textures/items/diamond_chestplate')
-	.button('%shop.kits.button.3\n§850.0K ',
+	.button('%menu.shop.kits.button.netherite\n§850.0K ',
 		'textures/items/netherite_chestplate')
-	.button('%menu.button.back')
+	.button('%menu.common.back')
 	pvp_kits.show(player).then(pvp => {
 		if (pvp.selection == 0) {
 			player.runCommandAsync('function shop/pvp_kits/iron')
@@ -216,12 +216,12 @@ function pvp_kits(player) {
 // --- Бусты ---
 function boosts(player) {
 	const boosts = new ActionFormData()
-	.title('%shop.boost.title')
-	.body('%shop.boost.body.1\n\n%shop.boost.body.2')
-	.button('%shop.boost.button.1\n§810.0K ')
-	.button('%shop.boost.button.2\n§850.0K ')
-	.button('%shop.boost.button.3\n§820.0K ')
-	.button('%menu.button.back')
+	.title('%menu.shop.boosts.title')
+	.body('%menu.shop.boosts.body\n\n%menu.shop.boosts.note')
+	.button('%menu.shop.boosts.button.x2\n§810.0K ')
+	.button('%menu.shop.boosts.button.x4\n§850.0K ')
+	.button('%menu.shop.boosts.button.ore_magnet\n§820.0K ')
+	.button('%menu.common.back')
 	boosts.show(player).then(tb => {
 		if (tb.selection == 0) {
 			player.runCommandAsync('function boost/X2boost')
@@ -239,15 +239,15 @@ function boosts(player) {
 // --- Настройки ---
 function settings(player) {
 	const settings = new ActionFormData()
-	.title('%settings.title')
-	.body('%settings.body')
-	.button('%settingsSelect.button.1',
+	.title('%menu.settings.title')
+	.body('%menu.settings.body')
+	.button('%menu.settings.button.board',
 		'textures/items/sign')
-	.button('%settingsSelect.button.2',
+	.button('%menu.settings.button.particles',
 		'textures/items/emerald')
-	.button('%settingsSelect.button.3',
+	.button('%menu.settings.button.sounds',
 		'textures/blocks/noteblock')
-	.button('%menu.button.back')
+	.button('%menu.common.back')
 	settings.show(player).then(tb => {
 		if (tb.selection == 0) {
 			settings_table(player)
@@ -264,21 +264,21 @@ function settings(player) {
 // --- Настройки: таблица ---
 function settings_table(player) {
     const settings_table = new ActionFormData()
-    .title('%settingsTable.title')
-    .body('%settingsTable.body\n\n%settings.default.1\n ')
-    .button(' %settings.button.1')
-    .button(' %settings.button.3')
-    .button(' %settings.button.2')
+    .title('%menu.settings.board.title')
+    .body('%menu.settings.board.body\n\n%menu.settings.default_on\n ')
+    .button(' %menu.settings.button.enable')
+    .button(' %menu.settings.button.icons_only')
+    .button(' %menu.settings.button.disable')
     settings_table.show(player).then(tb => {
         if (tb.selection == 0) {
             player.runCommandAsync('function settings/scoreboard_on');
-            player.tell('%settingsChanged.1');
+            player.tell('%chat.settings.enabled');
         } else if (tb.selection == 1) {
             player.runCommandAsync('function settings/scoreboard_icons');
-            player.tell('%settingsChanged.3');
+            player.tell('%chat.settings.icons_only');
         } else if (tb.selection == 2) {
             player.runCommandAsync('function settings/scoreboard_off');
-            player.tell('%settingsChanged.2');
+            player.tell('%chat.settings.disabled');
         }
     });
 }
@@ -286,17 +286,17 @@ function settings_table(player) {
 // --- Настройки: частицы ---
 function settings_particle(player) {
     const settings_particle = new ActionFormData()
-    .title('%settingsParticle.title')
-    .body('%settingsParticle.body\n\n%settings.default.2\n ')
-    .button(' %settings.button.1')
-    .button(' %settings.button.2')
+    .title('%menu.settings.particles.title')
+    .body('%menu.settings.particles.body\n\n%menu.settings.default_off\n ')
+    .button(' %menu.settings.button.enable')
+    .button(' %menu.settings.button.disable')
     settings_particle.show(player).then(tb => {
         if (tb.selection == 0) {
             player.runCommandAsync('tag @s add player:particle');
-            player.tell('%settingsChanged.1');
+            player.tell('%chat.settings.enabled');
         } else if (tb.selection == 1) {
             player.runCommandAsync('tag @s remove player:particle');
-            player.tell('%settingsChanged.2');
+            player.tell('%chat.settings.disabled');
         }
     });
 }
@@ -304,17 +304,17 @@ function settings_particle(player) {
 // --- Настройки: звук ---
 function settings_sound(player) {
     const settings_sound = new ActionFormData()
-    .title('%settingsSound.title')
-    .body('%settingsSound.body\n\n%settings.default.2\n ')
-    .button(' %settings.button.1')
-    .button(' %settings.button.2')
+    .title('%menu.settings.sounds.title')
+    .body('%menu.settings.sounds.body\n\n%menu.settings.default_off\n ')
+    .button(' %menu.settings.button.enable')
+    .button(' %menu.settings.button.disable')
     settings_sound.show(player).then(tb => {
         if (tb.selection == 0) {
             player.runCommandAsync('tag @s add player:sound');
-            player.tell('%settingsChanged.1');
+            player.tell('%chat.settings.enabled');
         } else if (tb.selection == 1) {
             player.runCommandAsync('tag @s remove player:sound');
-            player.tell('%settingsChanged.2');
+            player.tell('%chat.settings.disabled');
         }
     });
 }
@@ -322,9 +322,9 @@ function settings_sound(player) {
 // --- Правила ---
 function rules(player) {
 	const rules = new ActionFormData()
-	.title('%rules.title')
-	.body('%rules.body.1\n\n%rules.text.1\n%rules.text.2\n%rules.text.3\n%rules.text.4\n%rules.text.5\n%rules.text.6\n\n%rules.body.2')
-	.button('%menu.button.back')
+	.title('%menu.rules.title')
+	.body('%menu.rules.header\n\n%menu.rules.line.1\n%menu.rules.line.2\n%menu.rules.line.3\n%menu.rules.line.4\n%menu.rules.line.5\n%menu.rules.line.6\n\n%menu.rules.footer')
+	.button('%menu.common.back')
 	rules.show(player).then(tb => {
 		if (tb.selection == 0) {
 			menu(player)
@@ -335,16 +335,16 @@ function rules(player) {
 // --- Промокоды ---
 function promocodes(player) {
 	const promocodes = new ModalFormData()
-	.title('%promo.title')
-	.textField('%promo.text.1\n\n%promo.text.2',
-		'%promo.textField')
+	.title('%menu.promo.title')
+	.textField('%menu.promo.body\n\n%menu.promo.hint',
+		'%menu.promo.placeholder')
 	promocodes.show(player).then(r => {
 		// Форма закрыта крестиком — formValues нет (надёжнее, чем isCanceled/canceled: имя менялось между версиями API)
 		if (!r.formValues) return;
 
 		const enteredCode = r.formValues[0]?.trim();
 		if (validatePromoCode(enteredCode, player)) {} else {
-			player.tell('%message.promo.error');
+			player.tell('%chat.promo.error.invalid');
 		}
 	});
 }
@@ -356,28 +356,28 @@ const promocodeRewards = {
 		reward: {
 			type: "xp", amount: 500
 		},
-		message: "message.promo.1"
+		message: "chat.promo.reward.1"
 	},
 	"parkour": {
 		scoreboard: "promo2",
 		reward: {
 			type: "money", amount: 500
 		},
-		message: "message.promo.2"
+		message: "chat.promo.reward.2"
 	},
 	"hellbonus": {
 		scoreboard: "promo3",
 		reward: {
 			type: "xp", amount: 25000
 		},
-		message: "message.promo.3"
+		message: "chat.promo.reward.3"
 	},
 	"VIPbonus": {
 		scoreboard: "promo4",
 		reward: {
 			type: "money2", amount: 100
 		},
-		message: "message.promo.4"
+		message: "chat.promo.reward.4"
 	},
 }
 
@@ -404,7 +404,7 @@ function validatePromoCode(code, player) {
 		player.runCommandAsync(`scoreboard players set @s ${scoreboard} 1`);
 		player.runCommandAsync(`tellraw @a ${rawTranslate(promo.message, player.name)}`).catch(() => undefined);
 	}).catch(() => {
-		player.tell('%message.promo.activated');
+		player.tell('%chat.promo.error.used');
 	});
 
 	return true;
@@ -413,11 +413,11 @@ function validatePromoCode(code, player) {
 // --- Варпы ---
 function warps(player) {
 	const warps = new ActionFormData()
-	.title('%warps.title')
-	.body('%warps.body')
-	.button(' %warps.button.1')
-	.button(' %warps.button.2')
-	.button('%menu.button.back')
+	.title('%menu.warps.title')
+	.body('%menu.warps.body')
+	.button(' %menu.warps.button.spawn')
+	.button(' %menu.warps.button.minigames')
+	.button('%menu.common.back')
 	warps.show(player).then(tp => {
 		if (tp.selection == 0) {
 			player.runCommandAsync('tp @s[scores={lvl=1..15}] 0 5 0')
@@ -434,11 +434,11 @@ function warps(player) {
 // --- Улучшения ---
 function upgrading(player) {
 	const upgrading = new ActionFormData()
-	.title('%upgrading.title')
-	.body('%upgrading.body')
-	.button('%upgrading.button.1\n§8125.0K ')
-	.button('%upgrading.button.2\n§816 - 25 ')
-	.button('%menu.button.back')
+	.title('%menu.upgrades.title')
+	.body('%menu.upgrades.body')
+	.button('%menu.upgrades.button.vip\n§8125.0K ')
+	.button('%menu.upgrades.button.rebirth\n§816 - 25 ')
+	.button('%menu.common.back')
 	upgrading.show(player).then(tb => {
 		if (tb.selection == 0) {
 			player.runCommandAsync('function upgrade/upgrade_vip')

@@ -1,5 +1,5 @@
 # Ошибка: недостаточно денег для покупки незеритового набора
-execute as @s[scores={money=0..49999}] run tellraw @s {"rawtext":[{"translate":"message.basic.error"}]}
+execute as @s[scores={money=0..49999}] run tellraw @s {"rawtext":[{"translate":"chat.error.no_money"}]}
 
 # Выдача незеритовой брони через replaceitem (заменяет текущую броню)
 execute as @s[scores={money=50000..}] run replaceitem entity @s slot.armor.head 0 netherite_helmet
@@ -11,7 +11,7 @@ execute as @s[scores={money=50000..}] run replaceitem entity @s slot.armor.feet 
 execute as @s[scores={money=50000..}] run give @s netherite_sword
 
 # Сообщение игроку о покупке набора
-execute as @s[scores={money=50000..}] run tellraw @s {"rawtext":[{"translate":"message.shop.kit.netherite"}]}
+execute as @s[scores={money=50000..}] run tellraw @s {"rawtext":[{"translate":"chat.shop.kit.netherite"}]}
 
 # Списание денег за набор
 execute as @s[scores={money=50000..}] run scoreboard players remove @s money 50000

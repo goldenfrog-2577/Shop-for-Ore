@@ -50,7 +50,7 @@ effect @a[scores={rebirth=5..}] haste 2 4 true
 
 # «Магнит руды»: секунды идут только онлайн; по окончании — сообщение и снятие тега
 scoreboard players remove @a[scores={tpore=1..}] tpore 1
-execute as @a[tag=player:tp_ore,scores={tpore=..0}] run tellraw @s {"rawtext":[{"translate":"message.tp_ore.end"}]}
+execute as @a[tag=player:tp_ore,scores={tpore=..0}] run tellraw @s {"rawtext":[{"translate":"chat.ore_magnet.end"}]}
 tag @a[tag=player:tp_ore,scores={tpore=..0}] remove player:tp_ore
 
 # Подарок «в игре» (events/gift_event): обратный отсчёт, пока его не подобрали

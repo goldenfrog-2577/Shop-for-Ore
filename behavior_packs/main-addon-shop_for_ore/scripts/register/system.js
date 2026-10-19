@@ -34,7 +34,7 @@ world.events.playerJoin.subscribe((data) => {
 	// войти невозможно, поэтому просим задать пароль заново. Прогресс не трогаем
 	if (player.hasTag('hasRegister') && !hasPassword(player)) {
 		player.removeTag('hasRegister');
-		player.tell('\n%login.legacy\n ');
+		player.tell('\n%chat.account.legacy\n ');
 	}
 	if (canLogin(player)) {
 		player.removeTag('chekRegister');
