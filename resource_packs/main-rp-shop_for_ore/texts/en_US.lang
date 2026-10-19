@@ -227,21 +227,21 @@ settingsParticle.body=§7Click §2enable§7/§4disable§7 below to turn particle
 settingsSound.title=§l§8 Settings | Sounds
 settingsSound.body=§7Click §2enable§7/§4disable§7 below to turn sounds on or off when selling
 
-settingsChanged.1=§f[ §3Settings§f ]§r  §7Setting changed to - §2Enabled
-settingsChanged.2=§f[ §3Settings§f ]§r  §7Setting changed to - §4Disabled
-settingsChanged.3=§f[ §3Settings§f ]§r  §7Setting changed to - §gEmotes Only
+settingsChanged.1=§f[  §3Settings§f ]§r  §7Setting changed to - §2Enabled
+settingsChanged.2=§f[  §3Settings§f ]§r  §7Setting changed to - §4Disabled
+settingsChanged.3=§f[  §3Settings§f ]§r  §7Setting changed to - §gEmotes Only
 
 ## --- BANK MENU ---
 bank.title=§l§8Server Menu |  Bank
 bank.text.1=§rAmount you want to send:
 bank.text.2=§7Enter here...
-bank.text.3=§l§cERROR!§r§7 Not enough money on your balance
-bank.sent=§f[ §2Bank§f ]§r §7Sent to §e%1$s§7: §e%2$s
-bank.received=§f[ §2Bank§f ]§r §e%1$s§7 sent you §e%2$s
+bank.text.3=⩕ §l§cERROR!§r§7 Not enough money on your balance
+bank.sent=§f[  §2Bank§f ]§r §7Sent to §e%1$s§7: §e%2$s
+bank.received=§f[  §2Bank§f ]§r §e%1$s§7 sent you §e%2$s
 bank.text.7=§rChoose a player:
 bank.text.8=§eBalance§r:
-bank.error.amount=§l§cERROR!§r§7 The amount must be a positive whole number
-bank.error.self=§l§cERROR!§r§7 You can't send money to yourself
+bank.error.amount=⩕ §l§cERROR!§r§7 The amount must be a positive whole number
+bank.error.self=⩕ §l§cERROR!§r§7 You can't send money to yourself
 
 ## --- RULES MENU ---
 rules.title=§l§8Server Menu |  Rules
@@ -275,7 +275,7 @@ upgrading.button.2=§5Rebirth
 ## --- REGISTRATION MENU ---
 reg.title=§lAccount Registration
 reg.toggle=I agree to the server rules and confirm §cno§r cheats
-reg.text.1=§l§cERROR!§r§7 Confirm §bno cheats§7 to play on the server
+reg.text.1=⩕ §l§cERROR!§r§7 Confirm §bno cheats§7 to play on the server
 reg.text.2=§aHello.
 reg.text.3=§aWelcome to the server! Have fun :)
 reg.text.4=§6Account Info§r:
@@ -288,11 +288,11 @@ login.text.1=Welcome
 login.text.2=§rto the server §l[] Shop for Ore§r. Come up with and enter a password to register
 login.text.3=§gEnter the password you used during registration
 login.text.4=§7Enter password...
-login.text.5=§f[ §9Account§f ]§r §aLogged in! Welcome!
-login.text.6=§l§cERROR!§r§7 Wrong password, try again
-login.required=§l§cERROR!§r§7 Log in or register first
-login.legacy=§f[ §9Account§f ]§r §eAccount from the old platform: set a new password, your progress is kept
-reg.text.length=§l§cERROR!§r§7 Password must be 5 to 32 characters long
+login.text.5=§f[ ⩉ §9Account§f ]§r §aLogged in! Welcome!
+login.text.6=⩕ §l§cERROR!§r§7 Wrong password, try again
+login.required=⩕ §l§cERROR!§r§7 Log in or register first
+login.legacy=§f[ ⩉ §9Account§f ]§r §eAccount from the old platform: set a new password, your progress is kept
+reg.text.length=⩕ §l§cERROR!§r§7 Password must be 5 to 32 characters long
 
 ## --- ADMIN MENU ---
 admin.menu.title=§l§8Admin Menu
@@ -360,86 +360,86 @@ tools.button.12=§8Clear Inventory
 sayServer.title=§l§8Admin Menu | Announcements
 sayServer.body=§gType below anything you want to say. It will be shown to the whole server
 sayServer.textField=§7Enter text...
-sayServer.message=§f[ §eAnnouncement§f ]§r %1$s
+sayServer.message=§f[  §eAnnouncement§f ]§r %1$s
 
 ## --- ADMIN: WIPE ---
 wipe.title=§l§8Warning
 wipe.body=§7Wipe will reset all stats, but won't affect tags or inventories. Are you sure?
 wipe.button.1=§2Yes
 wipe.button.2=§4No
-wipe.message.success=§f[ §cServer§f ]§r §aAll player stats have been reset
+wipe.message.success=§f[  §cServer§f ]§r §aAll player stats have been reset
 
 ## --- LEVEL-UP & SYSTEM MESSAGES ---
-message.lvlup.lvl.2=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a2§f. Pickaxe upgraded: Stick >> Wooden Pickaxe
-message.lvlup.lvl.3=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a3§f. Pickaxe upgraded: Wooden Pickaxe >> Stone Pickaxe
-message.lvlup.lvl.4=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a4
-message.lvlup.lvl.5=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a5
-message.lvlup.lvl.6=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a6
-message.lvlup.lvl.7=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a7
-message.lvlup.lvl.8=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a8§f. Pickaxe upgraded: Stone Pickaxe >> Iron Pickaxe
-message.lvlup.lvl.9=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a9
-message.lvlup.lvl.10=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a10
-message.lvlup.lvl.11=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a11
-message.lvlup.lvl.12=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a12
-message.lvlup.lvl.13=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a13§f. Pickaxe upgraded: Iron Pickaxe >> §bDiamond Pickaxe
-message.lvlup.lvl.14=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a14
-message.lvlup.lvl.15=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a15§f. Pickaxe upgraded: §bDiamond Pickaxe§f >> §5Netherite Pickaxe
-message.lvlup.lvl.16=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a16§f. New location unlocked: §cNether
-message.lvlup.lvl.17=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a17
-message.lvlup.lvl.18=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a18
-message.lvlup.lvl.19=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a19
-message.lvlup.lvl.20=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a20
-message.lvlup.lvl.21=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a21
-message.lvlup.lvl.22=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a22
-message.lvlup.lvl.23=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a23
-message.lvlup.lvl.24=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a24
-message.lvlup.lvl.25=§f[ §aLvL UP§f ]§r %1$s §rleveled up to §a25§f. This is the §aMAX LEVEL§f!!!
+message.lvlup.lvl.2=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a2§f. Pickaxe upgraded: Stick >> Wooden Pickaxe
+message.lvlup.lvl.3=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a3§f. Pickaxe upgraded: Wooden Pickaxe >> Stone Pickaxe
+message.lvlup.lvl.4=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a4
+message.lvlup.lvl.5=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a5
+message.lvlup.lvl.6=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a6
+message.lvlup.lvl.7=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a7
+message.lvlup.lvl.8=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a8§f. Pickaxe upgraded: Stone Pickaxe >> Iron Pickaxe
+message.lvlup.lvl.9=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a9
+message.lvlup.lvl.10=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a10
+message.lvlup.lvl.11=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a11
+message.lvlup.lvl.12=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a12
+message.lvlup.lvl.13=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a13§f. Pickaxe upgraded: Iron Pickaxe >> §bDiamond Pickaxe
+message.lvlup.lvl.14=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a14
+message.lvlup.lvl.15=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a15§f. Pickaxe upgraded: §bDiamond Pickaxe§f >> §5Netherite Pickaxe
+message.lvlup.lvl.16=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a16§f. New location unlocked: §cNether
+message.lvlup.lvl.17=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a17
+message.lvlup.lvl.18=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a18
+message.lvlup.lvl.19=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a19
+message.lvlup.lvl.20=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a20
+message.lvlup.lvl.21=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a21
+message.lvlup.lvl.22=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a22
+message.lvlup.lvl.23=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a23
+message.lvlup.lvl.24=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a24
+message.lvlup.lvl.25=§f[  §aLvL UP§f ]§r %1$s §rleveled up to §a25§f. This is the §aMAX LEVEL§f!!!
 
 ## --- VIP & REBIRTH MESSAGES ---
-message.basic.error=§l§cERROR!§r§7 Not enough 
-message.lvlup.error.1=§l§cERROR!§r§7 §aVIP§7 requires level 25  and 125,000 
-message.lvlup.error.2=§l§cERROR!§r§7 Rebirth is available from level 16 to 25 
-message.lvlup.haveVIP=§l§cERROR!§r§7 You already have §aVIP
-message.lvlup.rebirth.1=§f[ §dRebirth§f ]§r %1$s§r§7 made their first §5Rebirth§7!
-message.lvlup.rebirth.2=§f[ §dRebirth§f ]§r §7Your Rebirth level: §5%1$s
-message.lvlup.vip=§f[ §aLvL UP§f ]§r %1$s§r§7 bought §aVIP§7!
-message.lvlup.vip.success=§f[ §aLvL UP§f ]§r §7Congrats on §aVIP§7! To get to the §aVIP island§7, open the §eServer Menu
+message.basic.error=⩕ §l§cERROR!§r§7 Not enough 
+message.lvlup.error.1=⩕ §l§cERROR!§r§7 §aVIP§7 requires level 25  and 125,000 
+message.lvlup.error.2=⩕ §l§cERROR!§r§7 Rebirth is available from level 16 to 25 
+message.lvlup.haveVIP=⩕ §l§cERROR!§r§7 You already have §aVIP
+message.lvlup.rebirth.1=§f[  §dRebirth§f ]§r %1$s§r§7 made their first §5Rebirth§7!
+message.lvlup.rebirth.2=§f[  §dRebirth§f ]§r §7Your Rebirth level: §5%1$s
+message.lvlup.vip=§f[  §aLvL UP§f ]§r %1$s§r§7 bought §aVIP§7!
+message.lvlup.vip.success=§f[  §aLvL UP§f ]§r §7Congrats on §aVIP§7! To get to the §aVIP island§7, open the §eServer Menu
 
 ## --- BOOST MESSAGES ---
-message.boost.end.1=§f[ §bBoost§f ]§r §7The §ax2 boost§7 has ended. Buy a new one in §eShop → Boosts
-message.boost.end.2=§f[ §bBoost§f ]§r §7The §bx4 boost§7 has ended. Buy a new one in §eShop → Boosts
-message.boost.error=§l§cERROR!§r§7 A boost is already active. Wait for it to end!
-message.x2boost=§f[ §bBoost§f ]§r %1$s§r§7 bought an §ax2 boost§7 for everyone for §e5 minutes§7!
-message.x4boost=§f[ §bBoost§f ]§r %1$s§r§7 bought an §bx4 boost§7 for everyone for §e5 minutes§7!
-message.shop.enchant.max=§l§cERROR!§r§7 You already have the §emaximum§7 level of this enchantment
-message.lvlup.rebirth.max=§l§cERROR!§r§7 You already have the §5maximum Rebirth§7 (5)
-message.tp_ore.buy=§f[ §eShop§f ]§r §6Ore Magnet§7 is on for §e5 minutes§7: items dropped nearby fly to you
-message.tp_ore.active=§l§cERROR!§r§7 §6Ore Magnet§7 is already active. Seconds left: §e%1$s
-message.tp_ore.end=§f[ §eShop§f ]§r §7The §6Ore Magnet§7 has run out. Buy a new one in §eShop → Boosts
+message.boost.end.1=§f[  §bBoost§f ]§r §7The §ax2 boost§7 has ended. Buy a new one in §eShop → Boosts
+message.boost.end.2=§f[  §bBoost§f ]§r §7The §bx4 boost§7 has ended. Buy a new one in §eShop → Boosts
+message.boost.error=⩕ §l§cERROR!§r§7 A boost is already active. Wait for it to end!
+message.x2boost=§f[  §bBoost§f ]§r %1$s§r§7 bought an §ax2 boost§7 for everyone for §e5 minutes§7!
+message.x4boost=§f[  §bBoost§f ]§r %1$s§r§7 bought an §bx4 boost§7 for everyone for §e5 minutes§7!
+message.shop.enchant.max=⩕ §l§cERROR!§r§7 You already have the §emaximum§7 level of this enchantment
+message.lvlup.rebirth.max=⩕ §l§cERROR!§r§7 You already have the §5maximum Rebirth§7 (5)
+message.tp_ore.buy=§f[  §eShop§f ]§r §6Ore Magnet§7 is on for §e5 minutes§7: items dropped nearby fly to you
+message.tp_ore.active=⩕ §l§cERROR!§r§7 §6Ore Magnet§7 is already active. Seconds left: §e%1$s
+message.tp_ore.end=§f[  §eShop§f ]§r §7The §6Ore Magnet§7 has run out. Buy a new one in §eShop → Boosts
 
 ## --- PROMO REWARDS ---
-message.promo.1=§f[ §aPromo§f ]§r %1$s§r§7 activated a promo code and got §e500 
-message.promo.2=§f[ §aPromo§f ]§r %1$s§r§7 activated a promo code and got §e500 
-message.promo.3=§f[ §aPromo§f ]§r %1$s§r§7 activated a promo code and got §e25k 
-message.promo.4=§f[ §aPromo§f ]§r %1$s§r§7 activated a promo code and got §e100 
-message.promo.activated=§l§cERROR!§r§7 You have already activated this §apromo code
-message.promo.error=§l§cERROR!§r§7 Invalid promo code
+message.promo.1=§f[  §aPromo§f ]§r %1$s§r§7 activated a promo code and got §e500 
+message.promo.2=§f[  §aPromo§f ]§r %1$s§r§7 activated a promo code and got §e500 
+message.promo.3=§f[  §aPromo§f ]§r %1$s§r§7 activated a promo code and got §e25k 
+message.promo.4=§f[  §aPromo§f ]§r %1$s§r§7 activated a promo code and got §e100 
+message.promo.activated=⩕ §l§cERROR!§r§7 You have already activated this §apromo code
+message.promo.error=⩕ §l§cERROR!§r§7 Invalid promo code
 
 ## --- ANTICHEAT MESSAGES ---
 
 ## --- CLEAR ITEMS ---
 message.clearItem.title=§l§eItem Cleanup
-message.anticheat.item=§f[ §cAnti-Cheat§f ]§r %1$s§r§7 tried to take a banned item: §c%2$s
-message.anticheat.enchant=§f[ §cAnti-Cheat§f ]§r %1$s§r§7: item §c%2$s§7 has enchantment level §c%3$s§7 above the limit
+message.anticheat.item=§f[  §cAnti-Cheat§f ]§r %1$s§r§7 tried to take a banned item: §c%2$s
+message.anticheat.enchant=§f[  §cAnti-Cheat§f ]§r %1$s§r§7: item §c%2$s§7 has enchantment level §c%3$s§7 above the limit
 message.clearItem.subtitle=§l§eItems removed: §a%1$s
 
 ## --- EVENT MESSAGES ---
-message.event.gift_event=§f[ §6Event§f ]§r §7A §agift has appeared§7 on the map! Who will grab it §bfirst§7?
-message.event.gift_event.end=§f[ §6Event§f ]§r %1$s§r§7 picked up the §agift§7!
+message.event.gift_event=§f[  §6Event§f ]§r §7A §agift has appeared§7 on the map! Who will grab it §bfirst§7?
+message.event.gift_event.end=§f[  §6Event§f ]§r %1$s§r§7 picked up the §agift§7!
 message.event.haste_event=§ggot haste for 10 sec
 message.event.mythic_chest=§l >> §rA mythic chest appeared in the PvP arena! Hurry to loot it first!
-message.event.rain_event=§f[ §6Event§f ]§r §bA coin rain is starting!
-message.event.rain_event.end=§f[ §6Event§f ]§r §bThe coin rain is over!
+message.event.rain_event=§f[  §6Event§f ]§r §bA coin rain is starting!
+message.event.rain_event.end=§f[  §6Event§f ]§r §bThe coin rain is over!
 
 ## --- COMMANDS & USAGE ---
 commands.list.desc=§8-----§f Command List §8-----§f
@@ -463,52 +463,52 @@ commands.kick.desc=§7Kicks a player from the server
 commands.tp.desc=§7Teleports a player to you
 commands.wipe.desc=§7Resets all players' progress
 
-message.cmd.error.3=§l§cERROR!§r§7 You don't have permission to use this command
-message.cmd.unknown=§l§cERROR!§r§7 Unknown command: §c%1$s§7. Type §e!help§7 to see the list of commands
-message.cmd.notfound=§l§cERROR!§r§7 Player §f%1$s§7 is not online
+message.cmd.error.3=⩕ §l§cERROR!§r§7 You don't have permission to use this command
+message.cmd.unknown=⩕ §l§cERROR!§r§7 Unknown command: §c%1$s§7. Type §e!help§7 to see the list of commands
+message.cmd.notfound=⩕ §l§cERROR!§r§7 Player §f%1$s§7 is not online
 
-message.cmd.spawn=§f[ §cServer§f ]§r §7You are at §bspawn
+message.cmd.spawn=§f[  §cServer§f ]§r §7You are at §bspawn
 message.cmd.emotes=§8-----§f Emote List §8-----§f
 message.cmd.msg.use=§aUsage: §b!msg §a<§bplayer§a> <§bmessage§a>
 message.cmd.msg.received=§7 %1$s:§r %2$s
 message.cmd.msg.sent=§7 You  %1$s:§r %2$s
-message.cmd.gm1=§f[ §7CMD§f ]§r §aGamemode changed to §bCreative
-message.cmd.gm2=§f[ §7CMD§f ]§r §aGamemode changed to §bAdventure
-message.cmd.gm6=§f[ §7CMD§f ]§r §aGamemode changed to §bSpectator
-message.cmd.fly.on=§f[ §7CMD§f ]§r §aFlight mode §benabled
-message.cmd.fly.off=§f[ §7CMD§f ]§r §aFlight mode §bdisabled
+message.cmd.gm1=§f[  §7CMD§f ]§r §aGamemode changed to §bCreative
+message.cmd.gm2=§f[  §7CMD§f ]§r §aGamemode changed to §bAdventure
+message.cmd.gm6=§f[  §7CMD§f ]§r §aGamemode changed to §bSpectator
+message.cmd.fly.on=§f[  §7CMD§f ]§r §aFlight mode §benabled
+message.cmd.fly.off=§f[  §7CMD§f ]§r §aFlight mode §bdisabled
 message.cmd.fly.use=§aUsage: §b!fly §a<§bon§a/§boff§a>
-message.cmd.clearchat=§f[ §7CMD§f ]§r §aChat cleared...
-message.cmd.stick=§f[ §7CMD§f ]§r §aYou received §bAdmin Stick
-message.cmd.invis.on=§f[ §7CMD§f ]§r §aYou are now §binvisible
-message.cmd.invis.off=§f[ §7CMD§f ]§r §aYou are no longer §binvisible
+message.cmd.clearchat=§f[  §7CMD§f ]§r §aChat cleared...
+message.cmd.stick=§f[  §7CMD§f ]§r §aYou received §bAdmin Stick
+message.cmd.invis.on=§f[  §7CMD§f ]§r §aYou are now §binvisible
+message.cmd.invis.off=§f[  §7CMD§f ]§r §aYou are no longer §binvisible
 message.cmd.invis.use=§aUsage: §b!invis §a<§bon§a/§boff§a>
 message.cmd.timeset.use=§aUsage: §b!timeset §a<§bsunrise§a; §bday§a; §bnoon§a; §bsunset§a; §bnight§a; §bmidnight§a>
 message.cmd.prefix.use=§aUsage: §b!prefix §a<§bplayer§a> <§bset§a/§btake§a> <§bprefix§a>
 message.cmd.tag.use=§aUsage: §b!tag §a<§bplayer§a> <§badd§a/§bremove§a> <§btag§a>
 message.cmd.scoreboard.use=§aUsage: §b!scoreboard §a<§bplayer§a> <§badd§a/§bremove§a> <§bobjective§a> <§bamount§a>
-message.cmd.kick=§f[ §cServer§f ]§r %1$s§r§7 was kicked. Reason: §f%2$s
+message.cmd.kick=§f[  §cServer§f ]§r %1$s§r§7 was kicked. Reason: §f%2$s
 message.cmd.kick.no_reason=not specified
 message.cmd.kick.use=§aUsage: §b!kick §a<§bplayer§a> <§breason §a(§boptional§a)>
 message.cmd.tp.use=§aUsage: §b!tp §a<§bplayer§a>
-message.cmd.timeset.done=§f[ §7CMD§f ]§r §7Time changed to §f%1$s
-message.cmd.prefix.set=§f[ §7CMD§f ]§r §7Prefix %1$s§r§7 added for §f%2$s
-message.cmd.prefix.take=§f[ §7CMD§f ]§r §7Prefix %1$s§r§7 removed for §f%2$s
-message.cmd.tag.add=§f[ §7CMD§f ]§r §7Tag §f%1$s§7 added for §f%2$s
-message.cmd.tag.remove=§f[ §7CMD§f ]§r §7Tag §f%1$s§7 removed for §f%2$s
-message.cmd.scoreboard.add=§f[ §7CMD§f ]§r §7Added §f%3$s§7 to §f%2$s§7 for §f%1$s
-message.cmd.scoreboard.remove=§f[ §7CMD§f ]§r §7Removed §f%3$s§7 from §f%2$s§7 for §f%1$s
-message.cmd.tp.done=§f[ §7CMD§f ]§r §7Teleported §f%1$s§7 to you
+message.cmd.timeset.done=§f[  §7CMD§f ]§r §7Time changed to §f%1$s
+message.cmd.prefix.set=§f[  §7CMD§f ]§r §7Prefix %1$s§r§7 added for §f%2$s
+message.cmd.prefix.take=§f[  §7CMD§f ]§r §7Prefix %1$s§r§7 removed for §f%2$s
+message.cmd.tag.add=§f[  §7CMD§f ]§r §7Tag §f%1$s§7 added for §f%2$s
+message.cmd.tag.remove=§f[  §7CMD§f ]§r §7Tag §f%1$s§7 removed for §f%2$s
+message.cmd.scoreboard.add=§f[  §7CMD§f ]§r §7Added §f%3$s§7 to §f%2$s§7 for §f%1$s
+message.cmd.scoreboard.remove=§f[  §7CMD§f ]§r §7Removed §f%3$s§7 from §f%2$s§7 for §f%1$s
+message.cmd.tp.done=§f[  §7CMD§f ]§r §7Teleported §f%1$s§7 to you
 
 ## --- SHOP REWARDS ---
-message.shop.enchant.efficiency=§f[ §eShop§f ]§r §7Purchased: §eEfficiency§7 (+1)
-message.shop.enchant.fortune=§f[ §eShop§f ]§r §7Purchased: §eFortune§7 (+1)
-message.shop.kit.iron=§f[ §eShop§f ]§r §7Purchased: §fIron Kit
-message.shop.kit.diamond=§f[ §eShop§f ]§r §7Purchased: §bDiamond Kit
-message.shop.kit.netherite=§f[ §eShop§f ]§r §7Purchased: §5Netherite Kit
+message.shop.enchant.efficiency=§f[  §eShop§f ]§r §7Purchased: §eEfficiency§7 (+1)
+message.shop.enchant.fortune=§f[  §eShop§f ]§r §7Purchased: §eFortune§7 (+1)
+message.shop.kit.iron=§f[  §eShop§f ]§r §7Purchased: §fIron Kit
+message.shop.kit.diamond=§f[  §eShop§f ]§r §7Purchased: §bDiamond Kit
+message.shop.kit.netherite=§f[  §eShop§f ]§r §7Purchased: §5Netherite Kit
 
 ## --- ADMIN STICK ---
-message.kick=§f[ §cServer§f ]§r %1$s§r§7 was removed by an administrator
+message.kick=§f[  §cServer§f ]§r %1$s§r§7 was removed by an administrator
 
 ## --- SCOREBOARD ---
 scoreboards.map=§l[] Shop for Ore§r
@@ -532,5 +532,5 @@ scoreboard.objective.efficiency= Efficiency
 scoreboard.objective.fortune= Fortune
 
 ## --- CHAT ERRORS ---
-message.chat.antiflood=§l§cERROR!§r§7 Your message is too long (over 200 characters)
-message.chat.antispam=§l§cERROR!§r§7 Don't spam the chat!
+message.chat.antiflood=⩕ §l§cERROR!§r§7 Your message is too long (over 200 characters)
+message.chat.antispam=⩕ §l§cERROR!§r§7 Don't spam the chat!
