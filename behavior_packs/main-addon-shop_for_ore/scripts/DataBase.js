@@ -46,6 +46,27 @@ export function rawTranslate(key, ...args) {
 };
 
 /**
+ * Отправить игроку строку, где ключи перевода записаны как %ключ (например '\n%chat.account.logged_in\n ').
+ * Раньше это делал player.tell(): после переименования ключей (#24) такие сообщения перестали
+ * появляться в игре, а tellraw с translate для тех же ключей работает (проверено на 1.19.51).
+ * Поэтому строка разбирается на куски {text} и {translate} и уходит через tellraw.
+ * @param {Player} player
+ * @param {string} message
+ */
+export function tellText(player, message) {
+	const rawtext = [];
+	const re = /%([a-z][a-z0-9_]*(?:\.[a-z0-9_]+)+)/g;
+	let last = 0, m;
+	while ((m = re.exec(message)) !== null) {
+		if (m.index > last) rawtext.push({ text: message.slice(last, m.index) });
+		rawtext.push({ translate: m[1] });
+		last = re.lastIndex;
+	}
+	if (last < message.length) rawtext.push({ text: message.slice(last) });
+	return run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
+};
+
+/**
  * Выполнить команду и не ронять ошибку в ContentLog, если она не сработала
  * (например, tellraw игроку, который уже вышел). Промис: результат команды или undefined при ошибке.
  * @param {Entity} entity

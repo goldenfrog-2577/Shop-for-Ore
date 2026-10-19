@@ -1,7 +1,7 @@
 // --- Обработка пользовательских команд чата для Shop for Ore ---
 // Импортируем необходимые данные и списки команд
 import { world } from '@minecraft/server';
-import { commandsList, emotes, emotesList, rawTranslate, isPending, run, findPlayer } from '../DataBase.js';
+import { commandsList, emotes, emotesList, rawTranslate, isPending, run, findPlayer, tellText } from '../DataBase.js';
 
 // --- Главный обработчик команд чата ---
 world.events.beforeChat.subscribe((data) => {
@@ -36,7 +36,7 @@ world.events.beforeChat.subscribe((data) => {
 		case "help":
 			// Вывод списка доступных команд
 			const helpMessage = commandsList.filter(cmd => !cmd.hostOnly || player.hasTag("host")).map(cmd => `§f${cmd.command} - ${cmd.description}`).join("\n");
-			player.tell(`%chat.help.header\n${helpMessage}\n§8------------------------§f`);
+			tellText(player, `%chat.help.header\n${helpMessage}\n§8------------------------§f`);
 			break;
 
 		case "spawn":
@@ -48,7 +48,7 @@ world.events.beforeChat.subscribe((data) => {
 		case "emotes":
 			// Вывод списка эмодзи
 			const emotesMessage = emotesList.map(emote => `${emote.name} - ${emote.symbol}`).join("\n");
-			player.tell(`%chat.emotes.header\n${emotesMessage}\n§8------------------------§f`);
+			tellText(player, `%chat.emotes.header\n${emotesMessage}\n§8------------------------§f`);
 			break;
 
 		case "msg":

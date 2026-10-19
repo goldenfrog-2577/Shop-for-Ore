@@ -55,13 +55,13 @@ admin.kick.button=Вигнати гравця
 chat.title=Чат
 chat.title.cheats=Чат і команди
 ui.command_block.placeholder=Введіть команду сюди...
-commands.scoreboard.players.offlinePlayerName= §cOffline
-death.attack.explosion= %1$s §r§cвибухнув
-death.attack.flyIntoWall= %1$s §r§cрозбився на елітрах
-death.attack.generic= %1$s §r§cзагадково помер
-death.attack.outOfWorld= %1$s §r§cпотрапив у порожнечу
-death.attack.player= %1$s §r§cбув убитий  гравцем§r %2$s
-death.attack.player.item= %1$s §r§cбув убитий  гравцем§r %2$s §r§cза допомогою§r %3$s
+commands.scoreboard.players.offlinePlayerName=§r §cOffline
+death.attack.explosion=§r %1$s §r§cвибухнув
+death.attack.flyIntoWall=§r %1$s §r§cрозбився на елітрах
+death.attack.generic=§r %1$s §r§cзагадково помер
+death.attack.outOfWorld=§r %1$s §r§cпотрапив у порожнечу
+death.attack.player=§r %1$s §r§cбув убитий  гравцем§r %2$s
+death.attack.player.item=§r %1$s §r§cбув убитий  гравцем§r %2$s §r§cза допомогою§r %3$s
 disconnect.kicked=Вас було кікнуто з сервера
 disconnect.kicked.reason=Вас було кікнуто з сервера з причини:
 disconnectionScreen.disconnected=Втрачено з'єднання, можливо хост вимкнув сервер
@@ -70,10 +70,10 @@ entity.server:floating_text.name=Голограма
 map.position=Координати: %s %s %s
 multiplayer.player.changeToPersona=§b%s §r§bзмінив свій скін
 multiplayer.player.changeToSkin=§b%s §r§bзмінив свій скін
-multiplayer.player.joined.realms=§r %s §r§7приєднався
-multiplayer.player.joined=§r %s §r§7приєднався
-multiplayer.player.left.realms=§r %s §r§7вийшов
-multiplayer.player.left=§r %s §r§7вийшов
+multiplayer.player.joined.realms=§r§r %s §r§7приєднався
+multiplayer.player.joined=§r§r %s §r§7приєднався
+multiplayer.player.left.realms=§r§r %s §r§7вийшов
+multiplayer.player.left=§r§r %s §r§7вийшов
 
 ## --- ІНФОРМАЦІЯ ПРО ПАК ---
 pack.name=Дата-пак для карти §lShop for Ore§r (U)
@@ -104,7 +104,7 @@ menu.main.button.upgrades=§8 Прокачка
 
 ## --- МЕНЮ ПРО КАРТУ ---
 menu.about.title=§l§8Меню сервера »  Про карту
-menu.about.body=§7Вибери, що тобі потрібно.
+menu.about.body=§7Вибери, що тобі потрібно:
 menu.about.button.levels=§8 Рівні
 menu.about.button.howtoplay=§f⩆ §8Як грати?
 menu.about.button.creators=§f⩇ §8Творці
@@ -153,14 +153,14 @@ menu.howtoplay.line.10=§l§7Ребітх
 menu.howtoplay.line.11=§r§7Ребітх — це перепроходження карти з довічним ефектом поспіху
 menu.howtoplay.line.12=Відкривається ребітх після 16 
 menu.howtoplay.line.13=Прокачується у Меню »  Прокачка
-menu.howtoplay.line.14=§l§7 Що означають смайлики зліва збоку?
+menu.howtoplay.line.14=§r§l§7 Що означають смайлики зліва збоку?
 menu.howtoplay.line.15=§r§7 — твій Нікнейм (ім'я у грі)
-menu.howtoplay.line.16= — ваші Гроші / Монети / Коїни
-menu.howtoplay.line.17= — ваші VIP коїни / монети
-menu.howtoplay.line.18= — твій Рівень і який  наступний
-menu.howtoplay.line.19= — твій Досвід / XP і скільки  до наступного 
-menu.howtoplay.line.20= — твій Ребітх, особливість: поспіх
-menu.howtoplay.line.21= — поточний Онлайн сервера
+menu.howtoplay.line.16=§r — ваші Гроші / Монети / Коїни
+menu.howtoplay.line.17=§r — ваші VIP коїни / монети
+menu.howtoplay.line.18=§r — твій Рівень і який  наступний
+menu.howtoplay.line.19=§r — твій Досвід / XP і скільки  до наступного 
+menu.howtoplay.line.20=§r — твій Ребітх, особливість: поспіх
+menu.howtoplay.line.21=§r — поточний Онлайн сервера
 
 menu.creators.title=§l§8Меню сервера » §f⩇§8 Творці
 
@@ -187,7 +187,7 @@ menu.shop.button.kits=§8PvP Набори
 menu.shop.button.boosts=§8Бустери
 
 menu.shop.enchants.title=§l§8 Магазин » Зачарування
-menu.shop.enchants.body=§7Вибери, яке зачарування хочеш купити.
+menu.shop.enchants.body=§7Вибери, яке зачарування хочеш купити:
 menu.shop.enchants.note=§l§cПримітка: §r§7Якщо ти купиш один раз, у тебе буде §e1§7 рівень зачарування. Якщо купити повторно, рівень зачарування збільшиться.
 menu.shop.enchants.button.efficiency=§8Ефективність
 menu.shop.enchants.button.fortune=§8Удача
@@ -199,49 +199,49 @@ menu.shop.kits.button.diamond=§8Діамантовий набір
 menu.shop.kits.button.netherite=§8Незеритовий набір
 
 menu.shop.boosts.title=§l§8 Магазин » Бустери
-menu.shop.boosts.body=§7Вибери, який бустер хочеш купити.
+menu.shop.boosts.body=§7Вибери, який бустер хочеш купити:
 menu.shop.boosts.note=§l§cПримітка: §r§7Бустер діє протягом §e5§7 хвилин після покупки.
-menu.shop.boosts.button.x2=§8 x2 бустер
-menu.shop.boosts.button.x4=§8 x4 бустер
-menu.shop.boosts.button.ore_magnet=§8⨾ Магніт руди
+menu.shop.boosts.button.x2=§2 x2 бустер
+menu.shop.boosts.button.x4=§3 x4 бустер
+menu.shop.boosts.button.ore_magnet=§6⨾ Магніт руди
 
 ## --- МЕНЮ НАЛАШТУВАНЬ ---
 menu.settings.title=§l§8Меню сервера »  Налаштування
-menu.settings.body=§7Вибір налаштувань.
-menu.settings.default_on=§7За замовчуванням: §aувімкнено
-menu.settings.default_off=§7За замовчуванням: §cвимкнено
+menu.settings.body=§7Вибір налаштувань:
+menu.settings.default_on=§7За замовчуванням: §2УВІМКНЕНО
+menu.settings.default_off=§7За замовчуванням: §4ВИМКНЕНО
 menu.settings.button.board=§8Таблиця
 menu.settings.button.particles=§8Частинки при продажу
 menu.settings.button.sounds=§8Звуки при продажу
 
 menu.settings.board.title=§l§8 Налаштування » Таблиця
-menu.settings.board.body=§7Натисни увімкнути/вимкнути нижче, щоб показати або приховати табличку сервера.
+menu.settings.board.body=§7Натисни §2увімкнути§7/§4вимкнути§7 нижче, щоб показати або приховати табличку сервера.
 
 menu.settings.button.enable=§2Увімкнути
 menu.settings.button.disable=§4Вимкнути
 menu.settings.button.icons_only=§gТільки смайлики
 
 menu.settings.particles.title=§l§8 Налаштування » Частинки
-menu.settings.particles.body=§7Натисни увімкнути/вимкнути нижче, щоб увімкнути або вимкнути відображення частинок при продажу.
+menu.settings.particles.body=§7Натисни §2увімкнути§7/§4вимкнути§7 нижче, щоб увімкнути або вимкнути відображення частинок при продажу.
 
 menu.settings.sounds.title=§l§8 Налаштування » Звуки
-menu.settings.sounds.body=§7Натисни увімкнути/вимкнути нижче, щоб увімкнути або вимкнути звуки при продажу.
+menu.settings.sounds.body=§7Натисни §2увімкнути§7/§4вимкнути§7 нижче, щоб увімкнути або вимкнути звуки при продажу.
 
-chat.settings.enabled= §3Налаштування §8» §7Налаштування змінено: §aувімкнено
-chat.settings.disabled= §3Налаштування §8» §7Налаштування змінено: §cвимкнено
-chat.settings.icons_only= §3Налаштування §8» §7Налаштування змінено: §eтільки смайлики
+chat.settings.enabled=§r §3Налаштування §8» §7Налаштування змінено: §aувімкнено
+chat.settings.disabled=§r §3Налаштування §8» §7Налаштування змінено: §cвимкнено
+chat.settings.icons_only=§r §3Налаштування §8» §7Налаштування змінено: §eтільки смайлики
 
 ## --- МЕНЮ БАНКУ ---
 menu.bank.title=§l§8Меню сервера »  Банк
 menu.bank.amount=§7Сума, яку ти хочеш відправити:
 menu.bank.amount_placeholder=§7Введи сюди...
-chat.bank.error.no_money=⩕ §l§cERROR!§r §8» §7На балансі недостатньо грошей
-chat.bank.sent= §2Банк §8» §7Переказ гравцю §f%1$s§r§7: §e%2$s§7
-chat.bank.received= §2Банк §8» §f%1$s§r§7 переказав(ла) тобі §e%2$s§7
+chat.bank.error.no_money=§r⩕ §l§cERROR!§r §8» §7На балансі недостатньо грошей
+chat.bank.sent=§r §2Банк §8» §7Переказ гравцю §f%1$s§r§7: §e%2$s§7
+chat.bank.received=§r §2Банк §8» §f%1$s§r§7 переказав(ла) тобі §e%2$s§7
 menu.bank.player=§rВибери гравця:
 menu.bank.balance=§eБаланс§r:
-chat.bank.error.amount=⩕ §l§cERROR!§r §8» §7Сума має бути цілим додатним числом
-chat.bank.error.self=⩕ §l§cERROR!§r §8» §7Не можна переказувати гроші самому собі
+chat.bank.error.amount=§r⩕ §l§cERROR!§r §8» §7Сума має бути цілим додатним числом
+chat.bank.error.self=§r⩕ §l§cERROR!§r §8» §7Не можна переказувати гроші самому собі
 
 ## --- МЕНЮ ПРАВИЛ ---
 menu.rules.title=§l§8Меню сервера »  Правила
@@ -268,31 +268,31 @@ menu.warps.button.minigames=§8Міні-ігри
 
 ## --- МЕНЮ ПРОКАЧКИ ---
 menu.upgrades.title=§l§8Меню сервера »  Прокачка
-menu.upgrades.body=§7Вибери свій шлях розвитку.
-menu.upgrades.button.vip=§2 VIP
-menu.upgrades.button.rebirth=§5 Ребітх
+menu.upgrades.body=§7Вибери свій шлях розвитку:
+menu.upgrades.button.vip=§2VIP
+menu.upgrades.button.rebirth=§5Ребітх
 
 ## --- МЕНЮ РЕЄСТРАЦІЇ ---
 account.register.title=§l§8Реєстрація акаунта
 account.register.agree=Я погоджуюсь з правилами сервера і підтверджую §cвідсутність§r читів
-chat.account.error.no_cheats=⩕ §l§cERROR!§r §8» §7Підтверди §eвідсутність читів§7, щоб грати на сервері
-account.register.greeting=§aВітаю
-account.register.welcome=§aЛаскаво просимо на сервер! Гарної гри :)
-account.register.info=§6Інформація про акаунт§r:
-account.register.password=§6Пароль§r: 
-account.register.remember=§aЗапам'ятай ці дані або зроби скріншот, щоб потім зайти у гру
+chat.account.error.no_cheats=§r⩕ §l§cERROR!§r §8» §7Підтверди §eвідсутність читів§7, щоб грати на сервері
+account.register.greeting=§7Вітаю
+account.register.welcome=§7Ласкаво просимо на сервер! Гарної гри :)
+account.register.info=§7Інформація про акаунт:
+account.register.password=§7Пароль: §f
+account.register.remember=§7Запам'ятай ці дані або зроби скріншот, щоб потім зайти у гру
 
 ## --- МЕНЮ ВХОДУ ---
 account.login.title=§l§8Вхід в акаунт
-account.login.greeting=Вітаю
-account.login.intro=§rна сервері §l[] Shop for Ore§r. Придумай і введи пароль для реєстрації
-account.login.hint=§gВведи пароль, який ти вводив при реєстрації
+account.login.greeting=§7Вітаю§f
+account.login.intro=§7на сервері §l[] Shop for Ore§r§7. Придумай і введи пароль для реєстрації
+account.login.hint=§7Введи пароль, який ти вводив при реєстрації:
 account.login.placeholder=§7Введі пароль...
-chat.account.logged_in=⩉ §9Акаунт §8» §7Вхід виконано! Ласкаво просимо!
-chat.account.error.wrong_password=⩕ §l§cERROR!§r §8» §7Невірний пароль, спробуй ще раз
-chat.account.error.login_required=⩕ §l§cERROR!§r §8» §7Спочатку увійди в акаунт або зареєструйся
-chat.account.legacy=⩉ §9Акаунт §8» §7Акаунт зі старої платформи: придумай новий пароль, прогрес збережеться
-chat.account.error.password_length=⩕ §l§cERROR!§r §8» §7Пароль має бути від §e5§7 до §e32§7 символів
+chat.account.logged_in=§r⩉ §9Акаунт §8» §7Вхід виконано! Ласкаво просимо!
+chat.account.error.wrong_password=§r⩕ §l§cERROR!§r §8» §7Невірний пароль, спробуй ще раз
+chat.account.error.login_required=§r⩕ §l§cERROR!§r §8» §7Спочатку увійди в акаунт або зареєструйся
+chat.account.legacy=§r⩉ §9Акаунт §8» §7Акаунт зі старої платформи: придумай новий пароль, прогрес збережеться
+chat.account.error.password_length=§r⩕ §l§cERROR!§r §8» §7Пароль має бути від §e5§7 до §e32§7 символів
 
 ## --- МЕНЮ АДМІНА ---
 admin.main.title=§l§8Меню адміна
@@ -307,7 +307,7 @@ admin.main.button.bot=§8Призвати бота
 
 ## --- АДМІН: РЕЖИМИ ГРИ ---
 admin.gamemode.title=§l§8Меню адміна » Режим гри
-admin.gamemode.body=§7Список режимів гри.
+admin.gamemode.body=§7Список режимів гри:
 admin.gamemode.button.creative=§8Креатив
 admin.gamemode.button.adventure=§8Пригода
 admin.gamemode.button.spectator=§8Спостерігач
@@ -315,7 +315,7 @@ admin.gamemode.button.fly=§8Політ
 
 ## --- АДМІН: ВСТАНОВЛЕННЯ ЧАСУ ---
 admin.time.title=§l§8Меню адміна » Встановлення часу
-admin.time.body=§7Вибери час, який хочеш встановити.
+admin.time.body=§7Вибери час, який хочеш встановити:
 admin.time.button.sunrise=§8Світанок
 admin.time.button.day=§8День
 admin.time.button.noon=§8Полудень
@@ -325,7 +325,7 @@ admin.time.button.midnight=§8Північ
 
 ## --- АДМІН: ТЕЛЕПОРТАЦІЇ ---
 admin.warps.title=§l§8Меню адміна » Телепортації
-admin.warps.body=§7Список телепортацій.
+admin.warps.body=§7Список телепортацій:
 admin.warps.button.mine=§8Шахта
 admin.warps.button.vip=§8VIP локація
 admin.warps.button.cmd_zone=§8CMD Zone
@@ -333,7 +333,7 @@ admin.warps.button.random_player=§8/tp to @r
 
 ## --- АДМІН: ЕФЕКТИ ---
 admin.effects.title=§l§8Меню адміна » Ефекти
-admin.effects.body=§7Список ефектів.
+admin.effects.body=§7Список ефектів:
 admin.effects.button.invisibility=§8Невидимість
 admin.effects.button.resistance=§8Стійкість
 admin.effects.button.strength=§8Сила
@@ -342,7 +342,7 @@ admin.effects.button.clear=§8Очистити ефекти
 
 ## --- АДМІН: ІНСТРУМЕНТИ ---
 admin.tools.title=§l§8Меню адміна » Інструменти
-admin.tools.body=§7Вибери те, що тобі потрібно.
+admin.tools.body=§7Вибери те, що тобі потрібно:
 admin.tools.button.command_block=§5Командний блок
 admin.tools.button.allow=§5Блок дозволу
 admin.tools.button.deny=§5Блок заборони
@@ -360,86 +360,86 @@ admin.tools.button.clear_inventory=§8Очистити інвентар
 admin.announce.title=§l§8Меню адміна » Оголошення
 admin.announce.body=§7Напиши у рядок нижче все, що хочеш сказати. Це побачать усі на сервері.
 admin.announce.placeholder=§7Введи текст...
-chat.server.announce= §eОголошення §8» §f%1$s
+chat.server.announce=§r §eОголошення §8» §f%1$s
 
 ## --- АДМІН: ВАЙП ---
 admin.wipe.title=§l§8Попередження
 admin.wipe.body=§7Вайп призведе до скидання всієї статистики, але не зачепить теги та інвентарі гравців. Ви впевнені?
 admin.wipe.button.yes=§2Так
 admin.wipe.button.no=§4Ні
-chat.server.wiped= §cСервер §8» §7Статистику всіх гравців скинуто
+chat.server.wiped=§r §cСервер §8» §7Статистику всіх гравців скинуто
 
 ## --- СИСТЕМНІ ТА РІВНЕВІ ПОВІДОМЛЕННЯ ---
-chat.lvlup.level.2= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e2§7 рівня, нова кирка: §eДерев'яна кирка
-chat.lvlup.level.3= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e3§7 рівня, нова кирка: §eКам'яна кирка
-chat.lvlup.level.4= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e4§7 рівня
-chat.lvlup.level.5= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e5§7 рівня
-chat.lvlup.level.6= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e6§7 рівня
-chat.lvlup.level.7= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e7§7 рівня
-chat.lvlup.level.8= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e8§7 рівня, нова кирка: §eЗалізна кирка
-chat.lvlup.level.9= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e9§7 рівня
-chat.lvlup.level.10= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e10§7 рівня
-chat.lvlup.level.11= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e11§7 рівня
-chat.lvlup.level.12= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e12§7 рівня
-chat.lvlup.level.13= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e13§7 рівня, нова кирка: §eДіамантова кирка
-chat.lvlup.level.14= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e14§7 рівня
-chat.lvlup.level.15= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e15§7 рівня, нова кирка: §eНезеритова кирка
-chat.lvlup.level.16= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e16§7 рівня, відкрито локацію §eНезер
-chat.lvlup.level.17= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e17§7 рівня
-chat.lvlup.level.18= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e18§7 рівня
-chat.lvlup.level.19= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e19§7 рівня
-chat.lvlup.level.20= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e20§7 рівня
-chat.lvlup.level.21= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e21§7 рівня
-chat.lvlup.level.22= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e22§7 рівня
-chat.lvlup.level.23= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e23§7 рівня
-chat.lvlup.level.24= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e24§7 рівня
-chat.lvlup.level.25= §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e25§7 рівня — це максимум!
+chat.lvlup.level.2=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e2§7 рівня, нова кирка: §eДерев'яна кирка
+chat.lvlup.level.3=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e3§7 рівня, нова кирка: §eКам'яна кирка
+chat.lvlup.level.4=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e4§7 рівня
+chat.lvlup.level.5=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e5§7 рівня
+chat.lvlup.level.6=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e6§7 рівня
+chat.lvlup.level.7=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e7§7 рівня
+chat.lvlup.level.8=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e8§7 рівня, нова кирка: §eЗалізна кирка
+chat.lvlup.level.9=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e9§7 рівня
+chat.lvlup.level.10=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e10§7 рівня
+chat.lvlup.level.11=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e11§7 рівня
+chat.lvlup.level.12=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e12§7 рівня
+chat.lvlup.level.13=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e13§7 рівня, нова кирка: §eДіамантова кирка
+chat.lvlup.level.14=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e14§7 рівня
+chat.lvlup.level.15=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e15§7 рівня, нова кирка: §eНезеритова кирка
+chat.lvlup.level.16=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e16§7 рівня, відкрито локацію §eНезер
+chat.lvlup.level.17=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e17§7 рівня
+chat.lvlup.level.18=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e18§7 рівня
+chat.lvlup.level.19=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e19§7 рівня
+chat.lvlup.level.20=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e20§7 рівня
+chat.lvlup.level.21=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e21§7 рівня
+chat.lvlup.level.22=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e22§7 рівня
+chat.lvlup.level.23=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e23§7 рівня
+chat.lvlup.level.24=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e24§7 рівня
+chat.lvlup.level.25=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e25§7 рівня — це максимум!
 
 ## --- VIP І РЕБІТХ ---
-chat.error.no_money=⩕ §l§cERROR!§r §8» §7Недостатньо 
-chat.vip.error.requirements=⩕ §l§cERROR!§r §8» §7Для §eVIP§7 потрібен §e25§7 рівень  і §e125 000§7 
-chat.rebirth.error.level=⩕ §l§cERROR!§r §8» §7Ребітх доступний з §e16§7 по §e25§7 рівень 
-chat.vip.error.owned=⩕ §l§cERROR!§r §8» §7У тебе вже є §eVIP
-chat.rebirth.first= §dРебітх §8» §f%1$s§r§7 зробив(ла) свій перший §eребітх§7!
-chat.rebirth.level= §dРебітх §8» §7Твій рівень ребітху: §e%1$s
-chat.vip.bought= §aLvL UP §8» §f%1$s§r§7 купив(ла) §eVIP§7!
-chat.vip.welcome= §aLvL UP §8» §7Вітаємо з §eVIP§7! Щоб потрапити на §eVIP-острів§7, відкрий §eМеню сервера
+chat.error.no_money=§r⩕ §l§cERROR!§r §8» §7Недостатньо 
+chat.vip.error.requirements=§r⩕ §l§cERROR!§r §8» §7Для §eVIP§7 потрібен §e25§7 рівень  і §e125 000§7 
+chat.rebirth.error.level=§r⩕ §l§cERROR!§r §8» §7Ребітх доступний з §e16§7 по §e25§7 рівень 
+chat.vip.error.owned=§r⩕ §l§cERROR!§r §8» §7У тебе вже є §eVIP
+chat.rebirth.first=§r §dРебітх §8» §f%1$s§r§7 зробив(ла) свій перший §eребітх§7!
+chat.rebirth.level=§r §dРебітх §8» §7Твій рівень ребітху: §e%1$s
+chat.vip.bought=§r §aLvL UP §8» §f%1$s§r§7 купив(ла) §eVIP§7!
+chat.vip.welcome=§r §aLvL UP §8» §7Вітаємо з §eVIP§7! Щоб потрапити на §eVIP-острів§7, відкрий §eМеню сервера
 
 ## --- БУСТИ ---
-chat.boost.x2_end= §bБустер §8» §ex2 бустер§7 закінчився. Новий можна купити в §eМагазин → Бустери
-chat.boost.x4_end= §bБустер §8» §ex4 бустер§7 закінчився. Новий можна купити в §eМагазин → Бустери
-chat.boost.error.active=⩕ §l§cERROR!§r §8» §7Зараз уже діє бустер. Дочекайся його закінчення!
-chat.boost.x2= §bБустер §8» §f%1$s§r§7 купив(ла) §ex2 бустер§7 для всіх на §e5 хвилин§7!
-chat.boost.x4= §bБустер §8» §f%1$s§r§7 купив(ла) §ex4 бустер§7 для всіх на §e5 хвилин§7!
-chat.shop.error.enchant_max=⩕ §l§cERROR!§r §8» §7У тебе вже §eмаксимальний§7 рівень цього зачарування
-chat.rebirth.error.max=⩕ §l§cERROR!§r §8» §7У тебе вже §eмаксимальний ребітх§7 (§e5§7)
-chat.ore_magnet.bought= §eМагазин §8» §eМагніт руди§7 увімкнено на §e5 хвилин§7: предмети, що випали поруч, летять до тебе
-chat.ore_magnet.error.active=⩕ §l§cERROR!§r §8» §eМагніт руди§7 вже працює. Залишилося секунд: §e%1$s
-chat.ore_magnet.end= §eМагазин §8» §eМагніт руди§7 закінчився. Новий можна купити в §eМагазин → Бустери
+chat.boost.x2_end=§r §bБустер §8» §ex2 бустер§7 закінчився. Новий можна купити в §eМагазин → Бустери
+chat.boost.x4_end=§r §bБустер §8» §ex4 бустер§7 закінчився. Новий можна купити в §eМагазин → Бустери
+chat.boost.error.active=§r⩕ §l§cERROR!§r §8» §7Зараз уже діє бустер. Дочекайся його закінчення!
+chat.boost.x2=§r §bБустер §8» §f%1$s§r§7 купив(ла) §ex2 бустер§7 для всіх на §e5 хвилин§7!
+chat.boost.x4=§r §bБустер §8» §f%1$s§r§7 купив(ла) §ex4 бустер§7 для всіх на §e5 хвилин§7!
+chat.shop.error.enchant_max=§r⩕ §l§cERROR!§r §8» §7У тебе вже §eмаксимальний§7 рівень цього зачарування
+chat.rebirth.error.max=§r⩕ §l§cERROR!§r §8» §7У тебе вже §eмаксимальний ребітх§7 (§e5§7)
+chat.ore_magnet.bought=§r §eМагазин §8» §eМагніт руди§7 увімкнено на §e5 хвилин§7: предмети, що випали поруч, летять до тебе
+chat.ore_magnet.error.active=§r⩕ §l§cERROR!§r §8» §eМагніт руди§7 вже працює. Залишилося секунд: §e%1$s
+chat.ore_magnet.end=§r §eМагазин §8» §eМагніт руди§7 закінчився. Новий можна купити в §eМагазин → Бустери
 
 ## --- НАГОРОДИ ЗА ПРОМОКОДИ ---
-chat.promo.reward.1= §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e500 
-chat.promo.reward.2= §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e500 
-chat.promo.reward.3= §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e25k 
-chat.promo.reward.4= §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e100 
-chat.promo.error.used=⩕ §l§cERROR!§r §8» §7Ти вже активував(ла) цей §eпромокод
-chat.promo.error.invalid=⩕ §l§cERROR!§r §8» §7Невірний промокод
+chat.promo.reward.1=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e500 
+chat.promo.reward.2=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e500 
+chat.promo.reward.3=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e25k 
+chat.promo.reward.4=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e100 
+chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7Ти вже активував(ла) цей §eпромокод
+chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Невірний промокод
 
 ## --- АНТИЧИТ ---
 
 ## --- ОЧИСТКА ПРЕДМЕТІВ ---
 screen.clear_items.title=§l§eОчищення сміття
-chat.anticheat.item= §cAnti-Cheat §8» §f%1$s§r§7 намагався(лася) взяти заборонений предмет: §e%2$s
-chat.anticheat.enchant= §cAnti-Cheat §8» §f%1$s§r§7: у предмета §e%2$s§7 рівень чар §e%3$s§7 вищий за допустимий
+chat.anticheat.item=§r §cAnti-Cheat §8» §f%1$s§r§7 намагався(лася) взяти заборонений предмет: §e%2$s
+chat.anticheat.enchant=§r §cAnti-Cheat §8» §f%1$s§r§7: у предмета §e%2$s§7 рівень чар §e%3$s§7 вищий за допустимий
 screen.clear_items.subtitle=§l§eВидалено предметів: §a%1$s
 
 ## --- ПОДІЇ ---
-chat.event.gift= §6Івент §8» §7На карті §eз'явився подарунок§7! Хто підбере його §eпершим§7?
-chat.event.gift_end= §6Івент §8» §f%1$s§r§7 підібрав(ла) §eподарунок§7!
+chat.event.gift=§r §6Івент §8» §7На карті §eз'явився подарунок§7! Хто підбере його §eпершим§7?
+chat.event.gift_end=§r §6Івент §8» §f%1$s§r§7 підібрав(ла) §eподарунок§7!
 screen.event.haste=§gотримав(ла) поспіх на 10 сек
-chat.event.mythic_chest=§l >> §rНа PvP арені з'явився містик! Поспіши залутати його першим!
-chat.event.rain= §6Івент §8» §7Починається дощ з монет!
-chat.event.rain_end= §6Івент §8» §7Дощ з монет закінчився!
+chat.event.mythic_chest=§r§l >> §rНа PvP арені з'явився містик! Поспіши залутати його першим!
+chat.event.rain=§r §6Івент §8» §7Починається дощ з монет!
+chat.event.rain_end=§r §6Івент §8» §7Дощ з монет закінчився!
 
 ## --- КОМАНДИ ТА ВИКОРИСТАННЯ ---
 chat.help.header=§8-----§f Список команд §8-----§f
@@ -463,52 +463,52 @@ chat.help.kick=§7Вигоняє гравця з сервера
 chat.help.tp=§7Телепортує гравця до тебе
 chat.help.wipe=§7Повністю скидає прогрес усіх гравців
 
-chat.cmd.error.no_permission=⩕ §l§cERROR!§r §8» §7У тебе немає прав на цю команду
-chat.cmd.error.unknown=⩕ §l§cERROR!§r §8» §7Невідома команда: §e%1$s§7. Напиши §e!help§7, щоб дізнатися список команд
-chat.cmd.error.offline=⩕ §l§cERROR!§r §8» §7Гравець §f%1$s§r§7 не в мережі
+chat.cmd.error.no_permission=§r⩕ §l§cERROR!§r §8» §7У тебе немає прав на цю команду
+chat.cmd.error.unknown=§r⩕ §l§cERROR!§r §8» §7Невідома команда: §e%1$s§7. Напиши §e!help§7, щоб дізнатися список команд
+chat.cmd.error.offline=§r⩕ §l§cERROR!§r §8» §7Гравець §f%1$s§r§7 не в мережі
 
-chat.cmd.spawn= §cСервер §8» §7Ти на §eспавні
+chat.cmd.spawn=§r §cСервер §8» §7Ти на §eспавні
 chat.emotes.header=§8-----§f Список емодзі §8-----§f
-chat.cmd.msg.use= §7CMD §8» §7Використання: §e!msg§7 <гравець> <повідомлення>
+chat.cmd.msg.use=§r §7CMD §8» §7Використання: §e!msg§7 <гравець> <повідомлення>
 chat.cmd.msg.received=§7 %1$s:§r %2$s
 chat.cmd.msg.sent=§7 Ти  %1$s:§r %2$s
-chat.cmd.gm1= §7CMD §8» §7Режим гри змінено на §eКреатив
-chat.cmd.gm2= §7CMD §8» §7Режим гри змінено на §eПригода
-chat.cmd.gm6= §7CMD §8» §7Режим гри змінено на §eСпостереження
-chat.cmd.fly.on= §7CMD §8» §7Режим польоту §aувімкнено
-chat.cmd.fly.off= §7CMD §8» §7Режим польоту §cвимкнено
-chat.cmd.fly.use= §7CMD §8» §7Використання: §e!fly§7 <on/off>
-chat.cmd.clearchat= §7CMD §8» §7Очищення чату...
-chat.cmd.stick= §7CMD §8» §7Ти отримав(ла) §eПалочку адміна
-chat.cmd.invis.on= §7CMD §8» §7Ти став(ла) §aневидимим
-chat.cmd.invis.off= §7CMD §8» §7Ти більше §cне невидимий(а)
-chat.cmd.invis.use= §7CMD §8» §7Використання: §e!invis§7 <on/off>
-chat.cmd.timeset.use= §7CMD §8» §7Використання: §e!timeset§7 <sunrise; day; noon; sunset; night; midnight>
-chat.cmd.prefix.use= §7CMD §8» §7Використання: §e!prefix§7 <гравець> <set/take> <префікс>
-chat.cmd.tag.use= §7CMD §8» §7Використання: §e!tag§7 <гравець> <add/remove> <тег>
-chat.cmd.scoreboard.use= §7CMD §8» §7Використання: §e!scoreboard§7 <гравець> <add/remove> <ціль> <кількість>
-chat.cmd.kick= §cСервер §8» §f%1$s§r§7 кікнутий(а). Причина: §e%2$s
+chat.cmd.gm1=§r §7CMD §8» §7Режим гри змінено на §eКреатив
+chat.cmd.gm2=§r §7CMD §8» §7Режим гри змінено на §eПригода
+chat.cmd.gm6=§r §7CMD §8» §7Режим гри змінено на §eСпостереження
+chat.cmd.fly.on=§r §7CMD §8» §7Режим польоту §aувімкнено
+chat.cmd.fly.off=§r §7CMD §8» §7Режим польоту §cвимкнено
+chat.cmd.fly.use=§r §7CMD §8» §7Використання: §e!fly§7 <on/off>
+chat.cmd.clearchat=§r §7CMD §8» §7Очищення чату...
+chat.cmd.stick=§r §7CMD §8» §7Ти отримав(ла) §eПалочку адміна
+chat.cmd.invis.on=§r §7CMD §8» §7Ти став(ла) §aневидимим
+chat.cmd.invis.off=§r §7CMD §8» §7Ти більше §cне невидимий(а)
+chat.cmd.invis.use=§r §7CMD §8» §7Використання: §e!invis§7 <on/off>
+chat.cmd.timeset.use=§r §7CMD §8» §7Використання: §e!timeset§7 <sunrise; day; noon; sunset; night; midnight>
+chat.cmd.prefix.use=§r §7CMD §8» §7Використання: §e!prefix§7 <гравець> <set/take> <префікс>
+chat.cmd.tag.use=§r §7CMD §8» §7Використання: §e!tag§7 <гравець> <add/remove> <тег>
+chat.cmd.scoreboard.use=§r §7CMD §8» §7Використання: §e!scoreboard§7 <гравець> <add/remove> <ціль> <кількість>
+chat.cmd.kick=§r §cСервер §8» §f%1$s§r§7 кікнутий(а). Причина: §e%2$s
 chat.cmd.kick.no_reason=не вказано
-chat.cmd.kick.use= §7CMD §8» §7Використання: §e!kick§7 <гравець> <причина (не обов'язково)>
-chat.cmd.tp.use= §7CMD §8» §7Використання: §e!tp§7 <гравець>
-chat.cmd.timeset.done= §7CMD §8» §7Час змінено на §e%1$s
-chat.cmd.prefix.set= §7CMD §8» §7Префікс %1$s§r§7 видано гравцю §f%2$s
-chat.cmd.prefix.take= §7CMD §8» §7Префікс %1$s§r§7 знято з гравця §f%2$s
-chat.cmd.tag.add= §7CMD §8» §7Тег §e%1$s§7 видано гравцю §f%2$s
-chat.cmd.tag.remove= §7CMD §8» §7Тег §e%1$s§7 знято з гравця §f%2$s
-chat.cmd.scoreboard.add= §7CMD §8» §7Гравцю §f%1$s§r§7 нараховано §e%3$s§7 у §e%2$s
-chat.cmd.scoreboard.remove= §7CMD §8» §7З гравця §f%1$s§r§7 списано §e%3$s§7 з §e%2$s
-chat.cmd.tp.done= §7CMD §8» §7Гравця §f%1$s§r§7 телепортовано до тебе
+chat.cmd.kick.use=§r §7CMD §8» §7Використання: §e!kick§7 <гравець> <причина (не обов'язково)>
+chat.cmd.tp.use=§r §7CMD §8» §7Використання: §e!tp§7 <гравець>
+chat.cmd.timeset.done=§r §7CMD §8» §7Час змінено на §e%1$s
+chat.cmd.prefix.set=§r §7CMD §8» §7Префікс %1$s§r§7 видано гравцю §f%2$s
+chat.cmd.prefix.take=§r §7CMD §8» §7Префікс %1$s§r§7 знято з гравця §f%2$s
+chat.cmd.tag.add=§r §7CMD §8» §7Тег §e%1$s§7 видано гравцю §f%2$s
+chat.cmd.tag.remove=§r §7CMD §8» §7Тег §e%1$s§7 знято з гравця §f%2$s
+chat.cmd.scoreboard.add=§r §7CMD §8» §7Гравцю §f%1$s§r§7 нараховано §e%3$s§7 у §e%2$s
+chat.cmd.scoreboard.remove=§r §7CMD §8» §7З гравця §f%1$s§r§7 списано §e%3$s§7 з §e%2$s
+chat.cmd.tp.done=§r §7CMD §8» §7Гравця §f%1$s§r§7 телепортовано до тебе
 
 ## --- НАГОРОДИ МАГАЗИНУ ---
-chat.shop.enchant.efficiency= §eМагазин §8» §7Куплено: §eЕфективність§7 (§e+1§7)
-chat.shop.enchant.fortune= §eМагазин §8» §7Куплено: §eУдача§7 (§e+1§7)
-chat.shop.kit.iron= §eМагазин §8» §7Куплено: §eЗалізний набір
-chat.shop.kit.diamond= §eМагазин §8» §7Куплено: §eДіамантовий набір
-chat.shop.kit.netherite= §eМагазин §8» §7Куплено: §eНезеритовий набір
+chat.shop.enchant.efficiency=§r §eМагазин §8» §7Куплено: §eЕфективність§7 (§e+1§7)
+chat.shop.enchant.fortune=§r §eМагазин §8» §7Куплено: §eУдача§7 (§e+1§7)
+chat.shop.kit.iron=§r §eМагазин §8» §7Куплено: §eЗалізний набір
+chat.shop.kit.diamond=§r §eМагазин §8» §7Куплено: §eДіамантовий набір
+chat.shop.kit.netherite=§r §eМагазин §8» §7Куплено: §eНезеритовий набір
 
 ## --- АДМІН-ПАЛОЧКА ---
-chat.server.kicked= §cСервер §8» §f%1$s§r§7 виключений(а) адміністратором
+chat.server.kicked=§r §cСервер §8» §f%1$s§r§7 виключений(а) адміністратором
 
 ## --- СКОРБОРД ---
 scoreboards.map=§l[] Магазин за руду§r
@@ -520,10 +520,10 @@ hud.lvl=[] §2Рівень§f:
 hud.lvl.max=§aМАКС.§f
 hud.rebirth=[] §dРебітх§f: 
 hud.online=[] §6Онлайн§f: 
-scoreboards.x2boost= §l§ax2 бустер
-scoreboards.x4boost= §l§bx4 бустер
+scoreboards.x2boost=§r §l§ax2 бустер
+scoreboards.x4boost=§r §l§bx4 бустер
 
 
 ## --- ПОМИЛКИ ЧАТУ ---
-chat.error.too_long=⩕ §l§cERROR!§r §8» §7Повідомлення занадто довге (понад §e200§7 символів)
-chat.error.spam=⩕ §l§cERROR!§r §8» §7Не спам у чаті!
+chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Повідомлення занадто довге (понад §e200§7 символів)
+chat.error.spam=§r⩕ §l§cERROR!§r §8» §7Не спам у чаті!
