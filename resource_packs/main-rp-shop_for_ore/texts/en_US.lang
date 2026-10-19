@@ -107,7 +107,7 @@ mapInfo.title=§l§8Server Menu |  About the Map
 mapInfo.body=§7Choose what you need.
 mapInfo.button.1=§8 Levels
 mapInfo.button.2=§f⩆ §8How to Play?
-mapInfo.button.3=§f⩇ §8Creator
+mapInfo.button.3=§f⩇ §8Creators
 mapInfo.button.4=§8 Map Version
 
 ## --- LEVELS MENU ---
@@ -162,7 +162,7 @@ howtoplay.text.19= - your XP and how much  to next 
 howtoplay.text.20= - your Rebirth, feature: haste
 howtoplay.text.21= - current Server Online
 
-mapCreator.title=§l§8Server Menu | §f⩇§8 Creator
+mapCreator.title=§l§8Server Menu | §f⩇§8 Creators
 
 mapVersion.title=§l§8Server Menu |  Map Version
 mapVersion.text.1=§l§7Here you'll find info about the latest map update

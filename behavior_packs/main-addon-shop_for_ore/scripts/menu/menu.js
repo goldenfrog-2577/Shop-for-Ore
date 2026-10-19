@@ -111,6 +111,9 @@ function mapCreator(player) {
 	.body('')
 	.button('§8Сreator\n§7kapycta1231484',
 		'textures/server_icons/creator')
+	// Соавтор карты: иконки шрифта (glyph_E1) подписаны «BY'NASTYA»
+	.button('§5Сo-creator\n§7NastyaXs00',
+		'textures/server_icons/creator')
 	.button('§6Оmlet Arcade\n§7@waxenjaguar2209',
 		'textures/server_icons/omlet')
 	.button('§9Discоrd\n§7GoldenFrog#2577',
