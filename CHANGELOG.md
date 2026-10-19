@@ -26,7 +26,7 @@
 - Исправлены опечатки и обращение на «вы» в меню и «Как играть?».
 
 **Для разработчиков**
-- Из ресурс-пака удалён неиспользуемый `ui/old_hud_screen.json` (48 КБ); в `chat_screen`, `command_block_screen`, `structure_editor_screen` оставлены только изменённые блоки — дословные копии ванилы убраны.
+- Из ресурс-пака удалены неиспользуемые `ui/old_hud_screen.json` (48 КБ) и `ui/scoreboards.json` (табло целиком рисует `server-ui`); в `chat_screen`, `command_block_screen`, `structure_editor_screen` оставлены только изменённые блоки — дословные копии ванилы убраны.
 - `tick.json`: только `system/system`, `system/levelup`, `system/timers`; табло, ранги, `qx`, зачарования, спешка, онлайн и погода перенесены в `timers/t5` / `timers/t20`.
 - Новые функции: `system/setup` (табло создаются один раз), `shop/tp_ore`, `timers/t4800`. Удалены `tp_ore/*`, `timers/t100`.
 - Игрок на основе ванильного 1.19.50, голограмма без анимационного контроллера (#14).
