@@ -55,13 +55,13 @@ admin.kick.button=Kick Player
 chat.title=Chat
 chat.title.cheats=Chat & Commands
 ui.command_block.placeholder=Enter command here...
-commands.scoreboard.players.offlinePlayerName= §cOffline
-death.attack.explosion= %1$s §r§cblew up
-death.attack.flyIntoWall= %1$s §r§ccrashed with elytra
-death.attack.generic= %1$s §r§cmysteriously died
-death.attack.outOfWorld= %1$s §r§cfell into the void
-death.attack.player= %1$s §r§cwas slain by  player§r %2$s
-death.attack.player.item= %1$s §r§cwas slain by  player§r %2$s §r§cusing§r %3$s
+commands.scoreboard.players.offlinePlayerName=§r §cOffline
+death.attack.explosion=§r %1$s §r§cblew up
+death.attack.flyIntoWall=§r %1$s §r§ccrashed with elytra
+death.attack.generic=§r %1$s §r§cmysteriously died
+death.attack.outOfWorld=§r %1$s §r§cfell into the void
+death.attack.player=§r %1$s §r§cwas slain by  player§r %2$s
+death.attack.player.item=§r %1$s §r§cwas slain by  player§r %2$s §r§cusing§r %3$s
 disconnect.kicked=You were kicked from the server
 disconnect.kicked.reason=You were kicked for:
 disconnectionScreen.disconnected=Connection lost, maybe the host shut down the server
@@ -70,10 +70,10 @@ entity.server:floating_text.name=Hologram
 map.position=Coordinates: %s %s %s
 multiplayer.player.changeToPersona=§b%s §r§bchanged their persona
 multiplayer.player.changeToSkin=§b%s §r§bchanged their skin
-multiplayer.player.joined.realms=§r %s §r§7joined
-multiplayer.player.joined=§r %s §r§7joined
-multiplayer.player.left.realms=§r %s §r§7left
-multiplayer.player.left=§r %s §r§7left
+multiplayer.player.joined.realms=§r§r %s §r§7joined
+multiplayer.player.joined=§r§r %s §r§7joined
+multiplayer.player.left.realms=§r§r %s §r§7left
+multiplayer.player.left=§r§r %s §r§7left
 
 ## --- PACK INFO ---
 pack.name=Datapack for map §lShop for Ore§r (R)
@@ -104,7 +104,7 @@ menu.main.button.upgrades=§8 Upgrades
 
 ## --- MAP INFO MENU ---
 menu.about.title=§l§8Server Menu »  About the Map
-menu.about.body=§7Choose what you need.
+menu.about.body=§7Choose what you need:
 menu.about.button.levels=§8 Levels
 menu.about.button.howtoplay=§f⩆ §8How to Play?
 menu.about.button.creators=§f⩇ §8Creators
@@ -153,14 +153,14 @@ menu.howtoplay.line.10=§l§7Rebirth
 menu.howtoplay.line.11=§r§7Rebirth is replaying the map with a permanent haste effect
 menu.howtoplay.line.12=Rebirth unlocks after 16 
 menu.howtoplay.line.13=Upgrade in Menu »  Upgrades
-menu.howtoplay.line.14=§l§7 What do the icons on the left mean?
+menu.howtoplay.line.14=§r§l§7 What do the icons on the left mean?
 menu.howtoplay.line.15=§r§7 - your Nickname (in-game name)
-menu.howtoplay.line.16= - your Money / Coins
-menu.howtoplay.line.17= - your VIP coins
-menu.howtoplay.line.18= - your Level and next 
-menu.howtoplay.line.19= - your XP and how much  to next 
-menu.howtoplay.line.20= - your Rebirth, feature: haste
-menu.howtoplay.line.21= - current Server Online
+menu.howtoplay.line.16=§r - your Money / Coins
+menu.howtoplay.line.17=§r - your VIP coins
+menu.howtoplay.line.18=§r - your Level and next 
+menu.howtoplay.line.19=§r - your XP and how much  to next 
+menu.howtoplay.line.20=§r - your Rebirth, feature: haste
+menu.howtoplay.line.21=§r - current Server Online
 
 menu.creators.title=§l§8Server Menu » §f⩇§8 Creators
 
@@ -187,7 +187,7 @@ menu.shop.button.kits=§8PvP Kits
 menu.shop.button.boosts=§8Boosts
 
 menu.shop.enchants.title=§l§8 Shop » Enchantments
-menu.shop.enchants.body=§7Choose which enchantment you want to buy.
+menu.shop.enchants.body=§7Choose which enchantment you want to buy:
 menu.shop.enchants.note=§l§cNote: §r§7If you buy once, you'll get §e1§7 level of the enchantment. Buy again to increase the level.
 menu.shop.enchants.button.efficiency=§8Efficiency
 menu.shop.enchants.button.fortune=§8Fortune
@@ -199,49 +199,49 @@ menu.shop.kits.button.diamond=§8Diamond Kit
 menu.shop.kits.button.netherite=§8Netherite Kit
 
 menu.shop.boosts.title=§l§8 Shop » Boosts
-menu.shop.boosts.body=§7Choose which boost you want to buy.
+menu.shop.boosts.body=§7Choose which boost you want to buy:
 menu.shop.boosts.note=§l§cNote: §r§7Boost lasts for §e5§7 minutes after purchase.
-menu.shop.boosts.button.x2=§8 x2 Boost
-menu.shop.boosts.button.x4=§8 x4 Boost
-menu.shop.boosts.button.ore_magnet=§8⨾ Ore Magnet
+menu.shop.boosts.button.x2=§2 x2 Boost
+menu.shop.boosts.button.x4=§3 x4 Boost
+menu.shop.boosts.button.ore_magnet=§6⨾ Ore Magnet
 
 ## --- SETTINGS MENU ---
 menu.settings.title=§l§8Server Menu »  Settings
-menu.settings.body=§7Choose your settings.
-menu.settings.default_on=§7Default: §aenabled
-menu.settings.default_off=§7Default: §cdisabled
+menu.settings.body=§7Choose your settings:
+menu.settings.default_on=§7Default: §2ENABLED
+menu.settings.default_off=§7Default: §4DISABLED
 menu.settings.button.board=§8Scoreboard
 menu.settings.button.particles=§8Particles on Sell
 menu.settings.button.sounds=§8Sounds on Sell
 
 menu.settings.board.title=§l§8 Settings » Scoreboard
-menu.settings.board.body=§7Click enable/disable below to show or hide the server scoreboard.
+menu.settings.board.body=§7Click §2enable§7/§4disable§7 below to show or hide the server scoreboard.
 
 menu.settings.button.enable=§2Enable
 menu.settings.button.disable=§4Disable
 menu.settings.button.icons_only=§gEmotes Only
 
 menu.settings.particles.title=§l§8 Settings » Particles
-menu.settings.particles.body=§7Click enable/disable below to turn particles on or off when selling.
+menu.settings.particles.body=§7Click §2enable§7/§4disable§7 below to turn particles on or off when selling.
 
 menu.settings.sounds.title=§l§8 Settings » Sounds
-menu.settings.sounds.body=§7Click enable/disable below to turn sounds on or off when selling.
+menu.settings.sounds.body=§7Click §2enable§7/§4disable§7 below to turn sounds on or off when selling.
 
-chat.settings.enabled= §3Settings §8» §7Setting changed: §aenabled
-chat.settings.disabled= §3Settings §8» §7Setting changed: §cdisabled
-chat.settings.icons_only= §3Settings §8» §7Setting changed: §eemotes Only
+chat.settings.enabled=§r §3Settings §8» §7Setting changed: §aenabled
+chat.settings.disabled=§r §3Settings §8» §7Setting changed: §cdisabled
+chat.settings.icons_only=§r §3Settings §8» §7Setting changed: §eemotes Only
 
 ## --- BANK MENU ---
 menu.bank.title=§l§8Server Menu »  Bank
 menu.bank.amount=§7Amount you want to send:
 menu.bank.amount_placeholder=§7Enter here...
-chat.bank.error.no_money=⩕ §l§cERROR!§r §8» §7Not enough money on your balance
-chat.bank.sent= §2Bank §8» §7Sent to §f%1$s§r§7: §e%2$s§7
-chat.bank.received= §2Bank §8» §f%1$s§r§7 sent you §e%2$s§7
+chat.bank.error.no_money=§r⩕ §l§cERROR!§r §8» §7Not enough money on your balance
+chat.bank.sent=§r §2Bank §8» §7Sent to §f%1$s§r§7: §e%2$s§7
+chat.bank.received=§r §2Bank §8» §f%1$s§r§7 sent you §e%2$s§7
 menu.bank.player=§rChoose a player:
 menu.bank.balance=§eBalance§r:
-chat.bank.error.amount=⩕ §l§cERROR!§r §8» §7The amount must be a positive whole number
-chat.bank.error.self=⩕ §l§cERROR!§r §8» §7You can't send money to yourself
+chat.bank.error.amount=§r⩕ §l§cERROR!§r §8» §7The amount must be a positive whole number
+chat.bank.error.self=§r⩕ §l§cERROR!§r §8» §7You can't send money to yourself
 
 ## --- RULES MENU ---
 menu.rules.title=§l§8Server Menu »  Rules
@@ -268,31 +268,31 @@ menu.warps.button.minigames=§8Mini-games
 
 ## --- UPGRADES MENU ---
 menu.upgrades.title=§l§8Server Menu »  Upgrades
-menu.upgrades.body=§7Choose your upgrade path.
-menu.upgrades.button.vip=§2 VIP
-menu.upgrades.button.rebirth=§5 Rebirth
+menu.upgrades.body=§7Choose your upgrade path:
+menu.upgrades.button.vip=§2VIP
+menu.upgrades.button.rebirth=§5Rebirth
 
 ## --- REGISTRATION MENU ---
 account.register.title=§l§8Account Registration
 account.register.agree=I agree to the server rules and confirm §cno§r cheats
-chat.account.error.no_cheats=⩕ §l§cERROR!§r §8» §7Confirm §eno cheats§7 to play on the server
-account.register.greeting=§aHello.
-account.register.welcome=§aWelcome to the server! Have fun :)
-account.register.info=§6Account Info§r:
-account.register.password=§6Password§r: 
-account.register.remember=§aRemember these details or take a screenshot to log in later.
+chat.account.error.no_cheats=§r⩕ §l§cERROR!§r §8» §7Confirm §eno cheats§7 to play on the server
+account.register.greeting=§7Hello.
+account.register.welcome=§7Welcome to the server! Have fun :)
+account.register.info=§7Account Info:
+account.register.password=§7Password: §f
+account.register.remember=§7Remember these details or take a screenshot to log in later.
 
 ## --- LOGIN MENU ---
 account.login.title=§l§8Account Login
-account.login.greeting=Welcome
-account.login.intro=§rto the server §l[] Shop for Ore§r. Come up with and enter a password to register
-account.login.hint=§gEnter the password you used during registration
+account.login.greeting=§7Welcome§f
+account.login.intro=§7to the server §l[] Shop for Ore§r§7. Come up with and enter a password to register
+account.login.hint=§7Enter the password you used during registration:
 account.login.placeholder=§7Enter password...
-chat.account.logged_in=⩉ §9Account §8» §7Logged in! Welcome!
-chat.account.error.wrong_password=⩕ §l§cERROR!§r §8» §7Wrong password, try again
-chat.account.error.login_required=⩕ §l§cERROR!§r §8» §7Log in or register first
-chat.account.legacy=⩉ §9Account §8» §7Account from the old platform: set a new password, your progress is kept
-chat.account.error.password_length=⩕ §l§cERROR!§r §8» §7Password must be §e5§7 to §e32§7 characters long
+chat.account.logged_in=§r⩉ §9Account §8» §7Logged in! Welcome!
+chat.account.error.wrong_password=§r⩕ §l§cERROR!§r §8» §7Wrong password, try again
+chat.account.error.login_required=§r⩕ §l§cERROR!§r §8» §7Log in or register first
+chat.account.legacy=§r⩉ §9Account §8» §7Account from the old platform: set a new password, your progress is kept
+chat.account.error.password_length=§r⩕ §l§cERROR!§r §8» §7Password must be §e5§7 to §e32§7 characters long
 
 ## --- ADMIN MENU ---
 admin.main.title=§l§8Admin Menu
@@ -307,7 +307,7 @@ admin.main.button.bot=§8Summon Bot
 
 ## --- ADMIN: GAMEMODES ---
 admin.gamemode.title=§l§8Admin Menu » Gamemode
-admin.gamemode.body=§7List of gamemodes.
+admin.gamemode.body=§7List of gamemodes:
 admin.gamemode.button.creative=§8Creative
 admin.gamemode.button.adventure=§8Adventure
 admin.gamemode.button.spectator=§8Spectator
@@ -315,7 +315,7 @@ admin.gamemode.button.fly=§8Fly
 
 ## --- ADMIN: TIME SETTING ---
 admin.time.title=§l§8Admin Menu » Set Time
-admin.time.body=§7Choose the time to set.
+admin.time.body=§7Choose the time to set:
 admin.time.button.sunrise=§8Sunrise
 admin.time.button.day=§8Day
 admin.time.button.noon=§8Noon
@@ -325,7 +325,7 @@ admin.time.button.midnight=§8Midnight
 
 ## --- ADMIN: WARPS ---
 admin.warps.title=§l§8Admin Menu » Warps
-admin.warps.body=§7List of warps.
+admin.warps.body=§7List of warps:
 admin.warps.button.mine=§8Mine
 admin.warps.button.vip=§8VIP Location
 admin.warps.button.cmd_zone=§8CMD Zone
@@ -333,7 +333,7 @@ admin.warps.button.random_player=§8/tp to @r
 
 ## --- ADMIN: EFFECTS ---
 admin.effects.title=§l§8Admin Menu » Effects
-admin.effects.body=§7List of effects.
+admin.effects.body=§7List of effects:
 admin.effects.button.invisibility=§8Invisibility
 admin.effects.button.resistance=§8Resistance
 admin.effects.button.strength=§8Strength
@@ -342,7 +342,7 @@ admin.effects.button.clear=§8Clear Effects
 
 ## --- ADMIN: TOOLS ---
 admin.tools.title=§l§8Admin Menu » Tools
-admin.tools.body=§7Choose what you need.
+admin.tools.body=§7Choose what you need:
 admin.tools.button.command_block=§5Command Block
 admin.tools.button.allow=§5Allow Block
 admin.tools.button.deny=§5Deny Block
@@ -360,86 +360,86 @@ admin.tools.button.clear_inventory=§8Clear Inventory
 admin.announce.title=§l§8Admin Menu » Announcements
 admin.announce.body=§7Type below anything you want to say. It will be shown to the whole server.
 admin.announce.placeholder=§7Enter text...
-chat.server.announce= §eAnnouncement §8» §f%1$s
+chat.server.announce=§r §eAnnouncement §8» §f%1$s
 
 ## --- ADMIN: WIPE ---
 admin.wipe.title=§l§8Warning
 admin.wipe.body=§7Wipe will reset all stats, but won't affect tags or inventories. Are you sure?
 admin.wipe.button.yes=§2Yes
 admin.wipe.button.no=§4No
-chat.server.wiped= §cServer §8» §7All player stats have been reset
+chat.server.wiped=§r §cServer §8» §7All player stats have been reset
 
 ## --- LEVEL-UP & SYSTEM MESSAGES ---
-chat.lvlup.level.2= §aLvL UP §8» §f%1$s§r§7 reached level §e2§7, new pickaxe: §eWooden Pickaxe
-chat.lvlup.level.3= §aLvL UP §8» §f%1$s§r§7 reached level §e3§7, new pickaxe: §eStone Pickaxe
-chat.lvlup.level.4= §aLvL UP §8» §f%1$s§r§7 reached level §e4
-chat.lvlup.level.5= §aLvL UP §8» §f%1$s§r§7 reached level §e5
-chat.lvlup.level.6= §aLvL UP §8» §f%1$s§r§7 reached level §e6
-chat.lvlup.level.7= §aLvL UP §8» §f%1$s§r§7 reached level §e7
-chat.lvlup.level.8= §aLvL UP §8» §f%1$s§r§7 reached level §e8§7, new pickaxe: §eIron Pickaxe
-chat.lvlup.level.9= §aLvL UP §8» §f%1$s§r§7 reached level §e9
-chat.lvlup.level.10= §aLvL UP §8» §f%1$s§r§7 reached level §e10
-chat.lvlup.level.11= §aLvL UP §8» §f%1$s§r§7 reached level §e11
-chat.lvlup.level.12= §aLvL UP §8» §f%1$s§r§7 reached level §e12
-chat.lvlup.level.13= §aLvL UP §8» §f%1$s§r§7 reached level §e13§7, new pickaxe: §eDiamond Pickaxe
-chat.lvlup.level.14= §aLvL UP §8» §f%1$s§r§7 reached level §e14
-chat.lvlup.level.15= §aLvL UP §8» §f%1$s§r§7 reached level §e15§7, new pickaxe: §eNetherite Pickaxe
-chat.lvlup.level.16= §aLvL UP §8» §f%1$s§r§7 reached level §e16§7, new location: §eNether
-chat.lvlup.level.17= §aLvL UP §8» §f%1$s§r§7 reached level §e17
-chat.lvlup.level.18= §aLvL UP §8» §f%1$s§r§7 reached level §e18
-chat.lvlup.level.19= §aLvL UP §8» §f%1$s§r§7 reached level §e19
-chat.lvlup.level.20= §aLvL UP §8» §f%1$s§r§7 reached level §e20
-chat.lvlup.level.21= §aLvL UP §8» §f%1$s§r§7 reached level §e21
-chat.lvlup.level.22= §aLvL UP §8» §f%1$s§r§7 reached level §e22
-chat.lvlup.level.23= §aLvL UP §8» §f%1$s§r§7 reached level §e23
-chat.lvlup.level.24= §aLvL UP §8» §f%1$s§r§7 reached level §e24
-chat.lvlup.level.25= §aLvL UP §8» §f%1$s§r§7 reached level §e25§7 — the max level!
+chat.lvlup.level.2=§r §aLvL UP §8» §f%1$s§r§7 reached level §e2§7, new pickaxe: §eWooden Pickaxe
+chat.lvlup.level.3=§r §aLvL UP §8» §f%1$s§r§7 reached level §e3§7, new pickaxe: §eStone Pickaxe
+chat.lvlup.level.4=§r §aLvL UP §8» §f%1$s§r§7 reached level §e4
+chat.lvlup.level.5=§r §aLvL UP §8» §f%1$s§r§7 reached level §e5
+chat.lvlup.level.6=§r §aLvL UP §8» §f%1$s§r§7 reached level §e6
+chat.lvlup.level.7=§r §aLvL UP §8» §f%1$s§r§7 reached level §e7
+chat.lvlup.level.8=§r §aLvL UP §8» §f%1$s§r§7 reached level §e8§7, new pickaxe: §eIron Pickaxe
+chat.lvlup.level.9=§r §aLvL UP §8» §f%1$s§r§7 reached level §e9
+chat.lvlup.level.10=§r §aLvL UP §8» §f%1$s§r§7 reached level §e10
+chat.lvlup.level.11=§r §aLvL UP §8» §f%1$s§r§7 reached level §e11
+chat.lvlup.level.12=§r §aLvL UP §8» §f%1$s§r§7 reached level §e12
+chat.lvlup.level.13=§r §aLvL UP §8» §f%1$s§r§7 reached level §e13§7, new pickaxe: §eDiamond Pickaxe
+chat.lvlup.level.14=§r §aLvL UP §8» §f%1$s§r§7 reached level §e14
+chat.lvlup.level.15=§r §aLvL UP §8» §f%1$s§r§7 reached level §e15§7, new pickaxe: §eNetherite Pickaxe
+chat.lvlup.level.16=§r §aLvL UP §8» §f%1$s§r§7 reached level §e16§7, new location: §eNether
+chat.lvlup.level.17=§r §aLvL UP §8» §f%1$s§r§7 reached level §e17
+chat.lvlup.level.18=§r §aLvL UP §8» §f%1$s§r§7 reached level §e18
+chat.lvlup.level.19=§r §aLvL UP §8» §f%1$s§r§7 reached level §e19
+chat.lvlup.level.20=§r §aLvL UP §8» §f%1$s§r§7 reached level §e20
+chat.lvlup.level.21=§r §aLvL UP §8» §f%1$s§r§7 reached level §e21
+chat.lvlup.level.22=§r §aLvL UP §8» §f%1$s§r§7 reached level §e22
+chat.lvlup.level.23=§r §aLvL UP §8» §f%1$s§r§7 reached level §e23
+chat.lvlup.level.24=§r §aLvL UP §8» §f%1$s§r§7 reached level §e24
+chat.lvlup.level.25=§r §aLvL UP §8» §f%1$s§r§7 reached level §e25§7 — the max level!
 
 ## --- VIP & REBIRTH MESSAGES ---
-chat.error.no_money=⩕ §l§cERROR!§r §8» §7Not enough 
-chat.vip.error.requirements=⩕ §l§cERROR!§r §8» §eVIP§7 requires level §e25§7  and §e125,000§7 
-chat.rebirth.error.level=⩕ §l§cERROR!§r §8» §7Rebirth is available from level §e16§7 to §e25§7 
-chat.vip.error.owned=⩕ §l§cERROR!§r §8» §7You already have §eVIP
-chat.rebirth.first= §dRebirth §8» §f%1$s§r§7 made their first §eRebirth§7!
-chat.rebirth.level= §dRebirth §8» §7Your Rebirth level: §e%1$s
-chat.vip.bought= §aLvL UP §8» §f%1$s§r§7 bought §eVIP§7!
-chat.vip.welcome= §aLvL UP §8» §7Congrats on §eVIP§7! To get to the §eVIP island§7, open the §eServer Menu
+chat.error.no_money=§r⩕ §l§cERROR!§r §8» §7Not enough 
+chat.vip.error.requirements=§r⩕ §l§cERROR!§r §8» §eVIP§7 requires level §e25§7  and §e125,000§7 
+chat.rebirth.error.level=§r⩕ §l§cERROR!§r §8» §7Rebirth is available from level §e16§7 to §e25§7 
+chat.vip.error.owned=§r⩕ §l§cERROR!§r §8» §7You already have §eVIP
+chat.rebirth.first=§r §dRebirth §8» §f%1$s§r§7 made their first §eRebirth§7!
+chat.rebirth.level=§r §dRebirth §8» §7Your Rebirth level: §e%1$s
+chat.vip.bought=§r §aLvL UP §8» §f%1$s§r§7 bought §eVIP§7!
+chat.vip.welcome=§r §aLvL UP §8» §7Congrats on §eVIP§7! To get to the §eVIP island§7, open the §eServer Menu
 
 ## --- BOOST MESSAGES ---
-chat.boost.x2_end= §bBoost §8» §7The §ex2 boost§7 has ended. Buy a new one in §eShop → Boosts
-chat.boost.x4_end= §bBoost §8» §7The §ex4 boost§7 has ended. Buy a new one in §eShop → Boosts
-chat.boost.error.active=⩕ §l§cERROR!§r §8» §7A boost is already active. Wait for it to end!
-chat.boost.x2= §bBoost §8» §f%1$s§r§7 bought an §ex2 boost§7 for everyone for §e5 minutes§7!
-chat.boost.x4= §bBoost §8» §f%1$s§r§7 bought an §ex4 boost§7 for everyone for §e5 minutes§7!
-chat.shop.error.enchant_max=⩕ §l§cERROR!§r §8» §7You already have the §emaximum§7 level of this enchantment
-chat.rebirth.error.max=⩕ §l§cERROR!§r §8» §7You already have the §emaximum Rebirth§7 (§e5§7)
-chat.ore_magnet.bought= §eShop §8» §eOre Magnet§7 is on for §e5 minutes§7: items dropped nearby fly to you
-chat.ore_magnet.error.active=⩕ §l§cERROR!§r §8» §eOre Magnet§7 is already active. Seconds left: §e%1$s
-chat.ore_magnet.end= §eShop §8» §7The §eOre Magnet§7 has run out. Buy a new one in §eShop → Boosts
+chat.boost.x2_end=§r §bBoost §8» §7The §ex2 boost§7 has ended. Buy a new one in §eShop → Boosts
+chat.boost.x4_end=§r §bBoost §8» §7The §ex4 boost§7 has ended. Buy a new one in §eShop → Boosts
+chat.boost.error.active=§r⩕ §l§cERROR!§r §8» §7A boost is already active. Wait for it to end!
+chat.boost.x2=§r §bBoost §8» §f%1$s§r§7 bought an §ex2 boost§7 for everyone for §e5 minutes§7!
+chat.boost.x4=§r §bBoost §8» §f%1$s§r§7 bought an §ex4 boost§7 for everyone for §e5 minutes§7!
+chat.shop.error.enchant_max=§r⩕ §l§cERROR!§r §8» §7You already have the §emaximum§7 level of this enchantment
+chat.rebirth.error.max=§r⩕ §l§cERROR!§r §8» §7You already have the §emaximum Rebirth§7 (§e5§7)
+chat.ore_magnet.bought=§r §eShop §8» §eOre Magnet§7 is on for §e5 minutes§7: items dropped nearby fly to you
+chat.ore_magnet.error.active=§r⩕ §l§cERROR!§r §8» §eOre Magnet§7 is already active. Seconds left: §e%1$s
+chat.ore_magnet.end=§r §eShop §8» §7The §eOre Magnet§7 has run out. Buy a new one in §eShop → Boosts
 
 ## --- PROMO REWARDS ---
-chat.promo.reward.1= §aPromo §8» §f%1$s§r§7 activated a promo code and got §e500 
-chat.promo.reward.2= §aPromo §8» §f%1$s§r§7 activated a promo code and got §e500 
-chat.promo.reward.3= §aPromo §8» §f%1$s§r§7 activated a promo code and got §e25k 
-chat.promo.reward.4= §aPromo §8» §f%1$s§r§7 activated a promo code and got §e100 
-chat.promo.error.used=⩕ §l§cERROR!§r §8» §7You have already activated this §epromo code
-chat.promo.error.invalid=⩕ §l§cERROR!§r §8» §7Invalid promo code
+chat.promo.reward.1=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e500 
+chat.promo.reward.2=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e500 
+chat.promo.reward.3=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e25k 
+chat.promo.reward.4=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e100 
+chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7You have already activated this §epromo code
+chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Invalid promo code
 
 ## --- ANTICHEAT MESSAGES ---
 
 ## --- CLEAR ITEMS ---
 screen.clear_items.title=§l§eItem Cleanup
-chat.anticheat.item= §cAnti-Cheat §8» §f%1$s§r§7 tried to take a banned item: §e%2$s
-chat.anticheat.enchant= §cAnti-Cheat §8» §f%1$s§r§7: item §e%2$s§7 has enchantment level §e%3$s§7 above the limit
+chat.anticheat.item=§r §cAnti-Cheat §8» §f%1$s§r§7 tried to take a banned item: §e%2$s
+chat.anticheat.enchant=§r §cAnti-Cheat §8» §f%1$s§r§7: item §e%2$s§7 has enchantment level §e%3$s§7 above the limit
 screen.clear_items.subtitle=§l§eItems removed: §a%1$s
 
 ## --- EVENT MESSAGES ---
-chat.event.gift= §6Event §8» §7A §egift has appeared§7 on the map! Who will grab it §efirst§7?
-chat.event.gift_end= §6Event §8» §f%1$s§r§7 picked up the §egift§7!
+chat.event.gift=§r §6Event §8» §7A §egift has appeared§7 on the map! Who will grab it §efirst§7?
+chat.event.gift_end=§r §6Event §8» §f%1$s§r§7 picked up the §egift§7!
 screen.event.haste=§ggot haste for 10 sec
-chat.event.mythic_chest=§l >> §rA mythic chest appeared in the PvP arena! Hurry to loot it first!
-chat.event.rain= §6Event §8» §7A coin rain is starting!
-chat.event.rain_end= §6Event §8» §7The coin rain is over!
+chat.event.mythic_chest=§r§l >> §rA mythic chest appeared in the PvP arena! Hurry to loot it first!
+chat.event.rain=§r §6Event §8» §7A coin rain is starting!
+chat.event.rain_end=§r §6Event §8» §7The coin rain is over!
 
 ## --- COMMANDS & USAGE ---
 chat.help.header=§8-----§f Command List §8-----§f
@@ -463,52 +463,52 @@ chat.help.kick=§7Kicks a player from the server
 chat.help.tp=§7Teleports a player to you
 chat.help.wipe=§7Resets all players' progress
 
-chat.cmd.error.no_permission=⩕ §l§cERROR!§r §8» §7You don't have permission to use this command
-chat.cmd.error.unknown=⩕ §l§cERROR!§r §8» §7Unknown command: §e%1$s§7. Type §e!help§7 to see the list of commands
-chat.cmd.error.offline=⩕ §l§cERROR!§r §8» §7Player §f%1$s§r§7 is not online
+chat.cmd.error.no_permission=§r⩕ §l§cERROR!§r §8» §7You don't have permission to use this command
+chat.cmd.error.unknown=§r⩕ §l§cERROR!§r §8» §7Unknown command: §e%1$s§7. Type §e!help§7 to see the list of commands
+chat.cmd.error.offline=§r⩕ §l§cERROR!§r §8» §7Player §f%1$s§r§7 is not online
 
-chat.cmd.spawn= §cServer §8» §7You are at §espawn
+chat.cmd.spawn=§r §cServer §8» §7You are at §espawn
 chat.emotes.header=§8-----§f Emote List §8-----§f
-chat.cmd.msg.use= §7CMD §8» §7Usage: §e!msg§7 <player> <message>
+chat.cmd.msg.use=§r §7CMD §8» §7Usage: §e!msg§7 <player> <message>
 chat.cmd.msg.received=§7 %1$s:§r %2$s
 chat.cmd.msg.sent=§7 You  %1$s:§r %2$s
-chat.cmd.gm1= §7CMD §8» §7Gamemode changed to §eCreative
-chat.cmd.gm2= §7CMD §8» §7Gamemode changed to §eAdventure
-chat.cmd.gm6= §7CMD §8» §7Gamemode changed to §eSpectator
-chat.cmd.fly.on= §7CMD §8» §7Flight mode §aenabled
-chat.cmd.fly.off= §7CMD §8» §7Flight mode §cdisabled
-chat.cmd.fly.use= §7CMD §8» §7Usage: §e!fly§7 <on/off>
-chat.cmd.clearchat= §7CMD §8» §7Chat cleared...
-chat.cmd.stick= §7CMD §8» §7You received §eAdmin Stick
-chat.cmd.invis.on= §7CMD §8» §7You are now §ainvisible
-chat.cmd.invis.off= §7CMD §8» §7You are no longer §cinvisible
-chat.cmd.invis.use= §7CMD §8» §7Usage: §e!invis§7 <on/off>
-chat.cmd.timeset.use= §7CMD §8» §7Usage: §e!timeset§7 <sunrise; day; noon; sunset; night; midnight>
-chat.cmd.prefix.use= §7CMD §8» §7Usage: §e!prefix§7 <player> <set/take> <prefix>
-chat.cmd.tag.use= §7CMD §8» §7Usage: §e!tag§7 <player> <add/remove> <tag>
-chat.cmd.scoreboard.use= §7CMD §8» §7Usage: §e!scoreboard§7 <player> <add/remove> <objective> <amount>
-chat.cmd.kick= §cServer §8» §f%1$s§r§7 was kicked. Reason: §e%2$s
+chat.cmd.gm1=§r §7CMD §8» §7Gamemode changed to §eCreative
+chat.cmd.gm2=§r §7CMD §8» §7Gamemode changed to §eAdventure
+chat.cmd.gm6=§r §7CMD §8» §7Gamemode changed to §eSpectator
+chat.cmd.fly.on=§r §7CMD §8» §7Flight mode §aenabled
+chat.cmd.fly.off=§r §7CMD §8» §7Flight mode §cdisabled
+chat.cmd.fly.use=§r §7CMD §8» §7Usage: §e!fly§7 <on/off>
+chat.cmd.clearchat=§r §7CMD §8» §7Chat cleared...
+chat.cmd.stick=§r §7CMD §8» §7You received §eAdmin Stick
+chat.cmd.invis.on=§r §7CMD §8» §7You are now §ainvisible
+chat.cmd.invis.off=§r §7CMD §8» §7You are no longer §cinvisible
+chat.cmd.invis.use=§r §7CMD §8» §7Usage: §e!invis§7 <on/off>
+chat.cmd.timeset.use=§r §7CMD §8» §7Usage: §e!timeset§7 <sunrise; day; noon; sunset; night; midnight>
+chat.cmd.prefix.use=§r §7CMD §8» §7Usage: §e!prefix§7 <player> <set/take> <prefix>
+chat.cmd.tag.use=§r §7CMD §8» §7Usage: §e!tag§7 <player> <add/remove> <tag>
+chat.cmd.scoreboard.use=§r §7CMD §8» §7Usage: §e!scoreboard§7 <player> <add/remove> <objective> <amount>
+chat.cmd.kick=§r §cServer §8» §f%1$s§r§7 was kicked. Reason: §e%2$s
 chat.cmd.kick.no_reason=not specified
-chat.cmd.kick.use= §7CMD §8» §7Usage: §e!kick§7 <player> <reason (optional)>
-chat.cmd.tp.use= §7CMD §8» §7Usage: §e!tp§7 <player>
-chat.cmd.timeset.done= §7CMD §8» §7Time changed to §e%1$s
-chat.cmd.prefix.set= §7CMD §8» §7Prefix %1$s§r§7 added for §f%2$s
-chat.cmd.prefix.take= §7CMD §8» §7Prefix %1$s§r§7 removed for §f%2$s
-chat.cmd.tag.add= §7CMD §8» §7Tag §e%1$s§7 added for §f%2$s
-chat.cmd.tag.remove= §7CMD §8» §7Tag §e%1$s§7 removed for §f%2$s
-chat.cmd.scoreboard.add= §7CMD §8» §7Added §e%3$s§7 to §e%2$s§7 for §f%1$s
-chat.cmd.scoreboard.remove= §7CMD §8» §7Removed §e%3$s§7 from §e%2$s§7 for §f%1$s
-chat.cmd.tp.done= §7CMD §8» §7Teleported §f%1$s§r§7 to you
+chat.cmd.kick.use=§r §7CMD §8» §7Usage: §e!kick§7 <player> <reason (optional)>
+chat.cmd.tp.use=§r §7CMD §8» §7Usage: §e!tp§7 <player>
+chat.cmd.timeset.done=§r §7CMD §8» §7Time changed to §e%1$s
+chat.cmd.prefix.set=§r §7CMD §8» §7Prefix %1$s§r§7 added for §f%2$s
+chat.cmd.prefix.take=§r §7CMD §8» §7Prefix %1$s§r§7 removed for §f%2$s
+chat.cmd.tag.add=§r §7CMD §8» §7Tag §e%1$s§7 added for §f%2$s
+chat.cmd.tag.remove=§r §7CMD §8» §7Tag §e%1$s§7 removed for §f%2$s
+chat.cmd.scoreboard.add=§r §7CMD §8» §7Added §e%3$s§7 to §e%2$s§7 for §f%1$s
+chat.cmd.scoreboard.remove=§r §7CMD §8» §7Removed §e%3$s§7 from §e%2$s§7 for §f%1$s
+chat.cmd.tp.done=§r §7CMD §8» §7Teleported §f%1$s§r§7 to you
 
 ## --- SHOP REWARDS ---
-chat.shop.enchant.efficiency= §eShop §8» §7Purchased: §eEfficiency§7 (§e+1§7)
-chat.shop.enchant.fortune= §eShop §8» §7Purchased: §eFortune§7 (§e+1§7)
-chat.shop.kit.iron= §eShop §8» §7Purchased: §eIron Kit
-chat.shop.kit.diamond= §eShop §8» §7Purchased: §eDiamond Kit
-chat.shop.kit.netherite= §eShop §8» §7Purchased: §eNetherite Kit
+chat.shop.enchant.efficiency=§r §eShop §8» §7Purchased: §eEfficiency§7 (§e+1§7)
+chat.shop.enchant.fortune=§r §eShop §8» §7Purchased: §eFortune§7 (§e+1§7)
+chat.shop.kit.iron=§r §eShop §8» §7Purchased: §eIron Kit
+chat.shop.kit.diamond=§r §eShop §8» §7Purchased: §eDiamond Kit
+chat.shop.kit.netherite=§r §eShop §8» §7Purchased: §eNetherite Kit
 
 ## --- ADMIN STICK ---
-chat.server.kicked= §cServer §8» §f%1$s§r§7 was removed by an administrator
+chat.server.kicked=§r §cServer §8» §f%1$s§r§7 was removed by an administrator
 
 ## --- SCOREBOARD ---
 scoreboards.map=§l[] Shop for Ore§r
@@ -520,10 +520,10 @@ hud.lvl=[] §2Level§f:
 hud.lvl.max=§aMAX§f
 hud.rebirth=[] §dRebirth§f: 
 hud.online=[] §6Online§f: 
-scoreboards.x2boost= §l§ax2 Boost
-scoreboards.x4boost= §l§bx4 Boost
+scoreboards.x2boost=§r §l§ax2 Boost
+scoreboards.x4boost=§r §l§bx4 Boost
 
 
 ## --- CHAT ERRORS ---
-chat.error.too_long=⩕ §l§cERROR!§r §8» §7Your message is too long (over §e200§7 characters)
-chat.error.spam=⩕ §l§cERROR!§r §8» §7Don't spam the chat!
+chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Your message is too long (over §e200§7 characters)
+chat.error.spam=§r⩕ §l§cERROR!§r §8» §7Don't spam the chat!
