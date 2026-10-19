@@ -1,6 +1,7 @@
 // --- Система регистрации и логина игроков ---
 // Добавляет нужные теги при входе и блокирует действия до прохождения логина/регистрации
 
+import { tellText } from '../DataBase.js';
 import { world } from '@minecraft/server';
 import { LoginUI } from './login.js';
 import { RegisterUI } from './register.js';
@@ -34,7 +35,7 @@ world.events.playerJoin.subscribe((data) => {
 	// войти невозможно, поэтому просим задать пароль заново. Прогресс не трогаем
 	if (player.hasTag('hasRegister') && !hasPassword(player)) {
 		player.removeTag('hasRegister');
-		player.tell('\n%chat.account.legacy\n ');
+		tellText(player, '\n%chat.account.legacy\n ');
 	}
 	if (canLogin(player)) {
 		player.removeTag('chekRegister');

@@ -3,7 +3,7 @@
 import { world } from '@minecraft/server';
 import { ActionFormData, ModalFormData } from '@minecraft/server-ui';
 import { bank } from './bank_menu.js';
-import { isPending, rawTranslate } from '../DataBase.js';
+import { isPending, rawTranslate, tellText } from '../DataBase.js';
 
 // --- Открытие меню при использовании специального предмета ---
 world.events.beforeItemUse.subscribe(data => {
@@ -272,13 +272,13 @@ function settings_table(player) {
     settings_table.show(player).then(tb => {
         if (tb.selection == 0) {
             player.runCommandAsync('function settings/scoreboard_on');
-            player.tell('%chat.settings.enabled');
+            tellText(player, '%chat.settings.enabled');
         } else if (tb.selection == 1) {
             player.runCommandAsync('function settings/scoreboard_icons');
-            player.tell('%chat.settings.icons_only');
+            tellText(player, '%chat.settings.icons_only');
         } else if (tb.selection == 2) {
             player.runCommandAsync('function settings/scoreboard_off');
-            player.tell('%chat.settings.disabled');
+            tellText(player, '%chat.settings.disabled');
         }
     });
 }
@@ -293,10 +293,10 @@ function settings_particle(player) {
     settings_particle.show(player).then(tb => {
         if (tb.selection == 0) {
             player.runCommandAsync('tag @s add player:particle');
-            player.tell('%chat.settings.enabled');
+            tellText(player, '%chat.settings.enabled');
         } else if (tb.selection == 1) {
             player.runCommandAsync('tag @s remove player:particle');
-            player.tell('%chat.settings.disabled');
+            tellText(player, '%chat.settings.disabled');
         }
     });
 }
@@ -311,10 +311,10 @@ function settings_sound(player) {
     settings_sound.show(player).then(tb => {
         if (tb.selection == 0) {
             player.runCommandAsync('tag @s add player:sound');
-            player.tell('%chat.settings.enabled');
+            tellText(player, '%chat.settings.enabled');
         } else if (tb.selection == 1) {
             player.runCommandAsync('tag @s remove player:sound');
-            player.tell('%chat.settings.disabled');
+            tellText(player, '%chat.settings.disabled');
         }
     });
 }
@@ -344,7 +344,7 @@ function promocodes(player) {
 
 		const enteredCode = r.formValues[0]?.trim();
 		if (validatePromoCode(enteredCode, player)) {} else {
-			player.tell('%chat.promo.error.invalid');
+			tellText(player, '%chat.promo.error.invalid');
 		}
 	});
 }
@@ -404,7 +404,7 @@ function validatePromoCode(code, player) {
 		player.runCommandAsync(`scoreboard players set @s ${scoreboard} 1`);
 		player.runCommandAsync(`tellraw @a ${rawTranslate(promo.message, player.name)}`).catch(() => undefined);
 	}).catch(() => {
-		player.tell('%chat.promo.error.used');
+		tellText(player, '%chat.promo.error.used');
 	});
 
 	return true;

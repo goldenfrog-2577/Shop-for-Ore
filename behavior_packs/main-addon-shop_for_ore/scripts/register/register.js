@@ -1,6 +1,7 @@
 // --- UI регистрации нового игрока ---
 // Форму вызывает register/system.js (раньше — отдельная проверка тега 'onRegister' каждый тик)
 
+import { tellText } from '../DataBase.js';
 import { ModalFormData } from '@minecraft/server-ui';
 import { PASSWORD_MIN, PASSWORD_MAX, setPassword } from './password.js';
 
@@ -20,13 +21,13 @@ export function RegisterUI(player) {
 		const password = String(r.formValues[0] ?? '').trim();
 		// Если игрок не подтвердил правила
 		if (r.formValues[1] != true) {
-			player.tell('\n%chat.account.error.no_cheats\n ');
+			tellText(player, '\n%chat.account.error.no_cheats\n ');
 			player.runCommandAsync('playsound note.bass @s');
 			return;
 		}
 		// Пустой или слишком длинный пароль не принимаем
 		if (password.length < PASSWORD_MIN || password.length > PASSWORD_MAX) {
-			player.tell('\n%chat.account.error.password_length\n ');
+			tellText(player, '\n%chat.account.error.password_length\n ');
 			player.runCommandAsync('playsound note.bass @s');
 			return;
 		}
@@ -36,7 +37,7 @@ export function RegisterUI(player) {
 		setPassword(player, password);
 		player.addTag('hasRegister');
 		player.removeTag('chekRegister');
-		player.tell(`\n%account.register.greeting §b${player.name}\n\n%account.register.welcome\n\n%account.register.info\n %account.register.password §b${password}\n\n%account.register.remember\n `);
+		tellText(player, `\n%account.register.greeting §b${player.name}\n\n%account.register.welcome\n\n%account.register.info\n %account.register.password §b${password}\n\n%account.register.remember\n `);
 		player.runCommandAsync('playsound random.levelup @s');
 	});
 }
