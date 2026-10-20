@@ -133,7 +133,7 @@ function mapCreator(player) {
 function mapVersion(player) {
 	const mapVersion = new ActionFormData()
 	.title('%menu.version.title')
-	.body('%menu.version.line.1\n\n§r%menu.version.label §a0.2.0_20261018r§r\n%menu.version.line.2\n\n%menu.version.line.3\n%menu.version.line.4\n%menu.version.line.5\n%menu.version.line.6\n%menu.version.line.7\n%menu.version.line.8\n%menu.version.line.9\n%menu.version.line.10\n%menu.version.line.11\n%menu.version.line.12')
+	.body('%menu.version.line.1\n\n§r%menu.version.label §a0.3.0_dev§r\n%menu.version.line.2\n\n%menu.version.line.3\n%menu.version.line.4\n%menu.version.line.5\n%menu.version.line.6\n%menu.version.line.7\n%menu.version.line.8\n%menu.version.line.9\n%menu.version.line.10\n%menu.version.line.11\n%menu.version.line.12')
 	.button('%menu.common.back')
 	mapVersion.show(player).then(tb => {
 		if (tb.selection == 0) {
