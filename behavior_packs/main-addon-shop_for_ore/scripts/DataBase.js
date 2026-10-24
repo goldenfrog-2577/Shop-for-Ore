@@ -1,5 +1,5 @@
 // Импортируем API Minecraft Bedrock Edition
-import { world } from "@minecraft/server";
+import { world, system } from "@minecraft/server";
 
 /**
  * Получить значение очков игрока по определённому objective.
@@ -509,7 +509,7 @@ export const commandsList = [
 		role: 'admin'
 	},
 	{
-		command: "!bot",
+		command: "!bot §7[§fsettings§7]",
 		description: "%chat.help.bot",
 		role: 'admin'
 	},
@@ -539,3 +539,21 @@ export const commandsList = [
 
 // Список эмодзи в виде массива объектов для вывода в интерфейсе
 export const emotesList = Object.entries(emotes).map(([name, symbol]) => ({ name, symbol }));
+
+/**
+ * Показать форму, когда игрок сможет её увидеть. Из чата (!password) форма сразу не откроется:
+ * пока открыт чат, show() отменяется с userBusy — повторяем раз в 10 тиков, до 30 секунд.
+ */
+export function showWhenFree(player, form, tries = 60) {
+	return form.show(player).then(r => {
+		if (r.canceled && r.cancelationReason === 'userBusy' && tries > 0) {
+			return new Promise(res => {
+				const id = system.runSchedule(() => {
+					system.clearRunSchedule(id);
+					res(showWhenFree(player, form, tries - 1));
+				}, 10);
+			});
+		}
+		return r;
+	});
+}

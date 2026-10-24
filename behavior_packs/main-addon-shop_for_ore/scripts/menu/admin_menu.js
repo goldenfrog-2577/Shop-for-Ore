@@ -7,7 +7,7 @@
 
 import { world } from '@minecraft/server';
 import { ActionFormData, ModalFormData, MessageFormData } from '@minecraft/server-ui';
-import { isPending, rawTranslate, closedByPlayer, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer } from '../DataBase.js';
+import { isPending, rawTranslate, closedByPlayer, showWhenFree, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer } from '../DataBase.js';
 import { runChatCommand } from '../chat/commands.js';
 import { sendChatMessage } from '../chat/chat.js';
 import { getBot, getBotName, setBotName, spawnBot, removeBot } from '../system/spawnbot.js';
@@ -51,7 +51,8 @@ world.events.beforeItemUse.subscribe(data => {
 function showActions(player, title, body, items, onBack) {
 	const form = new ActionFormData().title(title).body(body);
 	for (const item of items) form.button(item.text, item.icon);
-	return form.show(player).then(r => {
+	// Из чата (!bot settings) форма откроется, когда игрок закроет чат
+	return showWhenFree(player, form).then(r => {
 		// Крестик — на уровень вверх (как кнопка «Назад»); в главном меню onBack нет — просто закрыть
 		if (closedByPlayer(r)) return onBack?.();
 		if (r.canceled || r.selection === undefined) return;
@@ -446,7 +447,7 @@ function serverMenu(player) {
 
 // ===== Бот =====
 
-function botMenu(player) {
+export function botMenu(player) {
 	const bot = getBot();
 	const name = getBotName();
 	const items = [];

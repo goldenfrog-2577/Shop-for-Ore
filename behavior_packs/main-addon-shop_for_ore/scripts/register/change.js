@@ -4,9 +4,9 @@
 // игроку в сети: ему сразу показывается форма регистрации, поэтому аккаунт ни секунды не остаётся
 // без пароля (карту играют и с пиратских клиентов, ник может занять кто угодно).
 
-import { world, system } from '@minecraft/server';
+import { world } from '@minecraft/server';
 import { ModalFormData } from '@minecraft/server-ui';
-import { tellText, run, rawTranslate } from '../DataBase.js';
+import { tellText, run, rawTranslate, showWhenFree } from '../DataBase.js';
 import { PASSWORD_MIN, PASSWORD_MAX, setPassword, checkPassword, clearPassword } from './password.js';
 
 // После 3 неверных старых паролей подряд — пауза, чтобы не подбирать пароль через эту форму
@@ -14,23 +14,6 @@ const MAX_WRONG = 3;
 const LOCK_MS = 60 * 1000;
 const wrong = new Map();   // ник → { count, until }
 
-/**
- * Показать форму, когда игрок сможет её увидеть. Из чата (!password) форма сразу не откроется:
- * пока открыт чат, show() отменяется с userBusy — повторяем раз в 10 тиков, до 30 секунд.
- */
-export function showWhenFree(player, form, tries = 60) {
-	return form.show(player).then(r => {
-		if (r.canceled && r.cancelationReason === 'userBusy' && tries > 0) {
-			return new Promise(res => {
-				const id = system.runSchedule(() => {
-					system.clearRunSchedule(id);
-					res(showWhenFree(player, form, tries - 1));
-				}, 10);
-			});
-		}
-		return r;
-	});
-}
 
 /** Форма смены пароля. onBack — куда вернуться по крестику (из меню — в Настройки). */
 export function ChangePasswordUI(player, onBack) {

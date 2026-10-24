@@ -488,6 +488,7 @@ chat.admin.bot.renamed=§r §7CMD §8» §7Nombre del bot: §f%1$s
 chat.admin.bot.error.name=§r⩕ §l§cERROR!§r §8» §7Nombre del bot: de 3 a 16 caracteres — letras latinas, números, _ y espacio
 chat.admin.bot.error.absent=§r⩕ §l§cERROR!§r §8» §7El bot no está en el mundo
 chat.admin.bot.error.present=§r⩕ §l§cERROR!§r §8» §7El bot §f%1$s§r§7 ya está en el mundo. Gestiónalo desde el menú de admin
+chat.cmd.bot.settings=§r §7CMD §8» §7Cierra el chat: se abrirá la ventana de control del bot
 chat.server.wiped=§r §cServidor §8» §7Se han reiniciado las estadísticas de todos los jugadores
 
 ## --- MENSAJES DE NIVEL Y SISTEMA ---
@@ -582,7 +583,7 @@ chat.help.online=§7Muestra los jugadores conectados
 chat.help.report=§7Envía una denuncia sobre un jugador a los moderadores
 chat.help.rules=§7Muestra las reglas del servidor
 chat.help.password=§7Cambia tu contraseña
-chat.help.bot=§7Invoca un bot
+chat.help.bot=§7Invoca al bot; §esettings§7 — ventana de control del bot
 chat.help.stick=§7Da §cVara de admin
 chat.help.money=§7Cambia el saldo de un jugador
 chat.help.event=§7Inicia un evento ahora mismo
