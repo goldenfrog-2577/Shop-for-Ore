@@ -839,7 +839,8 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case "password":
-			// Смена пароля: форма откроется, как только игрок закроет чат (register/change.js)
+			// Смена пароля: форма откроется, как только игрок закроет чат (register/change.js) — подсказываем
+			run(player, 'tellraw @s {"rawtext":[{"translate":"chat.account.change.close_chat"}]}');
 			ChangePasswordUI(player);
 			break;
 

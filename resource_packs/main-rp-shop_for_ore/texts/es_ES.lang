@@ -154,13 +154,13 @@ menu.howtoplay.line.11=§r§7Reinicio es volver a jugar el mapa con un efecto de
 menu.howtoplay.line.12=El reinicio se desbloquea después de 16 
 menu.howtoplay.line.13=Se mejora en Menú »  Mejoras
 menu.howtoplay.line.14=§r§l§7 ¿Qué significan los iconos a la izquierda?
-menu.howtoplay.line.15=§r§7 - tu Apodo (nombre en el juego)
-menu.howtoplay.line.16=§r - tu Dinero / Monedas
-menu.howtoplay.line.17=§r - tus monedas VIP
-menu.howtoplay.line.18=§r - tu Nivel y el siguiente 
-menu.howtoplay.line.19=§r - tu XP y cuánto  para el siguiente 
-menu.howtoplay.line.20=§r - tu Reinicio, característica: prisa
-menu.howtoplay.line.21=§r - Online actual del servidor
+menu.howtoplay.line.15=§r§7 - tu Apodo (nombre en el juego)
+menu.howtoplay.line.16=§r§7 - tu Dinero / Monedas
+menu.howtoplay.line.17=§r§7 - tus monedas VIP
+menu.howtoplay.line.18=§r§7 - tu Nivel y el siguiente §r§7
+menu.howtoplay.line.19=§r§7 - tu XP y cuánto §r§7 para el siguiente §r§7
+menu.howtoplay.line.20=§r§7 - tu Reinicio, característica: prisa
+menu.howtoplay.line.21=§r§7 - Online actual del servidor
 
 menu.creators.title=§l§8Menú del servidor » §f⩇§8 Creadores
 
@@ -307,6 +307,7 @@ chat.account.error.password_length=§r⩕ §l§cERROR!§r §8» §7La contraseñ
 chat.account.changed=§r⩉ §9Cuenta §8» §7Contraseña cambiada.
 chat.account.error.mismatch=§r⩕ §l§cERROR!§r §8» §7Las contraseñas nuevas no coinciden
 chat.account.error.locked=§r⩕ §l§cERROR!§r §8» §7Demasiados intentos fallidos. Inténtalo de nuevo en §e%1$s§7 s
+chat.account.change.close_chat=§r §7CMD §8» §7Cierra el chat: se abrirá el formulario para cambiar la contraseña
 chat.account.reset=§r⩉ §9Cuenta §8» §7El dueño restableció tu contraseña. Elige una nueva: ahora se abrirá el registro.
 chat.account.reset.staff=§r §7CMD §8» §7El dueño §f%1$s§r§7 restableció la contraseña de §f%2$s
 

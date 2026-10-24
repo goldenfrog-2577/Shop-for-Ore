@@ -154,13 +154,13 @@ menu.howtoplay.line.11=§r§7Ребітх — це перепроходженн�
 menu.howtoplay.line.12=Відкривається ребітх після 16 
 menu.howtoplay.line.13=Прокачується у Меню »  Прокачка
 menu.howtoplay.line.14=§r§l§7 Що означають смайлики зліва збоку?
-menu.howtoplay.line.15=§r§7 — твій Нікнейм (ім'я у грі)
-menu.howtoplay.line.16=§r — ваші Гроші / Монети / Коїни
-menu.howtoplay.line.17=§r — ваші VIP коїни / монети
-menu.howtoplay.line.18=§r — твій Рівень і який  наступний
-menu.howtoplay.line.19=§r — твій Досвід / XP і скільки  до наступного 
-menu.howtoplay.line.20=§r — твій Ребітх, особливість: поспіх
-menu.howtoplay.line.21=§r — поточний Онлайн сервера
+menu.howtoplay.line.15=§r§7 — твій Нікнейм (ім'я у грі)
+menu.howtoplay.line.16=§r§7 — ваші Гроші / Монети / Коїни
+menu.howtoplay.line.17=§r§7 — ваші VIP коїни / монети
+menu.howtoplay.line.18=§r§7 — твій Рівень і який §r§7 наступний
+menu.howtoplay.line.19=§r§7 — твій Досвід / XP і скільки §r§7 до наступного §r§7
+menu.howtoplay.line.20=§r§7 — твій Ребітх, особливість: поспіх
+menu.howtoplay.line.21=§r§7 — поточний Онлайн сервера
 
 menu.creators.title=§l§8Меню сервера » §f⩇§8 Творці
 
@@ -307,6 +307,7 @@ chat.account.error.password_length=§r⩕ §l§cERROR!§r §8» §7Пароль 
 chat.account.changed=§r⩉ §9Акаунт §8» §7Пароль змінено.
 chat.account.error.mismatch=§r⩕ §l§cERROR!§r §8» §7Нові паролі не збігаються
 chat.account.error.locked=§r⩕ §l§cERROR!§r §8» §7Забагато невдалих спроб. Спробуй знову через §e%1$s§7 с
+chat.account.change.close_chat=§r §7CMD §8» §7Закрий чат — відкриється форма зміни пароля
 chat.account.reset=§r⩉ §9Акаунт §8» §7Власник скинув твій пароль. Придумай новий — зараз відкриється реєстрація.
 chat.account.reset.staff=§r §7CMD §8» §7Власник §f%1$s§r§7 скинув пароль гравцю §f%2$s
 
