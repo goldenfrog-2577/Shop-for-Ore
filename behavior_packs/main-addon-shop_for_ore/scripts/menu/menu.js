@@ -196,7 +196,7 @@ function enchants(player) {
 		'textures/items/book_enchanted')
 	.button('%menu.shop.enchants.button.fortune\n§810.0K ',
 		'textures/items/book_enchanted')
-	// Меч, лук, броня: зачарования для предмета в руке (menu/enchant_shop.js)
+	// Меч, лук, броня из инвентаря (menu/enchant_shop.js)
 	.button('%menu.shop.enchants.button.item\n%menu.shop.enchants.button.item_hint',
 		'textures/items/diamond_sword')
 	.button('%menu.common.back');

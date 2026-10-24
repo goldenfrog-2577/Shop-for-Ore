@@ -1,5 +1,7 @@
-// --- Магазин → Зачарования → «Предмет в руке»: зачарования для меча, лука и брони ---
-// Покупка повышает уровень одного зачарования на предмете в руке на 1 (до ванильного максимума —
+// --- Магазин → Зачарования → «Меч, лук, броня»: зачарования для предметов из инвентаря ---
+// Меню открывается предметом server:menu, поэтому «в руке» всегда само меню: предмет выбирается из инвентаря.
+// Надетая броня в 1.19.50 скриптам недоступна — её надо снять в инвентарь.
+// Покупка повышает уровень одного зачарования на выбранном предмете на 1 (до ванильного максимума —
 // чтобы античит не посчитал предмет читерским). Цена уровня = базовая цена × новый уровень.
 // Кирку уровня здесь не зачаровать: у неё свои «Эффективность» и «Удача» (scoreboard, timers/t20).
 
@@ -24,13 +26,27 @@ export const ITEM_ENCHANTS = [
 
 export const priceFor = (e, level) => e.price * level;
 
-/** Предмет в руке: { container, slot, item } или undefined. */
-function heldItem(player) {
+/** Предмет в слоте инвентаря: { container, item } или undefined. */
+function itemAt(player, slot) {
 	const container = player.getComponent('inventory').container;
-	const slot = player.selectedSlot;
 	const item = container.getItem(slot);
-	return item ? { container, slot, item } : undefined;
+	return item ? { container, item } : undefined;
 }
+
+/** Предметы инвентаря, которые можно зачаровать здесь: [{ slot, item }]. */
+export function enchantableItems(player) {
+	const container = player.getComponent('inventory').container;
+	const out = [];
+	for (let slot = 0; slot < container.size; slot++) {
+		const item = container.getItem(slot);
+		if (item && optionsFor(item).length) out.push({ slot, item });
+	}
+	return out;
+}
+
+const shortId = (typeId) => typeId.replace('minecraft:', '');
+// Иконка предмета: textures/items/<id>, у золотых и деревянных в ванили другие имена файлов
+const itemIcon = (typeId) => `textures/items/${shortId(typeId).replace(/^golden_/, 'gold_').replace(/^wooden_/, 'wood_').replace(/^bow$/, 'bow_standby')}`;
 
 /**
  * Что можно купить для предмета: [{ e, level (текущий), next (или undefined, если максимум) }].
@@ -53,9 +69,9 @@ export function optionsFor(item) {
 
 /** Купить следующий уровень. @returns {boolean} куплено */
 export function buyEnchant(player, slot, typeId, enchantId) {
-	const held = heldItem(player);
-	// Пока окно было открыто, предмет в руке сменили — ничего не делаем
-	if (!held || held.slot !== slot || held.item.typeId !== typeId) {
+	const held = itemAt(player, slot);
+	// Пока окно было открыто, предмет в этом слоте сменили или переложили — ничего не делаем
+	if (!held || held.item.typeId !== typeId) {
 		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.shop.item_enchant.error.changed"}]}');
 		return false;
 	}
@@ -76,25 +92,42 @@ export function buyEnchant(player, slot, typeId, enchantId) {
 	if (opt.level > 0) list.removeEnchantment(type);
 	if (!list.addEnchantment(new Enchantment(type, opt.next))) return false;
 	comp.enchantments = list;
-	held.container.setItem(held.slot, held.item);
+	held.container.setItem(slot, held.item);
 	run(player, `scoreboard players remove @s money ${price}`);
 	run(player, `tellraw @s ${rawTranslateRich('chat.shop.item_enchant.done', { translate: opt.e.name }, { translate: `enchantment.level.${opt.next}` }, String(price))}`);
 	return true;
 }
 
-/** Окно зачарований для предмета в руке. back — вернуться в «Зачарования». */
+/** Выбор предмета из инвентаря. back — вернуться в «Зачарования». */
 export function itemEnchants(player, back) {
-	const held = heldItem(player);
-	const options = held ? optionsFor(held.item) : [];
-	if (!options.length) {
+	const items = enchantableItems(player);
+	if (!items.length) {
 		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.shop.item_enchant.error.item"}]}');
 		return;
 	}
-	const { slot } = held;
+	// Один подходящий предмет — сразу к нему
+	if (items.length === 1) return itemEnchantMenu(player, items[0].slot, () => back());
+	const form = new ActionFormData()
+		.title('%menu.shop.item_enchants.title')
+		.body('%menu.shop.item_enchants.choose');
+	for (const { item } of items) form.button(`%item.${shortId(item.typeId)}.name`, itemIcon(item.typeId));
+	form.button('%menu.common.back');
+	form.show(player).then(r => {
+		if (closedByPlayer(r) || r.selection === items.length) return back();
+		const chosen = items[r.selection];
+		if (chosen) itemEnchantMenu(player, chosen.slot, () => itemEnchants(player, back));
+	});
+}
+
+/** Зачарования для предмета в слоте. back — к выбору предмета. */
+function itemEnchantMenu(player, slot, back) {
+	const held = itemAt(player, slot);
+	const options = held ? optionsFor(held.item) : [];
+	if (!options.length) return back();
 	const typeId = held.item.typeId;
 	const form = new ActionFormData()
 		.title('%menu.shop.item_enchants.title')
-		.body(`%menu.shop.item_enchants.item %item.${typeId.replace('minecraft:', '')}.name\n\n%menu.shop.item_enchants.body`);
+		.body(`%menu.shop.item_enchants.item %item.${shortId(typeId)}.name\n\n%menu.shop.item_enchants.body`);
 	for (const o of options) {
 		form.button(o.next === undefined
 			? `%${o.e.name} %enchantment.level.${o.level}\n%menu.shop.item_enchants.max`
@@ -107,6 +140,6 @@ export function itemEnchants(player, back) {
 		const o = options[r.selection];
 		if (!o) return;
 		// После покупки окно открывается снова — удобно поднять несколько уровней подряд
-		if (buyEnchant(player, slot, typeId, o.e.id)) itemEnchants(player, back);
+		if (buyEnchant(player, slot, typeId, o.e.id)) itemEnchantMenu(player, slot, back);
 	});
 }
