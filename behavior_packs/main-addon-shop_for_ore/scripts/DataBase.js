@@ -198,7 +198,7 @@ export const ROLES = ['player', 'moder', 'admin', 'owner'];
 export const ROLE_COLORS = { player: '§f', moder: '§9', admin: '§c', owner: '§4' };
 
 // Цвет ника и префикса бота карты
-export const BOT_COLOR = '§b';
+export const BOT_COLOR = '§7';
 
 /**
  * Роль игрока: 'player' | 'moder' | 'admin' | 'owner'.
