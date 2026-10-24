@@ -11,6 +11,7 @@ import { isPending, rawTranslate, closedByPlayer, hasRole, getRole, getScore, ge
 import { runChatCommand } from '../chat/commands.js';
 import { sendChatMessage } from '../chat/chat.js';
 import { getBot, getBotName, setBotName, spawnBot, removeBot } from '../system/spawnbot.js';
+import { giveMythicChest } from '../system/mythic.js';
 
 const BACK_ICON = 'textures/ui/icon_import';
 // Заголовок «Предупреждение» со знаком «!» из шрифта карты (glyph_E1)
@@ -20,9 +21,9 @@ const ROLE_GLYPHS = { player: '\ue137', moder: '\ue131', admin: '\ue130' };
 // Значок опыта, как у бустов в магазине
 const XP_GLYPH = '\ue154';
 const OPEN = '\n%menu.common.tap_to_open';
-const EVENTS = ['haste', 'rain', 'gift'];
-// Как часто срабатывают ивенты по таймеру (минуты): timers/t3600, t6000, t4800
-const EVENT_PERIOD = { haste: 3, rain: 5, gift: 4 };
+const EVENTS = ['haste', 'rain', 'gift', 'mythic'];
+// Как часто срабатывают ивенты по таймеру (минуты): timers/t3600, t6000, t4800, мистик — system/mythic.js
+const EVENT_PERIOD = { haste: 3, rain: 5, gift: 4, mythic: 10 };
 
 // --- Открытие админ-меню по использованию специального предмета ---
 world.events.beforeItemUse.subscribe(data => {
@@ -182,6 +183,8 @@ function tools(player) {
 		{ text: '%admin.tools.button.hologram_egg', icon: 'textures/items/floating_text', run: give('server:floating_text_spawn_egg') },
 		{ text: '%admin.tools.button.admin_stick', icon: 'textures/items/stick', run: give('server:admin_stick') },
 		{ text: '%admin.tools.button.name_tag', icon: 'textures/items/name_tag', run: give('name_tag 16') },
+		// Сундук с именем мистика — поставить в центр PvP-арены (x 300, z 300) вместо обычного
+		{ text: '%admin.tools.button.mythic_chest', icon: 'textures/blocks/ender_chest_front', run: () => giveMythicChest(player) },
 		// Очистка всего инвентаря — теперь с подтверждением
 		{ text: '%admin.tools.button.clear_inventory', icon: 'textures/ui/cancel', run: () => confirm(player, WARN_TITLE, '%admin.tools.clear.body', () => player.runCommandAsync('clear @s'), () => tools(player)) },
 		back(() => admin_menu(player))

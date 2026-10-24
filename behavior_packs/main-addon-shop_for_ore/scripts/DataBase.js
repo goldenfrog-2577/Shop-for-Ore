@@ -425,7 +425,7 @@ export const commandsList = [
 		role: 'admin'
 	},
 	{
-		command: "!event §7<§fhaste§8/§frain§8/§fgift§7>",
+		command: "!event §7<§fhaste§8/§frain§8/§fgift§8/§fmythic§7>",
 		description: "%chat.help.event",
 		role: 'admin'
 	},
