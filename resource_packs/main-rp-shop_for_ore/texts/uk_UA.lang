@@ -488,6 +488,7 @@ chat.admin.bot.renamed=§r §7CMD §8» §7Ім'я бота: §f%1$s
 chat.admin.bot.error.name=§r⩕ §l§cERROR!§r §8» §7Ім'я бота: від 3 до 16 символів — латинські літери, цифри, _ і пробіл
 chat.admin.bot.error.absent=§r⩕ §l§cERROR!§r §8» §7Бота немає у світі
 chat.admin.bot.error.present=§r⩕ §l§cERROR!§r §8» §7Бот §f%1$s§r§7 уже у світі. Керування ботом — у меню адміна
+chat.cmd.bot.settings=§r §7CMD §8» §7Закрий чат — відкриється вікно керування ботом
 chat.server.wiped=§r §cСервер §8» §7Статистику всіх гравців скинуто
 
 ## --- СИСТЕМНІ ТА РІВНЕВІ ПОВІДОМЛЕННЯ ---
@@ -582,7 +583,7 @@ chat.help.online=§7Показує гравців у мережі
 chat.help.report=§7Надсилає скаргу на гравця модераторам
 chat.help.rules=§7Показує правила сервера
 chat.help.password=§7Змінює твій пароль
-chat.help.bot=§7Призиває бота
+chat.help.bot=§7Призиває бота; §esettings§7 — вікно керування ботом
 chat.help.stick=§7Видає §cПалочку адміна
 chat.help.money=§7Змінює баланс гравця
 chat.help.event=§7Запускає івент одразу

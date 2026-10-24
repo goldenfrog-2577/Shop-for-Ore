@@ -7,6 +7,7 @@ import { teleportToArena, combatSecondsLeft } from '../system/pvp.js';
 import { startMythic } from '../system/mythic.js';
 import { ChangePasswordUI, resetPassword } from '../register/change.js';
 import { freezePlayer, unfreezePlayer } from '../system/freeze.js';
+import { botMenu } from '../menu/admin_menu.js';
 
 // --- Общие помощники команд ---
 
@@ -427,6 +428,12 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case "bot": {
+			// !bot settings — окно управления ботом (как в меню администратора); откроется после закрытия чата
+			if ((args[0] || '').toLowerCase() === 'settings') {
+				run(player, 'tellraw @s {"rawtext":[{"translate":"chat.cmd.bot.settings"}]}');
+				botMenu(player);
+				break;
+			}
 			// Призвать бота к себе (второй раз — не призывается: бот уже в мире). Управление ботом — в меню администратора
 			const bot = getBot();
 			if (bot) {
