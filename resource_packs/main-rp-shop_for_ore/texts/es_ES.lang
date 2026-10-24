@@ -192,7 +192,6 @@ menu.shop.enchants.body2=§7Espadas, arcos y armaduras se toman del inventario: 
 menu.shop.enchants.button.pickaxe=§8Pico de nivel
 menu.shop.enchants.pickaxe.title=§l§8 Tienda » Pico de nivel
 menu.shop.enchants.pickaxe.body=§7Los encantamientos del pico de nivel se conservan al cambiar de pico; el renacimiento los reinicia. Elige un encantamiento:
-menu.shop.item_enchants.title=§l§8 Tienda » Encantamientos del objeto
 menu.shop.item_enchants.item=§7Objeto:§f
 menu.shop.item_enchants.current=§7Ahora:§f
 menu.shop.item_enchants.none=sin encantamientos
@@ -316,7 +315,7 @@ admin.main.button.boosts=§8Potenciadores y eventos
 admin.main.button.server=§8Servidor
 
 ## --- ADMIN: MODOS DE JUEGO ---
-admin.gamemode.title=§l§8Menú de admin » Modo de juego
+admin.gamemode.title=§l§8Admin » Modo de juego
 admin.gamemode.body=§7Lista de modos de juego:
 admin.gamemode.button.creative=§8Creativo
 admin.gamemode.button.adventure=§8Aventura
@@ -325,7 +324,7 @@ admin.gamemode.button.fly_on=§8Activar vuelo
 admin.gamemode.button.fly_off=§8Desactivar vuelo
 
 ## --- ADMIN: HORA ---
-admin.time.title=§l§8Menú de admin » Establecer hora
+admin.time.title=§l§8Admin » Establecer hora
 admin.time.body=§7Elige la hora a establecer:
 admin.time.button.sunrise=§8Amanecer
 admin.time.button.day=§8Día
@@ -335,7 +334,7 @@ admin.time.button.night=§8Noche
 admin.time.button.midnight=§8Medianoche
 
 ## --- ADMIN: TELETRANSPORTES ---
-admin.warps.title=§l§8Menú de admin » Teletransportes
+admin.warps.title=§l§8Admin » Teletransportes
 admin.warps.body=§7Lista de teletransportes:
 admin.warps.button.mine=§8Mina (niv. 1–15)
 admin.warps.button.mine_2=§8Mina (niv. 16–25)
@@ -346,7 +345,7 @@ admin.warps.button.spleef=§8Spleef
 admin.warps.button.random_player=§8/tp a @r
 
 ## --- ADMIN: EFECTOS ---
-admin.effects.title=§l§8Menú de admin » Efectos
+admin.effects.title=§l§8Admin » Efectos
 admin.effects.body=§7Lista de efectos:
 admin.effects.button.invisibility=§8Invisibilidad
 admin.effects.button.resistance=§8Resistencia
@@ -363,7 +362,7 @@ admin.effects.button.slow_falling=§8Caída lenta
 admin.effects.button.clear=§8Limpiar efectos
 
 ## --- ADMIN: HERRAMIENTAS ---
-admin.tools.title=§l§8Menú de admin » Herramientas
+admin.tools.title=§l§8Admin » Herramientas
 admin.tools.body=§7Elige lo que necesitas:
 admin.tools.button.command_block=§5Bloque de comandos
 admin.tools.button.repeating_command_block=§5Bloque de comandos de repetición
@@ -385,7 +384,7 @@ admin.tools.button.clear_inventory=§8Limpiar inventario
 admin.tools.clear.body=§7Se vaciará todo tu inventario. ¿Estás seguro/a?
 
 ## --- ADMIN: ANUNCIOS ---
-admin.announce.title=§l§8Menú de admin » Anuncios
+admin.announce.title=§l§8Admin » Anuncios
 admin.announce.body=§7Escribe abajo lo que quieras decir. Lo verá todo el servidor.
 admin.announce.placeholder=§7Escribe el texto...
 
@@ -395,7 +394,7 @@ admin.wipe.body=§7El wipe reiniciará todas las estadísticas, pero no afectar�
 admin.wipe.button.yes=§2Sí
 admin.wipe.button.no=§4No
 chat.admin.error.no_players=§r⩕ §l§cERROR!§r §8» §7No hay jugadores sin rol a los que teletransportarse
-admin.players.title=§l§8Menú de admin » Jugadores
+admin.players.title=§l§8Admin » Jugadores
 admin.players.choose=§7Elige un jugador:
 admin.players.body.name=§7Jugador:§f
 admin.players.body.role=§7Rol:
@@ -415,33 +414,33 @@ admin.players.button.unmute=§8Quitar silencio
 admin.players.button.warn=§8Advertencia
 admin.players.button.kick=§8Expulsar
 admin.players.button.role=§8Rol
-admin.players.money.title=§l§8Menú de admin » Monedas
+admin.players.money.title=§l§8Admin » Monedas
 admin.players.money.action=§7Acción:
 admin.players.money.add=Dar
 admin.players.money.take=Quitar
 admin.players.money.set=Establecer
 admin.players.money.amount=§7Cantidad:
-admin.players.mute.title=§l§8Menú de admin » Silencio
+admin.players.mute.title=§l§8Admin » Silencio
 admin.players.mute.minutes=§7Duración:
-admin.players.warn.title=§l§8Menú de admin » Advertencia
-admin.players.kick.title=§l§8Menú de admin » Expulsar
+admin.players.warn.title=§l§8Admin » Advertencia
+admin.players.kick.title=§l§8Admin » Expulsar
 admin.players.reason=§7Motivo:
 admin.players.reason_optional=§7Motivo (opcional):
 admin.players.reason_placeholder=§7Escribe el motivo...
-admin.players.role.title=§l§8Menú de admin » Rol
+admin.players.role.title=§l§8Admin » Rol
 admin.players.role.choose=§7Nuevo rol:
-admin.boosts.title=§l§8Menú de admin » Potenciadores y eventos
+admin.boosts.title=§l§8Admin » Potenciadores y eventos
 admin.boosts.body=§7Un potenciador desde aquí es gratis y se aplica a todos.
 admin.boosts.button.boost=§8Iniciar potenciador
 admin.boosts.button.event=§8Evento:
 admin.boosts.button.auto=§8Eventos programados
-admin.boosts.boost.title=§l§8Menú de admin » Potenciador
+admin.boosts.boost.title=§l§8Admin » Potenciador
 admin.boosts.boost.type=§7Potenciador:
 admin.boosts.boost.minutes=§7Minutos
-admin.boosts.auto.title=§l§8Menú de admin » Eventos programados
+admin.boosts.auto.title=§l§8Admin » Eventos programados
 admin.boosts.auto.every=§7cada
 chat.admin.auto_events.saved=§r §7CMD §8» §7Ajustes de eventos programados guardados
-admin.server.title=§l§8Menú de admin » Servidor
+admin.server.title=§l§8Admin » Servidor
 admin.server.online=§7Jugadores en línea:
 admin.server.staff=§7Dueño y administradores:
 admin.server.moders=§7Moderadores:
@@ -454,7 +453,7 @@ admin.server.button.online=§8Quién está en línea
 admin.server.button.top_money=§8Top por monedas
 admin.server.button.top_lvl=§8Top por nivel
 admin.server.button.top_rebirth=§8Top por renacimientos
-admin.bot.title=§l§8Menú de admin » Bot
+admin.bot.title=§l§8Admin » Bot
 admin.bot.name=§7Nombre del bot:
 admin.bot.present=§aEl bot está en el mundo
 admin.bot.absent=§8El bot no está en el mundo
@@ -464,9 +463,9 @@ admin.bot.button.rename=§8Renombrar
 admin.bot.button.tp_here=§8Traer hasta mí
 admin.bot.button.tp_to=§8Ir hasta el bot
 admin.bot.button.say=§8Escribir como el bot
-admin.bot.rename.title=§l§8Menú de admin » Nombre del bot
+admin.bot.rename.title=§l§8Admin » Nombre del bot
 admin.bot.rename.body=§7Nuevo nombre: de 3 a 16 caracteres — letras latinas, números, _ y espacio. Si el bot está en el mundo, reaparecerá con el nuevo nombre.
-admin.bot.say.title=§l§8Menú de admin » Mensaje del bot
+admin.bot.say.title=§l§8Admin » Mensaje del bot
 chat.admin.bot.spawned=§r §7CMD §8» §7Bot §f%1$s§r§7 invocado
 chat.admin.bot.removed=§r §7CMD §8» §7Bot §f%1$s§r§7 quitado del mundo
 chat.admin.bot.renamed=§r §7CMD §8» §7Nombre del bot: §f%1$s

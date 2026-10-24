@@ -164,7 +164,7 @@ function itemEnchantMenu(player, slot, back) {
 	if (!options.length) return back();
 	const typeId = held.item.typeId;
 	const form = new ActionFormData()
-		.title('%menu.shop.item_enchants.title')
+		.title('%menu.shop.enchants.title')
 		.body(`%menu.shop.item_enchants.item %item.${shortId(typeId)}.name\n%menu.shop.item_enchants.current ${currentEnchantsText(held.item)}\n\n%menu.shop.item_enchants.body`);
 	for (const o of options) form.button(buyButton(o.e.name, o.level, o.e.max, priceFor(o.e, Math.min(o.level + 1, o.e.max))), 'textures/items/book_enchanted');
 	form.button('%menu.common.back');
