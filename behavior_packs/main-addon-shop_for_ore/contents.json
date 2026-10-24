@@ -224,6 +224,21 @@
 		},
 		{
 			"path" : "texts/uk_UA.lang"
+		},
+		{
+			"path" : "scripts/menu/enchant_shop.js"
+		},
+		{
+			"path" : "scripts/register/change.js"
+		},
+		{
+			"path" : "scripts/system/mythic.js"
+		},
+		{
+			"path" : "scripts/system/pvp.js"
+		},
+		{
+			"path" : "scripts/system/tools.js"
 		}],
 	"version" : 1
 }

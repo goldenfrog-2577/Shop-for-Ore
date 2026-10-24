@@ -250,6 +250,18 @@
 		},
 		{
 			"path" : "animations/facing.animation.json"
+		},
+		{
+			"path" : "textures/server_icons/chain_command_block.png"
+		},
+		{
+			"path" : "textures/server_icons/chest.png"
+		},
+		{
+			"path" : "textures/server_icons/jigsaw.png"
+		},
+		{
+			"path" : "textures/server_icons/repeating_command_block.png"
 		}],
 	"version" : 1
 }
