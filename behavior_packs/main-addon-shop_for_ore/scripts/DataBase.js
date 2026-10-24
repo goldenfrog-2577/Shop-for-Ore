@@ -100,12 +100,92 @@ export function rawText(text) {
 };
 
 /**
+ * Форму закрыл сам игрок (крестик или «Назад» на телефоне), а не движок: при userBusy
+ * (открыт чат или другое окно) форма тоже отменяется, но возвращать в меню нельзя — получится цикл.
+ * @param {{ canceled?: boolean, cancelationReason?: string }} response
+ * @returns {boolean}
+ */
+export function closedByPlayer(response) {
+	return !!response.canceled && response.cancelationReason !== 'userBusy';
+};
+
+/**
  * Игрок ещё не вошёл в аккаунт (ждёт логина или регистрации).
  * @param {Player} player
  * @returns {boolean}
  */
 export function isPending(player) {
 	return player.hasTag('chekLogin') || player.hasTag('chekRegister');
+};
+
+/**
+ * Перевод денег (табло money) другому игроку в сети — общий для меню банка и !pay.
+ * Сумма — целое положительное число (строка из формы или чата). Сначала списание у отправителя,
+ * зачисление — только если списание прошло. Ошибки сообщает отправителю.
+ * @param {Player} player — отправитель
+ * @param {string} targetName — ник получателя
+ * @param {string} rawAmount — сумма как ввёл игрок
+ * @returns {boolean} — перевод начат
+ */
+export function transferMoney(player, targetName, rawAmount) {
+	const raw = String(rawAmount ?? '').trim();
+	const amount = Number(raw);
+	// Целое положительное в пределах табло (дробная или огромная сумма «уходила» только в сообщении)
+	if (!/^\d+$/.test(raw) || !Number.isSafeInteger(amount) || amount <= 0 || amount > 2147483647) {
+		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.amount"}]}');
+		return false;
+	}
+	if (String(targetName).toLowerCase() === player.name.toLowerCase()) {
+		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.self"}]}');
+		return false;
+	}
+	// Получатель должен быть в сети: иначе деньги ушли бы «фейковому игроку» с его ником
+	const target = findPlayer(targetName);
+	if (!target) {
+		run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', targetName)}`);
+		return false;
+	}
+	if (getScore(player, "money") < amount) {
+		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.no_money"}]}');
+		return false;
+	}
+	run(player, `scoreboard players remove @s money ${amount}`).then((res) => {
+		if (res === undefined) return;
+		run(target, `scoreboard players add @s money ${amount}`);
+		run(player, `tellraw @s ${rawTranslate('chat.bank.sent', target.name, amount)}`);
+		run(target, `tellraw @s ${rawTranslate('chat.bank.received', player.name, amount)}`);
+		run(player, 'playsound note.bell @s');
+	});
+	return true;
+};
+
+// --- Наказания: мут, предупреждения, заморозка (хранятся тегами — переживают перезаход) ---
+// mute:<время окончания в мс>, warn:<1|2>, frozen
+
+/**
+ * Сколько ещё минут игрок в муте (0 — не в муте). Истёкший мут снимается.
+ * @param {Player} player
+ * @returns {number}
+ */
+export function muteMinutesLeft(player) {
+	const tag = player.getTags().find(t => t.startsWith('mute:'));
+	if (!tag) return 0;
+	const left = Number(tag.slice(5)) - Date.now();
+	if (!(left > 0)) {
+		player.removeTag(tag);
+		return 0;
+	}
+	return Math.ceil(left / 60000);
+};
+
+/**
+ * Число предупреждений игрока (тег warn:N).
+ * @param {Player} player
+ * @returns {number}
+ */
+export function getWarns(player) {
+	const tag = player.getTags().find(t => t.startsWith('warn:'));
+	return tag ? Number(tag.slice(5)) || 0 : 0;
 };
 
 // --- Роли: уровни доступа к командам и меню ---
@@ -115,7 +195,10 @@ export function isPending(player) {
 export const ROLES = ['player', 'moder', 'admin', 'owner'];
 
 // Цвет ника по роли (в чате и над головой), если у игрока нет своего тега name:
-export const ROLE_COLORS = { player: '§f', moder: '§b', admin: '§c', owner: '§4' };
+export const ROLE_COLORS = { player: '§f', moder: '§9', admin: '§c', owner: '§4' };
+
+// Цвет ника и префикса бота карты
+export const BOT_COLOR = '§f';
 
 /**
  * Роль игрока: 'player' | 'moder' | 'admin' | 'owner'.
@@ -123,6 +206,8 @@ export const ROLE_COLORS = { player: '§f', moder: '§b', admin: '§c', owner: '
  * @returns {string}
  */
 export function getRole(player) {
+	// Бот карты (тег bot) — всегда без роли: прав у него нет, в чате у него свой префикс «Бот»
+	if (player.hasTag('bot')) return 'player';
 	if (player.hasTag('host')) return 'owner';
 	if (player.hasTag('role:admin')) return 'admin';
 	if (player.hasTag('role:moder')) return 'moder';
@@ -174,17 +259,42 @@ export const emotes = {
 	":rebirth:": "\ue151"
 };
 
-// Список команд: описание для !help и минимальная роль (см. ROLES)
+// --- Точки телепортации для !warp ---
+// role — с какой роли точка доступна себе; отправить другого игрока — модератор и выше
+// (и не ниже роли точки). mine — шахта по уровню игрока, как кнопка «Спавн» в меню телепортаций.
+export const WARPS = [
+	{ id: 'spawn', role: 'player', pos: [0, 2, 0] },
+	{ id: 'mine', role: 'player', pos: (p) => {
+		const lvl = getScore(p, 'lvl');
+		if (lvl >= 26) return [-60, 5, -60];
+		if (lvl >= 16) return [0, 5, -33];
+		return [0, 5, 0];
+	} },
+	{ id: 'minigames', role: 'player', pos: [-109, 5, -60] },
+	// Арена: случайная точка площадки (system/pvp.js), чтобы игроки не появлялись друг у друга
+	{ id: 'pvp', role: 'player', arena: true },
+	{ id: 'spleef', role: 'player', pos: [500, 3, 500] },
+	{ id: 'vip', role: 'admin', pos: [-60, 5, -60] },
+	{ id: 'cmd', role: 'admin', pos: [50, 5, 50] }
+];
+
+// Список команд: описание для !help и минимальная роль (см. ROLES).
+// Порядок = порядок в !help: по ролям (игрок → владелец), внутри роли — по смыслу
 export const commandsList = [
-	// ===== Игрок =====
+	// ===== Игрок: справка и общение =====
 	{
-		command: "!help",
+		command: "!help §7[§fcommand§7]",
 		description: "%chat.help.help",
 		role: 'player'
 	},
 	{
-		command: "!spawn",
-		description: "%chat.help.spawn",
+		command: "!rules",
+		description: "%chat.help.rules",
+		role: 'player'
+	},
+	{
+		command: "!password",
+		description: "%chat.help.password",
 		role: 'player'
 	},
 	{
@@ -197,78 +307,175 @@ export const commandsList = [
 		description: "%chat.help.msg",
 		role: 'player'
 	},
-
-	// ===== Модератор: порядок в чате и мире =====
 	{
-		command: "!tp §7<§fplayer§7>",
+		command: "!r §7<§fmessage§7>",
+		description: "%chat.help.r",
+		role: 'player'
+	},
+	{
+		command: "!clearchat §7[§fall§7]",
+		description: "%chat.help.clearchat",
+		role: 'player'
+	},
+
+	// ===== Игрок: деньги и статистика =====
+	{
+		command: "!balance",
+		description: "%chat.help.balance",
+		role: 'player'
+	},
+	{
+		command: "!pay §7<§fplayer§7> <§famount§7>",
+		description: "%chat.help.pay",
+		role: 'player'
+	},
+	{
+		command: "!stats §7[§fplayer§7]",
+		description: "%chat.help.stats",
+		role: 'player'
+	},
+	{
+		command: "!top §7[§fmoney§8/§flvl§8/§frebirth§7]",
+		description: "%chat.help.top",
+		role: 'player'
+	},
+	{
+		command: "!online",
+		description: "%chat.help.online",
+		role: 'player'
+	},
+
+	// ===== Игрок: прочее =====
+	{
+		command: "!warp §7[§fpoint§7] [§fplayer§7]",
+		description: "%chat.help.warp",
+		role: 'player'
+	},
+	{
+		command: "!report §7<§fplayer§7> <§freason§7>",
+		description: "%chat.help.report",
+		role: 'player'
+	},
+
+	// ===== Модератор: наказания =====
+	{
+		command: "!kick §7<§fplayer§7> [§freason§7]",
+		description: "%chat.help.kick",
+		role: 'moder'
+	},
+	{
+		command: "!mute §7<§fplayer§7> <§fminutes§7> [§freason§7]",
+		description: "%chat.help.mute",
+		role: 'moder'
+	},
+	{
+		command: "!unmute §7<§fplayer§7>",
+		description: "%chat.help.unmute",
+		role: 'moder'
+	},
+	{
+		command: "!warn §7<§fplayer§7> <§freason§7>",
+		description: "%chat.help.warn",
+		role: 'moder'
+	},
+	{
+		command: "!freeze §7<§fplayer§7>",
+		description: "%chat.help.freeze",
+		role: 'moder'
+	},
+
+	// ===== Модератор: перемещение и наблюдение =====
+	{
+		command: "!tp §7<§fplayer§7> [§fplayer2§7]",
 		description: "%chat.help.tp",
 		role: 'moder'
 	},
 	{
-		command: "!invis §7<§fon§8/§foff§7>",
+		command: "!tphere §7<§fplayer§7>",
+		description: "%chat.help.tphere",
+		role: 'moder'
+	},
+	{
+		command: "!invis §7[§fon§8/§foff§7]",
 		description: "%chat.help.invis",
 		role: 'moder'
 	},
 	{
-		command: "!gm6",
+		command: "!gm6 §7[§fplayer§7]",
 		description: "%chat.help.gm6",
 		role: 'moder'
 	},
-	{
-		command: "!clearchat",
-		description: "%chat.help.clearchat",
-		role: 'moder'
-	},
-	{
-		command: "!kick §7<§fplayer§7> <§freason§7>",
-		description: "%chat.help.kick",
-		role: 'moder'
-	},
 
-	// ===== Администратор: режимы, мир, игроки =====
+	// ===== Администратор: режимы =====
 	{
-		command: "!gm1",
+		command: "!gm1 §7[§fplayer§7]",
 		description: "%chat.help.gm1",
 		role: 'admin'
 	},
 	{
-		command: "!gm2",
+		command: "!gm2 §7[§fplayer§7]",
 		description: "%chat.help.gm2",
 		role: 'admin'
 	},
 	{
-		command: "!fly §7<§fon§8/§foff§7>",
+		command: "!fly §7[§fon§8/§foff§7] [§fplayer§7]",
 		description: "%chat.help.fly",
 		role: 'admin'
 	},
+
+	// ===== Администратор: мир и сервер =====
 	{
-		command: "!timeset §7<§ftime§7>",
+		command: "!timeset §7<§ftime§8/§f0-24000§7>",
 		description: "%chat.help.timeset",
+		role: 'admin'
+	},
+	{
+		command: "!event §7<§fhaste§8/§frain§8/§fgift§8/§fmythic§7>",
+		description: "%chat.help.event",
+		role: 'admin'
+	},
+	{
+		command: "!boost §7<§fx2§8/§fx4§7> [§fminutes§7]",
+		description: "%chat.help.boost",
+		role: 'admin'
+	},
+	{
+		command: "!say §7<§fmessage§7>",
+		description: "%chat.help.say",
+		role: 'admin'
+	},
+
+	// ===== Администратор: игроки и данные =====
+	{
+		command: "!money §7<§fplayer§7> <§fadd§8/§ftake§8/§fset§7> <§famount§7>",
+		description: "%chat.help.money",
+		role: 'admin'
+	},
+	{
+		command: "!scoreboard §7<§fplayer§7> <§fadd§8/§fremove§8/§fset§8/§fget§7> <§fobjective§7> [§famount§7]",
+		description: "%chat.help.scoreboard",
+		role: 'admin'
+	},
+	{
+		command: "!tag §7<§fplayer§7> <§fadd§8/§fremove§8/§flist§7> [§ftag§7]",
+		description: "%chat.help.tag",
+		role: 'admin'
+	},
+	{
+		command: "!prefix §7<§fplayer§7> <§fset§8/§ftake§8/§flist§8/§fclear§7> [§fprefix§7]",
+		description: "%chat.help.prefix",
+		role: 'admin'
+	},
+
+	// ===== Администратор: предметы и бот =====
+	{
+		command: "!stick §7[§fplayer§7]",
+		description: "%chat.help.stick",
 		role: 'admin'
 	},
 	{
 		command: "!bot",
 		description: "%chat.help.bot",
-		role: 'admin'
-	},
-	{
-		command: "!stick",
-		description: "%chat.help.stick",
-		role: 'admin'
-	},
-	{
-		command: "!prefix §7<§fplayer§7> <§fset§8/§ftake§7> <§fprefix§7>",
-		description: "%chat.help.prefix",
-		role: 'admin'
-	},
-	{
-		command: "!tag §7<§fplayer§7> <§fadd§8/§fremove§7> <§ftag§7>",
-		description: "%chat.help.tag",
-		role: 'admin'
-	},
-	{
-		command: "!scoreboard §7<§fplayer§7> <§fadd§8/§fremove§7> <§fobjective§7> <§famount§7>",
-		description: "%chat.help.scoreboard",
 		role: 'admin'
 	},
 
@@ -284,7 +491,12 @@ export const commandsList = [
 		role: 'owner'
 	},
 	{
-		command: "!wipe",
+		command: "!resetpass §7<§fplayer§7>",
+		description: "%chat.help.resetpass",
+		role: 'owner'
+	},
+	{
+		command: "!wipe §7[§fconfirm§7]",
 		description: "%chat.help.wipe",
 		role: 'owner'
 	}

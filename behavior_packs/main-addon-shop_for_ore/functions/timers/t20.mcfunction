@@ -1,8 +1,9 @@
 # Каждые 20 тиков (1 с). Вызывается из system/timers.
 scoreboard players set t20 timer 0
 # было: командный блок (56, 1, 58) и (56, 2, 58)
-execute if entity @e[name="X2Boost",scores={system=1..300}] run function boost/x2_tick
-execute if entity @e[name="X4Boost",scores={system=1..300}] run function boost/x4_tick
+# Диапазон 1.. (раньше 1..300): буст из !boost может длиться дольше 5 минут
+execute if entity @e[name="X2Boost",scores={system=1..}] run function boost/x2_tick
+execute if entity @e[name="X4Boost",scores={system=1..}] run function boost/x4_tick
 # было: командный блок (58, 5, 58)
 tag @a[tag=!player] add player
 # было: командный блок (58, 6, 58)
@@ -10,10 +11,10 @@ scoreboard players remove @e[name="rainEvent",scores={system=1..30}] system 1
 
 # Бусты общие: пока таймер стойки идёт, тег есть у всех онлайн (в том числе у зашедших позже),
 # иначе снимается (в том числе у тех, кто был офлайн в момент окончания буста)
-execute if entity @e[name="X2Boost",scores={system=1..300}] run tag @a[tag=!x2boost] add x2boost
-execute unless entity @e[name="X2Boost",scores={system=1..300}] run tag @a[tag=x2boost] remove x2boost
-execute if entity @e[name="X4Boost",scores={system=1..300}] run tag @a[tag=!x4boost] add x4boost
-execute unless entity @e[name="X4Boost",scores={system=1..300}] run tag @a[tag=x4boost] remove x4boost
+execute if entity @e[name="X2Boost",scores={system=1..}] run tag @a[tag=!x2boost] add x2boost
+execute unless entity @e[name="X2Boost",scores={system=1..}] run tag @a[tag=x2boost] remove x2boost
+execute if entity @e[name="X4Boost",scores={system=1..}] run tag @a[tag=!x4boost] add x4boost
+execute unless entity @e[name="X4Boost",scores={system=1..}] run tag @a[tag=x4boost] remove x4boost
 
 # Погода по «золотому дождю» (раньше — каждый тик в system/system)
 execute as @e[name="rainEvent",scores={system=1..30}] run weather rain

@@ -23,6 +23,8 @@ import './chat/commands.js'     // Команды чата
 import './system/anticheat.js'   // Античит
 import './system/spawnbot.js'    // Спавн бота
 import './system/tools.js'       // Неразрушаемая кирка уровня
+import './system/pvp.js'         // PvP-арена: случайная точка входа и режим боя
+import './system/mythic.js'      // Ивент «Мистик»: сундук с лутом в центре арены
 
 // Импорт загрузчика скриптов
 import './register/loadScript.js'

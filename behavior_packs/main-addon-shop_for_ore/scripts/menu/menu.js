@@ -3,7 +3,10 @@
 import { world } from '@minecraft/server';
 import { ActionFormData, ModalFormData } from '@minecraft/server-ui';
 import { bank } from './bank_menu.js';
-import { isPending, rawTranslate, tellText } from '../DataBase.js';
+import { combatSecondsLeft } from '../system/pvp.js';
+import { enchantsMenu } from './enchant_shop.js';
+import { ChangePasswordUI } from '../register/change.js';
+import { isPending, rawTranslate, tellText, closedByPlayer } from '../DataBase.js';
 
 // --- Открытие меню при использовании специального предмета ---
 world.events.beforeItemUse.subscribe(data => {
@@ -13,6 +16,12 @@ world.events.beforeItemUse.subscribe(data => {
 		if (isPending(player)) {
 			data.cancel = true;
 			player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.account.error.login_required"}]}`);
+			return;
+		}
+		// Замороженный игрок не может уйти варпом из меню
+		if (player.hasTag('frozen')) {
+			data.cancel = true;
+			player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.active"}]}`);
 			return;
 		}
 		menu(player)
@@ -64,6 +73,8 @@ function mapInfo(player) {
 	.button('%menu.about.button.version')
 	.button('%menu.common.back')
 	mapInfo.show(player).then(i => {
+		// Крестик — на уровень вверх
+		if (closedByPlayer(i)) return menu(player);
 		if (i.selection == 0) {
 			levelsInfo(player)
 		} else if (i.selection == 1) {
@@ -85,6 +96,8 @@ function levelsInfo(player) {
 	.body('%menu.levels.line.1\n%menu.levels.line.2\n%menu.levels.line.3\n%menu.levels.line.4\n%menu.levels.line.5\n%menu.levels.line.6\n%menu.levels.line.7\n%menu.levels.line.8\n%menu.levels.line.9\n%menu.levels.line.10\n%menu.levels.line.11\n%menu.levels.line.12\n%menu.levels.line.13\n%menu.levels.line.14\n%menu.levels.line.15\n%menu.levels.line.16\n%menu.levels.line.17\n%menu.levels.line.18\n%menu.levels.line.19\n%menu.levels.line.20\n%menu.levels.line.21\n%menu.levels.line.22\n%menu.levels.line.23\n%menu.levels.line.24\n%menu.levels.line.25')
 	.button('%menu.common.back')
 	levelsInfo.show(player).then(tb => {
+		// Крестик — на уровень вверх
+		if (closedByPlayer(tb)) return mapInfo(player);
 		if (tb.selection == 0) {
 			mapInfo(player)
 		}
@@ -98,6 +111,8 @@ function howtoplay(player) {
 	.body(' %menu.howtoplay.line.1\n%menu.howtoplay.line.2\n%menu.howtoplay.line.3\n%menu.howtoplay.line.4\n%menu.howtoplay.line.5\n\n %menu.howtoplay.line.6\n%menu.howtoplay.line.7\n%menu.howtoplay.line.8\n%menu.howtoplay.line.9\n\n %menu.howtoplay.line.10\n%menu.howtoplay.line.11\n%menu.howtoplay.line.12\n%menu.howtoplay.line.13\n\n%menu.howtoplay.line.14\n\n%menu.howtoplay.line.15\n\n%menu.howtoplay.line.16\n\n%menu.howtoplay.line.17\n\n%menu.howtoplay.line.18\n\n%menu.howtoplay.line.19\n\n%menu.howtoplay.line.20\n\n%menu.howtoplay.line.21')
 	.button('%menu.common.back')
 	howtoplay.show(player).then(tb => {
+		// Крестик — на уровень вверх
+		if (closedByPlayer(tb)) return mapInfo(player);
 		if (tb.selection == 0) {
 			mapInfo(player)
 		}
@@ -123,7 +138,9 @@ function mapCreator(player) {
 	.button('§2Хbox\n§8kapycta123#1484',
 		'textures/server_icons/xbox')
 	mapCreator.show(player).then(tb => {
-		// Все кнопки возвращают к информации о карте; крестик просто закрывает меню
+		// Крестик — на уровень вверх
+		if (closedByPlayer(tb)) return mapInfo(player);
+		// Все кнопки возвращают к информации о карте
 		if (tb.selection === undefined) return;
 		mapInfo(player)
 	});
@@ -136,6 +153,8 @@ function mapVersion(player) {
 	.body('%menu.version.line.1\n\n§r%menu.version.label §a0.3.0_dev§r\n%menu.version.line.2\n\n%menu.version.line.3\n%menu.version.line.4\n%menu.version.line.5\n%menu.version.line.6\n%menu.version.line.7\n%menu.version.line.8\n%menu.version.line.9\n%menu.version.line.10\n%menu.version.line.11\n%menu.version.line.12')
 	.button('%menu.common.back')
 	mapVersion.show(player).then(tb => {
+		// Крестик — на уровень вверх
+		if (closedByPlayer(tb)) return mapInfo(player);
 		if (tb.selection == 0) {
 			mapInfo(player)
 		}
@@ -155,6 +174,8 @@ function shop(player) {
 		'textures/items/experience_bottle')
 	.button('%menu.common.back')
 	shop.show(player).then(tb => {
+		// Крестик — на уровень вверх
+		if (closedByPlayer(tb)) return menu(player);
 		if (tb.selection == 0) {
 			enchants(player)
 		} else if (tb.selection == 1) {
@@ -167,25 +188,9 @@ function shop(player) {
 	});
 }
 
-// --- Покупка зачарований ---
+// --- Зачарования: кирка уровня, меч, лук, броня (menu/enchant_shop.js) ---
 function enchants(player) {
-	const enchants = new ActionFormData()
-	.title('%menu.shop.enchants.title')
-	.body('%menu.shop.enchants.body\n%menu.shop.enchants.note')
-	.button('%menu.shop.enchants.button.efficiency\n§825.0K ',
-		'textures/items/book_enchanted')
-	.button('%menu.shop.enchants.button.fortune\n§810.0K ',
-		'textures/items/book_enchanted')
-	.button('%menu.common.back');
-	enchants.show(player).then(tb => {
-		if (tb.selection == 0) {
-			player.runCommandAsync('function shop/enchants/efficiency');
-		} else if (tb.selection == 1) {
-			player.runCommandAsync('function shop/enchants/fortune');
-		} else if (tb.selection == 2) {
-			shop(player);
-		}
-	});
+	enchantsMenu(player, () => shop(player));
 }
 
 // --- PvP-наборы ---
@@ -201,6 +206,8 @@ function pvp_kits(player) {
 		'textures/items/netherite_chestplate')
 	.button('%menu.common.back')
 	pvp_kits.show(player).then(pvp => {
+		// Крестик — на уровень вверх
+		if (closedByPlayer(pvp)) return shop(player);
 		if (pvp.selection == 0) {
 			player.runCommandAsync('function shop/pvp_kits/iron')
 		} else if (pvp.selection == 1) {
@@ -223,6 +230,8 @@ function boosts(player) {
 	.button('%menu.shop.boosts.button.ore_magnet\n§820.0K ')
 	.button('%menu.common.back')
 	boosts.show(player).then(tb => {
+		// Крестик — на уровень вверх
+		if (closedByPlayer(tb)) return shop(player);
 		if (tb.selection == 0) {
 			player.runCommandAsync('function boost/X2boost')
 		} else if (tb.selection == 1) {
@@ -238,7 +247,7 @@ function boosts(player) {
 
 // --- Настройки ---
 function settings(player) {
-	const settings = new ActionFormData()
+	const form = new ActionFormData()
 	.title('%menu.settings.title')
 	.body('%menu.settings.body')
 	.button('%menu.settings.button.board',
@@ -247,8 +256,12 @@ function settings(player) {
 		'textures/items/emerald')
 	.button('%menu.settings.button.sounds',
 		'textures/blocks/noteblock')
+	.button('%menu.settings.button.password',
+		'textures/ui/icon_lock')
 	.button('%menu.common.back')
-	settings.show(player).then(tb => {
+	form.show(player).then(tb => {
+		// Крестик — на уровень вверх
+		if (closedByPlayer(tb)) return menu(player);
 		if (tb.selection == 0) {
 			settings_table(player)
 		} else if (tb.selection == 1) {
@@ -256,6 +269,8 @@ function settings(player) {
 		} else if (tb.selection == 2) {
 			settings_sound(player)
 		} else if (tb.selection == 3) {
+			ChangePasswordUI(player, () => settings(player))
+		} else if (tb.selection == 4) {
 			menu(player)
 		}
 	});
@@ -270,6 +285,8 @@ function settings_table(player) {
     .button(' %menu.settings.button.icons_only')
     .button(' %menu.settings.button.disable')
     settings_table.show(player).then(tb => {
+    	// Крестик — на уровень вверх
+    	if (closedByPlayer(tb)) return settings(player);
         if (tb.selection == 0) {
             player.runCommandAsync('function settings/scoreboard_on');
             tellText(player, '%chat.settings.enabled');
@@ -291,6 +308,8 @@ function settings_particle(player) {
     .button(' %menu.settings.button.enable')
     .button(' %menu.settings.button.disable')
     settings_particle.show(player).then(tb => {
+    	// Крестик — на уровень вверх
+    	if (closedByPlayer(tb)) return settings(player);
         if (tb.selection == 0) {
             player.runCommandAsync('tag @s add player:particle');
             tellText(player, '%chat.settings.enabled');
@@ -309,6 +328,8 @@ function settings_sound(player) {
     .button(' %menu.settings.button.enable')
     .button(' %menu.settings.button.disable')
     settings_sound.show(player).then(tb => {
+    	// Крестик — на уровень вверх
+    	if (closedByPlayer(tb)) return settings(player);
         if (tb.selection == 0) {
             player.runCommandAsync('tag @s add player:sound');
             tellText(player, '%chat.settings.enabled');
@@ -326,6 +347,8 @@ function rules(player) {
 	.body('%menu.rules.header\n\n%menu.rules.line.1\n%menu.rules.line.2\n%menu.rules.line.3\n%menu.rules.line.4\n%menu.rules.line.5\n%menu.rules.line.6\n\n%menu.rules.footer')
 	.button('%menu.common.back')
 	rules.show(player).then(tb => {
+		// Крестик — на уровень вверх
+		if (closedByPlayer(tb)) return menu(player);
 		if (tb.selection == 0) {
 			menu(player)
 		}
@@ -339,8 +362,8 @@ function promocodes(player) {
 	.textField('%menu.promo.body\n\n%menu.promo.hint',
 		'%menu.promo.placeholder')
 	promocodes.show(player).then(r => {
-		// Форма закрыта крестиком — formValues нет (надёжнее, чем isCanceled/canceled: имя менялось между версиями API)
-		if (!r.formValues) return;
+		// Форма закрыта — formValues нет; крестиком — назад в главное меню
+		if (!r.formValues) return closedByPlayer(r) ? menu(player) : undefined;
 
 		const enteredCode = r.formValues[0]?.trim();
 		if (validatePromoCode(enteredCode, player)) {} else {
@@ -419,6 +442,13 @@ function warps(player) {
 	.button(' %menu.warps.button.minigames')
 	.button('%menu.common.back')
 	warps.show(player).then(tp => {
+		// Крестик — на уровень вверх
+		if (closedByPlayer(tp)) return menu(player);
+		// Режим боя на PvP-арене: телепорт из меню тоже недоступен
+		if (tp.selection !== undefined && tp.selection < 2 && combatSecondsLeft(player) > 0) {
+			player.runCommandAsync(`tellraw @s ${rawTranslate('chat.pvp.combat', combatSecondsLeft(player))}`);
+			return;
+		}
 		if (tp.selection == 0) {
 			player.runCommandAsync('tp @s[scores={lvl=1..15}] 0 5 0')
 			player.runCommandAsync('tp @s[scores={lvl=16..25}] 0 5 -33')
@@ -440,6 +470,8 @@ function upgrading(player) {
 	.button('%menu.upgrades.button.rebirth\n§816 - 25 ')
 	.button('%menu.common.back')
 	upgrading.show(player).then(tb => {
+		// Крестик — на уровень вверх
+		if (closedByPlayer(tb)) return menu(player);
 		if (tb.selection == 0) {
 			player.runCommandAsync('function upgrade/upgrade_vip')
 		} else if (tb.selection == 1) {
