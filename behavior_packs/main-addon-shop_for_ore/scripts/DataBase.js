@@ -178,12 +178,12 @@ export const emotes = {
 export const commandsList = [
 	// ===== Игрок =====
 	{
-		command: "!help",
+		command: "!help §7[§fcommand§7]",
 		description: "%chat.help.help",
 		role: 'player'
 	},
 	{
-		command: "!spawn",
+		command: "!spawn §7[§fplayer§7]",
 		description: "%chat.help.spawn",
 		role: 'player'
 	},
@@ -197,52 +197,62 @@ export const commandsList = [
 		description: "%chat.help.msg",
 		role: 'player'
 	},
+	{
+		command: "!r §7<§fmessage§7>",
+		description: "%chat.help.r",
+		role: 'player'
+	},
+	{
+		command: "!clearchat §7[§fall§7]",
+		description: "%chat.help.clearchat",
+		role: 'player'
+	},
 
 	// ===== Модератор: порядок в чате и мире =====
 	{
-		command: "!tp §7<§fplayer§7>",
+		command: "!tp §7<§fplayer§7> [§fplayer2§7]",
 		description: "%chat.help.tp",
 		role: 'moder'
 	},
 	{
-		command: "!invis §7<§fon§8/§foff§7>",
+		command: "!tphere §7<§fplayer§7>",
+		description: "%chat.help.tphere",
+		role: 'moder'
+	},
+	{
+		command: "!invis §7[§fon§8/§foff§7]",
 		description: "%chat.help.invis",
 		role: 'moder'
 	},
 	{
-		command: "!gm6",
+		command: "!gm6 §7[§fplayer§7]",
 		description: "%chat.help.gm6",
 		role: 'moder'
 	},
 	{
-		command: "!clearchat",
-		description: "%chat.help.clearchat",
-		role: 'moder'
-	},
-	{
-		command: "!kick §7<§fplayer§7> <§freason§7>",
+		command: "!kick §7<§fplayer§7> [§freason§7]",
 		description: "%chat.help.kick",
 		role: 'moder'
 	},
 
 	// ===== Администратор: режимы, мир, игроки =====
 	{
-		command: "!gm1",
+		command: "!gm1 §7[§fplayer§7]",
 		description: "%chat.help.gm1",
 		role: 'admin'
 	},
 	{
-		command: "!gm2",
+		command: "!gm2 §7[§fplayer§7]",
 		description: "%chat.help.gm2",
 		role: 'admin'
 	},
 	{
-		command: "!fly §7<§fon§8/§foff§7>",
+		command: "!fly §7[§fon§8/§foff§7] [§fplayer§7]",
 		description: "%chat.help.fly",
 		role: 'admin'
 	},
 	{
-		command: "!timeset §7<§ftime§7>",
+		command: "!timeset §7<§ftime§8/§f0-24000§7>",
 		description: "%chat.help.timeset",
 		role: 'admin'
 	},
@@ -252,22 +262,22 @@ export const commandsList = [
 		role: 'admin'
 	},
 	{
-		command: "!stick",
+		command: "!stick §7[§fplayer§7]",
 		description: "%chat.help.stick",
 		role: 'admin'
 	},
 	{
-		command: "!prefix §7<§fplayer§7> <§fset§8/§ftake§7> <§fprefix§7>",
+		command: "!prefix §7<§fplayer§7> <§fset§8/§ftake§8/§flist§8/§fclear§7> [§fprefix§7]",
 		description: "%chat.help.prefix",
 		role: 'admin'
 	},
 	{
-		command: "!tag §7<§fplayer§7> <§fadd§8/§fremove§7> <§ftag§7>",
+		command: "!tag §7<§fplayer§7> <§fadd§8/§fremove§8/§flist§7> [§ftag§7]",
 		description: "%chat.help.tag",
 		role: 'admin'
 	},
 	{
-		command: "!scoreboard §7<§fplayer§7> <§fadd§8/§fremove§7> <§fobjective§7> <§famount§7>",
+		command: "!scoreboard §7<§fplayer§7> <§fadd§8/§fremove§8/§fset§8/§fget§7> <§fobjective§7> [§famount§7]",
 		description: "%chat.help.scoreboard",
 		role: 'admin'
 	},
@@ -284,7 +294,7 @@ export const commandsList = [
 		role: 'owner'
 	},
 	{
-		command: "!wipe",
+		command: "!wipe §7[§fconfirm§7]",
 		description: "%chat.help.wipe",
 		role: 'owner'
 	}
