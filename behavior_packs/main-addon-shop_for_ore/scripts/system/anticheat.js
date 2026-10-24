@@ -2,7 +2,7 @@
 // Проверяет инвентарь игроков на наличие запрещённых предметов и завышенных уровней чар
 
 import { world, system, Items, ItemStack } from '@minecraft/server';
-import { rawTranslate } from '../DataBase.js';
+import { rawTranslate, hasRole } from '../DataBase.js';
 
 // --- Список запрещённых предметов ---
 const bannedItems = new Set([
@@ -57,8 +57,8 @@ let tick = 0;
 system.runSchedule(() => {
 	if (++tick % CHECK_EVERY_TICKS !== 0) return;
 	for (const player of world.getPlayers()) {
-		// Хост не проверяется
-		if (player.hasTag('host')) continue;
+		// Администратор и владелец не проверяются: им нужны командные блоки и т. п. из админ-меню
+		if (hasRole(player, 'admin')) continue;
 		const container = player.getComponent("inventory").container;
 		for (let i = 0; i < container.size; i++) {
 			const item = container.getItem(i);

@@ -108,6 +108,46 @@ export function isPending(player) {
 	return player.hasTag('chekLogin') || player.hasTag('chekRegister');
 };
 
+// --- Роли: уровни доступа к командам и меню ---
+// Владелец — хост мира (тег host), он один. Модератора и администратора назначает
+// владелец командой !role, роль хранится тегом role:<id>. Префикс в чате (тег rank:,
+// команда !prefix) — отдельное украшение и прав не даёт.
+export const ROLES = ['player', 'moder', 'admin', 'owner'];
+
+/**
+ * Роль игрока: 'player' | 'moder' | 'admin' | 'owner'.
+ * @param {Player} player
+ * @returns {string}
+ */
+export function getRole(player) {
+	if (player.hasTag('host')) return 'owner';
+	if (player.hasTag('role:admin')) return 'admin';
+	if (player.hasTag('role:moder')) return 'moder';
+	return 'player';
+};
+
+/**
+ * Есть ли у игрока роль не ниже указанной (администратор может всё, что модератор, и т. д.).
+ * @param {Player} player
+ * @param {string} role
+ * @returns {boolean}
+ */
+export function hasRole(player, role) {
+	return ROLES.indexOf(getRole(player)) >= ROLES.indexOf(role);
+};
+
+/**
+ * Как rawTranslate, но аргументом может быть и ключ перевода: { translate: 'role.admin' }.
+ * Нужен, когда в сообщение подставляется переводимое слово (название роли).
+ * @param {string} key
+ * @param {...(string|number|{translate: string})} args
+ * @returns {string}
+ */
+export function rawTranslateRich(key, ...args) {
+	const parts = args.map(a => (a !== null && typeof a === 'object') ? a : { text: String(a) });
+	return JSON.stringify({ rawtext: [{ translate: key, with: { rawtext: parts } }] });
+};
+
 // Список эмодзи для чата и интерфейса
 export const emotes = {
 	":smile:": "\ue1f0",
@@ -131,115 +171,119 @@ export const emotes = {
 	":rebirth:": "\ue151"
 };
 
-// Список доступных команд с описаниями и флагом "только для хоста"
+// Список команд: описание для !help и минимальная роль (см. ROLES)
 export const commandsList = [
-	// ===== Общедоступные команды =====
+	// ===== Игрок =====
 	{
 		command: "!help",
 		description: "%chat.help.help",
-		hostOnly: false
+		role: 'player'
 	},
 	{
 		command: "!spawn",
 		description: "%chat.help.spawn",
-		hostOnly: false
+		role: 'player'
 	},
 	{
 		command: "!emotes",
 		description: "%chat.help.emotes",
-		hostOnly: false
+		role: 'player'
 	},
 	{
 		command: "!msg §7<§fplayer§7> <§fmessage§7>",
 		description: "%chat.help.msg",
-		hostOnly: false
+		role: 'player'
 	},
 
-	// ===== Админские: режимы и способности =====
+	// ===== Модератор: порядок в чате и мире =====
 	{
-		command: "!gm1",
-		description: "%chat.help.gm1",
-		hostOnly: true
-	},
-	{
-		command: "!gm2",
-		description: "%chat.help.gm2",
-		hostOnly: true
-	},
-	{
-		command: "!gm6",
-		description: "%chat.help.gm6",
-		hostOnly: true
-	},
-	{
-		command: "!fly §7<§fon§8/§foff§7>",
-		description: "%chat.help.fly",
-		hostOnly: true
+		command: "!tp §7<§fplayer§7>",
+		description: "%chat.help.tp",
+		role: 'moder'
 	},
 	{
 		command: "!invis §7<§fon§8/§foff§7>",
 		description: "%chat.help.invis",
-		hostOnly: true
+		role: 'moder'
 	},
-
-	// ===== Админские: визуал и чат =====
+	{
+		command: "!gm6",
+		description: "%chat.help.gm6",
+		role: 'moder'
+	},
 	{
 		command: "!clearchat",
 		description: "%chat.help.clearchat",
-		hostOnly: true
-	},
-
-	// ===== Админские: мир =====
-	{
-		command: "!timeset §7<§ftime§7>",
-		description: "%chat.help.timeset",
-		hostOnly: true
-	},
-	{
-		command: "!tp §7<§fplayer§7>",
-		description: "%chat.help.tp",
-		hostOnly: true
-	},
-
-	// ===== Админские: сущности и предметы =====
-	{
-		command: "!bot",
-		description: "%chat.help.bot",
-		hostOnly: true
-	},
-	{
-		command: "!stick",
-		description: "%chat.help.stick",
-		hostOnly: true
-	},
-
-	// ===== Админские: управление игроками =====
-	{
-		command: "!prefix §7<§fplayer§7> <§fset§8/§ftake§7> <§fprefix§7>",
-		description: "%chat.help.prefix",
-		hostOnly: true
-	},
-	{
-		command: "!tag §7<§fplayer§7> <§fadd§8/§fremove§7> <§ftag§7>",
-		description: "%chat.help.tag",
-		hostOnly: true
-	},
-	{
-		command: "!scoreboard §7<§fplayer§7> <§fadd§8/§fremove§7> <§fobjective§7> <§famount§7>",
-		description: "%chat.help.scoreboard",
-		hostOnly: true
+		role: 'moder'
 	},
 	{
 		command: "!kick §7<§fplayer§7> <§freason§7>",
 		description: "%chat.help.kick",
-		hostOnly: true
+		role: 'moder'
 	},
 
-	// ===== Админские: системные =====
+	// ===== Администратор: режимы, мир, игроки =====
+	{
+		command: "!gm1",
+		description: "%chat.help.gm1",
+		role: 'admin'
+	},
+	{
+		command: "!gm2",
+		description: "%chat.help.gm2",
+		role: 'admin'
+	},
+	{
+		command: "!fly §7<§fon§8/§foff§7>",
+		description: "%chat.help.fly",
+		role: 'admin'
+	},
+	{
+		command: "!timeset §7<§ftime§7>",
+		description: "%chat.help.timeset",
+		role: 'admin'
+	},
+	{
+		command: "!bot",
+		description: "%chat.help.bot",
+		role: 'admin'
+	},
+	{
+		command: "!stick",
+		description: "%chat.help.stick",
+		role: 'admin'
+	},
+	{
+		command: "!prefix §7<§fplayer§7> <§fset§8/§ftake§7> <§fprefix§7>",
+		description: "%chat.help.prefix",
+		role: 'admin'
+	},
+	{
+		command: "!tag §7<§fplayer§7> <§fadd§8/§fremove§7> <§ftag§7>",
+		description: "%chat.help.tag",
+		role: 'admin'
+	},
+	{
+		command: "!scoreboard §7<§fplayer§7> <§fadd§8/§fremove§7> <§fobjective§7> <§famount§7>",
+		description: "%chat.help.scoreboard",
+		role: 'admin'
+	},
+
+	// ===== Владелец =====
+	{
+		command: "!role §7<§fplayer§7> <§fplayer§8/§fmoder§8/§fadmin§7>",
+		description: "%chat.help.role",
+		role: 'owner'
+	},
+	{
+		command: "!roles",
+		description: "%chat.help.roles",
+		role: 'owner'
+	},
 	{
 		command: "!wipe",
 		description: "%chat.help.wipe",
-		hostOnly: true
+		role: 'owner'
 	}
 ];
 

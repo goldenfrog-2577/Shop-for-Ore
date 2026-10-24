@@ -1,7 +1,7 @@
 // --- Обработка пользовательских команд чата для Shop for Ore ---
 // Импортируем необходимые данные и списки команд
 import { world } from '@minecraft/server';
-import { commandsList, emotes, emotesList, rawTranslate, isPending, run, findPlayer, tellText } from '../DataBase.js';
+import { commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES } from '../DataBase.js';
 
 // --- Главный обработчик команд чата ---
 world.events.beforeChat.subscribe((data) => {
@@ -25,8 +25,8 @@ world.events.beforeChat.subscribe((data) => {
 		return;
 	}
 
-	// Проверка на права хоста, если команда только для хоста
-	if (findCommand.hostOnly && !player.hasTag("host")) {
+	// Проверка роли: команда доступна, если роль игрока не ниже нужной
+	if (!hasRole(player, findCommand.role)) {
 		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.cmd.error.no_permission"}]}`);
 		return;
 	}
@@ -35,7 +35,8 @@ world.events.beforeChat.subscribe((data) => {
 	switch (command) {
 		case "help":
 			// Вывод списка доступных команд
-			const helpMessage = commandsList.filter(cmd => !cmd.hostOnly || player.hasTag("host")).map(cmd => `§f${cmd.command} - ${cmd.description}`).join("\n");
+			// Каждый видит только команды своей роли и ниже
+			const helpMessage = commandsList.filter(cmd => hasRole(player, cmd.role)).map(cmd => `§f${cmd.command} - ${cmd.description}`).join("\n");
 			tellText(player, `%chat.help.header\n${helpMessage}\n§8------------------------§f`);
 			break;
 
@@ -206,6 +207,11 @@ world.events.beforeChat.subscribe((data) => {
 					run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', kickTarget)}`);
 					break;
 				}
+				// Выгнать можно только игрока с ролью ниже своей (владелец — любого, кроме себя)
+				if (target.name !== player.name && getRole(player) !== 'owner' && hasRole(target, getRole(player))) {
+					run(player, `tellraw @s ${rawTranslate('chat.cmd.kick.error.role', target.name)}`);
+					break;
+				}
 				// Без причины — стандартное сообщение игры (раньше выгнанный видел сырой ключ %chat.cmd.kick.no_reason)
 				run(player, kickReason ? `kick "${target.name}" ${kickReason}` : `kick "${target.name}"`);
 				// JSON через JSON.stringify: кавычки в причине больше не ломают сообщение
@@ -237,6 +243,47 @@ world.events.beforeChat.subscribe((data) => {
 			run(player, `tellraw @s ${rawTranslate('chat.cmd.tp.done', tpTarget.name)}`);
 			break;
 		}	
+
+		case "role": {
+			// Назначение роли — только владелец (проверено выше по commandsList)
+			const roleTargetName = args[0];
+			const newRole = (args[1] || '').toLowerCase();
+			if (!roleTargetName || !['player', 'moder', 'admin'].includes(newRole)) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.role.use"}]}');
+				break;
+			}
+			const roleTarget = findPlayer(roleTargetName);
+			if (!roleTarget) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', roleTargetName)}`);
+				break;
+			}
+			// Владелец один — его роль командой не меняется
+			if (roleTarget.hasTag('host')) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.role.error.owner"}]}');
+				break;
+			}
+			roleTarget.removeTag('role:moder');
+			roleTarget.removeTag('role:admin');
+			if (newRole !== 'player') roleTarget.addTag(`role:${newRole}`);
+			run(player, `tellraw @s ${rawTranslateRich('chat.cmd.role.done', roleTarget.name, { translate: `role.${newRole}` })}`);
+			if (roleTarget.name !== player.name) {
+				run(roleTarget, `tellraw @s ${rawTranslateRich('chat.cmd.role.received', { translate: `role.${newRole}` })}`);
+			}
+			break;
+		}
+
+		case "roles": {
+			// Роли игроков в сети: сначала старшие
+			const lines = world.getPlayers()
+				.map(p => ({ name: p.name, role: getRole(p) }))
+				.sort((a, b) => ROLES.indexOf(b.role) - ROLES.indexOf(a.role) || a.name.localeCompare(b.name))
+				.map(p => ({ translate: 'chat.cmd.roles.line', with: { rawtext: [{ text: p.name }, { translate: `role.${p.role}` }] } }));
+			const rawtext = [{ translate: 'chat.cmd.roles.header' }];
+			for (const line of lines) rawtext.push({ text: '\n' }, line);
+			rawtext.push({ text: '\n§8------------------------' });
+			run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
+			break;
+		}
 
 		default:
 			// Неизвестная команда

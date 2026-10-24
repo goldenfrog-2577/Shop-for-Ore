@@ -3,15 +3,15 @@
 
 import { world } from '@minecraft/server';
 import { ActionFormData, ModalFormData, MessageFormData } from '@minecraft/server-ui';
-import { isPending, rawTranslate } from '../DataBase.js';
+import { isPending, rawTranslate, hasRole } from '../DataBase.js';
 
 // --- Открытие админ-меню по использованию специального предмета ---
 world.events.beforeItemUse.subscribe(data => {
 	const player = data.source
 	if (data.item.typeId == 'server:admin_menu') {
-		// Только для хоста: предмет можно получить через /give
-		if (!player.hasTag('host')) return;
-		// Хост тоже сначала входит в аккаунт
+		// Администратор и владелец (предмет можно получить через /give — тогда роль не даст открыть)
+		if (!hasRole(player, 'admin')) return;
+		// Сначала вход в аккаунт
 		if (isPending(player)) return;
 		admin_menu(player)
 	}
@@ -44,6 +44,11 @@ function admin_menu(player) {
 		} else if (m.selection == 5) {
 			sayServer(player)
 		} else if (m.selection == 6) {
+			// Вайп — только владелец
+			if (!hasRole(player, 'owner')) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.error.no_permission"}]}')
+				return
+			}
 			wipe(player)
 		} else if (m.selection == 7) {
 			player.runCommandAsync('function system/spawnbot')
@@ -126,7 +131,7 @@ function warps(player) {
 		} else if (tp.selection == 3) {
 			player.runCommandAsync('tp @s 50 5 50')
 		} else if (tp.selection == 4) {
-			player.runCommandAsync('tp @s @r[tag=!host]')
+			player.runCommandAsync('tp @s @r[tag=!host,tag=!role:admin,tag=!role:moder]')
 		}
 		if (tp.selection == 5) admin_menu(player)
 	});
