@@ -5,6 +5,7 @@ import { commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPen
 import { getBot, getBotName, spawnBot } from '../system/spawnbot.js';
 import { teleportToArena, combatSecondsLeft } from '../system/pvp.js';
 import { startMythic } from '../system/mythic.js';
+import { ChangePasswordUI, resetPassword } from '../register/change.js';
 
 // --- Общие помощники команд ---
 
@@ -834,6 +835,31 @@ export function runChatCommand(player, command, args) {
 			if (roleTarget.name !== player.name) {
 				run(roleTarget, `tellraw @s ${rawTranslateRich('chat.cmd.role.received', { translate: `role.${newRole}` })}`);
 			}
+			break;
+		}
+
+		case "password":
+			// Смена пароля: форма откроется, как только игрок закроет чат (register/change.js)
+			ChangePasswordUI(player);
+			break;
+
+		case "resetpass": {
+			// Сброс забытого пароля — только владелец и только игроку в сети: ему сразу показывается регистрация
+			const name = args.join(' ');
+			if (!name) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.resetpass.use"}]}');
+				break;
+			}
+			const target = findPlayer(name);
+			if (!target) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.resetpass.error.offline', name)}`);
+				break;
+			}
+			if (target.name === player.name || target.hasTag('bot')) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.error.self"}]}');
+				break;
+			}
+			resetPassword(player, target);
 			break;
 		}
 

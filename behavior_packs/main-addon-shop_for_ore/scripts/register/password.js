@@ -118,11 +118,16 @@ export function hasPassword(player) {
 	return player.getTags().some((t) => t.startsWith(HASH_TAG) || (t.startsWith(LEGACY_TAG) && t.length > LEGACY_TAG.length));
 }
 
-/** Сохраняет пароль: удаляет все старые теги пароля и ставит соль + хеш */
-export function setPassword(player, password) {
+/** Удаляет все теги пароля (соль, хеш, старый открытый пароль) — для сброса пароля владельцем */
+export function clearPassword(player) {
 	for (const t of player.getTags()) {
 		if (t.startsWith(SALT_TAG) || t.startsWith(HASH_TAG) || t.startsWith(LEGACY_TAG)) player.removeTag(t);
 	}
+}
+
+/** Сохраняет пароль: удаляет все старые теги пароля и ставит соль + хеш */
+export function setPassword(player, password) {
+	clearPassword(player);
 	const salt = makeSalt();
 	player.addTag(SALT_TAG + salt);
 	player.addTag(HASH_TAG + hashPassword(salt, password));

@@ -259,6 +259,8 @@ function playerActions(player, target) {
 		// Роль меняет только владелец, и не самому себе
 		if (hasRole(player, 'owner') && !target.hasTag('host') && !target.hasTag('bot')) {
 			items.push({ text: '%admin.players.button.role', icon: 'textures/ui/permissions_op_crown', run: () => playerRole(player, target) });
+			// Сброс забытого пароля — с подтверждением (команда !resetpass)
+			items.push({ text: '%admin.players.button.resetpass', icon: 'textures/ui/icon_lock', run: () => confirm(player, WARN_TITLE, '%admin.players.resetpass.body', () => runChatCommand(player, 'resetpass', [target.name]), () => playerActions(player, target)) });
 		}
 	}
 	items.push(back(() => playersMenu(player)));

@@ -5,6 +5,7 @@ import { ActionFormData, ModalFormData } from '@minecraft/server-ui';
 import { bank } from './bank_menu.js';
 import { combatSecondsLeft } from '../system/pvp.js';
 import { enchantsMenu } from './enchant_shop.js';
+import { ChangePasswordUI } from '../register/change.js';
 import { isPending, rawTranslate, tellText, closedByPlayer } from '../DataBase.js';
 
 // --- Открытие меню при использовании специального предмета ---
@@ -246,7 +247,7 @@ function boosts(player) {
 
 // --- Настройки ---
 function settings(player) {
-	const settings = new ActionFormData()
+	const form = new ActionFormData()
 	.title('%menu.settings.title')
 	.body('%menu.settings.body')
 	.button('%menu.settings.button.board',
@@ -255,8 +256,10 @@ function settings(player) {
 		'textures/items/emerald')
 	.button('%menu.settings.button.sounds',
 		'textures/blocks/noteblock')
+	.button('%menu.settings.button.password',
+		'textures/ui/icon_lock')
 	.button('%menu.common.back')
-	settings.show(player).then(tb => {
+	form.show(player).then(tb => {
 		// Крестик — на уровень вверх
 		if (closedByPlayer(tb)) return menu(player);
 		if (tb.selection == 0) {
@@ -266,6 +269,8 @@ function settings(player) {
 		} else if (tb.selection == 2) {
 			settings_sound(player)
 		} else if (tb.selection == 3) {
+			ChangePasswordUI(player, () => settings(player))
+		} else if (tb.selection == 4) {
 			menu(player)
 		}
 	});
