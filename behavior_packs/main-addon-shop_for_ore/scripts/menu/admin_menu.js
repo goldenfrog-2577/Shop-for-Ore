@@ -263,7 +263,8 @@ function playerActions(player, target) {
 			{ text: '%admin.players.button.warn', icon: 'textures/ui/ErrorGlyph', run: () => playerReason(player, target, 'warn', '%admin.players.warn.title', '%admin.players.reason') },
 			// Снять одно предупреждение (если есть)
 			...(getWarns(target) > 0 ? [{ text: '%admin.players.button.unwarn', icon: 'textures/ui/check', run: cmd('unwarn') }] : []),
-			{ text: '%admin.players.button.kick', icon: 'textures/ui/cancel', run: () => playerReason(player, target, 'kick', '%admin.players.kick.title', '%admin.players.reason_optional') }
+			{ text: '%admin.players.button.kick', icon: 'textures/ui/cancel', run: () => playerReason(player, target, 'kick', '%admin.players.kick.title', '%admin.players.reason_optional') },
+			{ text: '%admin.players.button.ban', icon: 'textures/ui/ErrorGlyph', run: () => playerReason(player, target, 'ban', '%admin.players.ban.title', '%admin.players.reason_optional') }
 		);
 		// Роль меняет только владелец, и не самому себе
 		if (hasRole(player, 'owner') && !target.hasTag('host') && !target.hasTag('bot')) {

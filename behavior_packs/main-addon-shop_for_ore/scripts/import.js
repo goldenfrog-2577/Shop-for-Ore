@@ -26,6 +26,7 @@ import './system/tools.js'       // Неразрушаемая кирка уро
 import './system/pvp.js'         // PvP-арена: случайная точка входа и режим боя
 import './system/mythic.js'      // Ивент «Мистик»: сундук с лутом в центре арены
 import './system/freeze.js'      // Заморозка: игрок застывает на месте
+import './system/ban.js'         // Бан по номеру игрока в мире и нику
 
 // Импорт загрузчика скриптов
 import './register/loadScript.js'
