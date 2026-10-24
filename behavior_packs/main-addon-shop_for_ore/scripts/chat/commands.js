@@ -2,6 +2,7 @@
 // Импортируем необходимые данные и списки команд
 import { world } from '@minecraft/server';
 import { commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns } from '../DataBase.js';
+import { getBot, getBotName, spawnBot } from '../system/spawnbot.js';
 
 // --- Общие помощники команд ---
 
@@ -112,7 +113,17 @@ world.events.beforeChat.subscribe((data) => {
 	// Парсим команду и аргументы
 	const args = message.slice(1).split(/\s+/);
 	const command = args.shift().toLowerCase();
+	runChatCommand(player, command, args);
+});
 
+/**
+ * Выполнить !-команду от имени игрока — из чата или из меню администратора.
+ * Права проверяются здесь же, по роли игрока.
+ * @param {Player} player
+ * @param {string} command — имя без «!», строчными
+ * @param {string[]} args — аргументы; из меню ник с пробелом передаётся одним элементом
+ */
+export function runChatCommand(player, command, args) {
 	// Поиск команды в списке — по точному имени (раньше «!f» находило «!fly», «!g» — «!gm1»)
 	const findCommand = commandsList.find(cmd => cmd.command.split(' ')[0] === `!${command}`);
 	if (!findCommand) {
@@ -375,10 +386,17 @@ world.events.beforeChat.subscribe((data) => {
 			break;
 		}
 
-		case "bot":
-			// Спавн бота
-			player.runCommandAsync("function system/spawnbot");
+		case "bot": {
+			// Призвать бота к себе (второй раз — не призывается: бот уже в мире). Управление ботом — в меню администратора
+			const bot = getBot();
+			if (bot) {
+				run(player, `tellraw @s ${rawTranslate('chat.admin.bot.error.present', bot.name)}`);
+				break;
+			}
+			spawnBot(player);
+			run(player, `tellraw @s ${rawTranslate('chat.admin.bot.spawned', getBotName())}`);
 			break;
+		}
 
 		case "stick": {
 			// Палочка админа себе или другому (администратор+)
@@ -797,4 +815,4 @@ world.events.beforeChat.subscribe((data) => {
 			// Неизвестная команда
 			run(player, `tellraw @s ${rawTranslate('chat.cmd.error.unknown', `!${command}`)}`);
 	}
-});
+}

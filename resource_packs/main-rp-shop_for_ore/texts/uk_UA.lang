@@ -85,8 +85,8 @@ progressScreen.message.locating=Перш ніж ставити багато пи
 progressScreen.message.resourceLoading=Omlet хоста: @waxenjaguar2209
 
 ## --- ПЕРЕКЛАД ТА КНОПКИ ІНТЕРФЕЙСУ ---
-admin.common.tap_to_summon=§8[§7Натисніть, щоб призвати§8]
 admin.common.back=§8Назад
+admin.common.min=хв
 menu.common.tap_to_open=§8[§7Натисніть, щоб відкрити§8]
 menu.common.back=§8 Назад
 
@@ -303,7 +303,10 @@ admin.main.button.effects=§8Ефекти
 admin.main.button.tools=§8Інструменти
 admin.main.button.announce=§8Оголошення
 admin.main.button.wipe=§8Вайп
-admin.main.button.bot=§8Призвати бота
+admin.main.button.bot=§8Бот
+admin.main.button.players=§8Гравці
+admin.main.button.boosts=§8Бусти та івенти
+admin.main.button.server=§8Сервер
 
 ## --- АДМІН: РЕЖИМИ ГРИ ---
 admin.gamemode.title=§l§8Меню адміна » Режим гри
@@ -311,7 +314,8 @@ admin.gamemode.body=§7Список режимів гри:
 admin.gamemode.button.creative=§8Креатив
 admin.gamemode.button.adventure=§8Пригода
 admin.gamemode.button.spectator=§8Спостерігач
-admin.gamemode.button.fly=§8Політ
+admin.gamemode.button.fly_on=§8Увімкнути політ
+admin.gamemode.button.fly_off=§8Вимкнути політ
 
 ## --- АДМІН: ВСТАНОВЛЕННЯ ЧАСУ ---
 admin.time.title=§l§8Меню адміна » Встановлення часу
@@ -355,18 +359,96 @@ admin.tools.button.npc_egg=§5Яйце призову NPC
 admin.tools.button.hologram_egg=§5Яйце призову голограми
 admin.tools.button.admin_stick=§cПалочка адміна
 admin.tools.button.clear_inventory=§8Очистити інвентар
+admin.tools.clear.body=§7Увесь твій інвентар буде очищено. Ти впевнений(а)?
 
 ## --- АДМІН: ОГОЛОШЕННЯ ---
 admin.announce.title=§l§8Меню адміна » Оголошення
 admin.announce.body=§7Напиши у рядок нижче все, що хочеш сказати. Це побачать усі на сервері.
 admin.announce.placeholder=§7Введи текст...
-chat.server.announce=§r §eОголошення §8» §f%1$s
 
 ## --- АДМІН: ВАЙП ---
 admin.wipe.title=§l§8Попередження
 admin.wipe.body=§7Вайп призведе до скидання всієї статистики, але не зачепить теги та інвентарі гравців. Ви впевнені?
 admin.wipe.button.yes=§2Так
 admin.wipe.button.no=§4Ні
+chat.admin.error.no_players=§r⩕ §l§cERROR!§r §8» §7Немає гравців без ролі, до яких можна телепортуватися
+admin.players.title=§l§8Меню адміна » Гравці
+admin.players.choose=§7Обери гравця:
+admin.players.body.name=§7Гравець:§f
+admin.players.body.role=§7Роль:
+admin.players.body.lvl=§7Рівень:§f
+admin.players.body.money=§7Монет на балансі:§e
+admin.players.body.warns=§7Попередження:§f
+admin.players.button.stats=§8Статистика
+admin.players.button.tp_to=§8Телепортуватися до нього
+admin.players.button.tp_here=§8Телепортувати до себе
+admin.players.button.spawn=§8Відправити на спавн
+admin.players.button.gamemode=§8Режим гри
+admin.players.button.money=§8Монети
+admin.players.button.freeze=§8Заморозити
+admin.players.button.unfreeze=§8Розморозити
+admin.players.button.mute=§8Замутити
+admin.players.button.unmute=§8Зняти мут
+admin.players.button.warn=§8Попередження
+admin.players.button.kick=§8Вигнати
+admin.players.button.role=§8Роль
+admin.players.money.title=§l§8Меню адміна » Монети
+admin.players.money.action=§7Дія:
+admin.players.money.add=Видати
+admin.players.money.take=Забрати
+admin.players.money.set=Встановити
+admin.players.money.amount=§7Сума:
+admin.players.mute.title=§l§8Меню адміна » Мут
+admin.players.mute.minutes=§7Тривалість:
+admin.players.warn.title=§l§8Меню адміна » Попередження
+admin.players.kick.title=§l§8Меню адміна » Вигнати
+admin.players.reason=§7Причина:
+admin.players.reason_optional=§7Причина (необов'язково):
+admin.players.reason_placeholder=§7Введи причину...
+admin.players.role.title=§l§8Меню адміна » Роль
+admin.players.role.choose=§7Нова роль:
+admin.boosts.title=§l§8Меню адміна » Бусти та івенти
+admin.boosts.body=§7Буст звідси безкоштовний і діє на всіх гравців.
+admin.boosts.button.boost=§8Запустити буст
+admin.boosts.button.event=§8Івент:
+admin.boosts.button.auto=§8Івенти за таймером
+admin.boosts.boost.title=§l§8Меню адміна » Буст
+admin.boosts.boost.type=§7Буст:
+admin.boosts.boost.minutes=§7Хвилин
+admin.boosts.auto.title=§l§8Меню адміна » Івенти за таймером
+admin.boosts.auto.every=§7кожні
+chat.admin.auto_events.saved=§r §7CMD §8» §7Налаштування івентів за таймером збережено
+admin.server.title=§l§8Меню адміна » Сервер
+admin.server.online=§7Гравців у мережі:
+admin.server.staff=§7Власник і адміністратори:
+admin.server.moders=§7Модератори:
+admin.server.boost=§7Буст:
+admin.server.left=§7залишилось
+admin.server.auto=§7Івенти за таймером:
+admin.server.on=§aувімк
+admin.server.off=§cвимк
+admin.server.button.online=§8Хто в мережі
+admin.server.button.top=§8Топ гравців
+admin.bot.title=§l§8Меню адміна » Бот
+admin.bot.name=§7Ім'я бота:
+admin.bot.present=§aБот у світі
+admin.bot.absent=§8Бота немає у світі
+admin.bot.button.spawn=§8Призвати бота
+admin.bot.button.remove=§8Прибрати бота
+admin.bot.button.rename=§8Перейменувати
+admin.bot.button.tp_here=§8Телепортувати до мене
+admin.bot.button.tp_to=§8Телепортуватися до бота
+admin.bot.button.say=§8Написати від імені бота
+admin.bot.rename.title=§l§8Меню адміна » Ім'я бота
+admin.bot.rename.body=§7Нове ім'я: від 3 до 16 символів — латинські літери, цифри, _ і пробіл. Якщо бот у світі, він з'явиться знову з новим ім'ям.
+admin.bot.say.title=§l§8Меню адміна » Повідомлення від бота
+chat.admin.bot.spawned=§r §7CMD §8» §7Бота §f%1$s§r§7 призвано
+chat.admin.bot.removed=§r §7CMD §8» §7Бота §f%1$s§r§7 прибрано зі світу
+chat.admin.bot.renamed=§r §7CMD §8» §7Ім'я бота: §f%1$s
+chat.admin.bot.says=§r§7[Бот] §f%1$s §8» §f%2$s
+chat.admin.bot.error.name=§r⩕ §l§cERROR!§r §8» §7Ім'я бота: від 3 до 16 символів — латинські літери, цифри, _ і пробіл
+chat.admin.bot.error.absent=§r⩕ §l§cERROR!§r §8» §7Бота немає у світі
+chat.admin.bot.error.present=§r⩕ §l§cERROR!§r §8» §7Бот §f%1$s§r§7 уже у світі. Керування ботом — у меню адміна
 chat.server.wiped=§r §cСервер §8» §7Статистику всіх гравців скинуто
 
 ## --- СИСТЕМНІ ТА РІВНЕВІ ПОВІДОМЛЕННЯ ---
