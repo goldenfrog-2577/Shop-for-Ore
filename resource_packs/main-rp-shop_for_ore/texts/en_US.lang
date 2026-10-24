@@ -510,11 +510,11 @@ chat.cmd.roles.header=§8-----§f Player Roles §8-----§f
 chat.cmd.roles.line=§f%1$s§r§8 — %2$s
 role.player=§7Player
 role.moder=§bModerator
-role.admin=§6Administrator
-role.owner=§cOwner
-role.tag.owner=§cOwner
-role.tag.admin=§6Admin
-role.tag.moder=§bMod
+role.admin=§cAdministrator
+role.owner=§4Owner
+role.tag.owner=§4Owner
+role.tag.admin=§cAdmin
+role.tag.moder=§bModerator
 
 ## --- SHOP REWARDS ---
 chat.shop.enchant.efficiency=§r §eShop §8» §7Purchased: §eEfficiency§7 (§e+1§7)
