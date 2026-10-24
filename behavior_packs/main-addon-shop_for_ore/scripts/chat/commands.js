@@ -140,9 +140,20 @@ world.events.beforeChat.subscribe((data) => {
 				run(player, `tellraw @s ${rawTranslateRich('chat.cmd.help.detail', cmd.command, { translate: cmd.description.slice(1) }, { translate: `role.${cmd.role}` })}`);
 				break;
 			}
-			// Каждый видит только команды своей роли и ниже
-			const helpMessage = commandsList.filter(cmd => hasRole(player, cmd.role)).map(cmd => `§f${cmd.command} - ${cmd.description}`).join("\n");
-			tellText(player, `%chat.help.header\n${helpMessage}\n§8------------------------§f`);
+			// Каждый видит только команды своей роли и ниже. Если ролей больше одной — по разделам с заголовком роли
+			const visible = commandsList.filter(cmd => hasRole(player, cmd.role));
+			const sections = new Set(visible.map(cmd => cmd.role)).size > 1;
+			const rawtext = [{ translate: 'chat.help.header' }];
+			let lastRole;
+			for (const cmd of visible) {
+				if (sections && cmd.role !== lastRole) {
+					rawtext.push({ text: '\n' }, { translate: 'chat.help.section', with: { rawtext: [{ translate: `role.${cmd.role}` }] } });
+					lastRole = cmd.role;
+				}
+				rawtext.push({ text: `\n§f${cmd.command} - ` }, { translate: cmd.description.slice(1) });
+			}
+			rawtext.push({ text: '\n§8------------------------' });
+			run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
 			break;
 		}
 

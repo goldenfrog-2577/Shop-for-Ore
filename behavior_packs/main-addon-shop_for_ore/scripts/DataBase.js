@@ -244,17 +244,18 @@ export const emotes = {
 	":rebirth:": "\ue151"
 };
 
-// Список команд: описание для !help и минимальная роль (см. ROLES)
+// Список команд: описание для !help и минимальная роль (см. ROLES).
+// Порядок = порядок в !help: по ролям (игрок → владелец), внутри роли — по смыслу
 export const commandsList = [
-	// ===== Игрок =====
+	// ===== Игрок: справка и общение =====
 	{
 		command: "!help §7[§fcommand§7]",
 		description: "%chat.help.help",
 		role: 'player'
 	},
 	{
-		command: "!spawn §7[§fplayer§7]",
-		description: "%chat.help.spawn",
+		command: "!rules",
+		description: "%chat.help.rules",
 		role: 'player'
 	},
 	{
@@ -277,6 +278,8 @@ export const commandsList = [
 		description: "%chat.help.clearchat",
 		role: 'player'
 	},
+
+	// ===== Игрок: деньги и статистика =====
 	{
 		command: "!balance",
 		description: "%chat.help.balance",
@@ -288,13 +291,13 @@ export const commandsList = [
 		role: 'player'
 	},
 	{
-		command: "!top §7[§fmoney§8/§flvl§8/§frebirth§7]",
-		description: "%chat.help.top",
+		command: "!stats §7[§fplayer§7]",
+		description: "%chat.help.stats",
 		role: 'player'
 	},
 	{
-		command: "!stats §7[§fplayer§7]",
-		description: "%chat.help.stats",
+		command: "!top §7[§fmoney§8/§flvl§8/§frebirth§7]",
+		description: "%chat.help.top",
 		role: 'player'
 	},
 	{
@@ -302,38 +305,20 @@ export const commandsList = [
 		description: "%chat.help.online",
 		role: 'player'
 	},
+
+	// ===== Игрок: прочее =====
+	{
+		command: "!spawn §7[§fplayer§7]",
+		description: "%chat.help.spawn",
+		role: 'player'
+	},
 	{
 		command: "!report §7<§fplayer§7> <§freason§7>",
 		description: "%chat.help.report",
 		role: 'player'
 	},
-	{
-		command: "!rules",
-		description: "%chat.help.rules",
-		role: 'player'
-	},
 
-	// ===== Модератор: порядок в чате и мире =====
-	{
-		command: "!tp §7<§fplayer§7> [§fplayer2§7]",
-		description: "%chat.help.tp",
-		role: 'moder'
-	},
-	{
-		command: "!tphere §7<§fplayer§7>",
-		description: "%chat.help.tphere",
-		role: 'moder'
-	},
-	{
-		command: "!invis §7[§fon§8/§foff§7]",
-		description: "%chat.help.invis",
-		role: 'moder'
-	},
-	{
-		command: "!gm6 §7[§fplayer§7]",
-		description: "%chat.help.gm6",
-		role: 'moder'
-	},
+	// ===== Модератор: наказания =====
 	{
 		command: "!kick §7<§fplayer§7> [§freason§7]",
 		description: "%chat.help.kick",
@@ -360,7 +345,29 @@ export const commandsList = [
 		role: 'moder'
 	},
 
-	// ===== Администратор: режимы, мир, игроки =====
+	// ===== Модератор: перемещение и наблюдение =====
+	{
+		command: "!tp §7<§fplayer§7> [§fplayer2§7]",
+		description: "%chat.help.tp",
+		role: 'moder'
+	},
+	{
+		command: "!tphere §7<§fplayer§7>",
+		description: "%chat.help.tphere",
+		role: 'moder'
+	},
+	{
+		command: "!invis §7[§fon§8/§foff§7]",
+		description: "%chat.help.invis",
+		role: 'moder'
+	},
+	{
+		command: "!gm6 §7[§fplayer§7]",
+		description: "%chat.help.gm6",
+		role: 'moder'
+	},
+
+	// ===== Администратор: режимы =====
 	{
 		command: "!gm1 §7[§fplayer§7]",
 		description: "%chat.help.gm1",
@@ -376,34 +383,11 @@ export const commandsList = [
 		description: "%chat.help.fly",
 		role: 'admin'
 	},
+
+	// ===== Администратор: мир и сервер =====
 	{
 		command: "!timeset §7<§ftime§8/§f0-24000§7>",
 		description: "%chat.help.timeset",
-		role: 'admin'
-	},
-	{
-		command: "!bot",
-		description: "%chat.help.bot",
-		role: 'admin'
-	},
-	{
-		command: "!stick §7[§fplayer§7]",
-		description: "%chat.help.stick",
-		role: 'admin'
-	},
-	{
-		command: "!prefix §7<§fplayer§7> <§fset§8/§ftake§8/§flist§8/§fclear§7> [§fprefix§7]",
-		description: "%chat.help.prefix",
-		role: 'admin'
-	},
-	{
-		command: "!tag §7<§fplayer§7> <§fadd§8/§fremove§8/§flist§7> [§ftag§7]",
-		description: "%chat.help.tag",
-		role: 'admin'
-	},
-	{
-		command: "!money §7<§fplayer§7> <§fadd§8/§ftake§8/§fset§7> <§famount§7>",
-		description: "%chat.help.money",
 		role: 'admin'
 	},
 	{
@@ -421,9 +405,38 @@ export const commandsList = [
 		description: "%chat.help.say",
 		role: 'admin'
 	},
+
+	// ===== Администратор: игроки и данные =====
+	{
+		command: "!money §7<§fplayer§7> <§fadd§8/§ftake§8/§fset§7> <§famount§7>",
+		description: "%chat.help.money",
+		role: 'admin'
+	},
 	{
 		command: "!scoreboard §7<§fplayer§7> <§fadd§8/§fremove§8/§fset§8/§fget§7> <§fobjective§7> [§famount§7]",
 		description: "%chat.help.scoreboard",
+		role: 'admin'
+	},
+	{
+		command: "!tag §7<§fplayer§7> <§fadd§8/§fremove§8/§flist§7> [§ftag§7]",
+		description: "%chat.help.tag",
+		role: 'admin'
+	},
+	{
+		command: "!prefix §7<§fplayer§7> <§fset§8/§ftake§8/§flist§8/§fclear§7> [§fprefix§7]",
+		description: "%chat.help.prefix",
+		role: 'admin'
+	},
+
+	// ===== Администратор: предметы и бот =====
+	{
+		command: "!stick §7[§fplayer§7]",
+		description: "%chat.help.stick",
+		role: 'admin'
+	},
+	{
+		command: "!bot",
+		description: "%chat.help.bot",
 		role: 'admin'
 	},
 
