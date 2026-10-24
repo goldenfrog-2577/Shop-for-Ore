@@ -1,11 +1,12 @@
 // --- Обработка пользовательских команд чата для Shop for Ore ---
 // Импортируем необходимые данные и списки команд
 import { world } from '@minecraft/server';
-import { commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS } from '../DataBase.js';
+import { commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS, setIssuer, clearIssuer, canLift } from '../DataBase.js';
 import { getBot, getBotName, spawnBot } from '../system/spawnbot.js';
 import { teleportToArena, combatSecondsLeft } from '../system/pvp.js';
 import { startMythic } from '../system/mythic.js';
 import { ChangePasswordUI, resetPassword } from '../register/change.js';
+import { freezePlayer, unfreezePlayer } from '../system/freeze.js';
 
 // --- Общие помощники команд ---
 
@@ -651,8 +652,11 @@ export function runChatCommand(player, command, args) {
 				break;
 			}
 			if (!canPunish(player, target)) break;
+			// Перебить мут, выданный старшим, нельзя (canPunish это не проверяет: роль цели может быть ниже обоих)
+			if (muteMinutesLeft(target) > 0 && !canLift(player, target, 'mute')) break;
 			target.getTags().filter(t => t.startsWith('mute:')).forEach(t => target.removeTag(t));
 			target.addTag(`mute:${Date.now() + minutes * 60000}`);
+			setIssuer(target, 'mute', getRole(player));
 			const reason = args.slice(2).join(' ');
 			run(player, `tellraw @a ${rawTranslateRich('chat.cmd.mute', target.name, String(minutes), reason ? { text: reason } : { translate: 'chat.cmd.kick.no_reason' })}`);
 			break;
@@ -672,7 +676,10 @@ export function runChatCommand(player, command, args) {
 				run(player, `tellraw @s ${rawTranslate('chat.cmd.unmute.error.not_muted', target.name)}`);
 				break;
 			}
+			// Мут, выданный старшим по роли, снять нельзя
+			if (!canLift(player, target, 'mute')) break;
 			target.getTags().filter(t => t.startsWith('mute:')).forEach(t => target.removeTag(t));
+			clearIssuer(target, 'mute');
 			run(player, `tellraw @s ${rawTranslate('chat.cmd.unmute.done', target.name)}`);
 			run(target, 'tellraw @s {"rawtext":[{"translate":"chat.cmd.unmute.received"}]}');
 			break;
@@ -696,16 +703,49 @@ export function runChatCommand(player, command, args) {
 			run(player, `tellraw @a ${rawTranslate('chat.cmd.warn', target.name, String(warns), reason)}`);
 			if (warns >= 3) {
 				// Причина кика — без перевода (её показывает сама игра), поэтому «3/3: причина»
+				clearIssuer(target, 'warn');
 				run(player, `kick "${target.name}" 3/3: ${reason}`);
 				run(player, `tellraw @a ${JSON.stringify({ rawtext: [{ translate: "chat.cmd.kick", with: { rawtext: [{ text: target.name }, { text: `3/3: ${reason}` }] } }] })}`);
 			} else {
 				target.addTag(`warn:${warns}`);
+				// Снять предупреждения сможет роль не ниже самой старшей из выдавших
+				setIssuer(target, 'warn', getRole(player), true);
 			}
 			break;
 		}
 
+		case "unwarn": {
+			// Снять предупреждения: !unwarn <ник> [число|all] (по умолчанию одно)
+			const name = args[0];
+			const amountArg = (args[1] || '1').toLowerCase();
+			if (!name || !(amountArg === 'all' || /^\d+$/.test(amountArg)) || amountArg === '0') {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.unwarn.use"}]}');
+				break;
+			}
+			const target = findPlayer(name);
+			if (!target) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', name)}`);
+				break;
+			}
+			const before = getWarns(target);
+			if (before === 0) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.unwarn.error.none', target.name)}`);
+				break;
+			}
+			if (target.name !== player.name && !canPunish(player, target)) break;
+			if (!canLift(player, target, 'warn')) break;
+			const left = amountArg === 'all' ? 0 : Math.max(0, before - Number(amountArg));
+			target.getTags().filter(t => t.startsWith('warn:')).forEach(t => target.removeTag(t));
+			if (left > 0) target.addTag(`warn:${left}`);
+			else clearIssuer(target, 'warn');
+			run(player, `tellraw @s ${rawTranslate('chat.cmd.unwarn.done', target.name, String(before - left), String(left))}`);
+			if (target.name !== player.name) run(target, `tellraw @s ${rawTranslate('chat.cmd.unwarn.received', String(before - left), String(left))}`);
+			break;
+		}
+
 		case "freeze": {
-			// Заморозка: нельзя двигаться и прыгать, недоступны меню и !warp. Повторная команда — разморозка
+			// Заморозка: игрок застывает на месте (даже в воздухе), недоступны меню, меню администратора и !warp.
+			// Повторная команда — разморозка
 			if (!args[0]) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.use"}]}');
 				break;
@@ -717,16 +757,15 @@ export function runChatCommand(player, command, args) {
 			}
 			if (!canPunish(player, target)) break;
 			if (target.hasTag('frozen')) {
-				target.removeTag('frozen');
-				run(target, 'effect @s slowness 0');
-				run(target, 'effect @s jump_boost 0');
+				// Разморозить может только роль не ниже заморозившего
+				if (!canLift(player, target, 'frozen')) break;
+				unfreezePlayer(target);
 				run(player, `tellraw @s ${rawTranslate('chat.cmd.freeze.off', target.name)}`);
 				run(target, 'tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.received.off"}]}');
 			} else {
-				target.addTag('frozen');
-				// Замедление 255 — стоит на месте; прыгучесть 128 (переполнение) — не прыгает
-				run(target, 'effect @s slowness 1000000 255 true');
-				run(target, 'effect @s jump_boost 1000000 128 true');
+				// Игрок застывает там, где стоит (в том числе в воздухе): system/freeze.js возвращает его на место каждый тик
+				freezePlayer(target);
+				setIssuer(target, 'frozen', getRole(player));
 				run(player, `tellraw @s ${rawTranslate('chat.cmd.freeze.on', target.name)}`);
 				run(target, 'tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.received.on"}]}');
 			}

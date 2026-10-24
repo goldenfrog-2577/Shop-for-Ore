@@ -239,6 +239,9 @@
 		},
 		{
 			"path" : "scripts/system/tools.js"
+		},
+		{
+			"path" : "scripts/system/freeze.js"
 		}],
 	"version" : 1
 }
