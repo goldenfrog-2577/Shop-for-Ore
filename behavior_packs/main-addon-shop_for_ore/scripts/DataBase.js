@@ -173,6 +173,7 @@ export function muteMinutesLeft(player) {
 	const left = Number(tag.slice(5)) - Date.now();
 	if (!(left > 0)) {
 		player.removeTag(tag);
+		clearIssuer(player, 'mute');
 		return 0;
 	}
 	return Math.ceil(left / 60000);
@@ -223,6 +224,35 @@ export function getRole(player) {
 export function hasRole(player, role) {
 	return ROLES.indexOf(getRole(player)) >= ROLES.indexOf(role);
 };
+
+// --- Кто выдал ограничение (мут, заморозку, предупреждения): тег <вид>by:<роль> ---
+// Снять ограничение может только тот, чья роль не ниже роли выдавшего (владелец — любое).
+
+/** Роль, выдавшая ограничение, или undefined (старые ограничения — без записи). */
+export function getIssuer(target, kind) {
+	const tag = target.getTags().find(t => t.startsWith(`${kind}by:`));
+	return tag ? tag.slice(kind.length + 3) : undefined;
+}
+
+export function clearIssuer(target, kind) {
+	target.getTags().filter(t => t.startsWith(`${kind}by:`)).forEach(t => target.removeTag(t));
+}
+
+/** Запомнить роль выдавшего. keepHigher — оставить прежнюю, если она старше (предупреждения копятся). */
+export function setIssuer(target, kind, role, keepHigher = false) {
+	const old = getIssuer(target, kind);
+	if (keepHigher && old && ROLES.indexOf(old) > ROLES.indexOf(role)) return;
+	clearIssuer(target, kind);
+	target.addTag(`${kind}by:${role}`);
+}
+
+/** Может ли player снять ограничение kind с target; при отказе сообщает, кто его выдал. */
+export function canLift(player, target, kind) {
+	const issuer = getIssuer(target, kind);
+	if (!issuer || hasRole(player, issuer)) return true;
+	run(player, `tellraw @s ${rawTranslateRich('chat.cmd.error.issuer', { translate: `role.${issuer}` })}`);
+	return false;
+}
 
 /**
  * Как rawTranslate, но аргументом может быть и ключ перевода: { translate: 'role.admin' }.
@@ -376,6 +406,11 @@ export const commandsList = [
 	{
 		command: "!warn §7<§fplayer§7> <§freason§7>",
 		description: "%chat.help.warn",
+		role: 'moder'
+	},
+	{
+		command: "!unwarn §7<§fplayer§7> [§famount§8/§fall§7]",
+		description: "%chat.help.unwarn",
 		role: 'moder'
 	},
 	{

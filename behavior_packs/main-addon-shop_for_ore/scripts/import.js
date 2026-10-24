@@ -25,6 +25,7 @@ import './system/spawnbot.js'    // Спавн бота
 import './system/tools.js'       // Неразрушаемая кирка уровня
 import './system/pvp.js'         // PvP-арена: случайная точка входа и режим боя
 import './system/mythic.js'      // Ивент «Мистик»: сундук с лутом в центре арены
+import './system/freeze.js'      // Заморозка: игрок застывает на месте
 
 // Импорт загрузчика скриптов
 import './register/loadScript.js'

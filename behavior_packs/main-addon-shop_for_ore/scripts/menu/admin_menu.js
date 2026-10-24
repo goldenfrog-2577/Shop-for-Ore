@@ -33,6 +33,12 @@ world.events.beforeItemUse.subscribe(data => {
 		if (!hasRole(player, 'admin')) return;
 		// Сначала вход в аккаунт
 		if (isPending(player)) return;
+		// Замороженный (!freeze) админ-меню не открывает: иначе ушёл бы телепортом или разморозил себя через других
+		if (player.hasTag('frozen')) {
+			data.cancel = true;
+			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.active"}]}');
+			return;
+		}
 		admin_menu(player)
 	}
 });
@@ -254,6 +260,8 @@ function playerActions(player, target) {
 				? { text: '%admin.players.button.unmute', icon: 'textures/ui/mute_off', run: cmd('unmute') }
 				: { text: '%admin.players.button.mute', icon: 'textures/ui/mute_on', run: () => playerMute(player, target) },
 			{ text: '%admin.players.button.warn', icon: 'textures/ui/ErrorGlyph', run: () => playerReason(player, target, 'warn', '%admin.players.warn.title', '%admin.players.reason') },
+			// Снять одно предупреждение (если есть)
+			...(getWarns(target) > 0 ? [{ text: '%admin.players.button.unwarn', icon: 'textures/ui/check', run: cmd('unwarn') }] : []),
 			{ text: '%admin.players.button.kick', icon: 'textures/ui/cancel', run: () => playerReason(player, target, 'kick', '%admin.players.kick.title', '%admin.players.reason_optional') }
 		);
 		// Роль меняет только владелец, и не самому себе
