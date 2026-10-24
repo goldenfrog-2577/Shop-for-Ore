@@ -15,6 +15,12 @@ world.events.beforeItemUse.subscribe(data => {
 			player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.account.error.login_required"}]}`);
 			return;
 		}
+		// Замороженный игрок не может уйти варпом из меню
+		if (player.hasTag('frozen')) {
+			data.cancel = true;
+			player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.active"}]}`);
+			return;
+		}
 		menu(player)
 	}
 });
