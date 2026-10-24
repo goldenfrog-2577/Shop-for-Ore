@@ -4,6 +4,7 @@
 import { tellText } from '../DataBase.js';
 import { ModalFormData } from '@minecraft/server-ui';
 import { checkPassword } from './password.js';
+import { unlockPlayer } from './system.js';
 
 /**
  * Показывает форму логина игроку.
@@ -23,6 +24,7 @@ export function LoginUI(player) {
 		// с задержкой и форма открывалась повторно
 		if (password && checkPassword(player, password)) {
 			player.removeTag('chekLogin');
+			unlockPlayer(player);
 			tellText(player, '\n%chat.account.logged_in\n ');
 			player.runCommandAsync('playsound random.levelup @s');
 		} else {

@@ -4,6 +4,7 @@
 import { tellText } from '../DataBase.js';
 import { ModalFormData } from '@minecraft/server-ui';
 import { PASSWORD_MIN, PASSWORD_MAX, setPassword } from './password.js';
+import { unlockPlayer } from './system.js';
 
 /**
  * Показывает форму регистрации игроку.
@@ -37,6 +38,7 @@ export function RegisterUI(player) {
 		setPassword(player, password);
 		player.addTag('hasRegister');
 		player.removeTag('chekRegister');
+		unlockPlayer(player);
 		tellText(player, `\n%account.register.greeting §b${player.name}\n\n%account.register.welcome\n\n%account.register.info\n %account.register.password §b${password}\n\n%account.register.remember\n `);
 		player.runCommandAsync('playsound random.levelup @s');
 	});

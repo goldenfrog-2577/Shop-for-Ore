@@ -184,7 +184,7 @@ function tools(player) {
 		{ text: '%admin.tools.button.admin_stick', icon: 'textures/items/stick', run: give('server:admin_stick') },
 		{ text: '%admin.tools.button.name_tag', icon: 'textures/items/name_tag', run: give('name_tag 16') },
 		// Сундук с именем мистика — поставить в центр PvP-арены (x 300, z 300) вместо обычного
-		{ text: '%admin.tools.button.mythic_chest', icon: 'textures/blocks/ender_chest_front', run: () => giveMythicChest(player) },
+		{ text: '%admin.tools.button.mythic_chest', icon: 'textures/server_icons/chest', run: () => giveMythicChest(player) },
 		// Очистка всего инвентаря — теперь с подтверждением
 		{ text: '%admin.tools.button.clear_inventory', icon: 'textures/ui/cancel', run: () => confirm(player, WARN_TITLE, '%admin.tools.clear.body', () => player.runCommandAsync('clear @s'), () => tools(player)) },
 		back(() => admin_menu(player))
@@ -259,6 +259,8 @@ function playerActions(player, target) {
 		// Роль меняет только владелец, и не самому себе
 		if (hasRole(player, 'owner') && !target.hasTag('host') && !target.hasTag('bot')) {
 			items.push({ text: '%admin.players.button.role', icon: 'textures/ui/permissions_op_crown', run: () => playerRole(player, target) });
+			// Сброс забытого пароля — с подтверждением (команда !resetpass)
+			items.push({ text: '%admin.players.button.resetpass', icon: 'textures/ui/icon_lock', run: () => confirm(player, WARN_TITLE, '%admin.players.resetpass.body', () => runChatCommand(player, 'resetpass', [target.name]), () => playerActions(player, target)) });
 		}
 	}
 	items.push(back(() => playersMenu(player)));

@@ -9,14 +9,26 @@ import { hasPassword } from './password.js';
 
 // Через сколько тиков после входа показывать форму (и повторять, пока игрок не вошёл)
 const FORM_DELAY_TICKS = 40;
-// Как часто обновлять эффекты блокировки (эффект длится 2 с = 40 тиков, обновляем раньше)
-const EFFECT_REFRESH_TICKS = 20;
+// Эффекты блокировки: длинные (60 с) и обновляются раз в 10 с. Раньше были 2 с с обновлением раз в секунду —
+// слепота в Bedrock начинает рассеиваться в конце действия, и экран на мгновение «проглядывал».
+// После входа эффекты снимает unlockPlayer()
+const EFFECT_SECONDS = 60;
+const EFFECT_REFRESH_TICKS = 200;
 
 // Тики ожидания по имени игрока — вместо табло ticks, которое раньше
 // создавалось командой каждый тик для каждого игрока
 const waitTicks = new Map();
 // Игроки, у которых сейчас открыта форма, — чтобы не открывать её поверх
 const formOpen = new Set();
+
+/**
+ * Снять эффекты блокировки после входа или регистрации. Замедление у замороженного (!freeze) не трогаем:
+ * это его наказание, а не блокировка входа.
+ */
+export function unlockPlayer(player) {
+	player.runCommandAsync('effect @s blindness 0').catch(() => undefined);
+	if (!player.hasTag('frozen')) player.runCommandAsync('effect @s slowness 0').catch(() => undefined);
+}
 
 /** Может ли игрок войти по паролю (иначе ему нужна регистрация) */
 function canLogin(player) {
@@ -80,8 +92,8 @@ world.events.tick.subscribe(() => {
 
 		// Эффекты блокировки управления: сразу и затем раз в секунду
 		if (firstSeen || tickCounter % EFFECT_REFRESH_TICKS === 0) {
-			player.runCommandAsync('effect @s slowness 2 255 true');
-			player.runCommandAsync('effect @s blindness 2 255 true');
+			player.runCommandAsync(`effect @s slowness ${EFFECT_SECONDS} 255 true`);
+			player.runCommandAsync(`effect @s blindness ${EFFECT_SECONDS} 255 true`);
 		}
 
 		// Через 40 тиков показываем форму; если игрок не вошёл — покажем снова ещё через 40

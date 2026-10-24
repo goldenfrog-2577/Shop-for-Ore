@@ -293,6 +293,11 @@ export const commandsList = [
 		role: 'player'
 	},
 	{
+		command: "!password",
+		description: "%chat.help.password",
+		role: 'player'
+	},
+	{
 		command: "!emotes",
 		description: "%chat.help.emotes",
 		role: 'player'
@@ -483,6 +488,11 @@ export const commandsList = [
 	{
 		command: "!roles",
 		description: "%chat.help.roles",
+		role: 'owner'
+	},
+	{
+		command: "!resetpass §7<§fplayer§7>",
+		description: "%chat.help.resetpass",
 		role: 'owner'
 	},
 	{
