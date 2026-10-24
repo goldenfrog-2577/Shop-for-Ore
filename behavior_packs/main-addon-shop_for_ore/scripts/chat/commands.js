@@ -140,9 +140,13 @@ world.events.beforeChat.subscribe((data) => {
 				run(player, `tellraw @s ${rawTranslateRich('chat.cmd.help.detail', cmd.command, { translate: cmd.description.slice(1) }, { translate: `role.${cmd.role}` })}`);
 				break;
 			}
-			// Каждый видит только команды своей роли и ниже
-			const helpMessage = commandsList.filter(cmd => hasRole(player, cmd.role)).map(cmd => `§f${cmd.command} - ${cmd.description}`).join("\n");
-			tellText(player, `%chat.help.header\n${helpMessage}\n§8------------------------§f`);
+			// Каждый видит только команды своей роли и ниже — сплошным списком в порядке commandsList
+			const rawtext = [{ translate: 'chat.help.header' }];
+			for (const cmd of commandsList.filter(cmd => hasRole(player, cmd.role))) {
+				rawtext.push({ text: `\n§f${cmd.command} - ` }, { translate: cmd.description.slice(1) });
+			}
+			rawtext.push({ text: '\n§8------------------------' });
+			run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
 			break;
 		}
 
@@ -506,6 +510,79 @@ world.events.beforeChat.subscribe((data) => {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.kick.use"}]}');
 			}
 			break;
+
+		case "money": {
+			// Деньги игроку в сети: add/take/set. Снять больше, чем есть, нельзя — баланс станет 0
+			const action = (args[1] || '').toLowerCase();
+			const raw = args[2] || '';
+			const amount = Number(raw);
+			if (!args[0] || !['add', 'take', 'set'].includes(action) || !/^\d+$/.test(raw) || amount > 2147483647) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.money.use"}]}');
+				break;
+			}
+			const target = findPlayer(args[0]);
+			if (!target) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', args[0])}`);
+				break;
+			}
+			const before = getScore(target, 'money');
+			const after = action === 'add' ? Math.min(before + amount, 2147483647) : action === 'take' ? Math.max(before - amount, 0) : amount;
+			run(target, `scoreboard players set @s money ${after}`);
+			run(player, `tellraw @s ${rawTranslate('chat.cmd.money.done', target.name, String(after))}`);
+			if (target.name !== player.name) run(target, `tellraw @s ${rawTranslate('chat.cmd.money.received', String(after))}`);
+			break;
+		}
+
+		case "event": {
+			// Запустить ивент сразу (по таймеру они идут, только если включены в settings)
+			const ev = (args[0] || '').toLowerCase();
+			const fn = { haste: 'events/haste_event', rain: 'events/rain_start', gift: 'events/gift_event' }[ev];
+			if (!fn) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.event.use"}]}');
+				break;
+			}
+			// «Ускорение» и «Подарок» выбирают игрока без тега host — без других игроков ничего не произойдёт
+			if (ev !== 'rain' && ![...world.getPlayers()].some(p => !p.hasTag('host'))) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.event.error.no_players"}]}');
+				break;
+			}
+			run(player, `function ${fn}`);
+			run(player, `tellraw @s ${rawTranslateRich('chat.cmd.event.done', { translate: `chat.cmd.event.name.${ev}` })}`);
+			break;
+		}
+
+		case "boost": {
+			// Бесплатный общий буст x2/x4 на 1–60 минут (по умолчанию 5). Как покупка в магазине, но без списания денег
+			const type = (args[0] || '').toLowerCase();
+			const minutes = args[1] === undefined ? 5 : Number(args[1]);
+			if (!['x2', 'x4'].includes(type) || !Number.isInteger(minutes) || minutes < 1 || minutes > 60) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.boost.use"}]}');
+				break;
+			}
+			if ([...world.getPlayers()].some(p => p.hasTag('x2boost') || p.hasTag('x4boost'))) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.boost.error.active"}]}');
+				break;
+			}
+			const stand = type === 'x2' ? 'X2Boost' : 'X4Boost';
+			run(player, `scoreboard players set scoreboards.${type}boost display 0`);
+			run(player, `scoreboard players set @e[name="${stand}"] system ${minutes * 60}`);
+			run(player, `tag @a add ${type}boost`);
+			run(player, `tellraw @a ${rawTranslate('chat.cmd.boost.started', player.name, type, String(minutes))}`);
+			run(player, 'execute positioned as @a run playsound note.bell @a');
+			break;
+		}
+
+		case "say": {
+			// Объявление от сервера всем (эмодзи заменяются)
+			let text = args.join(' ');
+			if (!text) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.say.use"}]}');
+				break;
+			}
+			for (const [name, symbol] of Object.entries(emotes)) text = text.replaceAll(name, symbol);
+			run(player, `tellraw @a ${rawTranslate('chat.cmd.say', text)}`);
+			break;
+		}
 
 		case "mute": {
 			// Мут на 1–1440 минут: нельзя писать в общий чат и ЛС. Хранится тегом mute:<окончание>
