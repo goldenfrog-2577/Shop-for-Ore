@@ -402,6 +402,26 @@ export const commandsList = [
 		role: 'admin'
 	},
 	{
+		command: "!money §7<§fplayer§7> <§fadd§8/§ftake§8/§fset§7> <§famount§7>",
+		description: "%chat.help.money",
+		role: 'admin'
+	},
+	{
+		command: "!event §7<§fhaste§8/§frain§8/§fgift§7>",
+		description: "%chat.help.event",
+		role: 'admin'
+	},
+	{
+		command: "!boost §7<§fx2§8/§fx4§7> [§fminutes§7]",
+		description: "%chat.help.boost",
+		role: 'admin'
+	},
+	{
+		command: "!say §7<§fmessage§7>",
+		description: "%chat.help.say",
+		role: 'admin'
+	},
+	{
 		command: "!scoreboard §7<§fplayer§7> <§fadd§8/§fremove§8/§fset§8/§fget§7> <§fobjective§7> [§famount§7]",
 		description: "%chat.help.scoreboard",
 		role: 'admin'
