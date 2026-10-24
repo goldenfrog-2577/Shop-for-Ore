@@ -273,8 +273,9 @@ world.events.beforeChat.subscribe((data) => {
 		}
 
 		case "roles": {
-			// Роли игроков в сети: сначала старшие
-			const lines = world.getPlayers()
+			// Роли игроков в сети: сначала старшие.
+			// В 1.19.50 getPlayers() возвращает итератор, а не массив — у него нет .map, поэтому [...]
+			const lines = [...world.getPlayers()]
 				.map(p => ({ name: p.name, role: getRole(p) }))
 				.sort((a, b) => ROLES.indexOf(b.role) - ROLES.indexOf(a.role) || a.name.localeCompare(b.name))
 				.map(p => ({ translate: 'chat.cmd.roles.line', with: { rawtext: [{ text: p.name }, { translate: `role.${p.role}` }] } }));
