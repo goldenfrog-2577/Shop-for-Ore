@@ -2,7 +2,7 @@
 // Импортируем необходимые модули
 import { world } from '@minecraft/server';
 import { ModalFormData } from '@minecraft/server-ui';
-import { getScore, transferMoney } from '../DataBase.js';
+import { getScore, transferMoney, closedByPlayer } from '../DataBase.js';
 import { menu } from './menu.js';
 
 // --- Основная функция банка ---
@@ -16,15 +16,15 @@ export function bank(player) {
 	}
 
 	// Создаём форму банка
-	const menu = new ModalFormData()
+	const form = new ModalFormData()
 		.title('%menu.bank.title')
 		.dropdown(`\n%menu.bank.balance §e${getScore(player, "money")}\n%menu.bank.player`, operations, 0)
 		.textField('%menu.bank.amount', '%menu.bank.amount_placeholder');
 
 	// Показываем форму игроку
-	menu.show(player).then((r) => {
-		// Форма закрыта крестиком — formValues нет
-		if (!r.formValues) return;
+	form.show(player).then((r) => {
+		// Форма закрыта — formValues нет; крестиком — назад в главное меню
+		if (!r.formValues) return closedByPlayer(r) ? menu(player) : undefined;
 		// Проверки и сам перевод — в transferMoney (общий с командой !pay)
 		transferMoney(player, operations[r.formValues[0]], r.formValues[1]);
 	});

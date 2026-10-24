@@ -85,8 +85,8 @@ progressScreen.message.locating=Before asking too many questions, read the signs
 progressScreen.message.resourceLoading=Host Omlet: @waxenjaguar2209
 
 ## --- TRANSLATION & UI BUTTONS ---
-admin.common.tap_to_summon=§8[§7Press to summon§8]
 admin.common.back=§8Back
+admin.common.min=min
 menu.common.tap_to_open=§8[§7Press to open§8]
 menu.common.back=§8 Back
 
@@ -303,7 +303,10 @@ admin.main.button.effects=§8Effects
 admin.main.button.tools=§8Tools
 admin.main.button.announce=§8Announcements
 admin.main.button.wipe=§8Wipe
-admin.main.button.bot=§8Summon Bot
+admin.main.button.bot=§8Bot
+admin.main.button.players=§8Players
+admin.main.button.boosts=§8Boosts and events
+admin.main.button.server=§8Server
 
 ## --- ADMIN: GAMEMODES ---
 admin.gamemode.title=§l§8Admin Menu » Gamemode
@@ -311,7 +314,8 @@ admin.gamemode.body=§7List of gamemodes:
 admin.gamemode.button.creative=§8Creative
 admin.gamemode.button.adventure=§8Adventure
 admin.gamemode.button.spectator=§8Spectator
-admin.gamemode.button.fly=§8Fly
+admin.gamemode.button.fly_on=§8Enable flight
+admin.gamemode.button.fly_off=§8Disable flight
 
 ## --- ADMIN: TIME SETTING ---
 admin.time.title=§l§8Admin Menu » Set Time
@@ -326,9 +330,12 @@ admin.time.button.midnight=§8Midnight
 ## --- ADMIN: WARPS ---
 admin.warps.title=§l§8Admin Menu » Warps
 admin.warps.body=§7List of warps:
-admin.warps.button.mine=§8Mine
+admin.warps.button.mine=§8Mine (lvl 1–15)
+admin.warps.button.mine_2=§8Mine (lvl 16–25)
 admin.warps.button.vip=§8VIP Location
 admin.warps.button.cmd_zone=§8CMD Zone
+admin.warps.button.pvp_arena=§8PvP arena
+admin.warps.button.spleef=§8Spleef
 admin.warps.button.random_player=§8/tp to @r
 
 ## --- ADMIN: EFFECTS ---
@@ -338,35 +345,126 @@ admin.effects.button.invisibility=§8Invisibility
 admin.effects.button.resistance=§8Resistance
 admin.effects.button.strength=§8Strength
 admin.effects.button.haste=§8Haste
+admin.effects.button.speed=§8Speed
+admin.effects.button.jump_boost=§8Jump Boost
+admin.effects.button.night_vision=§8Night Vision
+admin.effects.button.regeneration=§8Regeneration
+admin.effects.button.health_boost=§8Health Boost
+admin.effects.button.fire_resistance=§8Fire Resistance
+admin.effects.button.water_breathing=§8Water Breathing
+admin.effects.button.slow_falling=§8Slow Falling
 admin.effects.button.clear=§8Clear Effects
 
 ## --- ADMIN: TOOLS ---
 admin.tools.title=§l§8Admin Menu » Tools
 admin.tools.body=§7Choose what you need:
 admin.tools.button.command_block=§5Command Block
+admin.tools.button.repeating_command_block=§5Repeating Command Block
+admin.tools.button.chain_command_block=§5Chain Command Block
 admin.tools.button.allow=§5Allow Block
 admin.tools.button.deny=§5Deny Block
 admin.tools.button.structure_block=§5Structure Block
 admin.tools.button.structure_void=§5Structure Void
+admin.tools.button.jigsaw=§5Jigsaw Block
 admin.tools.button.barrier=§5Barrier
 admin.tools.button.border=§5Border
 admin.tools.button.light=§5Light Block
 admin.tools.button.npc_egg=§5NPC Spawn Egg
 admin.tools.button.hologram_egg=§5Hologram Spawn Egg
 admin.tools.button.admin_stick=§cAdmin Stick
+admin.tools.button.name_tag=§8Name Tags (16)
 admin.tools.button.clear_inventory=§8Clear Inventory
+admin.tools.clear.body=§7Your whole inventory will be cleared. Are you sure?
 
 ## --- ADMIN: ANNOUNCEMENTS ---
 admin.announce.title=§l§8Admin Menu » Announcements
 admin.announce.body=§7Type below anything you want to say. It will be shown to the whole server.
 admin.announce.placeholder=§7Enter text...
-chat.server.announce=§r §eAnnouncement §8» §f%1$s
 
 ## --- ADMIN: WIPE ---
 admin.wipe.title=§l§8Warning
 admin.wipe.body=§7Wipe will reset all stats, but won't affect tags or inventories. Are you sure?
 admin.wipe.button.yes=§2Yes
 admin.wipe.button.no=§4No
+chat.admin.error.no_players=§r⩕ §l§cERROR!§r §8» §7No players without a role to teleport to
+admin.players.title=§l§8Admin menu » Players
+admin.players.choose=§7Choose a player:
+admin.players.body.name=§7Player:§f
+admin.players.body.role=§7Role:
+admin.players.body.lvl=§7Level:§f
+admin.players.body.money=§7Coins on balance:§e
+admin.players.body.warns=§7Warnings:§f
+admin.players.button.stats=§8Stats
+admin.players.button.tp_to=§8Teleport to them
+admin.players.button.tp_here=§8Teleport here
+admin.players.button.spawn=§8Send to spawn
+admin.players.button.gamemode=§8Game mode
+admin.players.button.money=§8Coins
+admin.players.button.freeze=§8Freeze
+admin.players.button.unfreeze=§8Unfreeze
+admin.players.button.mute=§8Mute
+admin.players.button.unmute=§8Unmute
+admin.players.button.warn=§8Warning
+admin.players.button.kick=§8Kick
+admin.players.button.role=§8Role
+admin.players.money.title=§l§8Admin menu » Coins
+admin.players.money.action=§7Action:
+admin.players.money.add=Give
+admin.players.money.take=Take
+admin.players.money.set=Set
+admin.players.money.amount=§7Amount:
+admin.players.mute.title=§l§8Admin menu » Mute
+admin.players.mute.minutes=§7Duration:
+admin.players.warn.title=§l§8Admin menu » Warning
+admin.players.kick.title=§l§8Admin menu » Kick
+admin.players.reason=§7Reason:
+admin.players.reason_optional=§7Reason (optional):
+admin.players.reason_placeholder=§7Enter a reason...
+admin.players.role.title=§l§8Admin menu » Role
+admin.players.role.choose=§7New role:
+admin.boosts.title=§l§8Admin menu » Boosts and events
+admin.boosts.body=§7A boost from here is free and applies to all players.
+admin.boosts.button.boost=§8Start a boost
+admin.boosts.button.event=§8Event:
+admin.boosts.button.auto=§8Timed events
+admin.boosts.boost.title=§l§8Admin menu » Boost
+admin.boosts.boost.type=§7Boost:
+admin.boosts.boost.minutes=§7Minutes
+admin.boosts.auto.title=§l§8Admin menu » Timed events
+admin.boosts.auto.every=§7every
+chat.admin.auto_events.saved=§r §7CMD §8» §7Timed event settings saved
+admin.server.title=§l§8Admin menu » Server
+admin.server.online=§7Players online:
+admin.server.staff=§7Owner and admins:
+admin.server.moders=§7Moderators:
+admin.server.boost=§7Boost:
+admin.server.left=§7left
+admin.server.auto=§7Timed events:
+admin.server.on=§aon
+admin.server.off=§coff
+admin.server.button.online=§8Who is online
+admin.server.button.top_money=§8Top by coins
+admin.server.button.top_lvl=§8Top by level
+admin.server.button.top_rebirth=§8Top by rebirths
+admin.bot.title=§l§8Admin menu » Bot
+admin.bot.name=§7Bot name:
+admin.bot.present=§aThe bot is in the world
+admin.bot.absent=§8The bot is not in the world
+admin.bot.button.spawn=§8Summon the bot
+admin.bot.button.remove=§8Remove the bot
+admin.bot.button.rename=§8Rename
+admin.bot.button.tp_here=§8Teleport to me
+admin.bot.button.tp_to=§8Teleport to the bot
+admin.bot.button.say=§8Write as the bot
+admin.bot.rename.title=§l§8Admin menu » Bot name
+admin.bot.rename.body=§7New name: 3 to 16 characters — Latin letters, digits, _ and space. If the bot is in the world, it will respawn with the new name.
+admin.bot.say.title=§l§8Admin menu » Message from the bot
+chat.admin.bot.spawned=§r §7CMD §8» §7Bot §f%1$s§r§7 summoned
+chat.admin.bot.removed=§r §7CMD §8» §7Bot §f%1$s§r§7 removed from the world
+chat.admin.bot.renamed=§r §7CMD §8» §7Bot name: §f%1$s
+chat.admin.bot.error.name=§r⩕ §l§cERROR!§r §8» §7Bot name: 3 to 16 characters — Latin letters, digits, _ and space
+chat.admin.bot.error.absent=§r⩕ §l§cERROR!§r §8» §7The bot is not in the world
+chat.admin.bot.error.present=§r⩕ §l§cERROR!§r §8» §7Bot §f%1$s§r§7 is already in the world. Manage it from the admin menu
 chat.server.wiped=§r §cServer §8» §7All player stats have been reset
 
 ## --- LEVEL-UP & SYSTEM MESSAGES ---
@@ -601,6 +699,7 @@ chat.cmd.role.use=§r §7CMD §8» §7Usage: §e!role§7 <player> <player/mod
 chat.cmd.role.done=§r §7CMD §8» §7§f%1$s§r§7 now has the role %2$s
 chat.cmd.role.received=§r §cServer §8» §7You have been given the role %1$s
 chat.cmd.role.error.owner=§r⩕ §l§cERROR!§r §8» §7The owner's role can't be changed with a command
+chat.cmd.role.error.bot=§r⩕ §l§cERROR!§r §8» §7The bot can't get a role: it always has the "Bot" prefix
 chat.cmd.roles.header=§8-----§f Player Roles §8-----§f
 chat.cmd.roles.line=§f%1$s§r§8 — %2$s
 role.player=§7Player
@@ -610,6 +709,7 @@ role.owner=§4Owner
 role.tag.owner=§4Owner
 role.tag.admin=§cAdmin
 role.tag.moder=§9Moderator
+role.tag.bot=§7Bot
 
 ## --- SHOP REWARDS ---
 chat.shop.enchant.efficiency=§r §eShop §8» §7Purchased: §eEfficiency§7 (§e+1§7)

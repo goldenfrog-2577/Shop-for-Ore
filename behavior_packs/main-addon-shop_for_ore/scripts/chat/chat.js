@@ -1,7 +1,7 @@
 // --- Чат-логика и антиспам для Shop for Ore ---
 // Импортируем необходимые функции и данные
 import { world } from '@minecraft/server';
-import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS, muteMinutesLeft } from '../DataBase.js';
+import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft } from '../DataBase.js';
 
 // --- Значения по умолчанию для тегов игрока ---
 const rank = "rank:";
@@ -145,20 +145,37 @@ world.events.beforeChat.subscribe((data) => {
 	data.sendToTargets = true;
 	data.targets = [];
 
-	const ranks = getRanks(data.sender).join("§r§8] | [§r");
-	const nameColor = getNames(data.sender);
-	const textColor = getTexts(data.sender);
+	sendChatMessage(data.sender, message);
+});
+
+/**
+ * Отправить в общий чат сообщение в формате чата карты: время, роль, префиксы, ник, текст (эмодзи заменяются).
+ * Тот же формат у сообщения от имени бота из меню администратора.
+ * @param {Player} sender
+ * @param {string} message
+ */
+export function sendChatMessage(sender, message) {
+	const ranks = getRanks(sender).join("§r§8] | [§r");
+	const nameColor = getNames(sender);
+	const textColor = getTexts(sender);
 	// Московское время (UTC+3) считаем от UTC, чтобы не зависеть от часового пояса движка/устройства
 	const now = new Date(Date.now() + 3 * 60 * 60 * 1000);
 	const time = `${now.getUTCHours()}:${now.getUTCMinutes().toString().padStart(2, '0')}`;
 	const formatMessage = replaceEmotes(message);
+	// Бот карты: только префикс «Бот» — роли и ранги (rank:) его не перебивают
+	if (sender.hasTag('bot')) {
+		const rawtext = [{ text: ` §7${time} §8[` }];
+		rawtext.push({ translate: 'role.tag.bot' }, { text: `§r§8]§r ${BOT_COLOR}${sender.name}  §f${formatMessage}` });
+		world.getDimension('overworld').runCommandAsync(`tellraw @a ${JSON.stringify({ rawtext })}`).catch(() => undefined);
+		return;
+	}
 	// Префикс роли (кроме обычного игрока) — переводимое слово, поэтому не world.say, а tellraw с translate
-	const role = getRole(data.sender);
+	const role = getRole(sender);
 	const rawtext = [{ text: ` §7${time} §8[` }];
 	if (role !== 'player') rawtext.push({ translate: `role.tag.${role}` }, { text: '§r§8] | [§r' });
-	rawtext.push({ text: `${ranks}§8]§r ${nameColor}${playerName}  ${textColor}${formatMessage}` });
+	rawtext.push({ text: `${ranks}§8]§r ${nameColor}${sender.name}  ${textColor}${formatMessage}` });
 	world.getDimension('overworld').runCommandAsync(`tellraw @a ${JSON.stringify({ rawtext })}`).catch(() => undefined);
-});
+}
 
 // --- Обновление nameTag игрока (отображение информации над головой) ---
 // Раз в секунду и только если текст изменился (раньше — каждый тик для всех игроков)
@@ -167,6 +184,11 @@ let nameTagTick = 0;
 world.events.tick.subscribe(() => {
 	if (++nameTagTick % NAMETAG_REFRESH_TICKS !== 0) return;
 	for (let player of world.getPlayers()) {
+		// Бот: над головой только ник в цвете бота (уровня и денег у него нет)
+		if (player.hasTag('bot')) {
+			if (player.nameTag !== BOT_COLOR + player.name) player.nameTag = BOT_COLOR + player.name;
+			continue;
+		}
 		const role = getRole(player);
 		// Ник над головой: у игрока серый, у персонала — цвет роли
 		const nameTag = `${role === 'player' ? '§7' : ROLE_COLORS[role]}${player.name}\n§f - ${metricNumbers(getScore(player,"lvl"))}\n§f - ${metricNumbers(getScore(player,"xp"))}/${metricNumbers(getScore(player,"qx"))}\n§f - ${metricNumbers(getScore(player,"money"))}\n§f - ${metricNumbers(getScore(player,"rebirth"))}`;
