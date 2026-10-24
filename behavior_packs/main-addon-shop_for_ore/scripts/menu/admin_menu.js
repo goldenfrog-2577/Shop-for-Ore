@@ -20,9 +20,9 @@ const ROLE_GLYPHS = { player: '\ue137', moder: '\ue131', admin: '\ue130' };
 // Значок опыта, как у бустов в магазине
 const XP_GLYPH = '\ue154';
 const OPEN = '\n%menu.common.tap_to_open';
-const EVENTS = ['haste', 'rain', 'gift'];
-// Как часто срабатывают ивенты по таймеру (минуты): timers/t3600, t6000, t4800
-const EVENT_PERIOD = { haste: 3, rain: 5, gift: 4 };
+const EVENTS = ['haste', 'rain', 'gift', 'mythic'];
+// Как часто срабатывают ивенты по таймеру (минуты): timers/t3600, t6000, t4800, мистик — system/mythic.js
+const EVENT_PERIOD = { haste: 3, rain: 5, gift: 4, mythic: 10 };
 
 // --- Открытие админ-меню по использованию специального предмета ---
 world.events.beforeItemUse.subscribe(data => {

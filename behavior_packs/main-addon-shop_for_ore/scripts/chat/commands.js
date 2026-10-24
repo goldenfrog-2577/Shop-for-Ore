@@ -4,6 +4,7 @@ import { world } from '@minecraft/server';
 import { commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS } from '../DataBase.js';
 import { getBot, getBotName, spawnBot } from '../system/spawnbot.js';
 import { teleportToArena, combatSecondsLeft } from '../system/pvp.js';
+import { startMythic } from '../system/mythic.js';
 
 // --- Общие помощники команд ---
 
@@ -579,6 +580,15 @@ export function runChatCommand(player, command, args) {
 		case "event": {
 			// Запустить ивент сразу (по таймеру они идут, только если включены в settings)
 			const ev = (args[0] || '').toLowerCase();
+			// «Мистик» — скрипт (system/mythic.js): наполняет сундук в центре PvP-арены
+			if (ev === 'mythic') {
+				if (!startMythic()) {
+					player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.event.error.no_chest"}]}');
+					break;
+				}
+				run(player, `tellraw @s ${rawTranslateRich('chat.cmd.event.done', { translate: 'chat.cmd.event.name.mythic' })}`);
+				break;
+			}
 			const fn = { haste: 'events/haste_event', rain: 'events/rain_start', gift: 'events/gift_event' }[ev];
 			if (!fn) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.event.use"}]}');
