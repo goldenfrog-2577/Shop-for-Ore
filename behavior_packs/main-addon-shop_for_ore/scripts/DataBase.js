@@ -108,6 +108,47 @@ export function isPending(player) {
 	return player.hasTag('chekLogin') || player.hasTag('chekRegister');
 };
 
+/**
+ * Перевод денег (табло money) другому игроку в сети — общий для меню банка и !pay.
+ * Сумма — целое положительное число (строка из формы или чата). Сначала списание у отправителя,
+ * зачисление — только если списание прошло. Ошибки сообщает отправителю.
+ * @param {Player} player — отправитель
+ * @param {string} targetName — ник получателя
+ * @param {string} rawAmount — сумма как ввёл игрок
+ * @returns {boolean} — перевод начат
+ */
+export function transferMoney(player, targetName, rawAmount) {
+	const raw = String(rawAmount ?? '').trim();
+	const amount = Number(raw);
+	// Целое положительное в пределах табло (дробная или огромная сумма «уходила» только в сообщении)
+	if (!/^\d+$/.test(raw) || !Number.isSafeInteger(amount) || amount <= 0 || amount > 2147483647) {
+		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.amount"}]}');
+		return false;
+	}
+	if (String(targetName).toLowerCase() === player.name.toLowerCase()) {
+		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.self"}]}');
+		return false;
+	}
+	// Получатель должен быть в сети: иначе деньги ушли бы «фейковому игроку» с его ником
+	const target = findPlayer(targetName);
+	if (!target) {
+		run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', targetName)}`);
+		return false;
+	}
+	if (getScore(player, "money") < amount) {
+		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.no_money"}]}');
+		return false;
+	}
+	run(player, `scoreboard players remove @s money ${amount}`).then((res) => {
+		if (res === undefined) return;
+		run(target, `scoreboard players add @s money ${amount}`);
+		run(player, `tellraw @s ${rawTranslate('chat.bank.sent', target.name, amount)}`);
+		run(target, `tellraw @s ${rawTranslate('chat.bank.received', player.name, amount)}`);
+		run(player, 'playsound note.bell @s');
+	});
+	return true;
+};
+
 // --- Роли: уровни доступа к командам и меню ---
 // Владелец — хост мира (тег host), он один. Модератора и администратора назначает
 // владелец командой !role, роль хранится тегом role:<id>. Префикс в чате (тег rank:,
@@ -205,6 +246,41 @@ export const commandsList = [
 	{
 		command: "!clearchat §7[§fall§7]",
 		description: "%chat.help.clearchat",
+		role: 'player'
+	},
+	{
+		command: "!balance",
+		description: "%chat.help.balance",
+		role: 'player'
+	},
+	{
+		command: "!pay §7<§fplayer§7> <§famount§7>",
+		description: "%chat.help.pay",
+		role: 'player'
+	},
+	{
+		command: "!top §7[§fmoney§8/§flvl§8/§frebirth§7]",
+		description: "%chat.help.top",
+		role: 'player'
+	},
+	{
+		command: "!stats §7[§fplayer§7]",
+		description: "%chat.help.stats",
+		role: 'player'
+	},
+	{
+		command: "!online",
+		description: "%chat.help.online",
+		role: 'player'
+	},
+	{
+		command: "!report §7<§fplayer§7> <§freason§7>",
+		description: "%chat.help.report",
+		role: 'player'
+	},
+	{
+		command: "!rules",
+		description: "%chat.help.rules",
 		role: 'player'
 	},
 
