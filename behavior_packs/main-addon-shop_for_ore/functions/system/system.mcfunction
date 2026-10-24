@@ -18,7 +18,7 @@ execute as @a[x=-115,y=0,z=-51,r=1] at @s run tp @s 500 3 500
 gamemode a @a[tag=!host,tag=!role:admin,tag=!role:moder,m=!a]
 xp -100l @a[lm=1]
 
-# Сброс значений для новых игроков (без тега player)
+# Начальные значения для новых игроков (без тега player)
 # promo1-4: "add 0" только создаёт счёт новичку и не обнуляет его после перерождения,
 # иначе промокоды снова срабатывают после каждого rebirth
 scoreboard players set @a[tag=!player] xp 0
@@ -32,6 +32,17 @@ scoreboard players add @a promo4 0
 scoreboard players set @a[tag=!player] efficiency 0
 scoreboard players set @a[tag=!player] fortune 0
 scoreboard players set @a[tag=!rebirth] rebirth 0
+# Счёта нет, а тег player есть — так бывает после вайпа у тех, кто был не в сети: вайп сбрасывает
+# табло у всех («reset *»), а тег player снимает только с тех, кто в сети (@e). Без уровня у игрока
+# нет кирки и панели слева. «add 0» создаёт пустой счёт как 0 и не меняет существующий; уровня 0 не бывает
+scoreboard players add @a xp 0
+scoreboard players add @a money 0
+scoreboard players add @a money2 0
+scoreboard players add @a lvl 0
+scoreboard players set @a[scores={lvl=..0}] lvl 1
+scoreboard players add @a efficiency 0
+scoreboard players add @a fortune 0
+scoreboard players add @a rebirth 0
 
 # Выдача меню администратора и обычного меню — только если его нет в слоте
 # (раньше предмет перевыдавался каждый тик всем игрокам)
