@@ -443,7 +443,6 @@ chat.event.rain_end=§r §6Event §8» §7The coin rain is over!
 
 ## --- COMMANDS & USAGE ---
 chat.help.header=§8-----§f Command List §8-----§f
-chat.help.section=%1$s
 chat.help.help=§7Shows the command list or details of one command
 chat.help.spawn=§7Teleports to spawn
 chat.help.emotes=§7Shows the list of available emotes
