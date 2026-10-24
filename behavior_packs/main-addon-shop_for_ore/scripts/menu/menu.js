@@ -125,10 +125,10 @@ function mapCreator(player) {
 	.title('%menu.creators.title')
 	.body('')
 	.button('§8Сreator\n§8kapycta1231484',
-		'textures/server_icons/creator')
+		'textures/ui/icon_steve')
 	// Соавтор карты: иконки шрифта (glyph_E1) подписаны «BY'NASTYA»
 	.button('§5Сo-creator\n§8NastyaXs00',
-		'textures/server_icons/creator')
+		'textures/ui/icon_alex')
 	.button('§6Оmlet Arcade\n§8@waxenjaguar2209',
 		'textures/server_icons/omlet')
 	.button('§9Discоrd\n§8GoldenFrog#2577',

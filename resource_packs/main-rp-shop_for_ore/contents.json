@@ -39,9 +39,6 @@
 			"path" : "ui/chat_screen.json"
 		},
 		{
-			"path" : "textures/server_icons/creator.png"
-		},
-		{
 			"path" : "textures/server_icons/command_block.png"
 		},
 		{
