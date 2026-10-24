@@ -149,6 +149,35 @@ export function transferMoney(player, targetName, rawAmount) {
 	return true;
 };
 
+// --- Наказания: мут, предупреждения, заморозка (хранятся тегами — переживают перезаход) ---
+// mute:<время окончания в мс>, warn:<1|2>, frozen
+
+/**
+ * Сколько ещё минут игрок в муте (0 — не в муте). Истёкший мут снимается.
+ * @param {Player} player
+ * @returns {number}
+ */
+export function muteMinutesLeft(player) {
+	const tag = player.getTags().find(t => t.startsWith('mute:'));
+	if (!tag) return 0;
+	const left = Number(tag.slice(5)) - Date.now();
+	if (!(left > 0)) {
+		player.removeTag(tag);
+		return 0;
+	}
+	return Math.ceil(left / 60000);
+};
+
+/**
+ * Число предупреждений игрока (тег warn:N).
+ * @param {Player} player
+ * @returns {number}
+ */
+export function getWarns(player) {
+	const tag = player.getTags().find(t => t.startsWith('warn:'));
+	return tag ? Number(tag.slice(5)) || 0 : 0;
+};
+
 // --- Роли: уровни доступа к командам и меню ---
 // Владелец — хост мира (тег host), он один. Модератора и администратора назначает
 // владелец командой !role, роль хранится тегом role:<id>. Префикс в чате (тег rank:,
@@ -308,6 +337,26 @@ export const commandsList = [
 	{
 		command: "!kick §7<§fplayer§7> [§freason§7]",
 		description: "%chat.help.kick",
+		role: 'moder'
+	},
+	{
+		command: "!mute §7<§fplayer§7> <§fminutes§7> [§freason§7]",
+		description: "%chat.help.mute",
+		role: 'moder'
+	},
+	{
+		command: "!unmute §7<§fplayer§7>",
+		description: "%chat.help.unmute",
+		role: 'moder'
+	},
+	{
+		command: "!warn §7<§fplayer§7> <§freason§7>",
+		description: "%chat.help.warn",
+		role: 'moder'
+	},
+	{
+		command: "!freeze §7<§fplayer§7>",
+		description: "%chat.help.freeze",
 		role: 'moder'
 	},
 

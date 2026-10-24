@@ -1,7 +1,7 @@
 // --- Чат-логика и антиспам для Shop for Ore ---
 // Импортируем необходимые функции и данные
 import { world } from '@minecraft/server';
-import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS } from '../DataBase.js';
+import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS, muteMinutesLeft } from '../DataBase.js';
 
 // --- Значения по умолчанию для тегов игрока ---
 const rank = "rank:";
@@ -116,6 +116,14 @@ world.events.beforeChat.subscribe((data) => {
 
 	// Не обрабатывать команды (начинаются с '!')
 	if (message.startsWith('!')) {
+		return;
+	}
+
+	// Мут: писать в общий чат нельзя до окончания (ЛС блокирует commands.js)
+	const muted = muteMinutesLeft(player);
+	if (muted > 0) {
+		data.cancel = true;
+		player.runCommandAsync(`tellraw @s ${JSON.stringify({ rawtext: [{ translate: 'chat.cmd.mute.active', with: [String(muted)] }] })}`);
 		return;
 	}
 
