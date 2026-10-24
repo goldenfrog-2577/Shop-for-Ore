@@ -185,7 +185,7 @@ export function getWarns(player) {
 export const ROLES = ['player', 'moder', 'admin', 'owner'];
 
 // Цвет ника по роли (в чате и над головой), если у игрока нет своего тега name:
-export const ROLE_COLORS = { player: '§f', moder: '§b', admin: '§c', owner: '§4' };
+export const ROLE_COLORS = { player: '§f', moder: '§9', admin: '§c', owner: '§4' };
 
 /**
  * Роль игрока: 'player' | 'moder' | 'admin' | 'owner'.

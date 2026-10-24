@@ -443,7 +443,7 @@ chat.event.rain_end=§r §6Evento §8» §7¡La lluvia de monedas terminó!
 
 ## --- COMANDOS Y USO ---
 chat.help.header=§8-----§f Lista de comandos §8-----§f
-chat.help.section=§8—— %1$s §8——
+chat.help.section=%1$s
 chat.help.help=§7Muestra la lista de comandos o la descripción de uno
 chat.help.spawn=§7Teletransporta al spawn
 chat.help.emotes=§7Muestra la lista de emotes disponibles
@@ -605,12 +605,12 @@ chat.cmd.role.error.owner=§r⩕ §l§cERROR!§r §8» §7El rol del propietario
 chat.cmd.roles.header=§8-----§f Roles de jugadores §8-----§f
 chat.cmd.roles.line=§f%1$s§r§8 — %2$s
 role.player=§7Jugador
-role.moder=§bModerador
+role.moder=§9Moderador
 role.admin=§cAdministrador
 role.owner=§4Propietario
 role.tag.owner=§4Dueño
 role.tag.admin=§cAdmin
-role.tag.moder=§bModerador
+role.tag.moder=§9Moderador
 
 ## --- PREMIOS DE TIENDA ---
 chat.shop.enchant.efficiency=§r §eTienda §8» §7Comprado: §eEficiencia§7 (§e+1§7)
