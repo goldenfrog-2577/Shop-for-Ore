@@ -153,14 +153,14 @@ menu.howtoplay.line.10=§l§7Rebirth
 menu.howtoplay.line.11=§r§7Rebirth is replaying the map with a permanent haste effect
 menu.howtoplay.line.12=Rebirth unlocks after 16 
 menu.howtoplay.line.13=Upgrade in Menu »  Upgrades
-menu.howtoplay.line.14=§r§l§7 What do the icons on the left mean?
-menu.howtoplay.line.15=§r§7 - your Nickname (in-game name)
-menu.howtoplay.line.16=§r - your Money / Coins
-menu.howtoplay.line.17=§r - your VIP coins
-menu.howtoplay.line.18=§r - your Level and next 
-menu.howtoplay.line.19=§r - your XP and how much  to next 
-menu.howtoplay.line.20=§r - your Rebirth, feature: haste
-menu.howtoplay.line.21=§r - current Server Online
+menu.howtoplay.line.14=§r§l§7 What do the icons on the left mean?
+menu.howtoplay.line.15=§r§7 - your Nickname (in-game name)
+menu.howtoplay.line.16=§r§7 - your Money / Coins
+menu.howtoplay.line.17=§r§7 - your VIP coins
+menu.howtoplay.line.18=§r§7 - your Level and next §r§7
+menu.howtoplay.line.19=§r§7 - your XP and how much §r§7 to next §r§7
+menu.howtoplay.line.20=§r§7 - your Rebirth, feature: haste
+menu.howtoplay.line.21=§r§7 - current Server Online
 
 menu.creators.title=§l§8Server Menu » §f⩇§8 Creators
 
