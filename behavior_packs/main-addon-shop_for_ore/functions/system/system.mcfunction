@@ -9,7 +9,8 @@ execute as @a at @s if block ~~~ planks 5 run tp @s 0 5 0
 execute as @a at @s if block ~~~ crimson_planks run tp @s 0 5 -33
 execute as @a at @s if block ~~~ warped_planks run tp @s 0 5 -33
 # Телепортация в определённые мини-игры
-execute as @a[x=-103,y=0,z=-51,r=1] at @s run tp @s 292 -25 259
+# PvP-арена: телепорт в случайную точку площадки делает scripts/system/pvp.js по тегу warp:pvp
+tag @a[x=-103,y=0,z=-51,r=1,tag=!warp:pvp] add warp:pvp
 execute as @a[x=-115,y=0,z=-51,r=1] at @s run tp @s 500 3 500
 
 # Установка режима приключения и снятие опыта

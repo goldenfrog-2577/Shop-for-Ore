@@ -591,6 +591,7 @@ chat.cmd.warp.header=§8-----§f Warp Points §8-----§f
 chat.cmd.warp.done=§r §cServer §8» §7You were teleported: §e%1$s
 chat.cmd.warp.other=§r §7CMD §8» §7§f%1$s§r§7 was teleported: §e%2$s
 chat.cmd.warp.error.unknown=§r⩕ §l§cERROR!§r §8» §7No point §e%1$s§7. List of points — §e!warp
+chat.pvp.combat=§r⩕ §l§cERROR!§r §8» §7You are in combat on the PvP arena: teleport will be available in §e%1$s§7 s
 warp.spawn=Spawn
 warp.mine=Mine (by level)
 warp.minigames=Minigames

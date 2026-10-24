@@ -271,7 +271,8 @@ export const WARPS = [
 		return [0, 5, 0];
 	} },
 	{ id: 'minigames', role: 'player', pos: [-109, 5, -60] },
-	{ id: 'pvp', role: 'player', pos: [292, -25, 259] },
+	// Арена: случайная точка площадки (system/pvp.js), чтобы игроки не появлялись друг у друга
+	{ id: 'pvp', role: 'player', arena: true },
 	{ id: 'spleef', role: 'player', pos: [500, 3, 500] },
 	{ id: 'vip', role: 'admin', pos: [-60, 5, -60] },
 	{ id: 'cmd', role: 'admin', pos: [50, 5, 50] }

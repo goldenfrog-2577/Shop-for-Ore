@@ -3,6 +3,7 @@
 import { world } from '@minecraft/server';
 import { commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS } from '../DataBase.js';
 import { getBot, getBotName, spawnBot } from '../system/spawnbot.js';
+import { teleportToArena, combatSecondsLeft } from '../system/pvp.js';
 
 // --- Общие помощники команд ---
 
@@ -182,10 +183,19 @@ export function runChatCommand(player, command, args) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.active"}]}');
 				break;
 			}
+			// Режим боя на PvP-арене: сам уйти нельзя, пока не пройдут 15 секунд после удара
+			if (!args[1] && combatSecondsLeft(player) > 0) {
+				run(player, `tellraw @s ${rawTranslate('chat.pvp.combat', combatSecondsLeft(player))}`);
+				break;
+			}
 			const target = resolveTarget(player, args.slice(1).join(' ') || undefined, 'moder');
 			if (!target) break;
-			const [x, y, z] = typeof warp.pos === 'function' ? warp.pos(target) : warp.pos;
-			run(target, `tp @s ${x} ${y} ${z}`);
+			if (warp.arena) {
+				teleportToArena(target);
+			} else {
+				const [x, y, z] = typeof warp.pos === 'function' ? warp.pos(target) : warp.pos;
+				run(target, `tp @s ${x} ${y} ${z}`);
+			}
 			run(target, `tellraw @s ${rawTranslateRich('chat.cmd.warp.done', { translate: `warp.${warp.id}` })}`);
 			if (target.name !== player.name) run(player, `tellraw @s ${rawTranslateRich('chat.cmd.warp.other', target.name, { translate: `warp.${warp.id}` })}`);
 			break;
