@@ -335,6 +335,7 @@ admin.warps.button.mine_2=§8Mine (lvl 16–25)
 admin.warps.button.vip=§8VIP Location
 admin.warps.button.cmd_zone=§8CMD Zone
 admin.warps.button.pvp_arena=§8PvP arena
+admin.warps.button.spleef=§8Spleef
 admin.warps.button.random_player=§8/tp to @r
 
 ## --- ADMIN: EFFECTS ---
@@ -366,15 +367,12 @@ admin.tools.button.structure_block=§5Structure Block
 admin.tools.button.structure_void=§5Structure Void
 admin.tools.button.jigsaw=§5Jigsaw Block
 admin.tools.button.barrier=§5Barrier
-admin.tools.button.bedrock=§5Bedrock
 admin.tools.button.border=§5Border
 admin.tools.button.light=§5Light Block
 admin.tools.button.npc_egg=§5NPC Spawn Egg
 admin.tools.button.hologram_egg=§5Hologram Spawn Egg
 admin.tools.button.admin_stick=§cAdmin Stick
-admin.tools.button.elytra=§eElytra
 admin.tools.button.name_tag=§8Name Tags (16)
-admin.tools.button.spyglass=§8Spyglass
 admin.tools.button.clear_inventory=§8Clear Inventory
 admin.tools.clear.body=§7Your whole inventory will be cleared. Are you sure?
 
@@ -701,6 +699,7 @@ chat.cmd.role.use=§r §7CMD §8» §7Usage: §e!role§7 <player> <player/mod
 chat.cmd.role.done=§r §7CMD §8» §7§f%1$s§r§7 now has the role %2$s
 chat.cmd.role.received=§r §cServer §8» §7You have been given the role %1$s
 chat.cmd.role.error.owner=§r⩕ §l§cERROR!§r §8» §7The owner's role can't be changed with a command
+chat.cmd.role.error.bot=§r⩕ §l§cERROR!§r §8» §7The bot can't get a role: it always has the "Bot" prefix
 chat.cmd.roles.header=§8-----§f Player Roles §8-----§f
 chat.cmd.roles.line=§f%1$s§r§8 — %2$s
 role.player=§7Player
@@ -710,6 +709,7 @@ role.owner=§4Owner
 role.tag.owner=§4Owner
 role.tag.admin=§cAdmin
 role.tag.moder=§9Moderator
+role.tag.bot=§bBot
 
 ## --- SHOP REWARDS ---
 chat.shop.enchant.efficiency=§r §eShop §8» §7Purchased: §eEfficiency§7 (§e+1§7)

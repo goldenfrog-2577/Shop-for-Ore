@@ -335,6 +335,7 @@ admin.warps.button.mine_2=§8Шахта (16–25 ур.)
 admin.warps.button.vip=§8VIP локация
 admin.warps.button.cmd_zone=§8CMD Zone
 admin.warps.button.pvp_arena=§8PvP-арена
+admin.warps.button.spleef=§8Сплиф
 admin.warps.button.random_player=§8/tp to @r
 
 ## --- АДМИН: ЭФФЕКТЫ ---
@@ -366,15 +367,12 @@ admin.tools.button.structure_block=§5Структурный блок
 admin.tools.button.structure_void=§5Структурная пустота
 admin.tools.button.jigsaw=§5Блок-пазл
 admin.tools.button.barrier=§5Барьер
-admin.tools.button.bedrock=§5Бедрок
 admin.tools.button.border=§5Граница
 admin.tools.button.light=§5Блок света
 admin.tools.button.npc_egg=§5Яйцо призыва NPC
 admin.tools.button.hologram_egg=§5Яйцо призыва голограммы
 admin.tools.button.admin_stick=§cПалочка админа
-admin.tools.button.elytra=§eЭлитры
 admin.tools.button.name_tag=§8Бирки (16 шт.)
-admin.tools.button.spyglass=§8Подзорная труба
 admin.tools.button.clear_inventory=§8Очистить инвентарь
 admin.tools.clear.body=§7Весь твой инвентарь будет очищен. Ты уверен(а)?
 
@@ -701,6 +699,7 @@ chat.cmd.role.use=§r §7CMD §8» §7Использование: §e!role§7
 chat.cmd.role.done=§r §7CMD §8» §7Игроку §f%1$s§r§7 назначена роль %2$s
 chat.cmd.role.received=§r §cСервер §8» §7Тебе назначена роль %1$s
 chat.cmd.role.error.owner=§r⩕ §l§cERROR!§r §8» §7Роль владельца командой не меняется
+chat.cmd.role.error.bot=§r⩕ §l§cERROR!§r §8» §7Боту роль не выдаётся: у него всегда префикс «Бот»
 chat.cmd.roles.header=§8-----§f Роли игроков §8-----§f
 chat.cmd.roles.line=§f%1$s§r§8 — %2$s
 role.player=§7Игрок
@@ -710,6 +709,7 @@ role.owner=§4Владелец
 role.tag.owner=§4Владелец
 role.tag.admin=§cАдмин
 role.tag.moder=§9Модератор
+role.tag.bot=§bБот
 
 ## --- НАГРАДЫ МАГАЗИНА ---
 chat.shop.enchant.efficiency=§r §eМагазин §8» §7Куплено: §eЭффективность§7 (§e+1§7)

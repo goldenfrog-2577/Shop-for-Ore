@@ -197,12 +197,17 @@ export const ROLES = ['player', 'moder', 'admin', 'owner'];
 // Цвет ника по роли (в чате и над головой), если у игрока нет своего тега name:
 export const ROLE_COLORS = { player: '§f', moder: '§9', admin: '§c', owner: '§4' };
 
+// Цвет ника и префикса бота карты
+export const BOT_COLOR = '§b';
+
 /**
  * Роль игрока: 'player' | 'moder' | 'admin' | 'owner'.
  * @param {Player} player
  * @returns {string}
  */
 export function getRole(player) {
+	// Бот карты (тег bot) — всегда без роли: прав у него нет, в чате у него свой префикс «Бот»
+	if (player.hasTag('bot')) return 'player';
 	if (player.hasTag('host')) return 'owner';
 	if (player.hasTag('role:admin')) return 'admin';
 	if (player.hasTag('role:moder')) return 'moder';

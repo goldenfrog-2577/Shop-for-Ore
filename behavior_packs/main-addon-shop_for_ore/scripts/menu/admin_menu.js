@@ -122,6 +122,8 @@ function warps(player) {
 		{ text: '%menu.warps.button.minigames', icon: 'textures/ui/World', run: tp(-109, 5, -60) },
 		// Туда же ведёт портал из мини-игр (system/system: -103 0 -51)
 		{ text: '%admin.warps.button.pvp_arena', icon: 'textures/ui/World', run: tp(292, -25, 259) },
+		// Сплиф (второй портал из мини-игр: -115 0 -51)
+		{ text: '%admin.warps.button.spleef', icon: 'textures/ui/World', run: tp(500, -3, 500) },
 		{ text: '%admin.warps.button.cmd_zone', icon: 'textures/ui/World', run: tp(50, 5, 50) },
 		{ text: '%admin.warps.button.random_player', icon: 'textures/ui/World', run: () => {
 			// Случайный игрок без роли; если таких нет — сообщение (раньше команда молча не срабатывала)
@@ -166,23 +168,20 @@ function tools(player) {
 	const give = (item) => () => player.runCommandAsync(`give @s ${item}`);
 	showActions(player, '%admin.tools.title', '%admin.tools.body', [
 		{ text: '%admin.tools.button.command_block', icon: 'textures/server_icons/command_block', run: give('command_block') },
-		{ text: '%admin.tools.button.repeating_command_block', icon: 'textures/blocks/repeating_command_block_front_mipmap', run: give('repeating_command_block') },
-		{ text: '%admin.tools.button.chain_command_block', icon: 'textures/blocks/chain_command_block_front_mipmap', run: give('chain_command_block') },
+		{ text: '%admin.tools.button.repeating_command_block', icon: 'textures/server_icons/repeating_command_block', run: give('repeating_command_block') },
+		{ text: '%admin.tools.button.chain_command_block', icon: 'textures/server_icons/chain_command_block', run: give('chain_command_block') },
 		{ text: '%admin.tools.button.allow', icon: 'textures/server_icons/allow', run: give('allow') },
 		{ text: '%admin.tools.button.deny', icon: 'textures/server_icons/deny', run: give('deny') },
 		{ text: '%admin.tools.button.structure_block', icon: 'textures/server_icons/structure_block', run: give('structure_block') },
 		{ text: '%admin.tools.button.structure_void', icon: 'textures/server_icons/structure_void', run: give('structure_void') },
-		{ text: '%admin.tools.button.jigsaw', icon: 'textures/blocks/jigsaw_front', run: give('jigsaw') },
+		{ text: '%admin.tools.button.jigsaw', icon: 'textures/server_icons/jigsaw', run: give('jigsaw') },
 		{ text: '%admin.tools.button.barrier', icon: 'textures/blocks/barrier', run: give('barrier') },
-		{ text: '%admin.tools.button.bedrock', icon: 'textures/blocks/bedrock', run: give('bedrock') },
 		{ text: '%admin.tools.button.border', icon: 'textures/server_icons/border', run: give('border_block') },
 		{ text: '%admin.tools.button.light', icon: 'textures/items/light_block_15', run: give('light_block 1 15') },
 		{ text: '%admin.tools.button.npc_egg', icon: 'textures/items/egg_npc', run: give('spawn_egg 1 51') },
 		{ text: '%admin.tools.button.hologram_egg', icon: 'textures/items/floating_text', run: give('server:floating_text_spawn_egg') },
 		{ text: '%admin.tools.button.admin_stick', icon: 'textures/items/stick', run: give('server:admin_stick') },
-		{ text: '%admin.tools.button.elytra', icon: 'textures/items/elytra', run: give('elytra') },
 		{ text: '%admin.tools.button.name_tag', icon: 'textures/items/name_tag', run: give('name_tag 16') },
-		{ text: '%admin.tools.button.spyglass', icon: 'textures/items/spyglass', run: give('spyglass') },
 		// Очистка всего инвентаря — теперь с подтверждением
 		{ text: '%admin.tools.button.clear_inventory', icon: 'textures/ui/cancel', run: () => confirm(player, WARN_TITLE, '%admin.tools.clear.body', () => player.runCommandAsync('clear @s'), () => tools(player)) },
 		back(() => admin_menu(player))
@@ -255,7 +254,7 @@ function playerActions(player, target) {
 			{ text: '%admin.players.button.kick', icon: 'textures/ui/cancel', run: () => playerReason(player, target, 'kick', '%admin.players.kick.title', '%admin.players.reason_optional') }
 		);
 		// Роль меняет только владелец, и не самому себе
-		if (hasRole(player, 'owner') && !target.hasTag('host')) {
+		if (hasRole(player, 'owner') && !target.hasTag('host') && !target.hasTag('bot')) {
 			items.push({ text: '%admin.players.button.role', icon: 'textures/ui/permissions_op_crown', run: () => playerRole(player, target) });
 		}
 	}

@@ -782,6 +782,11 @@ export function runChatCommand(player, command, args) {
 				run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', roleTargetName)}`);
 				break;
 			}
+			// Боту роль не выдаётся: у него всегда префикс «Бот»
+			if (roleTarget.hasTag('bot')) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.role.error.bot"}]}');
+				break;
+			}
 			// Владелец один — его роль командой не меняется
 			if (roleTarget.hasTag('host')) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.role.error.owner"}]}');
