@@ -3,6 +3,7 @@
 import { world } from '@minecraft/server';
 import { ActionFormData, ModalFormData } from '@minecraft/server-ui';
 import { bank } from './bank_menu.js';
+import { combatSecondsLeft } from '../system/pvp.js';
 import { isPending, rawTranslate, tellText, closedByPlayer } from '../DataBase.js';
 
 // --- Открытие меню при использовании специального предмета ---
@@ -455,6 +456,11 @@ function warps(player) {
 	warps.show(player).then(tp => {
 		// Крестик — на уровень вверх
 		if (closedByPlayer(tp)) return menu(player);
+		// Режим боя на PvP-арене: телепорт из меню тоже недоступен
+		if (tp.selection !== undefined && tp.selection < 2 && combatSecondsLeft(player) > 0) {
+			player.runCommandAsync(`tellraw @s ${rawTranslate('chat.pvp.combat', combatSecondsLeft(player))}`);
+			return;
+		}
 		if (tp.selection == 0) {
 			player.runCommandAsync('tp @s[scores={lvl=1..15}] 0 5 0')
 			player.runCommandAsync('tp @s[scores={lvl=16..25}] 0 5 -33')

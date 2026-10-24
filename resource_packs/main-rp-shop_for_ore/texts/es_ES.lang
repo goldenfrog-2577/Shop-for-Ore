@@ -591,6 +591,7 @@ chat.cmd.warp.header=§8-----§f Puntos de teletransporte §8-----§f
 chat.cmd.warp.done=§r §cServidor §8» §7Te has teletransportado: §e%1$s
 chat.cmd.warp.other=§r §7CMD §8» §7§f%1$s§r§7 fue teletransportado: §e%2$s
 chat.cmd.warp.error.unknown=§r⩕ §l§cERROR!§r §8» §7No existe el punto §e%1$s§7. Lista de puntos — §e!warp
+chat.pvp.combat=§r⩕ §l§cERROR!§r §8» §7Estás en combate en la arena PvP: podrás teletransportarte en §e%1$s§7 s
 warp.spawn=Spawn
 warp.mine=Mina (según nivel)
 warp.minigames=Minijuegos

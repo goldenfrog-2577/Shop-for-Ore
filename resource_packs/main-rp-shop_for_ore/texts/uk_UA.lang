@@ -591,6 +591,7 @@ chat.cmd.warp.header=§8-----§f Точки телепортації §8-----§f
 chat.cmd.warp.done=§r §cСервер §8» §7Тебе телепортовано: §e%1$s
 chat.cmd.warp.other=§r §7CMD §8» §7Гравця §f%1$s§r§7 телепортовано: §e%2$s
 chat.cmd.warp.error.unknown=§r⩕ §l§cERROR!§r §8» §7Немає точки §e%1$s§7. Список точок — §e!warp
+chat.pvp.combat=§r⩕ §l§cERROR!§r §8» §7Ти в бою на PvP-арені: телепорт буде доступний через §e%1$s§7 с
 warp.spawn=Спавн
 warp.mine=Шахта (за рівнем)
 warp.minigames=Міні-ігри
