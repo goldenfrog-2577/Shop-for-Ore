@@ -28,6 +28,12 @@
 		},
 		{
 			"path" : "texts/en_US.lang"
+		},
+		{
+			"path" : "texts/es_ES.lang"
+		},
+		{
+			"path" : "texts/uk_UA.lang"
 		}],
 	"version" : 1
 }
