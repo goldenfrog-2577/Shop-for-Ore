@@ -479,6 +479,21 @@ export const commandsList = [
 		description: "%chat.help.say",
 		role: 'admin'
 	},
+	{
+		command: "!ban §7<§fplayer§7> [§freason§7]",
+		description: "%chat.help.ban",
+		role: 'admin'
+	},
+	{
+		command: "!unban §7<§fplayer§8/§fnumber§7>",
+		description: "%chat.help.unban",
+		role: 'admin'
+	},
+	{
+		command: "!banlist",
+		description: "%chat.help.banlist",
+		role: 'admin'
+	},
 
 	// ===== Администратор: игроки и данные =====
 	{

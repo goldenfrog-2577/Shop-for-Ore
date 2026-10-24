@@ -8,6 +8,7 @@ import { startMythic } from '../system/mythic.js';
 import { ChangePasswordUI, resetPassword } from '../register/change.js';
 import { freezePlayer, unfreezePlayer } from '../system/freeze.js';
 import { botMenu } from '../menu/admin_menu.js';
+import { addBan, removeBan, getBans, findBan, kickBanned } from '../system/ban.js';
 
 // --- Общие помощники команд ---
 
@@ -935,6 +936,61 @@ export function runChatCommand(player, command, args) {
 				break;
 			}
 			resetPassword(player, target);
+			break;
+		}
+
+		case "ban": {
+			// Бан: по номеру игрока в мире и нику (system/ban.js). Игрока в сети — сразу выгоняет
+			if (!args[0]) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.ban.use"}]}');
+				break;
+			}
+			const reason = args.slice(1).join(' ');
+			const target = findPlayer(args[0]);
+			if (target) {
+				if (!canPunish(player, target)) break;
+				if (target.hasTag('bot') || target.hasTag('host')) {
+					player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.error.self"}]}');
+					break;
+				}
+				if (!addBan({ id: target.id, name: target.name }, player.name, reason)) {
+					player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.ban.error.full"}]}');
+					break;
+				}
+				run(player, `tellraw @a ${rawTranslateRich('chat.cmd.ban.done', target.name, reason ? { text: reason } : { translate: 'chat.cmd.kick.no_reason' })}`);
+				kickBanned(target, findBan(target));
+			} else {
+				// Не в сети — бан только по нику; номер игрока запомнится, когда он зайдёт под этим ником
+				if (!addBan({ name: args[0] }, player.name, reason)) {
+					player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.ban.error.full"}]}');
+					break;
+				}
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.ban.offline', args[0])}`);
+			}
+			break;
+		}
+
+		case "unban": {
+			if (!args[0]) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.unban.use"}]}');
+				break;
+			}
+			const removed = removeBan(args.join(' '));
+			if (!removed) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.unban.error.not_found', args.join(' '))}`);
+				break;
+			}
+			run(player, `tellraw @s ${rawTranslate('chat.cmd.unban.done', removed.names.join(', '))}`);
+			break;
+		}
+
+		case "banlist": {
+			const bans = getBans();
+			const rawtext = [{ translate: 'chat.cmd.banlist.header' }];
+			if (!bans.length) rawtext.push({ text: '\n' }, { translate: 'chat.cmd.banlist.empty' });
+			bans.forEach((b, i) => rawtext.push({ text: `\n§e${i + 1}. §f${b.names.join('§7, §f')} §8— §7${b.by}${b.reason ? ' §8— §7' + b.reason : ''}${b.id ? '' : ' §8(ник)'}` }));
+			rawtext.push({ text: '\n§8------------------------' });
+			run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
 			break;
 		}
 

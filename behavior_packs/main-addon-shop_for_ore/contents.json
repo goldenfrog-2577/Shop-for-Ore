@@ -242,6 +242,9 @@
 		},
 		{
 			"path" : "scripts/system/freeze.js"
+		},
+		{
+			"path" : "scripts/system/ban.js"
 		}],
 	"version" : 1
 }
