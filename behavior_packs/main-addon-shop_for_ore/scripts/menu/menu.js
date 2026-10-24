@@ -4,6 +4,7 @@ import { world } from '@minecraft/server';
 import { ActionFormData, ModalFormData } from '@minecraft/server-ui';
 import { bank } from './bank_menu.js';
 import { combatSecondsLeft } from '../system/pvp.js';
+import { itemEnchants } from './enchant_shop.js';
 import { isPending, rawTranslate, tellText, closedByPlayer } from '../DataBase.js';
 
 // --- Открытие меню при использовании специального предмета ---
@@ -195,6 +196,9 @@ function enchants(player) {
 		'textures/items/book_enchanted')
 	.button('%menu.shop.enchants.button.fortune\n§810.0K ',
 		'textures/items/book_enchanted')
+	// Меч, лук, броня: зачарования для предмета в руке (menu/enchant_shop.js)
+	.button('%menu.shop.enchants.button.item\n%menu.shop.enchants.button.item_hint',
+		'textures/items/diamond_sword')
 	.button('%menu.common.back');
 	enchants.show(player).then(tb => {
 		// Крестик — на уровень вверх
@@ -204,6 +208,8 @@ function enchants(player) {
 		} else if (tb.selection == 1) {
 			player.runCommandAsync('function shop/enchants/fortune');
 		} else if (tb.selection == 2) {
+			itemEnchants(player, () => enchants(player));
+		} else if (tb.selection == 3) {
 			shop(player);
 		}
 	});

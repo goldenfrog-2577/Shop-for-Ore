@@ -191,6 +191,12 @@ menu.shop.enchants.body=§7Выбери, какое зачарование хо�
 menu.shop.enchants.note=§l§cПримечание: §r§7Если ты купишь один раз, у тебя будет §e1§7 уровень зачарования. А если купить повторно тогда, уровень зачарования увеличится.
 menu.shop.enchants.button.efficiency=§8Эффективность
 menu.shop.enchants.button.fortune=§8Удача
+menu.shop.enchants.button.item=§8Предмет в руке
+menu.shop.enchants.button.item_hint=§8меч, лук, броня
+menu.shop.item_enchants.title=§l§8 Магазин » Зачарования предмета
+menu.shop.item_enchants.item=§7Предмет:§f
+menu.shop.item_enchants.body=§7Каждая покупка повышает уровень зачарования на §e1§7, цена растёт с уровнем. Выбери зачарование:
+menu.shop.item_enchants.max=§2Максимальный уровень
 
 menu.shop.kits.title=§l§8 Магазин » PvP Наборы
 menu.shop.kits.body=§7Покупая один из наборов, ты получишь броню и меч.
@@ -727,6 +733,9 @@ role.tag.bot=§7Бот
 ## --- НАГРАДЫ МАГАЗИНА ---
 chat.shop.enchant.efficiency=§r §eМагазин §8» §7Куплено: §eЭффективность§7 (§e+1§7)
 chat.shop.enchant.fortune=§r §eМагазин §8» §7Куплено: §eУдача§7 (§e+1§7)
+chat.shop.item_enchant.done=§r §eМагазин §8» §7Куплено: §e%1$s %2$s§7 за §e%3$s §f
+chat.shop.item_enchant.error.item=§r⩕ §l§cERROR!§r §8» §7Возьми в руку меч, лук или броню — здесь зачаровываются они
+chat.shop.item_enchant.error.changed=§r⩕ §l§cERROR!§r §8» §7Предмет в руке сменился — открой окно заново
 chat.shop.kit.iron=§r §eМагазин §8» §7Куплено: §eЖелезный набор
 chat.shop.kit.diamond=§r §eМагазин §8» §7Куплено: §eАлмазный набор
 chat.shop.kit.netherite=§r §eМагазин §8» §7Куплено: §eНезеритовый набор
