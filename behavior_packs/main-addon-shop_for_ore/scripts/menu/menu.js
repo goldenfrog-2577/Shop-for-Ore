@@ -4,6 +4,7 @@ import { world } from '@minecraft/server';
 import { ActionFormData, ModalFormData } from '@minecraft/server-ui';
 import { bank } from './bank_menu.js';
 import { combatSecondsLeft } from '../system/pvp.js';
+import { enchantsMenu } from './enchant_shop.js';
 import { isPending, rawTranslate, tellText, closedByPlayer } from '../DataBase.js';
 
 // --- Открытие меню при использовании специального предмета ---
@@ -186,27 +187,9 @@ function shop(player) {
 	});
 }
 
-// --- Покупка зачарований ---
+// --- Зачарования: кирка уровня, меч, лук, броня (menu/enchant_shop.js) ---
 function enchants(player) {
-	const enchants = new ActionFormData()
-	.title('%menu.shop.enchants.title')
-	.body('%menu.shop.enchants.body\n%menu.shop.enchants.note')
-	.button('%menu.shop.enchants.button.efficiency\n§825.0K ',
-		'textures/items/book_enchanted')
-	.button('%menu.shop.enchants.button.fortune\n§810.0K ',
-		'textures/items/book_enchanted')
-	.button('%menu.common.back');
-	enchants.show(player).then(tb => {
-		// Крестик — на уровень вверх
-		if (closedByPlayer(tb)) return shop(player);
-		if (tb.selection == 0) {
-			player.runCommandAsync('function shop/enchants/efficiency');
-		} else if (tb.selection == 1) {
-			player.runCommandAsync('function shop/enchants/fortune');
-		} else if (tb.selection == 2) {
-			shop(player);
-		}
-	});
+	enchantsMenu(player, () => shop(player));
 }
 
 // --- PvP-наборы ---
