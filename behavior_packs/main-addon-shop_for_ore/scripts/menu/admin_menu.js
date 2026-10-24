@@ -239,7 +239,7 @@ function playerActions(player, target) {
 		);
 	}
 	items.push(
-		{ text: '%admin.players.button.spawn', icon: 'textures/ui/World', run: cmd('spawn') },
+		{ text: '%admin.players.button.spawn', icon: 'textures/ui/World', run: () => runChatCommand(player, 'warp', ['spawn', name]) },
 		{ text: '%admin.players.button.gamemode', icon: 'textures/ui/heart_new', run: () => playerGamemode(player, target) },
 		{ text: '%admin.players.button.money', icon: 'textures/items/gold_ingot', run: () => playerMoney(player, target) }
 	);

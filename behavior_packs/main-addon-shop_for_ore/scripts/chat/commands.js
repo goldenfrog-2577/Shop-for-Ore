@@ -1,7 +1,7 @@
 // --- Обработка пользовательских команд чата для Shop for Ore ---
 // Импортируем необходимые данные и списки команд
 import { world } from '@minecraft/server';
-import { commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns } from '../DataBase.js';
+import { commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS } from '../DataBase.js';
 import { getBot, getBotName, spawnBot } from '../system/spawnbot.js';
 
 // --- Общие помощники команд ---
@@ -161,18 +161,33 @@ export function runChatCommand(player, command, args) {
 			break;
 		}
 
-		case "spawn": {
-			// !spawn — себя; !spawn <ник> — другого (модератор+)
-			// Замороженный не может уйти на спавн сам
-			if (!args[0] && player.hasTag('frozen')) {
+		case "warp": {
+			// !warp — список точек; !warp <точка> — себя; !warp <точка> <ник> — другого (модератор и выше).
+			// Заменяет !spawn: спавн — это !warp spawn
+			const available = WARPS.filter(w => hasRole(player, w.role));
+			if (!args[0]) {
+				const rawtext = [{ translate: 'chat.cmd.warp.header' }];
+				for (const w of available) rawtext.push({ text: `\n§f!warp ${w.id} §8- ` }, { translate: `warp.${w.id}` });
+				rawtext.push({ text: '\n§8------------------------' });
+				run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
+				break;
+			}
+			const warp = available.find(w => w.id === args[0].toLowerCase());
+			if (!warp) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.warp.error.unknown', args[0])}`);
+				break;
+			}
+			// Замороженный не может уйти сам
+			if (!args[1] && player.hasTag('frozen')) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.active"}]}');
 				break;
 			}
-			const target = resolveTarget(player, args[0], 'moder');
+			const target = resolveTarget(player, args.slice(1).join(' ') || undefined, 'moder');
 			if (!target) break;
-			run(target, "tp @s 0 2 0");
-			run(target, 'tellraw @s {"rawtext":[{"translate":"chat.cmd.spawn"}]}');
-			if (target.name !== player.name) run(player, `tellraw @s ${rawTranslate('chat.cmd.spawn.other', target.name)}`);
+			const [x, y, z] = typeof warp.pos === 'function' ? warp.pos(target) : warp.pos;
+			run(target, `tp @s ${x} ${y} ${z}`);
+			run(target, `tellraw @s ${rawTranslateRich('chat.cmd.warp.done', { translate: `warp.${warp.id}` })}`);
+			if (target.name !== player.name) run(player, `tellraw @s ${rawTranslateRich('chat.cmd.warp.other', target.name, { translate: `warp.${warp.id}` })}`);
 			break;
 		}
 
@@ -669,7 +684,7 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case "freeze": {
-			// Заморозка: нельзя двигаться и прыгать, недоступны меню и !spawn. Повторная команда — разморозка
+			// Заморозка: нельзя двигаться и прыгать, недоступны меню и !warp. Повторная команда — разморозка
 			if (!args[0]) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.use"}]}');
 				break;
