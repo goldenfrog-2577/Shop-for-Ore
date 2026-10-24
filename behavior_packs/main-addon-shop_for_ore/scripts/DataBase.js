@@ -249,8 +249,8 @@ export const commandsList = [
 		role: 'player'
 	},
 	{
-		command: "!bal",
-		description: "%chat.help.bal",
+		command: "!balance",
+		description: "%chat.help.balance",
 		role: 'player'
 	},
 	{
