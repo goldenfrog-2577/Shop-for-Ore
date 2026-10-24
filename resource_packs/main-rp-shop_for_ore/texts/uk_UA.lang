@@ -536,11 +536,11 @@ chat.cmd.roles.header=§8-----§f Ролі гравців §8-----§f
 chat.cmd.roles.line=§f%1$s§r§8 — %2$s
 role.player=§7Гравець
 role.moder=§bМодератор
-role.admin=§6Адміністратор
-role.owner=§cВласник
-role.tag.owner=§cВласник
-role.tag.admin=§6Адмін
-role.tag.moder=§bМодер
+role.admin=§cАдміністратор
+role.owner=§4Власник
+role.tag.owner=§4Власник
+role.tag.admin=§cАдмін
+role.tag.moder=§bМодератор
 
 ## --- НАГОРОДИ МАГАЗИНУ ---
 chat.shop.enchant.efficiency=§r §eМагазин §8» §7Куплено: §eЕфективність§7 (§e+1§7)
