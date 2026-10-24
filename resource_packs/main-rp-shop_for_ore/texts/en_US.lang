@@ -373,6 +373,7 @@ admin.tools.button.npc_egg=§5NPC Spawn Egg
 admin.tools.button.hologram_egg=§5Hologram Spawn Egg
 admin.tools.button.admin_stick=§cAdmin Stick
 admin.tools.button.name_tag=§8Name Tags (16)
+admin.tools.button.mythic_chest=§5Mythic chest
 admin.tools.button.clear_inventory=§8Clear Inventory
 admin.tools.clear.body=§7Your whole inventory will be cleared. Are you sure?
 

@@ -373,6 +373,7 @@ admin.tools.button.npc_egg=§5Huevo de NPC
 admin.tools.button.hologram_egg=§5Huevo de holograma
 admin.tools.button.admin_stick=§cVara de admin
 admin.tools.button.name_tag=§8Etiquetas (16)
+admin.tools.button.mythic_chest=§5Cofre mítico
 admin.tools.button.clear_inventory=§8Limpiar inventario
 admin.tools.clear.body=§7Se vaciará todo tu inventario. ¿Estás seguro/a?
 

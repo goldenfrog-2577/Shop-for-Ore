@@ -373,6 +373,7 @@ admin.tools.button.npc_egg=§5Яйце призову NPC
 admin.tools.button.hologram_egg=§5Яйце призову голограми
 admin.tools.button.admin_stick=§cПалочка адміна
 admin.tools.button.name_tag=§8Бірки (16 шт.)
+admin.tools.button.mythic_chest=§5Скриня містика
 admin.tools.button.clear_inventory=§8Очистити інвентар
 admin.tools.clear.body=§7Увесь твій інвентар буде очищено. Ти впевнений(а)?
 

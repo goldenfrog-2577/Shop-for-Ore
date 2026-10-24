@@ -4,7 +4,7 @@
 // (или переключатель в меню администратора). Сразу — командой !event mythic.
 // Столбец сундука держит прогруженным ticking area «mythic», иначе без игроков на арене сундук не заполнить.
 
-import { world, BlockLocation } from '@minecraft/server';
+import { world, BlockLocation, Items, ItemStack } from '@minecraft/server';
 import { run } from '../DataBase.js';
 
 const CHEST_X = 300, CHEST_Z = 300;
@@ -32,6 +32,17 @@ export const MYTHIC_LOOT = [
 	{ w: 4, item: 'bow', count: [1, 1] },
 	{ w: 5, item: 'arrow', count: [16, 32] }
 ];
+
+// Имя сундука (видно при открытии): значок мистика из шрифта карты. Имя блока не переводится —
+// оно задаётся предметом, из которого сундук поставлен (кнопка в меню администратора → Инструменты)
+export const MYTHIC_CHEST_NAME = '§r\ue11c §5Мистик';
+
+/** Выдать администратору сундук с именем мистика: поставить его в центр арены вместо обычного. */
+export function giveMythicChest(player) {
+	const item = new ItemStack(Items.get('minecraft:chest'), 1);
+	item.nameTag = MYTHIC_CHEST_NAME;
+	player.getComponent('inventory').container.addItem(item);
+}
 
 const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const overworld = () => world.getDimension('overworld');
