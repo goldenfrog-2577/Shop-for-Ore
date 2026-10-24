@@ -145,20 +145,30 @@ world.events.beforeChat.subscribe((data) => {
 	data.sendToTargets = true;
 	data.targets = [];
 
-	const ranks = getRanks(data.sender).join("§r§8] | [§r");
-	const nameColor = getNames(data.sender);
-	const textColor = getTexts(data.sender);
+	sendChatMessage(data.sender, message);
+});
+
+/**
+ * Отправить в общий чат сообщение в формате чата карты: время, роль, префиксы, ник, текст (эмодзи заменяются).
+ * Тот же формат у сообщения от имени бота из меню администратора.
+ * @param {Player} sender
+ * @param {string} message
+ */
+export function sendChatMessage(sender, message) {
+	const ranks = getRanks(sender).join("§r§8] | [§r");
+	const nameColor = getNames(sender);
+	const textColor = getTexts(sender);
 	// Московское время (UTC+3) считаем от UTC, чтобы не зависеть от часового пояса движка/устройства
 	const now = new Date(Date.now() + 3 * 60 * 60 * 1000);
 	const time = `${now.getUTCHours()}:${now.getUTCMinutes().toString().padStart(2, '0')}`;
 	const formatMessage = replaceEmotes(message);
 	// Префикс роли (кроме обычного игрока) — переводимое слово, поэтому не world.say, а tellraw с translate
-	const role = getRole(data.sender);
+	const role = getRole(sender);
 	const rawtext = [{ text: ` §7${time} §8[` }];
 	if (role !== 'player') rawtext.push({ translate: `role.tag.${role}` }, { text: '§r§8] | [§r' });
-	rawtext.push({ text: `${ranks}§8]§r ${nameColor}${playerName}  ${textColor}${formatMessage}` });
+	rawtext.push({ text: `${ranks}§8]§r ${nameColor}${sender.name}  ${textColor}${formatMessage}` });
 	world.getDimension('overworld').runCommandAsync(`tellraw @a ${JSON.stringify({ rawtext })}`).catch(() => undefined);
-});
+}
 
 // --- Обновление nameTag игрока (отображение информации над головой) ---
 // Раз в секунду и только если текст изменился (раньше — каждый тик для всех игроков)

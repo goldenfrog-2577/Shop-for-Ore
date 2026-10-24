@@ -100,6 +100,16 @@ export function rawText(text) {
 };
 
 /**
+ * Форму закрыл сам игрок (крестик или «Назад» на телефоне), а не движок: при userBusy
+ * (открыт чат или другое окно) форма тоже отменяется, но возвращать в меню нельзя — получится цикл.
+ * @param {{ canceled?: boolean, cancelationReason?: string }} response
+ * @returns {boolean}
+ */
+export function closedByPlayer(response) {
+	return !!response.canceled && response.cancelationReason !== 'userBusy';
+};
+
+/**
  * Игрок ещё не вошёл в аккаунт (ждёт логина или регистрации).
  * @param {Player} player
  * @returns {boolean}
