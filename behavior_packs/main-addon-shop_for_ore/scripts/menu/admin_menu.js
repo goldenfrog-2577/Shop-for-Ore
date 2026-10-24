@@ -356,10 +356,24 @@ function getSetting(name) {
 function boostsMenu(player) {
 	showActions(player, '%admin.boosts.title', '%admin.boosts.body', [
 		{ text: '%admin.boosts.button.boost', icon: 'textures/items/experience_bottle', run: () => boostForm(player) },
+		{ text: '%admin.boosts.button.magnet', icon: 'textures/items/ender_pearl', run: () => magnetForm(player) },
 		...EVENTS.map(ev => ({ text: `%admin.boosts.button.event %chat.cmd.event.name.${ev}`, icon: 'textures/ui/icon_timer', run: () => runChatCommand(player, 'event', [ev]) })),
 		{ text: '%admin.boosts.button.auto', icon: 'textures/ui/icon_setting', run: () => autoEventsForm(player, () => boostsMenu(player)) },
 		back(() => admin_menu(player))
 	], () => admin_menu(player));
+}
+
+// «Магнит руды» бесплатно (как !boost magnet): кому и на сколько
+function magnetForm(player) {
+	const names = [...world.getPlayers()].map(p => p.name);
+	new ModalFormData()
+	.title('%admin.boosts.magnet.title')
+	.dropdown('%admin.players.choose', names, Math.max(0, names.indexOf(player.name)))
+	.slider('%admin.boosts.boost.minutes', 1, 60, 1, 5)
+	.show(player).then(r => {
+		if (!r.formValues) return closedByPlayer(r) ? boostsMenu(player) : undefined;
+		runChatCommand(player, 'boost', ['magnet', names[r.formValues[0]], String(r.formValues[1])]);
+	});
 }
 
 // Буст для всех (как !boost): тип и длительность 1–60 минут

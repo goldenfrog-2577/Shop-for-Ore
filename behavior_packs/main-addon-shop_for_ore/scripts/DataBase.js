@@ -470,7 +470,7 @@ export const commandsList = [
 		role: 'admin'
 	},
 	{
-		command: "!boost §7<§fx2§8/§fx4§7> [§fminutes§7]",
+		command: "!boost §7<§fx2§8/§fx4§7> [§fminutes§7] §8| §fmagnet §7[§fplayer§7] [§fminutes§7]",
 		description: "%chat.help.boost",
 		role: 'admin'
 	},
