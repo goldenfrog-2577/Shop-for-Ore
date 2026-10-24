@@ -512,6 +512,9 @@ role.player=§7Игрок
 role.moder=§bМодератор
 role.admin=§6Администратор
 role.owner=§cВладелец
+role.tag.owner=§cВладелец
+role.tag.admin=§6Админ
+role.tag.moder=§bМодер
 
 ## --- НАГРАДЫ МАГАЗИНА ---
 chat.shop.enchant.efficiency=§r §eМагазин §8» §7Куплено: §eЭффективность§7 (§e+1§7)

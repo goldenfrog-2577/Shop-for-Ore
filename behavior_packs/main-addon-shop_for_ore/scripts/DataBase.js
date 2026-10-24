@@ -114,6 +114,9 @@ export function isPending(player) {
 // команда !prefix) — отдельное украшение и прав не даёт.
 export const ROLES = ['player', 'moder', 'admin', 'owner'];
 
+// Цвет ника по роли (в чате и над головой), если у игрока нет своего тега name:
+export const ROLE_COLORS = { player: '§f', moder: '§b', admin: '§6', owner: '§c' };
+
 /**
  * Роль игрока: 'player' | 'moder' | 'admin' | 'owner'.
  * @param {Player} player

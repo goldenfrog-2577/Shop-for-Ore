@@ -512,6 +512,9 @@ role.player=§7Jugador
 role.moder=§bModerador
 role.admin=§6Administrador
 role.owner=§cPropietario
+role.tag.owner=§cDueño
+role.tag.admin=§6Admin
+role.tag.moder=§bMod
 
 ## --- PREMIOS DE TIENDA ---
 chat.shop.enchant.efficiency=§r §eTienda §8» §7Comprado: §eEficiencia§7 (§e+1§7)
