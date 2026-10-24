@@ -81,6 +81,18 @@ function canPunish(player, target) {
 }
 
 /**
+ * «Магнит руды» бесплатно (персонал): табло tpore — секунды, тег player:tp_ore (timers/t5, t20).
+ * Если магнит уже работает — время заменяется новым.
+ */
+export function giveOreMagnet(player, target, minutes) {
+	run(target, `scoreboard players set @s tpore ${minutes * 60}`);
+	target.addTag('player:tp_ore');
+	run(target, `tellraw @s ${rawTranslateRich('chat.cmd.boost.magnet.received', player.name, String(minutes))}`);
+	run(target, 'playsound note.bell @s');
+	if (target.name !== player.name) run(player, `tellraw @s ${rawTranslate('chat.cmd.boost.magnet.done', target.name, String(minutes))}`);
+}
+
+/**
  * Личное сообщение с эмодзи; запоминает собеседников для !r.
  * @param {Player} player
  * @param {string} recipientName
@@ -609,6 +621,22 @@ export function runChatCommand(player, command, args) {
 		case "boost": {
 			// Бесплатный общий буст x2/x4 на 1–60 минут (по умолчанию 5). Как покупка в магазине, но без списания денег
 			const type = (args[0] || '').toLowerCase();
+			// Личный «Магнит руды» (как в магазине): !boost magnet [ник] [минуты 1–60] — себе или игроку
+			if (type === 'magnet') {
+				const rest = args.slice(1);
+				const minutesArg = rest.length && /^\d+$/.test(rest[rest.length - 1]) ? Number(rest.pop()) : 5;
+				if (minutesArg < 1 || minutesArg > 60) {
+					player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.boost.use"}]}');
+					break;
+				}
+				const target = rest.length ? findPlayer(rest.join(' ')) : player;
+				if (!target) {
+					run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', rest.join(' '))}`);
+					break;
+				}
+				giveOreMagnet(player, target, minutesArg);
+				break;
+			}
 			const minutes = args[1] === undefined ? 5 : Number(args[1]);
 			if (!['x2', 'x4'].includes(type) || !Number.isInteger(minutes) || minutes < 1 || minutes > 60) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.boost.use"}]}');
