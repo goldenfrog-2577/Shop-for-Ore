@@ -709,7 +709,7 @@ role.owner=§4Владелец
 role.tag.owner=§4Владелец
 role.tag.admin=§cАдмин
 role.tag.moder=§9Модератор
-role.tag.bot=§bБот
+role.tag.bot=§7Бот
 
 ## --- НАГРАДЫ МАГАЗИНА ---
 chat.shop.enchant.efficiency=§r §eМагазин §8» §7Куплено: §eЭффективность§7 (§e+1§7)

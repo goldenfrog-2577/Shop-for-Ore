@@ -709,7 +709,7 @@ role.owner=§4Propietario
 role.tag.owner=§4Dueño
 role.tag.admin=§cAdmin
 role.tag.moder=§9Moderador
-role.tag.bot=§bBot
+role.tag.bot=§7Bot
 
 ## --- PREMIOS DE TIENDA ---
 chat.shop.enchant.efficiency=§r §eTienda §8» §7Comprado: §eEficiencia§7 (§e+1§7)

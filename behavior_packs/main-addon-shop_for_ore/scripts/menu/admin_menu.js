@@ -123,7 +123,7 @@ function warps(player) {
 		// Туда же ведёт портал из мини-игр (system/system: -103 0 -51)
 		{ text: '%admin.warps.button.pvp_arena', icon: 'textures/ui/World', run: tp(292, -25, 259) },
 		// Сплиф (второй портал из мини-игр: -115 0 -51)
-		{ text: '%admin.warps.button.spleef', icon: 'textures/ui/World', run: tp(500, -3, 500) },
+		{ text: '%admin.warps.button.spleef', icon: 'textures/ui/World', run: tp(500, 3, 500) },
 		{ text: '%admin.warps.button.cmd_zone', icon: 'textures/ui/World', run: tp(50, 5, 50) },
 		{ text: '%admin.warps.button.random_player', icon: 'textures/ui/World', run: () => {
 			// Случайный игрок без роли; если таких нет — сообщение (раньше команда молча не срабатывала)
