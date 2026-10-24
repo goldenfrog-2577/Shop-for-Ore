@@ -1,7 +1,7 @@
 // --- Чат-логика и антиспам для Shop for Ore ---
 // Импортируем необходимые функции и данные
 import { world } from '@minecraft/server';
-import { getScore, metricNumbers, emotes, isPending } from '../DataBase.js';
+import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS } from '../DataBase.js';
 
 // --- Значения по умолчанию для тегов игрока ---
 const rank = "rank:";
@@ -81,6 +81,7 @@ function getTexts(player) {
 }
 
 // --- Получение цвета имени из тегов ---
+// Без тега name: ник окрашивается в цвет роли (у игрока — белый)
 function getNames(player) {
 	const names = player
 	.getTags()
@@ -89,7 +90,7 @@ function getNames(player) {
 		return v.substring(name.length);
 	})
 	.filter((x) => x);
-	return names.length === 0 ? [nameDefault]: names;
+	return names.length === 0 ? [ROLE_COLORS[getRole(player)] ?? nameDefault]: names;
 }
 
 // --- Замена эмодзи в сообщении на символы ---
@@ -143,7 +144,12 @@ world.events.beforeChat.subscribe((data) => {
 	const now = new Date(Date.now() + 3 * 60 * 60 * 1000);
 	const time = `${now.getUTCHours()}:${now.getUTCMinutes().toString().padStart(2, '0')}`;
 	const formatMessage = replaceEmotes(message);
-	world.say(` §7${time} §8[${ranks}§8]§r ${nameColor}${playerName}  ${textColor}${formatMessage}`);
+	// Префикс роли (кроме обычного игрока) — переводимое слово, поэтому не world.say, а tellraw с translate
+	const role = getRole(data.sender);
+	const rawtext = [{ text: ` §7${time} §8[` }];
+	if (role !== 'player') rawtext.push({ translate: `role.tag.${role}` }, { text: '§r§8] | [§r' });
+	rawtext.push({ text: `${ranks}§8]§r ${nameColor}${playerName}  ${textColor}${formatMessage}` });
+	world.getDimension('overworld').runCommandAsync(`tellraw @a ${JSON.stringify({ rawtext })}`).catch(() => undefined);
 });
 
 // --- Обновление nameTag игрока (отображение информации над головой) ---
@@ -153,7 +159,9 @@ let nameTagTick = 0;
 world.events.tick.subscribe(() => {
 	if (++nameTagTick % NAMETAG_REFRESH_TICKS !== 0) return;
 	for (let player of world.getPlayers()) {
-		const nameTag = `§7${player.name}\n§f - ${metricNumbers(getScore(player,"lvl"))}\n§f - ${metricNumbers(getScore(player,"xp"))}/${metricNumbers(getScore(player,"qx"))}\n§f - ${metricNumbers(getScore(player,"money"))}\n§f - ${metricNumbers(getScore(player,"rebirth"))}`;
+		const role = getRole(player);
+		// Ник над головой: у игрока серый, у персонала — цвет роли
+		const nameTag = `${role === 'player' ? '§7' : ROLE_COLORS[role]}${player.name}\n§f - ${metricNumbers(getScore(player,"lvl"))}\n§f - ${metricNumbers(getScore(player,"xp"))}/${metricNumbers(getScore(player,"qx"))}\n§f - ${metricNumbers(getScore(player,"money"))}\n§f - ${metricNumbers(getScore(player,"rebirth"))}`;
 		if (player.nameTag !== nameTag) player.nameTag = nameTag;
 	}
 });

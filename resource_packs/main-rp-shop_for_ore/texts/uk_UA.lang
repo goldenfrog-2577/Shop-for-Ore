@@ -462,6 +462,8 @@ chat.help.scoreboard=§7Керує базою даних команди /scorebo
 chat.help.kick=§7Вигоняє гравця з сервера
 chat.help.tp=§7Телепортує гравця до тебе
 chat.help.wipe=§7Повністю скидає прогрес усіх гравців
+chat.help.role=§7Призначає роль гравцю
+chat.help.roles=§7Показує ролі гравців у мережі
 
 chat.cmd.error.no_permission=§r⩕ §l§cERROR!§r §8» §7У тебе немає прав на цю команду
 chat.cmd.error.unknown=§r⩕ §l§cERROR!§r §8» §7Невідома команда: §e%1$s§7. Напиши §e!help§7, щоб дізнатися список команд
@@ -490,6 +492,7 @@ chat.cmd.scoreboard.use=§r §7CMD §8» §7Використання: §e!sco
 chat.cmd.kick=§r §cСервер §8» §f%1$s§r§7 кікнутий(а). Причина: §e%2$s
 chat.cmd.kick.no_reason=не вказано
 chat.cmd.kick.use=§r §7CMD §8» §7Використання: §e!kick§7 <гравець> <причина (не обов'язково)>
+chat.cmd.kick.error.role=§r⩕ §l§cERROR!§r §8» §7Не можна вигнати §f%1$s§r§7: його роль не нижча за твою
 chat.cmd.tp.use=§r §7CMD §8» §7Використання: §e!tp§7 <гравець>
 chat.cmd.timeset.done=§r §7CMD §8» §7Час змінено на §e%1$s
 chat.cmd.prefix.set=§r §7CMD §8» §7Префікс %1$s§r§7 видано гравцю §f%2$s
@@ -499,6 +502,19 @@ chat.cmd.tag.remove=§r §7CMD §8» §7Тег §e%1$s§7 знято з гр�
 chat.cmd.scoreboard.add=§r §7CMD §8» §7Гравцю §f%1$s§r§7 нараховано §e%3$s§7 у §e%2$s
 chat.cmd.scoreboard.remove=§r §7CMD §8» §7З гравця §f%1$s§r§7 списано §e%3$s§7 з §e%2$s
 chat.cmd.tp.done=§r §7CMD §8» §7Гравця §f%1$s§r§7 телепортовано до тебе
+chat.cmd.role.use=§r §7CMD §8» §7Використання: §e!role§7 <гравець> <player/moder/admin>
+chat.cmd.role.done=§r §7CMD §8» §7Гравцю §f%1$s§r§7 призначено роль %2$s
+chat.cmd.role.received=§r §cСервер §8» §7Тобі призначено роль %1$s
+chat.cmd.role.error.owner=§r⩕ §l§cERROR!§r §8» §7Роль власника командою не змінюється
+chat.cmd.roles.header=§8-----§f Ролі гравців §8-----§f
+chat.cmd.roles.line=§f%1$s§r§8 — %2$s
+role.player=§7Гравець
+role.moder=§bМодератор
+role.admin=§cАдміністратор
+role.owner=§4Власник
+role.tag.owner=§4Власник
+role.tag.admin=§cАдмін
+role.tag.moder=§bМодератор
 
 ## --- НАГОРОДИ МАГАЗИНУ ---
 chat.shop.enchant.efficiency=§r §eМагазин §8» §7Куплено: §eЕфективність§7 (§e+1§7)
