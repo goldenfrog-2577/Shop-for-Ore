@@ -1,17 +1,37 @@
 // --- Обработка пользовательских команд чата для Shop for Ore ---
 // Импортируем необходимые данные и списки команд
 import { world } from '@minecraft/server';
-import { commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES } from '../DataBase.js';
+import { commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney } from '../DataBase.js';
 
 // --- Общие помощники команд ---
 
 // С кем игрок последним переписывался в ЛС (для !r): имя → имя собеседника
 const lastPrivate = new Map();
-world.events.playerLeave.subscribe((data) => { lastPrivate.delete(data.playerName); wipeRequests.delete(data.playerName); });
+world.events.playerLeave.subscribe((data) => { lastPrivate.delete(data.playerName); wipeRequests.delete(data.playerName); lastReport.delete(data.playerName); });
 
 // Запросы на вайп, ждущие «!wipe confirm»: имя → время запроса
 const wipeRequests = new Map();
 const WIPE_CONFIRM_MS = 30000;
+
+// Последняя жалоба игрока (!report) — не чаще раза в минуту: имя → время
+const lastReport = new Map();
+const REPORT_COOLDOWN_MS = 60000;
+
+// Сколько строк правил в .lang (menu.rules.line.1…N) — те же, что в меню «Правила»
+const RULES_LINES = 6;
+
+/**
+ * Отправить игроку несколько строк одним tellraw: заголовок, строки, разделитель.
+ * @param {Player} player
+ * @param {object} header — элемент rawtext заголовка
+ * @param {object[]} lines — элементы rawtext строк
+ */
+function tellList(player, header, lines) {
+	const rawtext = [header];
+	for (const line of lines) rawtext.push({ text: '\n' }, line);
+	rawtext.push({ text: '\n§8------------------------' });
+	run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
+}
 
 /**
  * Цель команды: игрок из аргумента [ник] или сам вызвавший.
@@ -142,6 +162,113 @@ world.events.beforeChat.subscribe((data) => {
 			} else {
 				sendPrivate(player, partner, args.join(" "));
 			}
+			break;
+		}
+
+		case "bal": {
+			// Свой баланс; у VIP — ещё VIP-монеты
+			run(player, `tellraw @s ${rawTranslate('chat.cmd.bal', getScore(player, 'money'))}`);
+			if (getScore(player, 'lvl') >= 26) run(player, `tellraw @s ${rawTranslate('chat.cmd.bal.vip', getScore(player, 'money2'))}`);
+			break;
+		}
+
+		case "pay": {
+			// То же, что перевод в меню банка
+			if (!args[0] || !args[1]) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.pay.use"}]}');
+				break;
+			}
+			transferMoney(player, args[0], args[1]);
+			break;
+		}
+
+		case "top": {
+			// Топ-5 игроков в сети по деньгам, уровню или ребитхам
+			const by = (args[0] || 'money').toLowerCase();
+			if (!['money', 'lvl', 'rebirth'].includes(by)) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.top.use"}]}');
+				break;
+			}
+			const top = [...world.getPlayers()]
+				.map(p => ({ name: p.name, value: getScore(p, by) }))
+				.sort((a, b) => b.value - a.value || a.name.localeCompare(b.name))
+				.slice(0, 5);
+			tellList(player, { translate: `chat.cmd.top.header.${by}` },
+				top.map((p, i) => ({ translate: 'chat.cmd.top.line', with: [String(i + 1), p.name, String(p.value)] })));
+			break;
+		}
+
+		case "stats": {
+			// Статистика своя или другого игрока в сети
+			const target = args[0] ? findPlayer(args[0]) : player;
+			if (!target) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', args[0])}`);
+				break;
+			}
+			const lvl = getScore(target, 'lvl');
+			const lines = [
+				{ translate: 'chat.cmd.stats.lvl', with: { rawtext: [lvl >= 26 ? { translate: 'chat.cmd.stats.vip' } : { text: String(lvl) }] } },
+				{ translate: 'chat.cmd.stats.xp', with: [String(getScore(target, 'xp')), String(getScore(target, 'qx'))] },
+				{ translate: 'chat.cmd.stats.money', with: [String(getScore(target, 'money'))] },
+				{ translate: 'chat.cmd.stats.rebirth', with: [String(getScore(target, 'rebirth'))] },
+				{ translate: 'chat.cmd.stats.role', with: { rawtext: [{ translate: `role.${getRole(target)}` }] } }
+			];
+			tellList(player, { translate: 'chat.cmd.stats.header', with: [target.name] }, lines);
+			break;
+		}
+
+		case "online": {
+			// Кто в сети: ник, роль, уровень; старшие роли сверху
+			const list = [...world.getPlayers()]
+				.map(p => ({ name: p.name, role: getRole(p), lvl: getScore(p, 'lvl') }))
+				.sort((a, b) => ROLES.indexOf(b.role) - ROLES.indexOf(a.role) || a.name.localeCompare(b.name));
+			tellList(player, { translate: 'chat.cmd.online.header', with: [String(list.length)] },
+				list.map(p => ({ translate: 'chat.cmd.online.line', with: { rawtext: [{ text: p.name }, { translate: `role.${p.role}` }, { text: String(p.lvl) }] } })));
+			break;
+		}
+
+		case "report": {
+			// Жалоба на игрока — уходит модераторам и выше, кто в сети
+			const reportName = args[0];
+			const reason = args.slice(1).join(' ');
+			if (!reportName || !reason) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.report.use"}]}');
+				break;
+			}
+			const target = findPlayer(reportName);
+			if (!target) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', reportName)}`);
+				break;
+			}
+			if (target.name === player.name) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.report.error.self"}]}');
+				break;
+			}
+			const last = lastReport.get(player.name);
+			if (last && Date.now() - last < REPORT_COOLDOWN_MS) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.report.error.cooldown"}]}');
+				break;
+			}
+			const staff = [...world.getPlayers()].filter(p => hasRole(p, 'moder') && p.name !== player.name);
+			if (!staff.length) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.report.error.no_staff"}]}');
+				break;
+			}
+			lastReport.set(player.name, Date.now());
+			for (const s of staff) {
+				run(s, `tellraw @s ${rawTranslate('chat.cmd.report.staff', player.name, target.name, reason)}`);
+				run(s, 'playsound note.pling @s');
+			}
+			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.report.sent"}]}');
+			break;
+		}
+
+		case "rules": {
+			// Правила сервера — те же строки, что в меню «Правила»
+			const lines = [];
+			for (let i = 1; i <= RULES_LINES; i++) lines.push({ translate: `menu.rules.line.${i}` });
+			lines.push({ translate: 'menu.rules.footer' });
+			tellList(player, { translate: 'menu.rules.header' }, lines);
 			break;
 		}
 
