@@ -259,6 +259,24 @@ export const emotes = {
 	":rebirth:": "\ue151"
 };
 
+// --- Точки телепортации для !warp ---
+// role — с какой роли точка доступна себе; отправить другого игрока — модератор и выше
+// (и не ниже роли точки). mine — шахта по уровню игрока, как кнопка «Спавн» в меню телепортаций.
+export const WARPS = [
+	{ id: 'spawn', role: 'player', pos: [0, 2, 0] },
+	{ id: 'mine', role: 'player', pos: (p) => {
+		const lvl = getScore(p, 'lvl');
+		if (lvl >= 26) return [-60, 5, -60];
+		if (lvl >= 16) return [0, 5, -33];
+		return [0, 5, 0];
+	} },
+	{ id: 'minigames', role: 'player', pos: [-109, 5, -60] },
+	{ id: 'pvp', role: 'player', pos: [292, -25, 259] },
+	{ id: 'spleef', role: 'player', pos: [500, 3, 500] },
+	{ id: 'vip', role: 'admin', pos: [-60, 5, -60] },
+	{ id: 'cmd', role: 'admin', pos: [50, 5, 50] }
+];
+
 // Список команд: описание для !help и минимальная роль (см. ROLES).
 // Порядок = порядок в !help: по ролям (игрок → владелец), внутри роли — по смыслу
 export const commandsList = [
@@ -323,8 +341,8 @@ export const commandsList = [
 
 	// ===== Игрок: прочее =====
 	{
-		command: "!spawn §7[§fplayer§7]",
-		description: "%chat.help.spawn",
+		command: "!warp §7[§fpoint§7] [§fplayer§7]",
+		description: "%chat.help.warp",
 		role: 'player'
 	},
 	{
