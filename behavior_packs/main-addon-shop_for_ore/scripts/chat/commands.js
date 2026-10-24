@@ -195,10 +195,10 @@ world.events.beforeChat.subscribe((data) => {
 			break;
 		}
 
-		case "bal": {
-			// Свой баланс; у VIP — ещё VIP-монеты
-			run(player, `tellraw @s ${rawTranslate('chat.cmd.bal', getScore(player, 'money'))}`);
-			if (getScore(player, 'lvl') >= 26) run(player, `tellraw @s ${rawTranslate('chat.cmd.bal.vip', getScore(player, 'money2'))}`);
+		case "balance": {
+			// Монеты на балансе; у VIP — ещё VIP-монеты
+			run(player, `tellraw @s ${rawTranslate('chat.cmd.balance', getScore(player, 'money'))}`);
+			if (getScore(player, 'lvl') >= 26) run(player, `tellraw @s ${rawTranslate('chat.cmd.balance.vip', getScore(player, 'money2'))}`);
 			break;
 		}
 
