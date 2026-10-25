@@ -12,6 +12,9 @@ import { addBan, removeBan, getBans, findBan, kickBanned } from '../system/ban.j
 
 // --- Общие помощники команд ---
 
+// Служебные табло: !scoreboard меняет их только у владельца (таймеры, разовая настройка, ивенты, панель)
+const PROTECTED_OBJECTIVES = ['timer', 'system', 'settings', 'display', 'online', 'xp_need'];
+
 // С кем игрок последним переписывался в ЛС (для !r): имя → имя собеседника
 const lastPrivate = new Map();
 world.events.playerLeave.subscribe((data) => { lastPrivate.delete(data.playerName); wipeRequests.delete(data.playerName); lastReport.delete(data.playerName); });
@@ -556,32 +559,63 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case "scoreboard": {
-			// Значение табло игрока: add/remove/set <число>, get — посмотреть
-			const sbTarget = args[0];
+			// !scoreboard objectives — все табло; !scoreboard <ник> list — все счета игрока;
+			// <ник> get <табло>; <ник> add/remove/set <табло> <число>; <ник> reset [табло].
+			// Служебные табло (таймеры, настройки) меняет только владелец — иначе собьются таймеры и setup
+			const sbUse = () => player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.scoreboard.use"}]}');
+			if ((args[0] || '').toLowerCase() === 'objectives' && !args[1]) {
+				const lines = world.scoreboard.getObjectives().map(o => `§e${o.id}${o.displayName && o.displayName !== o.id ? ` §8— §7${o.displayName}` : ''}`);
+				run(player, `tellraw @s ${JSON.stringify({ rawtext: [{ translate: 'chat.cmd.scoreboard.objectives' }, { text: `\n${lines.join('\n') || '—'}` }] })}`);
+				break;
+			}
 			const sbAction = (args[1] || '').toLowerCase();
+			if (!args[0] || !['get', 'list', 'add', 'remove', 'set', 'reset'].includes(sbAction)) { sbUse(); break; }
+			const target = findPlayer(args[0]);
+			if (!target) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', args[0])}`);
+				break;
+			}
+			// Счёт игрока в табло или undefined (счёта нет)
+			const scoreOf = (objective) => { try { return objective.getScore(target.scoreboard); } catch { return undefined; } };
+			if (sbAction === 'list') {
+				const lines = world.scoreboard.getObjectives().map(o => [o.id, scoreOf(o)]).filter(([, v]) => v !== undefined).map(([id, v]) => `§e${id}§7: §f${v}`);
+				run(player, `tellraw @s ${JSON.stringify({ rawtext: [{ translate: 'chat.cmd.scoreboard.list', with: [target.name] }, { text: `\n${lines.join('\n') || '—'}` }] })}`);
+				break;
+			}
 			const sbObjective = args[2];
-			const sbAmount = parseInt(args[3], 10);
-			if (sbTarget && sbAction === 'get' && sbObjective) {
-				const target = findPlayer(sbTarget);
-				if (!target) {
-					run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', sbTarget)}`);
-					break;
-				}
-				let objective;
+			if (!sbObjective && sbAction !== 'reset') { sbUse(); break; }
+			let objective;
+			if (sbObjective) {
 				try { objective = world.scoreboard.getObjective(sbObjective); } catch { objective = undefined; }
 				if (!objective) {
 					run(player, `tellraw @s ${rawTranslate('chat.cmd.scoreboard.error.objective', sbObjective)}`);
 					break;
 				}
-				let value;
-				try { value = objective.getScore(target.scoreboard); } catch { value = undefined; }
-				run(player, `tellraw @s ${rawTranslate('chat.cmd.scoreboard.get', target.name, sbObjective, value ?? '—')}`);
-			} else if (sbTarget && ["add", "remove", "set"].includes(sbAction) && sbObjective && !isNaN(sbAmount)) {
-				run(player, `scoreboard players ${sbAction} "${sbTarget}" ${sbObjective} ${sbAmount}`);
-				player.runCommandAsync(`tellraw @s ${rawTranslate(`chat.cmd.scoreboard.${sbAction}`, sbTarget, sbObjective, sbAmount)}`);
-			} else {
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.scoreboard.use"}]}');
 			}
+			if (sbAction === 'get') {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.scoreboard.get', target.name, sbObjective, scoreOf(objective) ?? '—')}`);
+				break;
+			}
+			// Дальше — изменения: служебные табло (или сброс всех табло сразу) — только владельцу
+			if ((!sbObjective || PROTECTED_OBJECTIVES.includes(sbObjective)) && !hasRole(player, 'owner')) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.scoreboard.error.protected', sbObjective ?? '*')}`);
+				break;
+			}
+			if (sbAction === 'reset') {
+				run(player, `scoreboard players reset "${target.name}"${sbObjective ? ' ' + sbObjective : ''}`);
+				run(player, `tellraw @s ${sbObjective ? rawTranslate('chat.cmd.scoreboard.reset', target.name, sbObjective) : rawTranslate('chat.cmd.scoreboard.reset.all', target.name)}`);
+				break;
+			}
+			const raw = args[3] ?? '';
+			if (!/^-?\d+$/.test(raw) || Math.abs(Number(raw)) > 2147483647) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.scoreboard.error.number', raw || '—')}`);
+				break;
+			}
+			const amount = Number(raw);
+			const before = scoreOf(objective) ?? 0;
+			const after = Math.max(-2147483648, Math.min(2147483647, sbAction === 'add' ? before + amount : sbAction === 'remove' ? before - amount : amount));
+			run(player, `scoreboard players set "${target.name}" ${sbObjective} ${after}`);
+			run(player, `tellraw @s ${rawTranslate(`chat.cmd.scoreboard.${sbAction}`, target.name, sbObjective, String(amount), String(after))}`);
 			break;
 		}
 
