@@ -5,7 +5,7 @@
 # а первый подобравший объявляется в system/autosale (там же блок продаётся за 150).
 # Раньше блок появлялся под картой (0 -50 0), искался по локализованному имени,
 # а объявление «подобрал» срабатывало в тот же тик, до того как его кто-то подобрал.
-execute if entity @a[tag=player,tag=!host] run scoreboard players set gift system 60
-execute if entity @a[tag=player,tag=!host] at @r[tag=player,tag=!host] run structure load gift ~ ~3 ~
-execute if entity @a[tag=player,tag=!host] run tellraw @a {"rawtext":[{"translate":"chat.event.gift"}]}
-execute if entity @a[tag=player,tag=!host] as @a at @s run playsound note.bell @s ~~~ 1.0 0.75
+execute if entity @a[tag=player,tag=!role:owner] run scoreboard players set gift system 60
+execute if entity @a[tag=player,tag=!role:owner] at @r[tag=player,tag=!role:owner] run structure load gift ~ ~3 ~
+execute if entity @a[tag=player,tag=!role:owner] run tellraw @a {"rawtext":[{"translate":"chat.event.gift"}]}
+execute if entity @a[tag=player,tag=!role:owner] as @a at @s run playsound note.bell @s ~~~ 1.0 0.75

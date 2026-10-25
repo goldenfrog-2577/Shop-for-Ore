@@ -677,6 +677,7 @@ chat.cmd.invis.use=§r §7CMD §8» §7Uso: §e!invis§7 [on/off] — sin arg
 chat.cmd.timeset.use=§r §7CMD §8» §7Uso: §e!timeset§7 <sunrise; day; noon; sunset; night; midnight> o un número §e0–24000
 chat.cmd.prefix.use=§r §7CMD §8» §7Uso: §e!prefix§7 <jugador> <set/take/list/clear> [prefijo]
 chat.cmd.tag.use=§r §7CMD §8» §7Uso: §e!tag§7 <jugador> <add/remove/list> [etiqueta]
+chat.cmd.tag.error.protected=§r⩕ §l§cERROR!§r §8» §7Las etiquetas de rol y de acceso (role:…, auth:…) no se cambian así — el propietario asigna roles con §e!role
 chat.cmd.scoreboard.use=§r §7CMD §8» §7Uso: §e!scoreboard§7 <jugador> <add/remove/set/get> <objetivo> [cantidad]
 chat.cmd.kick=§r §cServidor §8» §f%1$s§r§7 fue expulsado. Motivo: §e%2$s
 chat.cmd.kick.no_reason=no especificado

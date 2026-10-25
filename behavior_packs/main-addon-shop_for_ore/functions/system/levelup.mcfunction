@@ -1,6 +1,6 @@
 # Повышение уровня — заменяет 24 цепочки командных блоков (x=58, y=1..24, z=54..50).
-# Игрок на золотом блоке, у которого опыта не меньше требуемого (qx, см. qx.mcfunction),
+# Игрок на золотом блоке, у которого опыта не меньше требуемого (xp_need, см. qx.mcfunction),
 # получает +1 уровень. Работает для каждого игрока отдельно (@s): в старых блоках опыт
 # снимался у всех игроков на золотых блоках с подходящим уровнем, а не только у повысившегося.
-# Не больше одного уровня за тик; qx пересчитывается в конце system/levelup_apply.
-execute as @a[scores={lvl=1..24}] at @s if block ~~-1~ gold_block 0 if score @s xp >= @s qx run function system/levelup_apply
+# Не больше одного уровня за тик; xp_need пересчитывается в конце system/levelup_apply.
+execute as @a[scores={lvl=1..24}] at @s if block ~~-1~ gold_block 0 if score @s xp >= @s xp_need run function system/levelup_apply

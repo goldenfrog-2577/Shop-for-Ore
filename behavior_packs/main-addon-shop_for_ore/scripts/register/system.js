@@ -6,6 +6,7 @@ import { world } from '@minecraft/server';
 import { LoginUI } from './login.js';
 import { RegisterUI } from './register.js';
 import { hasPassword } from './password.js';
+import { migratePlayer } from '../system/migrate.js';
 
 // Через сколько тиков после входа показывать форму (и повторять, пока игрок не вошёл)
 const FORM_DELAY_TICKS = 40;
@@ -27,34 +28,36 @@ const formOpen = new Set();
  */
 export function unlockPlayer(player) {
 	player.runCommandAsync('effect @s blindness 0').catch(() => undefined);
-	if (!player.hasTag('frozen')) player.runCommandAsync('effect @s slowness 0').catch(() => undefined);
+	if (!player.hasTag('state:frozen')) player.runCommandAsync('effect @s slowness 0').catch(() => undefined);
 }
 
 /** Может ли игрок войти по паролю (иначе ему нужна регистрация) */
 function canLogin(player) {
-	return player.hasTag('hasRegister') && hasPassword(player);
+	return player.hasTag('auth:done') && hasPassword(player);
 }
 
 // При входе игрока: определяем, что ему показывать — логин или регистрацию.
-// Ставим ровно один из тегов chekLogin/chekRegister: в мире встречались игроки
+// Ставим ровно один из тегов auth:login/auth:register: в мире встречались игроки
 // с обоими сразу — старый код показывал им две формы одновременно
 world.events.playerJoin.subscribe((data) => {
 	const player = data.player;
-	// Кик админ-палкой (событие server:kick в player.json) ставит тег kick, из-за которого
+	// Старые названия тегов (до 0.3.0) — сразу на новые, иначе зарегистрированный игрок попал бы на регистрацию
+	migratePlayer(player);
+	// Кик админ-палкой (событие server:kick в player.json) ставит тег state:kick, из-за которого
 	// игрок исчезает с сервера. Раньше тег не снимался, и кик действовал как вечный бан
-	player.removeTag('kick');
-	// Старые аккаунты (эпоха Omlet Arcade): hasRegister есть, а пароля нет —
+	player.removeTag('state:kick');
+	// Старые аккаунты (эпоха Omlet Arcade): auth:done есть, а пароля нет —
 	// войти невозможно, поэтому просим задать пароль заново. Прогресс не трогаем
-	if (player.hasTag('hasRegister') && !hasPassword(player)) {
-		player.removeTag('hasRegister');
+	if (player.hasTag('auth:done') && !hasPassword(player)) {
+		player.removeTag('auth:done');
 		tellText(player, '\n%chat.account.legacy\n ');
 	}
 	if (canLogin(player)) {
-		player.removeTag('chekRegister');
-		player.addTag('chekLogin');
+		player.removeTag('auth:register');
+		player.addTag('auth:login');
 	} else {
-		player.removeTag('chekLogin');
-		player.addTag('chekRegister');
+		player.removeTag('auth:login');
+		player.addTag('auth:register');
 	}
 });
 
@@ -80,8 +83,8 @@ let tickCounter = 0;
 world.events.tick.subscribe(() => {
 	tickCounter++;
 	for (const player of world.getPlayers()) {
-		const needLogin = player.hasTag('chekLogin');
-		const needRegister = player.hasTag('chekRegister');
+		const needLogin = player.hasTag('auth:login');
+		const needRegister = player.hasTag('auth:register');
 		if (!needLogin && !needRegister) {
 			waitTicks.delete(player.name);
 			continue;

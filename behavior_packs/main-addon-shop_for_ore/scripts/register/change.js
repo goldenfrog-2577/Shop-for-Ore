@@ -62,19 +62,19 @@ export function ChangePasswordUI(player, onBack) {
 
 /**
  * Сброс пароля игроку в сети (владелец). Пароль стирается, игрок сразу получает форму регистрации
- * (register/system.js по тегу chekRegister). Прогресс, роль и предметы не трогаются.
+ * (register/system.js по тегу auth:register). Прогресс, роль и предметы не трогаются.
  * @returns {boolean}
  */
 export function resetPassword(owner, target) {
 	clearPassword(target);
-	target.removeTag('hasRegister');
-	target.removeTag('chekLogin');
-	target.addTag('chekRegister');
+	target.removeTag('auth:done');
+	target.removeTag('auth:login');
+	target.addTag('auth:register');
 	tellText(target, '\n%chat.account.reset\n ');
 	run(target, 'playsound note.pling @s');
 	// Персоналу в сети — кто кому сбросил
 	for (const p of world.getPlayers()) {
-		if (p.hasTag('host') || p.hasTag('role:admin') || p.hasTag('role:moder')) {
+		if (p.hasTag('role:owner') || p.hasTag('role:admin') || p.hasTag('role:moder')) {
 			run(p, `tellraw @s ${rawTranslate('chat.account.reset.staff', owner.name, target.name)}`);
 		}
 	}

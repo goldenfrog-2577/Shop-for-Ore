@@ -33,7 +33,7 @@ world.events.beforeItemUse.subscribe(data => {
 		// Сначала вход в аккаунт
 		if (isPending(player)) return;
 		// Замороженный (!freeze) админ-меню не открывает: иначе ушёл бы телепортом или разморозил себя через других
-		if (player.hasTag('frozen')) {
+		if (player.hasTag('state:frozen')) {
 			data.cancel = true;
 			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.active"}]}');
 			return;
@@ -106,7 +106,7 @@ function gamemodes(player) {
 		{ text: '%admin.gamemode.button.adventure', icon: 'textures/ui/absorption_heart', run: () => runChatCommand(player, 'gm2', []) },
 		{ text: '%admin.gamemode.button.spectator', icon: 'textures/ui/freeze_heart', run: () => runChatCommand(player, 'gm6', []) },
 		// Раньше кнопка только включала полёт — теперь переключает
-		{ text: player.hasTag('fly:on') ? '%admin.gamemode.button.fly_off' : '%admin.gamemode.button.fly_on', icon: 'textures/items/feather', run: () => runChatCommand(player, 'fly', []) },
+		{ text: player.hasTag('state:fly') ? '%admin.gamemode.button.fly_off' : '%admin.gamemode.button.fly_on', icon: 'textures/items/feather', run: () => runChatCommand(player, 'fly', []) },
 		back(() => admin_menu(player))
 	], () => admin_menu(player));
 }
@@ -164,7 +164,7 @@ function effects(player) {
 		{ text: '%admin.effects.button.clear', icon: 'textures/ui/cancel', run: () => {
 			player.runCommandAsync('effect @s clear');
 			// Невидимость из !invis снята вместе с остальными эффектами
-			player.removeTag('invis:on');
+			player.removeTag('state:invis');
 		} },
 		back(() => admin_menu(player))
 	], () => admin_menu(player));
@@ -253,7 +253,7 @@ function playerActions(player, target) {
 	if (!self) {
 		const muted = muteMinutesLeft(target) > 0;
 		items.push(
-			{ text: target.hasTag('frozen') ? '%admin.players.button.unfreeze' : '%admin.players.button.freeze', icon: 'textures/ui/freeze_heart', run: cmd(target.hasTag('frozen') ? 'unfreeze' : 'freeze') },
+			{ text: target.hasTag('state:frozen') ? '%admin.players.button.unfreeze' : '%admin.players.button.freeze', icon: 'textures/ui/freeze_heart', run: cmd(target.hasTag('state:frozen') ? 'unfreeze' : 'freeze') },
 			muted
 				? { text: '%admin.players.button.unmute', icon: 'textures/ui/mute_off', run: cmd('unmute') }
 				: { text: '%admin.players.button.mute', icon: 'textures/ui/mute_on', run: () => playerMute(player, target) },
@@ -264,7 +264,7 @@ function playerActions(player, target) {
 			{ text: '%admin.players.button.ban', icon: 'textures/ui/ErrorGlyph', run: () => playerReason(player, target, 'ban', '%admin.players.ban.title', '%admin.players.reason_optional') }
 		);
 		// Роль меняет только владелец, и не самому себе
-		if (hasRole(player, 'owner') && !target.hasTag('host') && !target.hasTag('bot')) {
+		if (hasRole(player, 'owner') && !target.hasTag('role:owner') && !target.hasTag('role:bot')) {
 			items.push({ text: '%admin.players.button.role', icon: 'textures/ui/permissions_op_crown', run: () => playerRole(player, target) });
 			// Сброс забытого пароля — с подтверждением (команда !resetpass)
 			items.push({ text: '%admin.players.button.resetpass', icon: 'textures/ui/icon_lock', run: () => confirm(player, WARN_TITLE, '%admin.players.resetpass.body', () => runChatCommand(player, 'resetpass', [target.name]), () => playerActions(player, target)) });

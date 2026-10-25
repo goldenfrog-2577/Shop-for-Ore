@@ -87,7 +87,7 @@
 								{
 									"test": "has_tag",
 									"subject": "other",
-									"value": "host"
+									"value": "role:owner"
 								}]
 						},
 						"event": "remove"

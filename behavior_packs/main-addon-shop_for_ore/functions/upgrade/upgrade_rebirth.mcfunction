@@ -9,23 +9,23 @@ execute as @s[scores={lvl=26..26}] run tellraw @s {"rawtext":[{"translate":"chat
 execute as @s[scores={lvl=16..25,rebirth=5..}] run tellraw @s {"rawtext":[{"translate":"chat.rebirth.error.max"}]}
 
 # Если уровень 16-25 и rebirth 0-4 — добавить тег rebirth и увеличить счётчик rebirth
-execute as @s[scores={lvl=16..25,rebirth=0..4}] run tag @s add rebirth:now
-execute as @s[tag=rebirth:now] run tag @s add rebirth
-scoreboard players add @s[tag=rebirth:now] rebirth 1
+execute as @s[scores={lvl=16..25,rebirth=0..4}] run tag @s add sys:rebirth_now
+execute as @s[tag=sys:rebirth_now] run tag @s add player:rebirth
+scoreboard players add @s[tag=sys:rebirth_now] rebirth 1
 
 # Если только что получен первый rebirth — сообщение всем и звук
-execute as @s[tag=rebirth:now,scores={rebirth=1}] run tellraw @a {"rawtext":[{"translate":"chat.rebirth.first","with":{"rawtext":[{"selector":"@s"}]}}]}
-execute as @s[tag=rebirth:now,scores={rebirth=1}] positioned as @a run playsound mob.enderdragon.death @a ~~~ 0.7
+execute as @s[tag=sys:rebirth_now,scores={rebirth=1}] run tellraw @a {"rawtext":[{"translate":"chat.rebirth.first","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute as @s[tag=sys:rebirth_now,scores={rebirth=1}] positioned as @a run playsound mob.enderdragon.death @a ~~~ 0.7
 
 # Сообщение игроку о текущем уровне rebirth (2 и выше)
-execute as @s[tag=rebirth:now] run tellraw @s {"rawtext":[{"translate":"chat.rebirth.level","with":{"rawtext":[{"score":{"name":"@s","objective":"rebirth"}}]}}]}
+execute as @s[tag=sys:rebirth_now] run tellraw @s {"rawtext":[{"translate":"chat.rebirth.level","with":{"rawtext":[{"score":{"name":"@s","objective":"rebirth"}}]}}]}
 
 # Звук для rebirth 2 и выше
-execute as @s[tag=rebirth:now,scores={rebirth=2..}] run playsound mob.enderdragon.death @s ~~~ 0.5
+execute as @s[tag=sys:rebirth_now,scores={rebirth=2..}] run playsound mob.enderdragon.death @s ~~~ 0.5
 
 # Удаление тега player после перерождения
-execute as @s[tag=rebirth:now] run tag @s remove player
+execute as @s[tag=sys:rebirth_now] run tag @s remove player
 
 # Телепортация игрока после перерождения
-execute as @s[tag=rebirth:now] run tp @s 0 5 0
-tag @s remove rebirth:now
+execute as @s[tag=sys:rebirth_now] run tp @s 0 5 0
+tag @s remove sys:rebirth_now

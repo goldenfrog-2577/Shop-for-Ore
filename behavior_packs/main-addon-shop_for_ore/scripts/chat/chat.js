@@ -163,7 +163,7 @@ export function sendChatMessage(sender, message) {
 	const time = `${now.getUTCHours()}:${now.getUTCMinutes().toString().padStart(2, '0')}`;
 	const formatMessage = replaceEmotes(message);
 	// Бот карты: только префикс «Бот» — роли и ранги (rank:) его не перебивают
-	if (sender.hasTag('bot')) {
+	if (sender.hasTag('role:bot')) {
 		const rawtext = [{ text: ` §7${time} §8[` }];
 		rawtext.push({ translate: 'role.tag.bot' }, { text: `§r§8]§r ${BOT_COLOR}${sender.name}  §f${formatMessage}` });
 		world.getDimension('overworld').runCommandAsync(`tellraw @a ${JSON.stringify({ rawtext })}`).catch(() => undefined);
@@ -185,13 +185,13 @@ world.events.tick.subscribe(() => {
 	if (++nameTagTick % NAMETAG_REFRESH_TICKS !== 0) return;
 	for (let player of world.getPlayers()) {
 		// Бот: над головой только ник в цвете бота (уровня и денег у него нет)
-		if (player.hasTag('bot')) {
+		if (player.hasTag('role:bot')) {
 			if (player.nameTag !== BOT_COLOR + player.name) player.nameTag = BOT_COLOR + player.name;
 			continue;
 		}
 		const role = getRole(player);
 		// Ник над головой: у игрока серый, у персонала — цвет роли
-		const nameTag = `${role === 'player' ? '§7' : ROLE_COLORS[role]}${player.name}\n§f - ${metricNumbers(getScore(player,"lvl"))}\n§f - ${metricNumbers(getScore(player,"xp"))}/${metricNumbers(getScore(player,"qx"))}\n§f - ${metricNumbers(getScore(player,"money"))}\n§f - ${metricNumbers(getScore(player,"rebirth"))}`;
+		const nameTag = `${role === 'player' ? '§7' : ROLE_COLORS[role]}${player.name}\n§f - ${metricNumbers(getScore(player,"lvl"))}\n§f - ${metricNumbers(getScore(player,"xp"))}/${metricNumbers(getScore(player,"xp_need"))}\n§f - ${metricNumbers(getScore(player,"money"))}\n§f - ${metricNumbers(getScore(player,"rebirth"))}`;
 		if (player.nameTag !== nameTag) player.nameTag = nameTag;
 	}
 });

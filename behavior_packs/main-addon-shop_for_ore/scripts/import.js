@@ -27,6 +27,7 @@ import './system/pvp.js'         // PvP-арена: случайная точк�
 import './system/mythic.js'      // Ивент «Мистик»: сундук с лутом в центре арены
 import './system/freeze.js'      // Заморозка: игрок застывает на месте
 import './system/ban.js'         // Бан по номеру игрока в мире и нику
+import './system/migrate.js'     // Старые названия тегов → новые (0.3.0)
 
 // Импорт загрузчика скриптов
 import './register/loadScript.js'

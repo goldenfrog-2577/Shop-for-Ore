@@ -1,7 +1,7 @@
 // --- PvP-арена: телепорт в случайную точку и «режим боя» ---
 // Арена: x=236..363, y=-32..0, z=240..367 (тег player:pvp выдаёт functions/system/system).
 // 1) На арену игрок попадает в случайную точку площадки, а не в одну и ту же — чтобы не начинать бой у входа.
-//    Туда ведут !warp pvp и портал из мини-игр (system.mcfunction ставит тег warp:pvp, телепорт делает этот файл).
+//    Туда ведут !warp pvp и портал из мини-игр (system.mcfunction ставит тег sys:warp_pvp, телепорт делает этот файл).
 // 2) Кто получил или нанёс урон другому игроку на арене, 15 секунд не может уйти телепортом (!warp, меню).
 
 import { world, BlockLocation } from '@minecraft/server';
@@ -70,8 +70,8 @@ world.events.tick.subscribe(() => {
 	// Портал из мини-игр: тег ставит system.mcfunction
 	if (tick % 2 === 0) {
 		for (const p of world.getPlayers()) {
-			if (!p.hasTag('warp:pvp')) continue;
-			p.removeTag('warp:pvp');
+			if (!p.hasTag('sys:warp_pvp')) continue;
+			p.removeTag('sys:warp_pvp');
 			// Пока идёт телепорт, игрок ещё стоит в портале — второй раз не телепортируем
 			if (pending.some(j => j.player.name === p.name)) continue;
 			teleportToArena(p);

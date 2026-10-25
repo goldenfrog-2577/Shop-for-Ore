@@ -107,12 +107,12 @@ function canPunish(player, target) {
 }
 
 /**
- * «Магнит руды» бесплатно (персонал): табло tpore — секунды, тег player:tp_ore (timers/t5, t20).
+ * «Магнит руды» бесплатно (персонал): табло magnet — секунды, тег boost:magnet (timers/t5, t20).
  * Если магнит уже работает — время заменяется новым.
  */
 export function giveOreMagnet(player, target, minutes) {
-	run(target, `scoreboard players set @s tpore ${minutes * 60}`);
-	target.addTag('player:tp_ore');
+	run(target, `scoreboard players set @s magnet ${minutes * 60}`);
+	target.addTag('boost:magnet');
 	run(target, `tellraw @s ${rawTranslateRich('chat.cmd.boost.magnet.received', player.name, String(minutes))}`);
 	run(target, 'playsound note.bell @s');
 	if (target.name !== player.name) run(player, `tellraw @s ${rawTranslate('chat.cmd.boost.magnet.done', target.name, String(minutes))}`);
@@ -220,7 +220,7 @@ export function runChatCommand(player, command, args) {
 				break;
 			}
 			// Замороженный не может уйти сам
-			if (!args[1] && player.hasTag('frozen')) {
+			if (!args[1] && player.hasTag('state:frozen')) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.active"}]}');
 				break;
 			}
@@ -319,7 +319,7 @@ export function runChatCommand(player, command, args) {
 			const lvl = getScore(target, 'lvl');
 			const lines = [
 				{ translate: 'chat.cmd.stats.lvl', with: { rawtext: [lvl >= 26 ? { translate: 'chat.cmd.stats.vip' } : { text: String(lvl) }] } },
-				{ translate: 'chat.cmd.stats.xp', with: [String(getScore(target, 'xp')), String(getScore(target, 'qx'))] },
+				{ translate: 'chat.cmd.stats.xp', with: [String(getScore(target, 'xp')), String(getScore(target, 'xp_need'))] },
 				{ translate: 'chat.cmd.stats.money', with: [String(getScore(target, 'money'))] },
 				{ translate: 'chat.cmd.stats.rebirth', with: [String(getScore(target, 'rebirth'))] },
 				{ translate: 'chat.cmd.stats.role', with: { rawtext: [{ translate: `role.${getRole(target)}` }] } },
@@ -401,17 +401,17 @@ export function runChatCommand(player, command, args) {
 
 		case "fly": {
 			// !fly — переключить; !fly on/off; !fly [on/off] <ник> — другому (администратор+).
-			// Состояние полёта скрипт прочитать не может, поэтому запоминаем его тегом fly:on
+			// Состояние полёта скрипт прочитать не может, поэтому запоминаем его тегом state:fly
 			let state = args[0] ? args[0].toLowerCase() : undefined;
 			let targetName = args[1];
 			if (state && state !== 'on' && state !== 'off') { targetName = args[0]; state = undefined; }
 			const target = findPlayer(targetName ?? player.name);
 			// Включить полёт — только администратору и выше; выключить — любому
-			const turnOn = state ? state === 'on' : !(target ?? player).hasTag('fly:on');
+			const turnOn = state ? state === 'on' : !(target ?? player).hasTag('state:fly');
 			if (!resolveTarget(player, targetName, 'admin', turnOn ? 'admin' : undefined)) break;
 			const on = turnOn;
 			run(target, `ability @s mayfly ${on}`);
-			if (on) target.addTag('fly:on'); else target.removeTag('fly:on');
+			if (on) target.addTag('state:fly'); else target.removeTag('state:fly');
 			run(target, `tellraw @s {"rawtext":[{"translate":"chat.cmd.fly.${on ? 'on' : 'off'}"}]}`);
 			if (target.name !== player.name) run(player, `tellraw @s ${rawTranslate(`chat.cmd.fly.other.${on ? 'on' : 'off'}`, target.name)}`);
 			break;
@@ -435,21 +435,21 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case "invis": {
-			// !invis — переключить; !invis on/off. Состояние — тег invis:on
+			// !invis — переключить; !invis on/off. Состояние — тег state:invis
 			const state = args[0] ? args[0].toLowerCase() : undefined;
 			if (state && state !== 'on' && state !== 'off') {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.invis.use"}]}');
 				break;
 			}
-			const on = state ? state === 'on' : !player.hasTag('invis:on');
+			const on = state ? state === 'on' : !player.hasTag('state:invis');
 			if (on) {
 				player.runCommandAsync("effect @s invisibility 3600 255 true");
-				player.addTag('invis:on');
+				player.addTag('state:invis');
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.invis.on"}]}');
 			} else {
 				// Только невидимость (раньше снимались все эффекты)
 				player.runCommandAsync("effect @s invisibility 0");
-				player.removeTag('invis:on');
+				player.removeTag('state:invis');
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.invis.off"}]}');
 			}
 			break;
@@ -528,7 +528,8 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case "tag": {
-			// Теги игрока: add/remove/list. Служебные теги паролей (pws:, pwh:, password:) не показываются
+			// Теги игрока: add/remove/list. Служебные теги паролей (auth:salt:, auth:hash:, password:) не показываются;
+			// роли и вход (role:*, auth:*) так не меняются — иначе администратор выдал бы себе role:owner
 			const tagTarget = args[0];
 			const tagAction = (args[1] || '').toLowerCase();
 			const tagName = args[2];
@@ -538,9 +539,13 @@ export function runChatCommand(player, command, args) {
 					run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', tagTarget)}`);
 					break;
 				}
-				const tags = target.getTags().filter(t => !/^(pws|pwh|password):/.test(t));
+				const tags = target.getTags().filter(t => !/^(auth:(salt|hash):|password:)/.test(t));
 				run(player, `tellraw @s ${rawTranslate('chat.cmd.tag.list', target.name, tags.length ? tags.join('§r§7, ') : '—')}`);
 			} else if (tagTarget && ["add", "remove"].includes(tagAction) && tagName) {
+				if (/^(role|auth):|^password:/.test(tagName)) {
+					player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.tag.error.protected"}]}');
+					break;
+				}
 				const tagCommand = `tag "${tagTarget}" ${tagAction} ${JSON.stringify(tagName)}`;
 				run(player, tagCommand);
 				player.runCommandAsync(`tellraw @s ${rawTranslate(`chat.cmd.tag.${tagAction}`, tagName, tagTarget)}`);
@@ -622,7 +627,7 @@ export function runChatCommand(player, command, args) {
 				break;
 			}
 			// «Ускорение» и «Подарок» выбирают игрока без тега host — без других игроков ничего не произойдёт
-			if (ev !== 'rain' && ![...world.getPlayers()].some(p => !p.hasTag('host'))) {
+			if (ev !== 'rain' && ![...world.getPlayers()].some(p => !p.hasTag('role:owner'))) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.event.error.no_players"}]}');
 				break;
 			}
@@ -655,7 +660,7 @@ export function runChatCommand(player, command, args) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.boost.use"}]}');
 				break;
 			}
-			if ([...world.getPlayers()].some(p => p.hasTag('x2boost') || p.hasTag('x4boost'))) {
+			if ([...world.getPlayers()].some(p => p.hasTag('boost:x2') || p.hasTag('boost:x4'))) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.boost.error.active"}]}');
 				break;
 			}
@@ -695,8 +700,8 @@ export function runChatCommand(player, command, args) {
 			if (!canPunish(player, target)) break;
 			// Перебить мут, выданный старшим, нельзя (canPunish это не проверяет: роль цели может быть ниже обоих)
 			if (muteMinutesLeft(target) > 0 && !canLift(player, target, 'mute')) break;
-			target.getTags().filter(t => t.startsWith('mute:')).forEach(t => target.removeTag(t));
-			target.addTag(`mute:${Date.now() + minutes * 60000}`);
+			target.getTags().filter(t => t.startsWith('state:mute:')).forEach(t => target.removeTag(t));
+			target.addTag(`state:mute:${Date.now() + minutes * 60000}`);
 			setIssuer(target, 'mute', getRole(player));
 			const reason = args.slice(2).join(' ');
 			run(player, `tellraw @a ${rawTranslateRich('chat.cmd.mute', target.name, String(minutes), reason ? { text: reason } : { translate: 'chat.cmd.kick.no_reason' })}`);
@@ -719,7 +724,7 @@ export function runChatCommand(player, command, args) {
 			}
 			// Мут, выданный старшим по роли, снять нельзя
 			if (!canLift(player, target, 'mute')) break;
-			target.getTags().filter(t => t.startsWith('mute:')).forEach(t => target.removeTag(t));
+			target.getTags().filter(t => t.startsWith('state:mute:')).forEach(t => target.removeTag(t));
 			clearIssuer(target, 'mute');
 			run(player, `tellraw @s ${rawTranslate('chat.cmd.unmute.done', target.name)}`);
 			run(target, 'tellraw @s {"rawtext":[{"translate":"chat.cmd.unmute.received"}]}');
@@ -740,7 +745,7 @@ export function runChatCommand(player, command, args) {
 			}
 			if (!canPunish(player, target)) break;
 			const warns = getWarns(target) + 1;
-			target.getTags().filter(t => t.startsWith('warn:')).forEach(t => target.removeTag(t));
+			target.getTags().filter(t => t.startsWith('state:warn:')).forEach(t => target.removeTag(t));
 			run(player, `tellraw @a ${rawTranslate('chat.cmd.warn', target.name, String(warns), reason)}`);
 			if (warns >= 3) {
 				// Причина кика — без перевода (её показывает сама игра), поэтому «3/3: причина»
@@ -748,7 +753,7 @@ export function runChatCommand(player, command, args) {
 				run(player, `kick "${target.name}" 3/3: ${reason}`);
 				run(player, `tellraw @a ${JSON.stringify({ rawtext: [{ translate: "chat.cmd.kick", with: { rawtext: [{ text: target.name }, { text: `3/3: ${reason}` }] } }] })}`);
 			} else {
-				target.addTag(`warn:${warns}`);
+				target.addTag(`state:warn:${warns}`);
 				// Снять предупреждения сможет роль не ниже самой старшей из выдавших
 				setIssuer(target, 'warn', getRole(player), true);
 			}
@@ -776,8 +781,8 @@ export function runChatCommand(player, command, args) {
 			if (target.name !== player.name && !canPunish(player, target)) break;
 			if (!canLift(player, target, 'warn')) break;
 			const left = amountArg === 'all' ? 0 : Math.max(0, before - Number(amountArg));
-			target.getTags().filter(t => t.startsWith('warn:')).forEach(t => target.removeTag(t));
-			if (left > 0) target.addTag(`warn:${left}`);
+			target.getTags().filter(t => t.startsWith('state:warn:')).forEach(t => target.removeTag(t));
+			if (left > 0) target.addTag(`state:warn:${left}`);
 			else clearIssuer(target, 'warn');
 			run(player, `tellraw @s ${rawTranslate('chat.cmd.unwarn.done', target.name, String(before - left), String(left))}`);
 			if (target.name !== player.name) run(target, `tellraw @s ${rawTranslate('chat.cmd.unwarn.received', String(before - left), String(left))}`);
@@ -797,7 +802,7 @@ export function runChatCommand(player, command, args) {
 				break;
 			}
 			if (!canPunish(player, target)) break;
-			if (target.hasTag('frozen')) {
+			if (target.hasTag('state:frozen')) {
 				run(player, `tellraw @s ${rawTranslate('chat.cmd.freeze.error.already', target.name)}`);
 				break;
 			}
@@ -819,7 +824,7 @@ export function runChatCommand(player, command, args) {
 				run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', args[0])}`);
 				break;
 			}
-			if (!target.hasTag('frozen')) {
+			if (!target.hasTag('state:frozen')) {
 				run(player, `tellraw @s ${rawTranslate('chat.cmd.unfreeze.error.not_frozen', target.name)}`);
 				break;
 			}
@@ -903,12 +908,12 @@ export function runChatCommand(player, command, args) {
 				break;
 			}
 			// Боту роль не выдаётся: у него всегда префикс «Бот»
-			if (roleTarget.hasTag('bot')) {
+			if (roleTarget.hasTag('role:bot')) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.role.error.bot"}]}');
 				break;
 			}
 			// Владелец один — его роль командой не меняется
-			if (roleTarget.hasTag('host')) {
+			if (roleTarget.hasTag('role:owner')) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.role.error.owner"}]}');
 				break;
 			}
@@ -940,7 +945,7 @@ export function runChatCommand(player, command, args) {
 				run(player, `tellraw @s ${rawTranslate('chat.cmd.resetpass.error.offline', name)}`);
 				break;
 			}
-			if (target.name === player.name || target.hasTag('bot')) {
+			if (target.name === player.name || target.hasTag('role:bot')) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.error.self"}]}');
 				break;
 			}
@@ -958,7 +963,7 @@ export function runChatCommand(player, command, args) {
 			const target = findPlayer(args[0]);
 			if (target) {
 				if (!canPunish(player, target)) break;
-				if (target.hasTag('bot') || target.hasTag('host')) {
+				if (target.hasTag('role:bot') || target.hasTag('role:owner')) {
 					player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.error.self"}]}');
 					break;
 				}

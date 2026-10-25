@@ -1,5 +1,5 @@
 // --- Заморозка (!freeze): игрок застывает там, где его заморозили, даже в воздухе ---
-// Место хранится тегом frozenat:x,y,z (переживает перезаход). Каждый тик игрок, сдвинувшийся с места
+// Место хранится тегом state:frozen_at:x,y,z (переживает перезаход). Каждый тик игрок, сдвинувшийся с места
 // (шаг, прыжок, падение, толчок), возвращается обратно; поворачивать голову можно.
 // Раньше было замедление 255 + прыгучесть 128: в воздухе игрок падал, а «переполненная» прыгучесть
 // вела себя по-разному на разных устройствах.
@@ -7,7 +7,7 @@
 import { world } from '@minecraft/server';
 import { run, clearIssuer } from '../DataBase.js';
 
-const POS_TAG = 'frozenat:';
+const POS_TAG = 'state:frozen_at:';
 const EPS = 0.05;
 
 function frozenAt(player) {
@@ -25,14 +25,14 @@ function rememberPosition(player) {
 
 /** Заморозить: тег frozen, текущее место; замедление 255 — чтобы возврат на место был незаметнее. */
 export function freezePlayer(player) {
-	player.addTag('frozen');
+	player.addTag('state:frozen');
 	rememberPosition(player);
 	run(player, 'effect @s slowness 1000000 255 true');
 }
 
 /** Разморозить: снять тег, место и эффекты (прыгучесть — от старой заморозки). */
 export function unfreezePlayer(player) {
-	player.removeTag('frozen');
+	player.removeTag('state:frozen');
 	player.getTags().filter(t => t.startsWith(POS_TAG)).forEach(t => player.removeTag(t));
 	clearIssuer(player, 'frozen');
 	run(player, 'effect @s slowness 0');
@@ -41,7 +41,7 @@ export function unfreezePlayer(player) {
 
 world.events.tick.subscribe(() => {
 	for (const player of world.getPlayers()) {
-		if (!player.hasTag('frozen')) continue;
+		if (!player.hasTag('state:frozen')) continue;
 		const at = frozenAt(player);
 		// Заморожен до этого обновления (без места) — застывает там, где он сейчас
 		if (!at) {
