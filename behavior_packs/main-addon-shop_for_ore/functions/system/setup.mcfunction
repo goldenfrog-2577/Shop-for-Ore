@@ -1,4 +1,4 @@
-# Разовая настройка табло. Вызывается из system/timers, пока setup system меньше 3.
+# Разовая настройка табло. Вызывается из system/timers, пока setup system меньше 4.
 # 2 — табло qx и tpore переименованы в xp_need и magnet (единый стиль названий, 0.3.0)
 # Если понадобится новое табло — добавить сюда и поднять номер в timers и ниже.
 scoreboard objectives add xp_need dummy System
@@ -16,4 +16,9 @@ scoreboard objectives remove tpore
 scoreboard objectives add vip_coins dummy
 scoreboard players operation @a vip_coins = @a money2
 scoreboard objectives remove money2
-scoreboard players set setup system 3
+# 4 — счётчики для достижений (scripts/system/achievements.js)
+scoreboard objectives add stat_mined dummy
+scoreboard objectives add stat_kills dummy
+scoreboard objectives add stat_playtime dummy
+scoreboard objectives add stat_wins dummy
+scoreboard players set setup system 4

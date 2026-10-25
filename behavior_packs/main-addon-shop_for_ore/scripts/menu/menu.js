@@ -6,6 +6,9 @@ import { bank } from './bank_menu.js';
 import { combatSecondsLeft } from '../system/pvp.js';
 import { enchantsMenu } from './enchant_shop.js';
 import { cosmeticsMenu } from './cosmetics_shop.js';
+import { achievementsMenu } from './achievements_menu.js';
+import { minigamesMenu } from './minigames_menu.js';
+import { MUSIC_OFF } from '../system/music.js';
 import { ChangePasswordUI } from '../register/change.js';
 import { isPending, rawTranslate, tellText, closedByPlayer } from '../DataBase.js';
 
@@ -42,6 +45,8 @@ export function menu(player) {
 	.button('%menu.main.button.promo\n%menu.common.tap_to_open')
 	.button('%menu.main.button.warps\n%menu.common.tap_to_open')
 	.button('%menu.main.button.upgrades\n%menu.common.tap_to_open')
+	.button('%menu.main.button.achievements\n%menu.common.tap_to_open')
+	.button('%menu.main.button.games\n%menu.common.tap_to_open')
 	menu.show(player).then(m => {
 		if (m.selection == 0) {
 			mapInfo(player)
@@ -59,6 +64,10 @@ export function menu(player) {
 			warps(player)
 		} else if (m.selection == 7) {
 			upgrading(player)
+		} else if (m.selection == 8) {
+			achievementsMenu(player, () => menu(player))
+		} else if (m.selection == 9) {
+			minigamesMenu(player, () => menu(player))
 		}
 	});
 }
@@ -151,7 +160,7 @@ function mapCreator(player) {
 function mapVersion(player) {
 	const mapVersion = new ActionFormData()
 	.title('%menu.version.title')
-	.body('%menu.version.line.1\n\n§r%menu.version.label §a0.3.0_20261025_dev§r\n%menu.version.line.2\n\n%menu.version.line.3\n%menu.version.line.4\n%menu.version.line.5\n%menu.version.line.6\n%menu.version.line.7\n%menu.version.line.8\n%menu.version.line.9\n%menu.version.line.10\n%menu.version.line.11\n%menu.version.line.12\n%menu.version.line.13\n%menu.version.line.14\n%menu.version.line.15\n%menu.version.line.16\n%menu.version.line.17\n%menu.version.line.18')
+	.body('%menu.version.line.1\n\n§r%menu.version.label §a0.3.0_20261025_dev§r\n%menu.version.line.2\n\n%menu.version.line.3\n%menu.version.line.4\n%menu.version.line.5\n%menu.version.line.6\n%menu.version.line.7\n%menu.version.line.8\n%menu.version.line.9\n%menu.version.line.10\n%menu.version.line.11\n%menu.version.line.12\n%menu.version.line.13\n%menu.version.line.14\n%menu.version.line.15\n%menu.version.line.16\n%menu.version.line.17\n%menu.version.line.18\n%menu.version.line.19\n%menu.version.line.20')
 	.button('%menu.common.back')
 	mapVersion.show(player).then(tb => {
 		// Крестик — на уровень вверх
@@ -229,7 +238,7 @@ function pvp_kits(player) {
 function boosts(player) {
 	const boosts = new ActionFormData()
 	.title('%menu.shop.boosts.title')
-	.body('%menu.shop.boosts.body\n\n%menu.shop.boosts.note')
+	.body('%menu.shop.boosts.body\n\n%menu.shop.boosts.x2\n%menu.shop.boosts.x4\n%menu.shop.boosts.magnet')
 	.button('%menu.shop.boosts.button.x2\n§810.0K ')
 	.button('%menu.shop.boosts.button.x4\n§850.0K ')
 	.button('%menu.shop.boosts.button.ore_magnet\n§820.0K ')
@@ -261,6 +270,8 @@ function settings(player) {
 		'textures/items/emerald')
 	.button('%menu.settings.button.sounds',
 		'textures/blocks/noteblock')
+	.button('%menu.settings.button.music',
+		'textures/items/record_cat')
 	.button('%menu.settings.button.password',
 		'textures/ui/icon_lock')
 	.button('%menu.common.back')
@@ -274,8 +285,10 @@ function settings(player) {
 		} else if (tb.selection == 2) {
 			settings_sound(player)
 		} else if (tb.selection == 3) {
-			ChangePasswordUI(player, () => settings(player))
+			settings_music(player)
 		} else if (tb.selection == 4) {
+			ChangePasswordUI(player, () => settings(player))
+		} else if (tb.selection == 5) {
 			menu(player)
 		}
 	});
@@ -340,6 +353,26 @@ function settings_sound(player) {
             tellText(player, '%chat.settings.enabled');
         } else if (tb.selection == 1) {
             player.runCommandAsync('tag @s remove player:sound');
+            tellText(player, '%chat.settings.disabled');
+        }
+    });
+}
+
+// --- Настройки: музыка (system/music.js; по умолчанию включена) ---
+function settings_music(player) {
+    const form = new ActionFormData()
+    .title('%menu.settings.music.title')
+    .body('%menu.settings.music.body\n\n%menu.settings.default_on\n ')
+    .button(' %menu.settings.button.enable')
+    .button(' %menu.settings.button.disable')
+    form.show(player).then(tb => {
+    	if (closedByPlayer(tb)) return settings(player);
+        if (tb.selection == 0) {
+            player.removeTag(MUSIC_OFF);
+            tellText(player, '%chat.settings.enabled');
+        } else if (tb.selection == 1) {
+            player.addTag(MUSIC_OFF);
+            player.runCommandAsync('stopsound @s music.game').catch(() => undefined);
             tellText(player, '%chat.settings.disabled');
         }
     });
