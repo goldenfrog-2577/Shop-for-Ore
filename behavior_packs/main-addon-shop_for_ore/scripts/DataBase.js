@@ -505,7 +505,7 @@ export const commandsList = [
 
 	// ===== Администратор: игроки и данные =====
 	{
-		command: "!scoreboard §7<§fplayer§7> <§fadd§8/§fremove§8/§fset§8/§fget§7> <§fobjective§7> [§famount§7]",
+		command: "!scoreboard §7<§fplayer§7> <§fadd§8/§fremove§8/§fset§8/§fget§8/§flist§8/§freset§7> [§fobjective§7] [§famount§7] §8| §fobjectives",
 		description: "%chat.help.scoreboard",
 		role: 'admin'
 	},
