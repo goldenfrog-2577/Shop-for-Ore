@@ -1,7 +1,7 @@
 // --- Система регистрации и логина игроков ---
 // Добавляет нужные теги при входе и блокирует действия до прохождения логина/регистрации
 
-import { tellText } from '../DataBase.js';
+import { tellText, run } from '../DataBase.js';
 import { world } from '@minecraft/server';
 import { LoginUI } from './login.js';
 import { RegisterUI } from './register.js';
@@ -27,8 +27,8 @@ const formOpen = new Set();
  * это его наказание, а не блокировка входа.
  */
 export function unlockPlayer(player) {
-	player.runCommandAsync('effect @s blindness 0').catch(() => undefined);
-	if (!player.hasTag('state:frozen')) player.runCommandAsync('effect @s slowness 0').catch(() => undefined);
+	run(player, 'effect @s blindness 0');
+	if (!player.hasTag('state:frozen')) run(player, 'effect @s slowness 0');
 }
 
 /** Может ли игрок войти по паролю (иначе ему нужна регистрация) */
@@ -95,8 +95,8 @@ world.events.tick.subscribe(() => {
 
 		// Эффекты блокировки управления: сразу и затем раз в секунду
 		if (firstSeen || tickCounter % EFFECT_REFRESH_TICKS === 0) {
-			player.runCommandAsync(`effect @s slowness ${EFFECT_SECONDS} 255 true`);
-			player.runCommandAsync(`effect @s blindness ${EFFECT_SECONDS} 255 true`);
+			run(player, `effect @s slowness ${EFFECT_SECONDS} 255 true`);
+			run(player, `effect @s blindness ${EFFECT_SECONDS} 255 true`);
 		}
 
 		// Через 40 тиков показываем форму; если игрок не вошёл — покажем снова ещё через 40

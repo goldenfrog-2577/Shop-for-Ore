@@ -2,8 +2,8 @@
 // Список: получено — цветом (зелёное — достижение, фиолетовое — испытание), нет — серым с прогрессом.
 // Нажатие — описание, прогресс и награда.
 
-import { ActionFormData } from '@minecraft/server-ui';
-import { closedByPlayer, metricNumbers } from '../DataBase.js';
+import { metricNumbers } from '../DataBase.js';
+import { showMenu, backButton } from './forms.js';
 import { ACHIEVEMENTS, GLYPH, has, progressOf, countOf, rewardText } from '../system/achievements.js';
 
 const color = (a) => a.type === 'challenge' ? '§5' : '§2';
@@ -16,19 +16,14 @@ function statusLine(player, a) {
 }
 
 export function achievementsMenu(player, back) {
-	const form = new ActionFormData()
-	.title('%menu.achievements.title')
-	.body(`%menu.achievements.body\n%menu.achievements.count §e${countOf(player)}§7 / §e${ACHIEVEMENTS.length}`);
-	for (const a of ACHIEVEMENTS) {
-		const got = has(player, a.id);
-		form.button(`${got ? color(a) : '§8'}${GLYPH[a.type]} %ach.${a.id}.name\n${statusLine(player, a)}`);
-	}
-	form.button('%menu.common.back');
-	form.show(player).then(r => {
-		if (closedByPlayer(r) || r.selection === ACHIEVEMENTS.length) return back();
-		if (r.selection === undefined) return;
-		details(player, ACHIEVEMENTS[r.selection], () => achievementsMenu(player, back));
-	});
+	const again = () => achievementsMenu(player, back);
+	showMenu(player, '%menu.achievements.title', `%menu.achievements.body\n%menu.achievements.count §e${countOf(player)}§7 / §e${ACHIEVEMENTS.length}`, [
+		...ACHIEVEMENTS.map(a => ({
+			text: `${has(player, a.id) ? color(a) : '§8'}${GLYPH[a.type]} %ach.${a.id}.name\n${statusLine(player, a)}`,
+			run: () => details(player, a, again)
+		})),
+		backButton(back)
+	], back);
 }
 
 function details(player, a, back) {
@@ -45,11 +40,5 @@ function details(player, a, back) {
 		'',
 		has(player, a.id) ? `${color(a)}%menu.achievements.done` : '§8%menu.achievements.locked'
 	].filter((l, i, arr) => l !== '' || arr[i - 1] !== '');
-	new ActionFormData()
-	.title(`${color(a)}${GLYPH[a.type]} %ach.${a.id}.name`)
-	.body(lines.join('\n'))
-	.button('%menu.common.back')
-	.show(player).then(r => {
-		if (closedByPlayer(r) || r.selection === 0) back();
-	});
+	showMenu(player, `${color(a)}${GLYPH[a.type]} %ach.${a.id}.name`, lines.join('\n'), [backButton(back)], back);
 }

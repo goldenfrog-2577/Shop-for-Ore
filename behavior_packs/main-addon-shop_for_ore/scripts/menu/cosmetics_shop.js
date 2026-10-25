@@ -6,8 +6,8 @@
 // не продаются тем, у кого этой роли нет (colorAllowed). Частицы при продаже смотреть может каждый, покупать и выбирать — только VIP.
 
 import { world, BlockLocation } from '@minecraft/server';
-import { ActionFormData } from '@minecraft/server-ui';
-import { CHAT_COLORS, getChatColor, setChatColor, colorAllowed, getScore, metricNumbers, run, rawTranslateRich, closedByPlayer } from '../DataBase.js';
+import { CHAT_COLORS, getChatColor, setChatColor, colorAllowed, getScore, metricNumbers, run, tell } from '../DataBase.js';
+import { showMenu, backButton } from './forms.js';
 
 const VIP_COIN = '';
 const isVip = (player) => getScore(player, 'lvl') >= 26;
@@ -74,110 +74,89 @@ function syncSellFlag(player) {
 /** Купить как в магазине: хватает — списать и сообщить, нет — ошибка. @returns {boolean} */
 function buy(player, kind, id, cost, mark, nameKey) {
 	if (coins(player) < cost) {
-		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.shop.cosmetics.error.no_coins"}]}');
+		tell(player, 'chat.shop.cosmetics.error.no_coins');
 		run(player, 'playsound note.bass @s');
 		return false;
 	}
 	run(player, `scoreboard players remove @s vip_coins ${cost}`);
 	player.addTag(`cosmetic:${kind}:${id}`);
-	run(player, `tellraw @s ${rawTranslateRich('chat.shop.cosmetics.bought', { text: mark }, { translate: nameKey }, { text: `${metricNumbers(cost)} ${VIP_COIN}` })}`);
+	tell(player, 'chat.shop.cosmetics.bought', { text: mark }, { translate: nameKey }, { text: `${metricNumbers(cost)} ${VIP_COIN}` });
 	run(player, 'playsound random.levelup @s');
 	return true;
 }
 
+// Пометка «[Только для VIP]» — одна на всё, что доступно только VIP (common.vip_only)
+const VIP_ONLY = '%common.vip_only';
+
 // --- Главное окно ---
 export function cosmeticsMenu(player, back) {
-	const form = new ActionFormData()
-	.title('%menu.shop.cosmetics.title')
-	.body(`%menu.shop.cosmetics.body\n%menu.shop.cosmetics.balance ${price(coins(player))}`)
-	.button('%menu.shop.cosmetics.button.name', 'textures/items/name_tag')
-	.button('%menu.shop.cosmetics.button.text', 'textures/items/book_writable')
-	.button('%menu.shop.cosmetics.button.trail', 'textures/items/blaze_powder')
-	.button('%menu.shop.cosmetics.button.death', 'textures/items/totem')
-	.button(`%menu.shop.cosmetics.button.sell\n${isVip(player) ? '' : '%menu.shop.cosmetics.vip_only'}`, 'textures/items/gold_ingot')
-	.button('%menu.common.back');
-	form.show(player).then(r => {
-		if (closedByPlayer(r) || r.selection === 5) return back();
-		const again = () => cosmeticsMenu(player, back);
-		if (r.selection === 0) colorMenu(player, 'name', again);
-		else if (r.selection === 1) colorMenu(player, 'text', again);
-		else if (r.selection === 2) fxMenu(player, 'trail', again);
-		else if (r.selection === 3) fxMenu(player, 'death', again);
-		else if (r.selection === 4) fxMenu(player, 'sell', again);
-	});
+	const again = () => cosmeticsMenu(player, back);
+	showMenu(player, '%menu.shop.cosmetics.title', `%menu.shop.cosmetics.body\n%menu.shop.cosmetics.balance ${price(coins(player))}`, [
+		{ text: '%menu.shop.cosmetics.button.name', icon: 'textures/items/name_tag', run: () => colorMenu(player, 'name', again) },
+		{ text: '%menu.shop.cosmetics.button.text', icon: 'textures/items/book_writable', run: () => colorMenu(player, 'text', again) },
+		{ text: '%menu.shop.cosmetics.button.trail', icon: 'textures/items/blaze_powder', run: () => fxMenu(player, 'trail', again) },
+		{ text: '%menu.shop.cosmetics.button.death', icon: 'textures/items/totem', run: () => fxMenu(player, 'death', again) },
+		{ text: `%menu.shop.cosmetics.button.sell\n${isVip(player) ? '' : VIP_ONLY}`, icon: 'textures/items/gold_ingot', run: () => fxMenu(player, 'sell', again) },
+		backButton(back)
+	], back);
 }
 
-// Состояние кнопки: выбрано / куплено / цена
-const state = (selected, owned, cost) => selected ? '%menu.shop.cosmetics.selected' : owned ? '%menu.shop.cosmetics.owned' : price(cost);
+// Состояние кнопки: выбрано / куплено / цена (+ пометка VIP, если купить нельзя)
+const state = (selected, owned, cost, vipOnly = false) => selected ? '%menu.shop.cosmetics.selected' : owned ? '%menu.shop.cosmetics.owned' : `${price(cost)}${vipOnly ? ` ${VIP_ONLY}` : ''}`;
+const body = (player, kind) => `%menu.shop.cosmetics.${kind}.body\n%menu.shop.cosmetics.balance ${price(coins(player))}`;
 
 // --- Цвет ника / текста ---
 function colorMenu(player, kind, back) {
+	const again = () => colorMenu(player, kind, back);
 	// Цвета ролей — только своей роли и ниже (как у !color); текст сообщений — любым цветом
 	const ids = Object.keys(CHAT_COLORS).filter(id => kind === 'text' || colorAllowed(player, CHAT_COLORS[id]));
 	const current = getChatColor(player, kind);
-	const form = new ActionFormData()
-	.title(`%menu.shop.cosmetics.${kind}.title`)
-	.body(`%menu.shop.cosmetics.${kind}.body\n%menu.shop.cosmetics.balance ${price(coins(player))}`)
-	.button('%menu.shop.cosmetics.reset', 'textures/ui/refresh_light');
-	for (const id of ids) {
-		const code = CHAT_COLORS[id];
-		form.button(`§${code}■§r %color.${id}\n${state(current === `§${code}`, owns(player, kind, code), COLOR_PRICE[kind])}`);
-	}
-	form.button('%menu.common.back');
-	form.show(player).then(r => {
-		if (closedByPlayer(r) || r.selection === ids.length + 1) return back();
-		const again = () => colorMenu(player, kind, back);
-		if (r.selection === 0) {
-			setChatColor(player, kind, undefined);
-			run(player, `tellraw @s {"rawtext":[{"translate":"chat.shop.cosmetics.reset.${kind}"}]}`);
-			return again();
-		}
-		const id = ids[r.selection - 1];
+	const choose = (id) => () => {
 		const code = CHAT_COLORS[id];
 		if (!owns(player, kind, code) && !buy(player, kind, code, COLOR_PRICE[kind], `§${code}■`, `color.${id}`)) return again();
 		setChatColor(player, kind, code);
-		run(player, `tellraw @s ${rawTranslateRich(`chat.shop.cosmetics.selected.${kind}`, { text: `§${code}■` }, { translate: `color.${id}` })}`);
+		tell(player, `chat.shop.cosmetics.selected.${kind}`, { text: `§${code}■` }, { translate: `color.${id}` });
 		again();
-	});
+	};
+	showMenu(player, `%menu.shop.cosmetics.${kind}.title`, body(player, kind), [
+		{ text: '%menu.shop.cosmetics.reset', icon: 'textures/ui/refresh_light', run: () => { setChatColor(player, kind, undefined); tell(player, `chat.shop.cosmetics.reset.${kind}`); again(); } },
+		...ids.map(id => {
+			const code = CHAT_COLORS[id];
+			return { text: `§${code}■§r %color.${id}\n${state(current === `§${code}`, owns(player, kind, code), COLOR_PRICE[kind])}`, run: choose(id) };
+		}),
+		backButton(back)
+	], back);
 }
 
 // --- Частицы ---
 function fxMenu(player, kind, back) {
-	const list = FX[kind];
+	const again = () => fxMenu(player, kind, back);
 	const current = getFx(player, kind);
-	const form = new ActionFormData()
-	.title(`%menu.shop.cosmetics.${kind}.title`)
-	.body(`%menu.shop.cosmetics.${kind}.body\n%menu.shop.cosmetics.balance ${price(coins(player))}`)
-	.button('%menu.shop.cosmetics.off', 'textures/ui/cancel');
-	for (const e of list) form.button(`%cosmetics.${kind}.${e.id}\n${state(current?.id === e.id, owns(player, kind, e.id), e.price)}`, e.icon);
-	form.button('%menu.common.back');
-	form.show(player).then(r => {
-		if (closedByPlayer(r) || r.selection === list.length + 1) return back();
-		const again = () => fxMenu(player, kind, back);
-		if (r.selection === 0) {
-			setFx(player, kind, undefined);
-			run(player, `tellraw @s {"rawtext":[{"translate":"chat.shop.cosmetics.off.${kind}"}]}`);
-			return again();
-		}
-		const e = list[r.selection - 1];
-		// Частицы при продаже: смотреть может каждый, купить и выбрать — только VIP
-		if (kind === 'sell' && !isVip(player)) {
-			run(player, 'tellraw @s {"rawtext":[{"translate":"chat.shop.cosmetics.error.vip"}]}');
+	// Частицы при продаже: смотреть может каждый, купить и выбрать — только VIP
+	const locked = kind === 'sell' && !isVip(player);
+	const choose = (e) => () => {
+		if (locked) {
+			tell(player, 'chat.shop.cosmetics.error.vip');
 			run(player, 'playsound note.bass @s');
 			return again();
 		}
 		if (!owns(player, kind, e.id) && !buy(player, kind, e.id, e.price, '', `cosmetics.${kind}.${e.id}`)) return again();
 		setFx(player, kind, e.id);
-		run(player, `tellraw @s ${rawTranslateRich(`chat.shop.cosmetics.selected.${kind}`, { translate: `cosmetics.${kind}.${e.id}` })}`);
+		tell(player, `chat.shop.cosmetics.selected.${kind}`, { translate: `cosmetics.${kind}.${e.id}` });
 		// Показать сразу, как это выглядит
 		if (kind === 'death') burst(player.dimension, player.location, e.particle);
 		else run(player, `particle ${e.particle} ~ ~1 ~`);
 		again();
-	});
+	};
+	showMenu(player, `%menu.shop.cosmetics.${kind}.title`, body(player, kind), [
+		{ text: '%menu.shop.cosmetics.off', icon: 'textures/ui/cancel', run: () => { setFx(player, kind, undefined); tell(player, `chat.shop.cosmetics.off.${kind}`); again(); } },
+		...FX[kind].map(e => ({ text: `%cosmetics.${kind}.${e.id}\n${state(current?.id === e.id, owns(player, kind, e.id), e.price, locked)}`, icon: e.icon, run: choose(e) })),
+		backButton(back)
+	], back);
 }
 
 const at = (v) => v.toFixed(2);
-const particleAt = (dim, x, y, z, id) => dim.runCommandAsync(`particle ${id} ${at(x)} ${at(y)} ${at(z)}`).catch(() => undefined);
+const particleAt = (dim, x, y, z, id) => run(dim, `particle ${id} ${at(x)} ${at(y)} ${at(z)}`);
 
 // --- Частицы вокруг игрока: только в движении — след там, где игрок только что был (на уровне пояса) ---
 // Стоит на месте (АФК) — частиц нет. Не у невидимых (!invis), замороженных и бота
@@ -200,7 +179,7 @@ world.events.tick.subscribe(() => {
 			const was = lastWorth.get(player.name);
 			lastWorth.set(player.name, worth);
 			if (was !== undefined && worth > was && player.hasTag('player:particle') && onGold(player)) {
-				player.runCommandAsync(`particle ${sell.particle} ~ ~1 ~`).catch(() => undefined);
+				run(player, `particle ${sell.particle} ~ ~1 ~`);
 			}
 		}
 		if (player.hasTag('state:invis') || player.hasTag('state:frozen') || player.hasTag('role:bot')) continue;

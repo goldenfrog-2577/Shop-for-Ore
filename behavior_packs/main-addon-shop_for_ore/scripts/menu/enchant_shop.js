@@ -8,8 +8,8 @@
 // функции shop/enchants/*, цены и максимумы — там же (здесь только для показа).
 
 import { MinecraftEnchantmentTypes, Enchantment } from '@minecraft/server';
-import { ActionFormData } from '@minecraft/server-ui';
-import { getScore, metricNumbers, rawTranslateRich, run, closedByPlayer } from '../DataBase.js';
+import { getScore, metricNumbers, run, tell } from '../DataBase.js';
+import { showMenu, backButton } from './forms.js';
 
 // id — ключ в MinecraftEnchantmentTypes, name — ванильный ключ перевода (переводится на языке игрока)
 export const ITEM_ENCHANTS = [
@@ -74,18 +74,18 @@ export function buyEnchant(player, slot, typeId, enchantId) {
 	const held = itemAt(player, slot);
 	// Пока окно было открыто, предмет в этом слоте сменили или переложили — ничего не делаем
 	if (!held || held.item.typeId !== typeId) {
-		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.shop.item_enchant.error.changed"}]}');
+		tell(player, 'chat.shop.item_enchant.error.changed');
 		return false;
 	}
 	const opt = optionsFor(held.item).find(o => o.e.id === enchantId);
 	if (!opt) return false;
 	if (opt.next === undefined) {
-		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.shop.error.enchant_max"}]}');
+		tell(player, 'chat.shop.error.enchant_max');
 		return false;
 	}
 	const price = priceFor(opt.e, opt.next);
 	if (getScore(player, 'money') < price) {
-		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.error.no_money"}]}');
+		tell(player, 'chat.error.no_money');
 		return false;
 	}
 	const comp = held.item.getComponent('enchantments');
@@ -96,7 +96,7 @@ export function buyEnchant(player, slot, typeId, enchantId) {
 	comp.enchantments = list;
 	held.container.setItem(slot, held.item);
 	run(player, `scoreboard players remove @s money ${price}`);
-	run(player, `tellraw @s ${rawTranslateRich('chat.shop.item_enchant.done', { translate: opt.e.name }, { translate: `enchantment.level.${opt.next}` }, String(price))}`);
+	tell(player, 'chat.shop.item_enchant.done', { translate: opt.e.name }, { translate: `enchantment.level.${opt.next}` }, String(price));
 	return true;
 }
 
@@ -114,20 +114,15 @@ const buyButton = (name, current, max, price) => current >= max
 
 /** Магазин → Зачарования: что зачаровать. back — в Магазин. */
 export function enchantsMenu(player, back) {
-	const items = enchantableItems(player);
+	const again = () => enchantsMenu(player, back);
 	const pick = PICKAXE_ENCHANTS.map(e => `%${e.name} §8${Math.min(getScore(player, e.id), e.max)}/${e.max}`).join(' §8· ');
-	const form = new ActionFormData()
-		.title('%menu.shop.enchants.title')
-		.body('%menu.shop.enchants.body\n%menu.shop.enchants.body2')
-		.button(`%menu.shop.enchants.button.pickaxe\n${pick}`, 'textures/items/diamond_pickaxe');
-	for (const { item } of items) form.button(`%item.${shortId(item.typeId)}.name\n${currentEnchantsText(item, 2)}`, itemIcon(item.typeId));
-	form.button('%menu.common.back');
-	form.show(player).then(r => {
-		if (closedByPlayer(r) || r.selection === items.length + 1) return back();
-		if (r.selection === 0) return pickaxeMenu(player, () => enchantsMenu(player, back));
-		const chosen = items[(r.selection ?? 0) - 1];
-		if (chosen) itemEnchantMenu(player, chosen.slot, () => enchantsMenu(player, back));
-	});
+	showMenu(player, '%menu.shop.enchants.title', '%menu.shop.enchants.body\n%menu.shop.enchants.body2', [
+		{ text: `%menu.shop.enchants.button.pickaxe\n${pick}`, icon: 'textures/items/diamond_pickaxe', run: () => pickaxeMenu(player, again) },
+		...enchantableItems(player).map(({ slot, item }) => ({
+			text: `%item.${shortId(item.typeId)}.name\n${currentEnchantsText(item, 2)}`, icon: itemIcon(item.typeId), run: () => itemEnchantMenu(player, slot, again)
+		})),
+		backButton(back)
+	], back);
 }
 
 /** Текущие зачарования предмета из каталога: «Острота II, Прочность I» (не больше limit, дальше «…»). */
@@ -141,20 +136,17 @@ function currentEnchantsText(item, limit = 99) {
 	return parts.join(', ') + (have.length > limit ? ' …' : '');
 }
 
-/** Экран кирки уровня. back — к выбору. */
+/** Экран кирки уровня. back — к выбору. На уровне 1 вместо кирки палка — зачаровать её нельзя. */
 function pickaxeMenu(player, back) {
-	const form = new ActionFormData()
-		.title('%menu.shop.enchants.pickaxe.title')
-		.body('%menu.shop.enchants.pickaxe.body');
-	for (const e of PICKAXE_ENCHANTS) form.button(buyButton(e.name, getScore(player, e.id), e.max, e.price), 'textures/items/book_enchanted');
-	form.button('%menu.common.back');
-	form.show(player).then(r => {
-		if (closedByPlayer(r) || r.selection === PICKAXE_ENCHANTS.length) return back();
-		const e = PICKAXE_ENCHANTS[r.selection];
-		if (!e) return;
-		// Покупка — прежней функцией (проверки денег и максимума, сообщения); окно — снова, уже с новым уровнем
-		run(player, `function shop/enchants/${e.id}`).then(() => pickaxeMenu(player, back));
-	});
+	const stick = getScore(player, 'lvl') < 2;
+	showMenu(player, '%menu.shop.enchants.pickaxe.title', `%menu.shop.enchants.pickaxe.body${stick ? '\n\n%menu.shop.enchants.pickaxe.stick' : ''}`, [
+		...PICKAXE_ENCHANTS.map(e => ({
+			text: buyButton(e.name, getScore(player, e.id), e.max, e.price), icon: 'textures/items/book_enchanted',
+			// Покупка — функцией shop/enchants/* (проверки палки, денег и максимума, сообщения); окно — снова, с новым уровнем
+			run: () => run(player, `function shop/enchants/${e.id}`).then(() => pickaxeMenu(player, back))
+		})),
+		backButton(back)
+	], back);
 }
 
 /** Зачарования для предмета в слоте. back — к выбору. */
@@ -163,16 +155,13 @@ function itemEnchantMenu(player, slot, back) {
 	const options = held ? optionsFor(held.item) : [];
 	if (!options.length) return back();
 	const typeId = held.item.typeId;
-	const form = new ActionFormData()
-		.title('%menu.shop.enchants.title')
-		.body(`%menu.shop.item_enchants.item %item.${shortId(typeId)}.name\n%menu.shop.item_enchants.current ${currentEnchantsText(held.item)}\n\n%menu.shop.item_enchants.body`);
-	for (const o of options) form.button(buyButton(o.e.name, o.level, o.e.max, priceFor(o.e, Math.min(o.level + 1, o.e.max))), 'textures/items/book_enchanted');
-	form.button('%menu.common.back');
-	form.show(player).then(r => {
-		if (closedByPlayer(r) || r.selection === options.length) return back();
-		const o = options[r.selection];
-		if (!o) return;
-		// После покупки окно открывается снова — удобно поднять несколько уровней подряд
-		if (buyEnchant(player, slot, typeId, o.e.id)) itemEnchantMenu(player, slot, back);
-	});
+	const body = `%menu.shop.item_enchants.item %item.${shortId(typeId)}.name\n%menu.shop.item_enchants.current ${currentEnchantsText(held.item)}\n\n%menu.shop.item_enchants.body`;
+	showMenu(player, '%menu.shop.enchants.title', body, [
+		...options.map(o => ({
+			text: buyButton(o.e.name, o.level, o.e.max, priceFor(o.e, Math.min(o.level + 1, o.e.max))), icon: 'textures/items/book_enchanted',
+			// После покупки окно открывается снова — удобно поднять несколько уровней подряд
+			run: () => { if (buyEnchant(player, slot, typeId, o.e.id)) itemEnchantMenu(player, slot, back); }
+		})),
+		backButton(back)
+	], back);
 }

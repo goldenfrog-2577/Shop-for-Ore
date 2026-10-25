@@ -1,19 +1,18 @@
 // --- UI регистрации нового игрока ---
 // Форму вызывает register/system.js (раньше — отдельная проверка тега 'onRegister' каждый тик)
 
-import { tellText } from '../DataBase.js';
-import { ModalFormData } from '@minecraft/server-ui';
+import { tellText, run } from '../DataBase.js';
+import { modal } from '../menu/forms.js';
 import { PASSWORD_MIN, PASSWORD_MAX, setPassword } from './password.js';
 import { unlockPlayer } from './system.js';
 
 /**
  * Показывает форму регистрации игроку.
- * @param {Player} player 
+ * @param {Player} player
  * @returns {Promise<void>} завершается, когда игрок закрыл форму
  */
 export function RegisterUI(player) {
-	const register = new ModalFormData()
-		.title('%account.register.title')
+	const register = modal('%account.register.title')
 		.textField(`\n%account.login.greeting ${player.name} %account.login.intro`,'%account.login.placeholder')
 		.toggle('%account.register.agree', false);
 	return register.show(player).then(r => {
@@ -21,15 +20,15 @@ export function RegisterUI(player) {
 		if (!r.formValues) return;
 		const password = String(r.formValues[0] ?? '').trim();
 		// Если игрок не подтвердил правила
-		if (r.formValues[1] != true) {
+		if (r.formValues[1] !== true) {
 			tellText(player, '\n%chat.account.error.no_cheats\n ');
-			player.runCommandAsync('playsound note.bass @s');
+			run(player, 'playsound note.bass @s');
 			return;
 		}
 		// Пустой или слишком длинный пароль не принимаем
 		if (password.length < PASSWORD_MIN || password.length > PASSWORD_MAX) {
 			tellText(player, '\n%chat.account.error.password_length\n ');
-			player.runCommandAsync('playsound note.bass @s');
+			run(player, 'playsound note.bass @s');
 			return;
 		}
 		// Теги ставим синхронно и в правильном порядке: сначала пароль (соль + хеш), потом auth:done.
@@ -40,6 +39,6 @@ export function RegisterUI(player) {
 		player.removeTag('auth:register');
 		unlockPlayer(player);
 		tellText(player, `\n%account.register.greeting §b${player.name}\n\n%account.register.welcome\n\n%account.register.info\n %account.register.password §b${password}\n\n%account.register.remember\n `);
-		player.runCommandAsync('playsound random.levelup @s');
+		run(player, 'playsound random.levelup @s');
 	});
 }

@@ -5,8 +5,8 @@
 // без пароля (карту играют и с пиратских клиентов, ник может занять кто угодно).
 
 import { world } from '@minecraft/server';
-import { ModalFormData } from '@minecraft/server-ui';
-import { tellText, run, rawTranslate, showWhenFree } from '../DataBase.js';
+import { tellText, run, tell } from '../DataBase.js';
+import { showModal, modal } from '../menu/forms.js';
 import { PASSWORD_MIN, PASSWORD_MAX, setPassword, checkPassword, clearPassword } from './password.js';
 
 // После 3 неверных старых паролей подряд — пауза, чтобы не подбирать пароль через эту форму
@@ -14,25 +14,19 @@ const MAX_WRONG = 3;
 const LOCK_MS = 60 * 1000;
 const wrong = new Map();   // ник → { count, until }
 
-
 /** Форма смены пароля. onBack — куда вернуться по крестику (из меню — в Настройки). */
 export function ChangePasswordUI(player, onBack) {
 	const lock = wrong.get(player.name);
 	if (lock && lock.until > Date.now()) {
-		run(player, `tellraw @s ${rawTranslate('chat.account.error.locked', Math.ceil((lock.until - Date.now()) / 1000))}`);
+		tell(player, 'chat.account.error.locked', Math.ceil((lock.until - Date.now()) / 1000));
 		return Promise.resolve();
 	}
-	const form = new ModalFormData()
-		.title('%account.change.title')
+	const form = modal('%account.change.title')
 		.textField('%account.change.old', '%account.login.placeholder')
 		.textField('%account.change.new', '%account.login.placeholder')
 		.textField('%account.change.repeat', '%account.login.placeholder');
-	return showWhenFree(player, form).then(r => {
-		if (!r.formValues) {
-			if (r.canceled && r.cancelationReason !== 'userBusy' && onBack) onBack();
-			return;
-		}
-		const [oldPass, newPass, repeat] = r.formValues.map(v => String(v ?? '').trim());
+	return showModal(player, form, (values) => {
+		const [oldPass, newPass, repeat] = values.map(v => String(v ?? '').trim());
 		if (!oldPass || !checkPassword(player, oldPass)) {
 			const w = wrong.get(player.name) ?? { count: 0, until: 0 };
 			w.count++;
@@ -57,7 +51,7 @@ export function ChangePasswordUI(player, onBack) {
 		// Новый пароль показываем один раз, как при регистрации, — чтобы его можно было запомнить
 		tellText(player, `\n%chat.account.changed\n %account.register.password §b${newPass}\n\n%account.register.remember\n `);
 		run(player, 'playsound random.levelup @s');
-	});
+	}, onBack);
 }
 
 /**
@@ -75,7 +69,7 @@ export function resetPassword(owner, target) {
 	// Персоналу в сети — кто кому сбросил
 	for (const p of world.getPlayers()) {
 		if (p.hasTag('role:owner') || p.hasTag('role:admin') || p.hasTag('role:moder')) {
-			run(p, `tellraw @s ${rawTranslate('chat.account.reset.staff', owner.name, target.name)}`);
+			tell(p, 'chat.account.reset.staff', owner.name, target.name);
 		}
 	}
 	return true;

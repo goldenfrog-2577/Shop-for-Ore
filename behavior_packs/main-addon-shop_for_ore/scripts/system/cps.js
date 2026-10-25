@@ -6,7 +6,7 @@
 // Предел меняется без правки кода: /scoreboard players set cps_limit settings <число> (0 — по умолчанию).
 
 import { world } from '@minecraft/server';
-import { run, rawTranslate, hasRole } from '../DataBase.js';
+import { hasRole, tell } from '../DataBase.js';
 
 export const DEFAULT_LIMIT = 16;
 const ALERT_SECONDS = 3;
@@ -62,7 +62,7 @@ world.events.tick.subscribe(() => {
 		if ((lastAlert.get(name) ?? -Infinity) > tick - ALERT_COOLDOWN * 20) continue;
 		lastAlert.set(name, tick);
 		for (const staff of world.getPlayers()) {
-			if (hasRole(staff, 'moder')) run(staff, `tellraw @s ${rawTranslate('chat.cps.alert', name, cps, s, limit)}`);
+			if (hasRole(staff, 'moder')) tell(staff, 'chat.cps.alert', name, cps, s, limit);
 		}
 	}
 });

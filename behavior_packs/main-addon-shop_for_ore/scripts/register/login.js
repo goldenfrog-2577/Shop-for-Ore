@@ -1,19 +1,18 @@
 // --- UI авторизации игрока при входе ---
 // Форму вызывает register/system.js (раньше — отдельная проверка тега 'onLogin' каждый тик)
 
-import { tellText } from '../DataBase.js';
-import { ModalFormData } from '@minecraft/server-ui';
+import { tellText, run } from '../DataBase.js';
+import { modal } from '../menu/forms.js';
 import { checkPassword } from './password.js';
 import { unlockPlayer } from './system.js';
 
 /**
  * Показывает форму логина игроку.
- * @param {Player} player 
+ * @param {Player} player
  * @returns {Promise<void>} завершается, когда игрок закрыл форму
  */
 export function LoginUI(player) {
-	const login = new ModalFormData()
-		.title('%account.login.title')
+	const login = modal('%account.login.title')
 		.textField('%account.login.hint', '%account.login.placeholder');
 	return login.show(player).then(r => {
 		// Форма закрыта — через ~2 с она покажется снова
@@ -26,10 +25,10 @@ export function LoginUI(player) {
 			player.removeTag('auth:login');
 			unlockPlayer(player);
 			tellText(player, '\n%chat.account.logged_in\n ');
-			player.runCommandAsync('playsound random.levelup @s');
+			run(player, 'playsound random.levelup @s');
 		} else {
 			tellText(player, '\n%chat.account.error.wrong_password\n ');
-			player.runCommandAsync('playsound note.bass @s');
+			run(player, 'playsound note.bass @s');
 		}
 	});
 }

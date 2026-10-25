@@ -1,5 +1,7 @@
-// Импортируем API Minecraft Bedrock Edition
-import { world, system } from "@minecraft/server";
+// --- Общие данные и помощники: счёт, сообщения (tell, tellText), команды (run), роли, наказания,
+// список команд чата, точки !warp, эмодзи ---
+
+import { world, system } from '@minecraft/server';
 
 /**
  * Получить значение очков игрока по определённому objective.
@@ -21,12 +23,12 @@ export function getScore(entity, objective) {
  * @returns {string|number} - Сокращённое число с суффиксом или исходное число.
  */
 export function metricNumbers(value) {
-	const types = ["","K","M","B","T","P","E","Z","Y"];
+	const types = ['','K','M','B','T','P','E','Z','Y'];
 	let selectType = (Math.log10(value) / 3) | 0;
-	if (selectType == 0) return value;
+	if (selectType === 0) return value;
 	let scaled = value / Math.pow(10, selectType * 3);
 	// 999 999 → «1.0M», а не «1000.0K»
-	if (scaled.toFixed(1) === "1000.0" && selectType < types.length - 1) {
+	if (scaled.toFixed(1) === '1000.0' && selectType < types.length - 1) {
 		selectType++;
 		scaled /= 1000;
 	}
@@ -145,7 +147,7 @@ export function transferMoney(player, targetName, rawAmount) {
 		run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', targetName)}`);
 		return false;
 	}
-	if (getScore(player, "money") < amount) {
+	if (getScore(player, 'money') < amount) {
 		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.no_money"}]}');
 		return false;
 	}
@@ -329,27 +331,40 @@ export function rawTranslateRich(key, ...args) {
 	return JSON.stringify({ rawtext: [{ translate: key, with: { rawtext: parts } }] });
 };
 
+/**
+ * Сообщение игроку ключом перевода: tell(player, 'chat.cmd.tp.done', ник).
+ * Аргументы — строки и числа или переводимые части ({ translate: 'role.admin' }, { rawtext: […] }).
+ * @param {Player} player
+ * @param {string} key
+ * @param {...(string|number|object)} args
+ */
+export function tell(player, key, ...args) {
+	const json = !args.length ? JSON.stringify({ rawtext: [{ translate: key }] })
+		: args.some(a => a !== null && typeof a === 'object') ? rawTranslateRich(key, ...args) : rawTranslate(key, ...args);
+	return run(player, `tellraw @s ${json}`);
+}
+
 // Список эмодзи для чата и интерфейса
 export const emotes = {
-	":smile:": "\ue1f0",
-	":rock:": "\ue1f2",
-	":sad:": "\ue1f3",
-	":angry:": "\ue1f4",
-	":happy:": "\ue1f5",
-	":trash:": "\ue1f6",
-	":clown:": "\ue1f1",
-	":cat:": "\ue1f9",
-	":hi:": "\ue1e2",
-	":ok:": "\ue1e3",
-	":feck:": "\ue1e4",
-	":like:": "\ue1e0",
-	":dislike:": "\ue1e1",
-	":skull:": "\ue10e",
-	":rskull:": "\ue10f",
-	":coin:": "\ue152",
-	":lvl:": "\ue153",
-	":xp:": "\ue154",
-	":rebirth:": "\ue151"
+	':smile:': '\ue1f0',
+	':rock:': '\ue1f2',
+	':sad:': '\ue1f3',
+	':angry:': '\ue1f4',
+	':happy:': '\ue1f5',
+	':trash:': '\ue1f6',
+	':clown:': '\ue1f1',
+	':cat:': '\ue1f9',
+	':hi:': '\ue1e2',
+	':ok:': '\ue1e3',
+	':feck:': '\ue1e4',
+	':like:': '\ue1e0',
+	':dislike:': '\ue1e1',
+	':skull:': '\ue10e',
+	':rskull:': '\ue10f',
+	':coin:': '\ue152',
+	':lvl:': '\ue153',
+	':xp:': '\ue154',
+	':rebirth:': '\ue151'
 };
 
 // --- Точки телепортации для !warp ---
@@ -376,266 +391,266 @@ export const WARPS = [
 export const commandsList = [
 	// ===== Игрок: справка и общение =====
 	{
-		command: "!help §7[§fcommand§7]",
-		description: "%chat.help.help",
+		command: '!help §7[§fcommand§7]',
+		description: '%chat.help.help',
 		role: 'player'
 	},
 	{
-		command: "!rules",
-		description: "%chat.help.rules",
+		command: '!rules',
+		description: '%chat.help.rules',
 		role: 'player'
 	},
 	{
-		command: "!password",
-		description: "%chat.help.password",
+		command: '!password',
+		description: '%chat.help.password',
 		role: 'player'
 	},
 	{
-		command: "!emotes",
-		description: "%chat.help.emotes",
+		command: '!emotes',
+		description: '%chat.help.emotes',
 		role: 'player'
 	},
 	{
-		command: "!msg §7<§fplayer§7> <§fmessage§7>",
-		description: "%chat.help.msg",
+		command: '!msg §7<§fplayer§7> <§fmessage§7>',
+		description: '%chat.help.msg',
 		role: 'player'
 	},
 	{
-		command: "!reply §7<§fmessage§7>",
-		description: "%chat.help.reply",
+		command: '!reply §7<§fmessage§7>',
+		description: '%chat.help.reply',
 		role: 'player'
 	},
 	{
-		command: "!clearchat §7[§fall§7]",
-		description: "%chat.help.clearchat",
+		command: '!clearchat §7[§fall§7]',
+		description: '%chat.help.clearchat',
 		role: 'player'
 	},
 
 	// ===== Игрок: деньги и статистика =====
 	{
-		command: "!balance",
-		description: "%chat.help.balance",
+		command: '!balance',
+		description: '%chat.help.balance',
 		role: 'player'
 	},
 	{
-		command: "!pay §7<§fplayer§7> <§famount§7>",
-		description: "%chat.help.pay",
+		command: '!pay §7<§fplayer§7> <§famount§7>',
+		description: '%chat.help.pay',
 		role: 'player'
 	},
 	{
-		command: "!stats §7[§fplayer§7]",
-		description: "%chat.help.stats",
+		command: '!stats §7[§fplayer§7]',
+		description: '%chat.help.stats',
 		role: 'player'
 	},
 	{
-		command: "!top §7[§fmoney§8/§flvl§8/§frebirth§8/§fvip_coins§7]",
-		description: "%chat.help.top",
+		command: '!top §7[§fmoney§8/§flvl§8/§frebirth§8/§fvip_coins§7]',
+		description: '%chat.help.top',
 		role: 'player'
 	},
 	{
-		command: "!online",
-		description: "%chat.help.online",
+		command: '!online',
+		description: '%chat.help.online',
 		role: 'player'
 	},
 
 	// ===== Игрок: прочее =====
 	{
-		command: "!warp §7[§fpoint§7] [§fplayer§7]",
-		description: "%chat.help.warp",
+		command: '!warp §7[§fpoint§7] [§fplayer§7]',
+		description: '%chat.help.warp',
 		role: 'player'
 	},
 	{
-		command: "!game §7[§fjoin§8/§fleave§7] [§fgame§7]",
-		description: "%chat.help.game",
+		command: '!game §7[§fjoin§8/§fleave§7] [§fgame§7]',
+		description: '%chat.help.game',
 		role: 'player'
 	},
 	{
-		command: "!report §7<§fplayer§7> <§freason§7>",
-		description: "%chat.help.report",
+		command: '!report §7<§fplayer§7> <§freason§7>',
+		description: '%chat.help.report',
 		role: 'player'
 	},
 
 	// ===== Модератор: наказания =====
 	{
-		command: "!kick §7<§fplayer§7> [§freason§7]",
-		description: "%chat.help.kick",
+		command: '!kick §7<§fplayer§7> [§freason§7]',
+		description: '%chat.help.kick',
 		role: 'moder'
 	},
 	{
-		command: "!mute §7<§fplayer§7> <§fminutes§7> [§freason§7]",
-		description: "%chat.help.mute",
+		command: '!mute §7<§fplayer§7> <§fminutes§7> [§freason§7]',
+		description: '%chat.help.mute',
 		role: 'moder'
 	},
 	{
-		command: "!unmute §7<§fplayer§7>",
-		description: "%chat.help.unmute",
+		command: '!unmute §7<§fplayer§7>',
+		description: '%chat.help.unmute',
 		role: 'moder'
 	},
 	{
-		command: "!warn §7<§fplayer§7> <§freason§7>",
-		description: "%chat.help.warn",
+		command: '!warn §7<§fplayer§7> <§freason§7>',
+		description: '%chat.help.warn',
 		role: 'moder'
 	},
 	{
-		command: "!unwarn §7<§fplayer§7> [§famount§8/§fall§7]",
-		description: "%chat.help.unwarn",
+		command: '!unwarn §7<§fplayer§7> [§famount§8/§fall§7]',
+		description: '%chat.help.unwarn',
 		role: 'moder'
 	},
 	{
-		command: "!freeze §7<§fplayer§7>",
-		description: "%chat.help.freeze",
+		command: '!freeze §7<§fplayer§7>',
+		description: '%chat.help.freeze',
 		role: 'moder'
 	},
 	{
-		command: "!unfreeze §7<§fplayer§7>",
-		description: "%chat.help.unfreeze",
+		command: '!unfreeze §7<§fplayer§7>',
+		description: '%chat.help.unfreeze',
 		role: 'moder'
 	},
 	{
-		command: "!cps §7<§fplayer§7>",
-		description: "%chat.help.cps",
+		command: '!cps §7<§fplayer§7>',
+		description: '%chat.help.cps',
 		role: 'moder'
 	},
 
 	// ===== Модератор: перемещение и наблюдение =====
 	{
-		command: "!tp §7<§fplayer§7>",
-		description: "%chat.help.tp",
+		command: '!tp §7<§fplayer§7>',
+		description: '%chat.help.tp',
 		role: 'moder'
 	},
 	{
-		command: "!tphere §7<§fplayer§7>",
-		description: "%chat.help.tphere",
+		command: '!tphere §7<§fplayer§7>',
+		description: '%chat.help.tphere',
 		role: 'moder'
 	},
 	{
-		command: "!invis §7[§fon§8/§foff§7]",
-		description: "%chat.help.invis",
+		command: '!invis §7[§fon§8/§foff§7]',
+		description: '%chat.help.invis',
 		role: 'moder'
 	},
 	{
-		command: "!gm6 §7[§fplayer§7]",
-		description: "%chat.help.gm6",
+		command: '!gm6 §7[§fplayer§7]',
+		description: '%chat.help.gm6',
 		role: 'moder'
 	},
 
 	// ===== Администратор: режимы =====
 	{
-		command: "!gm1 §7[§fplayer§7]",
-		description: "%chat.help.gm1",
+		command: '!gm1 §7[§fplayer§7]',
+		description: '%chat.help.gm1',
 		role: 'admin'
 	},
 	{
-		command: "!gm2 §7[§fplayer§7]",
-		description: "%chat.help.gm2",
+		command: '!gm2 §7[§fplayer§7]',
+		description: '%chat.help.gm2',
 		role: 'admin'
 	},
 	{
-		command: "!fly §7[§fon§8/§foff§7] [§fplayer§7]",
-		description: "%chat.help.fly",
+		command: '!fly §7[§fon§8/§foff§7] [§fplayer§7]',
+		description: '%chat.help.fly',
 		role: 'admin'
 	},
 
 	// ===== Администратор: мир и сервер =====
 	{
-		command: "!timeset §7<§ftime§8/§f0-24000§7>",
-		description: "%chat.help.timeset",
+		command: '!timeset §7<§ftime§8/§f0-24000§7>',
+		description: '%chat.help.timeset',
 		role: 'admin'
 	},
 	{
-		command: "!event §7<§fhaste§8/§frain§8/§fgift§8/§fmythic§7>",
-		description: "%chat.help.event",
+		command: '!event §7<§fhaste§8/§frain§8/§fgift§8/§fmythic§7>',
+		description: '%chat.help.event',
 		role: 'admin'
 	},
 	{
-		command: "!boost §7<§fx2§8/§fx4§7> [§fminutes§7] §8| §fmagnet §7[§fplayer§7] [§fminutes§7]",
-		description: "%chat.help.boost",
+		command: '!boost §7<§fx2§8/§fx4§7> [§fminutes§7] §8| §fmagnet §7[§fplayer§7] [§fminutes§7]',
+		description: '%chat.help.boost',
 		role: 'admin'
 	},
 	{
-		command: "!say §7<§fmessage§7>",
-		description: "%chat.help.say",
+		command: '!say §7<§fmessage§7>',
+		description: '%chat.help.say',
 		role: 'admin'
 	},
 	{
-		command: "!ban §7<§fplayer§7> [§freason§7]",
-		description: "%chat.help.ban",
+		command: '!ban §7<§fplayer§7> [§freason§7]',
+		description: '%chat.help.ban',
 		role: 'admin'
 	},
 	{
-		command: "!unban §7<§fplayer§8/§fnumber§7>",
-		description: "%chat.help.unban",
+		command: '!unban §7<§fplayer§8/§fnumber§7>',
+		description: '%chat.help.unban',
 		role: 'admin'
 	},
 	{
-		command: "!banlist",
-		description: "%chat.help.banlist",
+		command: '!banlist',
+		description: '%chat.help.banlist',
 		role: 'admin'
 	},
 
 	// ===== Администратор: игроки и данные =====
 	{
-		command: "!scoreboard §7<§fplayer§7> <§fadd§8/§fremove§8/§fset§8/§fget§8/§flist§8/§freset§7> [§fobjective§7] [§famount§7] §8| §fobjectives",
-		description: "%chat.help.scoreboard",
+		command: '!scoreboard §7<§fplayer§7> <§fadd§8/§fremove§8/§fset§8/§fget§8/§flist§8/§freset§7> [§fobjective§7] [§famount§7] §8| §fobjectives',
+		description: '%chat.help.scoreboard',
 		role: 'admin'
 	},
 	{
-		command: "!tag §7<§fplayer§7> <§fadd§8/§fremove§8/§flist§7> [§ftag§7]",
-		description: "%chat.help.tag",
+		command: '!tag §7<§fplayer§7> <§fadd§8/§fremove§8/§flist§7> [§ftag§7]',
+		description: '%chat.help.tag',
 		role: 'admin'
 	},
 	{
-		command: "!achievement §7<§fplayer§7> <§flist§8/§fgrant§8/§frevoke§7> [§fid§7]",
-		description: "%chat.help.achievement",
+		command: '!achievement §7<§fplayer§7> <§flist§8/§fgrant§8/§frevoke§7> [§fid§7]',
+		description: '%chat.help.achievement',
 		role: 'admin'
 	},
 	{
-		command: "!color §7<§fplayer§7> <§fname§8/§ftext§7> <§fcolor§8/§freset§7>",
-		description: "%chat.help.color",
+		command: '!color §7<§fplayer§7> <§fname§8/§ftext§7> <§fcolor§8/§freset§7>',
+		description: '%chat.help.color',
 		role: 'admin'
 	},
 	{
-		command: "!prefix §7<§fplayer§7> <§fset§8/§ftake§8/§flist§8/§fclear§7> [§fprefix§7]",
-		description: "%chat.help.prefix",
+		command: '!prefix §7<§fplayer§7> <§fset§8/§ftake§8/§flist§8/§fclear§7> [§fprefix§7]',
+		description: '%chat.help.prefix',
 		role: 'admin'
 	},
 
 	// ===== Администратор: предметы и бот =====
 	{
-		command: "!stick §7[§fplayer§7]",
-		description: "%chat.help.stick",
+		command: '!stick §7[§fplayer§7]',
+		description: '%chat.help.stick',
 		role: 'admin'
 	},
 	{
-		command: "!bot §7[§fsettings§7]",
-		description: "%chat.help.bot",
+		command: '!bot §7[§fsettings§7]',
+		description: '%chat.help.bot',
 		role: 'admin'
 	},
 	{
-		command: "!debug §7[§fplayer§7]",
-		description: "%chat.help.debug",
+		command: '!debug §7[§fplayer§7]',
+		description: '%chat.help.debug',
 		role: 'admin'
 	},
 
 	// ===== Владелец =====
 	{
-		command: "!role §7<§fplayer§7> <§fplayer§8/§fmoder§8/§fadmin§7>",
-		description: "%chat.help.role",
+		command: '!role §7<§fplayer§7> <§fplayer§8/§fmoder§8/§fadmin§7>',
+		description: '%chat.help.role',
 		role: 'owner'
 	},
 	{
-		command: "!roles",
-		description: "%chat.help.roles",
+		command: '!roles',
+		description: '%chat.help.roles',
 		role: 'owner'
 	},
 	{
-		command: "!resetpass §7<§fplayer§7>",
-		description: "%chat.help.resetpass",
+		command: '!resetpass §7<§fplayer§7>',
+		description: '%chat.help.resetpass',
 		role: 'owner'
 	},
 	{
-		command: "!wipe §7[§fconfirm§7]",
-		description: "%chat.help.wipe",
+		command: '!wipe §7[§fconfirm§7]',
+		description: '%chat.help.wipe',
 		role: 'owner'
 	}
 ];

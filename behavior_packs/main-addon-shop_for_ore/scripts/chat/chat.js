@@ -1,11 +1,10 @@
 // --- Чат-логика и антиспам для Shop for Ore ---
-// Импортируем необходимые функции и данные
 import { world } from '@minecraft/server';
-import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor, impersonatedRole } from '../DataBase.js';
+import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor, impersonatedRole, tell, run } from '../DataBase.js';
 
 // --- Значения по умолчанию для тегов игрока ---
-const rank = "rank:";
-const rankDefault = "§7Player";
+const rank = 'rank:';
+const rankDefault = '§7Player';
 
 // --- Настройки антиспама и антифлуда ---
 const MAX_MESSAGE_LENGTH = 200; // Максимальная длина сообщения
@@ -28,7 +27,7 @@ function isSpamming(playerName, message) {
 	if (!playerMessages.has(playerName)) {
 		playerMessages.set(playerName, {
 			lastMessage: message,
-			timestamps: [now],
+			timestamps: [now]
 		});
 		return false;
 	}
@@ -55,13 +54,13 @@ function isSpamming(playerName, message) {
 // --- Получение рангов игрока из тегов ---
 function getRanks(player) {
 	const ranks = player
-	.getTags()
-	.map((v) => {
-		if (!v.startsWith(rank)) return null;
-		return v.substring(rank.length);
-	})
+		.getTags()
+		.map((v) => {
+			if (!v.startsWith(rank)) return null;
+			return v.substring(rank.length);
+		})
 	// Префикс с цветом или названием роли, которой у игрока нет (выдан до проверки или роль сняли), не показываем
-	.filter((x) => x && !impersonatedRole(player, x));
+		.filter((x) => x && !impersonatedRole(player, x));
 	return ranks.length === 0 ? [rankDefault]: ranks;
 }
 
@@ -73,7 +72,7 @@ const textColorOf = (player) => getChatColor(player, 'text') ?? '§f';
 function replaceEmotes(message) {
 	return message.replace(/:([a-zA-Z0-9_]+):/g,
 		(match) => {
-			return emotes[match] || "\ue128";
+			return emotes[match] || '\ue128';
 		});
 }
 
@@ -81,12 +80,12 @@ function replaceEmotes(message) {
 world.events.beforeChat.subscribe((data) => {
 	const playerName = data.sender.name;
 	const message = data.message.trim();
-	let player = data.sender;
+	const player = data.sender;
 
 	// До входа в аккаунт чат и !-команды недоступны (команды отменяет commands.js)
 	if (isPending(player)) {
 		data.cancel = true;
-		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.account.error.login_required"}]}`);
+		tell(player, 'chat.account.error.login_required');
 		return;
 	}
 
@@ -99,21 +98,21 @@ world.events.beforeChat.subscribe((data) => {
 	const muted = muteMinutesLeft(player);
 	if (muted > 0) {
 		data.cancel = true;
-		player.runCommandAsync(`tellraw @s ${JSON.stringify({ rawtext: [{ translate: 'chat.cmd.mute.active', with: [String(muted)] }] })}`);
+		tell(player, 'chat.cmd.mute.active', String(muted));
 		return;
 	}
 
 	// Проверка на длину сообщения
 	if (message.length > MAX_MESSAGE_LENGTH) {
 		data.cancel = true;
-		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.error.too_long"}]}`);
+		tell(player, 'chat.error.too_long');
 		return;
 	}
 
 	// Проверка на спам/флуд
 	if (isSpamming(playerName, message)) {
 		data.cancel = true;
-		player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.error.spam"}]}`);
+		tell(player, 'chat.error.spam');
 		return;
 	}
 
@@ -131,7 +130,7 @@ world.events.beforeChat.subscribe((data) => {
  * @param {string} message
  */
 export function sendChatMessage(sender, message) {
-	const ranks = getRanks(sender).join("§r§8] | [§r");
+	const ranks = getRanks(sender).join('§r§8] | [§r');
 	const nameColor = nameColorOf(sender);
 	const textColor = textColorOf(sender);
 	// Московское время (UTC+3) считаем от UTC, чтобы не зависеть от часового пояса движка/устройства
@@ -142,7 +141,7 @@ export function sendChatMessage(sender, message) {
 	if (sender.hasTag('role:bot')) {
 		const rawtext = [{ text: ` §7${time} §8[` }];
 		rawtext.push({ translate: 'role.tag.bot' }, { text: `§r§8]§r ${BOT_COLOR}${sender.name}  §f${formatMessage}` });
-		world.getDimension('overworld').runCommandAsync(`tellraw @a ${JSON.stringify({ rawtext })}`).catch(() => undefined);
+		run(world.getDimension('overworld'), `tellraw @a ${JSON.stringify({ rawtext })}`);
 		return;
 	}
 	// Префикс роли (кроме обычного игрока) — переводимое слово, поэтому не world.say, а tellraw с translate
@@ -150,7 +149,7 @@ export function sendChatMessage(sender, message) {
 	const rawtext = [{ text: ` §7${time} §8[` }];
 	if (role !== 'player') rawtext.push({ translate: `role.tag.${role}` }, { text: '§r§8] | [§r' });
 	rawtext.push({ text: `${ranks}§8]§r ${nameColor}${sender.name}  ${textColor}${formatMessage}` });
-	world.getDimension('overworld').runCommandAsync(`tellraw @a ${JSON.stringify({ rawtext })}`).catch(() => undefined);
+	run(world.getDimension('overworld'), `tellraw @a ${JSON.stringify({ rawtext })}`);
 }
 
 // --- Обновление nameTag игрока (отображение информации над головой) ---
@@ -159,7 +158,7 @@ const NAMETAG_REFRESH_TICKS = 20;
 let nameTagTick = 0;
 world.events.tick.subscribe(() => {
 	if (++nameTagTick % NAMETAG_REFRESH_TICKS !== 0) return;
-	for (let player of world.getPlayers()) {
+	for (const player of world.getPlayers()) {
 		// Бот: над головой только ник в цвете бота (уровня и денег у него нет)
 		if (player.hasTag('role:bot')) {
 			if (player.nameTag !== BOT_COLOR + player.name) player.nameTag = BOT_COLOR + player.name;
@@ -167,7 +166,7 @@ world.events.tick.subscribe(() => {
 		}
 		const role = getRole(player);
 		// Ник над головой: цвет из !color, иначе у игрока серый, у персонала — цвет роли. У VIP вместо монет — VIP-коины
-		const nameTag = `${getChatColor(player, 'name') ?? (role === 'player' ? '§7' : ROLE_COLORS[role])}${player.name}\n§f - ${metricNumbers(getScore(player,"lvl"))}\n§f - ${metricNumbers(getScore(player,"xp"))}/${metricNumbers(getScore(player,"xp_need"))}\n${getScore(player, "lvl") >= 26 ? `§f - ${metricNumbers(getScore(player, "vip_coins"))}` : `§f - ${metricNumbers(getScore(player, "money"))}`}\n§f - ${metricNumbers(getScore(player,"rebirth"))}`;
+		const nameTag = `${getChatColor(player, 'name') ?? (role === 'player' ? '§7' : ROLE_COLORS[role])}${player.name}\n§f - ${metricNumbers(getScore(player,'lvl'))}\n§f - ${metricNumbers(getScore(player,'xp'))}/${metricNumbers(getScore(player,'xp_need'))}\n${getScore(player, 'lvl') >= 26 ? `§f - ${metricNumbers(getScore(player, 'vip_coins'))}` : `§f - ${metricNumbers(getScore(player, 'money'))}`}\n§f - ${metricNumbers(getScore(player,'rebirth'))}`;
 		if (player.nameTag !== nameTag) player.nameTag = nameTag;
 	}
 });
