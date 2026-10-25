@@ -251,6 +251,9 @@
 		},
 		{
 			"path" : "scripts/menu/cosmetics.js"
+		},
+		{
+			"path" : "scripts/system/reload.js"
 		}],
 	"version" : 1
 }
