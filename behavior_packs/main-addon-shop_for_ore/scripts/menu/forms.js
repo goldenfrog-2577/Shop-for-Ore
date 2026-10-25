@@ -3,10 +3,29 @@
 // пункты можно показывать не всем. Крестик (закрыл сам игрок) — onBack, как кнопка «Назад».
 // Если форма не открылась из-за открытого чата (userBusy), она покажется, когда чат закроют.
 // В 1.19.50 формы принимают только строки: ключи перевода пишутся как «%ключ», после ключа —
-// пробел или перенос строки (сразу после ключа не ставим ни скобок, ни §-кодов).
+// пробел или перенос строки (сразу после ключа не ставим ни скобок, ни §-кодов). Параметров
+// (with, %1$s) у ключей в формах нет — порядок слов с ником собирается так, чтобы подходил всем языкам.
+// Если после нажатия игроку пришло сообщение в чат (ошибка, покупка, «настройка изменена»),
+// закрывается вся цепочка меню: формы, которые действие открыло бы следом, не показываются.
 
 import { ActionFormData, ModalFormData, MessageFormData } from '@minecraft/server-ui';
-import { closedByPlayer, showWhenFree } from '../DataBase.js';
+import { closedByPlayer, showWhenFree, toldCount } from '../DataBase.js';
+
+// Ник → сколько сообщений было у игрока до нажатия (пока выполняется действие кнопки)
+const acting = new Map();
+/** Выполнить действие кнопки; формы, открытые им после сообщения в чат, не покажутся. */
+function act(player, fn) {
+	acting.set(player.name, toldCount(player));
+	try {
+		fn?.();
+	} finally {
+		acting.delete(player.name);
+	}
+}
+/** Действие уже написало игроку в чат — новую форму не открываем. */
+const closedByMessage = (player) => acting.has(player.name) && toldCount(player) > acting.get(player.name);
+// null — форма не показана (обработчики ничего не делают, «Назад» тоже не срабатывает)
+const show = (player, form) => closedByMessage(player) ? Promise.resolve(null) : showWhenFree(player, form);
 
 /**
  * Кнопка «Назад».
@@ -28,10 +47,11 @@ export function showMenu(player, title, body, items, onBack) {
 	const list = items.filter(Boolean);
 	const form = new ActionFormData().title(title).body(body);
 	for (const item of list) form.button(item.text, item.icon);
-	return showWhenFree(player, form).then(r => {
-		if (closedByPlayer(r)) return onBack?.();
+	return show(player, form).then(r => {
+		if (!r) return;
+		if (closedByPlayer(r)) return act(player, onBack);
 		if (r.canceled || r.selection === undefined) return;
-		list[r.selection]?.run();
+		act(player, list[r.selection]?.run);
 	});
 }
 
@@ -43,9 +63,10 @@ export function showMenu(player, title, body, items, onBack) {
  * @param {() => void} [onBack]
  */
 export function showModal(player, form, onSubmit, onBack) {
-	return showWhenFree(player, form).then(r => {
-		if (!r.formValues) return closedByPlayer(r) ? onBack?.() : undefined;
-		onSubmit(r.formValues);
+	return show(player, form).then(r => {
+		if (!r) return;
+		if (!r.formValues) return closedByPlayer(r) ? act(player, onBack) : undefined;
+		act(player, () => onSubmit(r.formValues));
 	});
 }
 
@@ -66,9 +87,10 @@ export function confirm(player, title, body, onYes, onNo) {
 		.body(body)
 		.button1(' %admin.wipe.button.yes')
 		.button2(' %admin.wipe.button.no');
-	return showWhenFree(player, form).then(r => {
-		if (r.selection === 1) onYes();
-		else if (onNo && (r.selection === 0 || closedByPlayer(r))) onNo();
+	return show(player, form).then(r => {
+		if (!r) return;
+		if (r.selection === 1) act(player, onYes);
+		else if (onNo && (r.selection === 0 || closedByPlayer(r))) act(player, onNo);
 	});
 }
 

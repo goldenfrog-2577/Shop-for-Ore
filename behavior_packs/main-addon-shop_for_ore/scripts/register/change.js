@@ -49,7 +49,7 @@ export function ChangePasswordUI(player, onBack) {
 		}
 		setPassword(player, newPass);
 		// Новый пароль показываем один раз, как при регистрации, — чтобы его можно было запомнить
-		tellText(player, `\n%chat.account.changed\n %account.register.password §b${newPass}\n\n%account.register.remember\n `);
+		tellText(player, '\n%chat.account.changed\n %account.register.password\n\n%account.register.remember\n ', { 'account.register.password': [newPass] });
 		run(player, 'playsound random.levelup @s');
 	}, onBack);
 }

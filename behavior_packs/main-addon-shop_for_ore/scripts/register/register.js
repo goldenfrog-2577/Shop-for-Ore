@@ -13,7 +13,8 @@ import { unlockPlayer } from './system.js';
  */
 export function RegisterUI(player) {
 	const register = modal('%account.register.title')
-		.textField(`\n%account.login.greeting ${player.name} %account.login.intro`,'%account.login.placeholder')
+		// В форме у ключей нет параметров: ник — в начале («Ник, приветствую…»), так порядок слов верен во всех языках
+		.textField(`\n§b${player.name}§7, %account.login.intro`, '%account.login.placeholder')
 		.toggle('%account.register.agree', false);
 	return register.show(player).then(r => {
 		// Форма закрыта — через ~2 с она покажется снова
@@ -38,7 +39,9 @@ export function RegisterUI(player) {
 		player.addTag('auth:done');
 		player.removeTag('auth:register');
 		unlockPlayer(player);
-		tellText(player, `\n%account.register.greeting §b${player.name}\n\n%account.register.welcome\n\n%account.register.info\n %account.register.password §b${password}\n\n%account.register.remember\n `);
+		// В чате ник и пароль — параметры ключей (%1$s): где они стоят, решает перевод
+		tellText(player, '\n%account.register.greeting\n\n%account.register.welcome\n\n%account.register.info\n %account.register.password\n\n%account.register.remember\n ',
+			{ 'account.register.greeting': [player.name], 'account.register.password': [password] });
 		run(player, 'playsound random.levelup @s');
 	});
 }

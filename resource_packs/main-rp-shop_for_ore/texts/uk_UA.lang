@@ -39,7 +39,6 @@ tile.emerald_block.name=§2Подарунок§r
 
 ## --- СЕРВЕРНІ ПРЕДМЕТИ ---
 item.server:menu=§eМеню сервера §7[Натисніть, щоб відкрити§7]§r
-item.server:menu_new=§eМеню сервера §7[Натисніть, щоб відкрити§7]§r
 item.server:admin_menu=§eМеню адміна §7[Натисніть, щоб відкрити§7]§r
 item.server:admin_stick=§cПалочка адміна§r
 item.spawn_egg.entity.server:floating_text.name=Яйце призову голограми
@@ -54,7 +53,7 @@ button.deleteText=Видалити текст
 admin.kick.button=Вигнати гравця
 chat.title=Чат
 chat.title.cheats=Чат і команди
-ui.command_block.placeholder=Введіть команду сюди...
+command_block.placeholder=Введіть команду сюди...
 commands.scoreboard.players.offlinePlayerName=§r §cOffline
 death.attack.explosion=§r %1$s §r§cвибухнув
 death.attack.flyIntoWall=§r %1$s §r§cрозбився на елітрах
@@ -90,7 +89,7 @@ admin.common.min=хв
 admin.common.minutes=хвилин
 menu.common.tap_to_open=§8[§7Натисніть, щоб відкрити§8]
 menu.common.back=§8 Назад
-common.vip_only=§c[Тільки для VIP]
+common.vip_only=§8[§cТільки для VIP§8]
 menu.common.yes=§2Так
 menu.common.no=§4Ні
 
@@ -110,7 +109,7 @@ menu.main.button.games=§8 Міні-ігри
 
 ## --- МЕНЮ ПРО КАРТУ ---
 menu.about.title=§l§8Меню сервера »  Про карту
-menu.about.body=§7Усе про карту: рівні й шахти, як грати, творці й що нового у версії. Обери розділ:
+menu.about.body=§7Усе про карту: рівні й шахти, як грати, творці й що нового у версії.
 menu.about.button.levels=§8 Рівні
 menu.about.button.howtoplay=§f⩆ §8Як грати?
 menu.about.button.creators=§f⩇ §8Творці
@@ -196,7 +195,7 @@ menu.version.line.21=• Вайп зі зведенням, CPS над хотба
 
 ## --- МЕНЮ МАГАЗИНУ ---
 menu.shop.title=§l§8Меню сервера »  Магазин
-menu.shop.body=§7Зачарування для кирки й спорядження, набори для PvP-арени, бусти й косметика. Що ти хочеш купити?
+menu.shop.body=§7Зачарування для кирки й спорядження, набори для PvP-арени, бусти й косметика.
 menu.shop.button.enchants=§8Зачарування
 menu.shop.button.kits=§8PvP Набори
 menu.shop.button.boosts=§8Бустери
@@ -207,7 +206,7 @@ menu.shop.enchants.body=§7Що зачарувати? Кожна покупка 
 menu.shop.enchants.body2=§7Меч, лук і броня беруться з інвентарю: вдягнену броню спершу зніми.
 menu.shop.enchants.button.pickaxe=§8Кирка рівня
 menu.shop.enchants.pickaxe.title=§l§8 Магазин » Кирка рівня
-menu.shop.enchants.pickaxe.body=§7Зачарування кирки рівня зберігаються при зміні кирки, переродження їх скидає. Обери зачарування:
+menu.shop.enchants.pickaxe.body=§7Зачарування кирки рівня зберігаються при зміні кирки, переродження їх скидає.
 menu.shop.enchants.pickaxe.stick=§6У тебе поки палиця (1 рівень): зачарування відкриються з дерев’яної кирки на 2 рівні.
 menu.shop.item_enchants.item=§7Предмет:§f
 menu.shop.item_enchants.current=§7Зараз:§f
@@ -242,15 +241,15 @@ menu.shop.cosmetics.owned=§8Куплено — натисни, щоб обра�
 menu.shop.cosmetics.reset=§8Як у ролі (скинути)
 menu.shop.cosmetics.off=§8Вимкнути
 menu.shop.cosmetics.name.title=§l§8Косметика » Колір ніку
-menu.shop.cosmetics.name.body=§7Колір твого ніка в чаті й над головою; кольори ролей — лише для персоналу. Куплений колір обирається безкоштовно:
+menu.shop.cosmetics.name.body=§7Колір твого ніка в чаті й над головою; кольори ролей — лише для персоналу.
 menu.shop.cosmetics.text.title=§l§8Косметика » Колір тексту
-menu.shop.cosmetics.text.body=§7Колір твоїх повідомлень у чаті — його бачать усі. Куплений колір обирається безкоштовно:
+menu.shop.cosmetics.text.body=§7Колір твоїх повідомлень у чаті — його бачать усі.
 menu.shop.cosmetics.trail.title=§l§8Косметика » Частинки
-menu.shop.cosmetics.trail.body=§7Частинки тягнуться за тобою, поки йдеш; стоїш на місці — їх немає. Куплені обираються безкоштовно:
+menu.shop.cosmetics.trail.body=§7Частинки тягнуться за тобою, поки йдеш; стоїш на місці — їх немає.
 menu.shop.cosmetics.death.title=§l§8Косметика » Смерть
-menu.shop.cosmetics.death.body=§7Хмара частинок там, де ти загинув (наприклад, на PvP-арені). Куплені обираються безкоштовно:
+menu.shop.cosmetics.death.body=§7Хмара частинок там, де ти загинув (наприклад, на PvP-арені).
 menu.shop.cosmetics.sell.title=§l§8Косметика » Продаж
-menu.shop.cosmetics.sell.body=§7Частинки, коли продаєш на золотому блоці (якщо їх увімкнено в налаштуваннях):
+menu.shop.cosmetics.sell.body=§7Частинки, коли продаєш на золотому блоці (якщо їх увімкнено в налаштуваннях).
 cosmetics.trail.heart=§8Сердечка
 cosmetics.trail.note=§8Ноти
 cosmetics.trail.happy=§8Іскри удачі
@@ -275,13 +274,11 @@ cosmetics.sell.lava=§8Лава
 
 ## --- МЕНЮ НАЛАШТУВАНЬ ---
 menu.settings.title=§l§8Меню сервера »  Налаштування
-menu.settings.body=§7Тут змінюється лише те, що бачиш і чуєш ти сам: панель, частинки, звуки, музика й пароль. Обери, що налаштувати:
-menu.settings.default_on=§7За замовчуванням: §2УВІМКНЕНО
-menu.settings.default_off=§7За замовчуванням: §4ВИМКНЕНО
-menu.settings.state=§7Зараз:
-menu.settings.state.on=§2увімкнено
-menu.settings.state.off=§4вимкнено
-menu.settings.state.icons=§gлише значки
+menu.settings.body=§7Тут змінюється лише те, що бачиш і чуєш ти сам: панель, частинки, звуки, музика й пароль.
+menu.settings.state=§7Поточний стан:
+menu.settings.state.on=§2Увімкнено
+menu.settings.state.off=§4Вимкнено
+menu.settings.state.icons=§gЛише значки
 menu.settings.button.board=§8Панель ліворуч
 menu.settings.button.particles=§8Частинки при продажу
 menu.settings.button.sounds=§8Звуки при продажу
@@ -375,9 +372,9 @@ menu.games.phase.running=Гра триває
 minigame.pvp_ffa.name=PvP: останній, хто вижив
 title.game.go=Уперед!
 
-chat.settings.enabled=§r §3Налаштування §8» §7Налаштування змінено: §aувімкнено
-chat.settings.disabled=§r §3Налаштування §8» §7Налаштування змінено: §cвимкнено
-chat.settings.icons_only=§r §3Налаштування §8» §7Налаштування змінено: §eлише значки
+chat.settings.enabled=§r §3Налаштування §8» §7Налаштування змінено: §2Увімкнено
+chat.settings.disabled=§r §3Налаштування §8» §7Налаштування змінено: §4Вимкнено
+chat.settings.icons_only=§r §3Налаштування §8» §7Налаштування змінено: §gЛише значки
 
 ## --- МЕНЮ БАНКУ ---
 menu.bank.title=§l§8Меню сервера »  Банк
@@ -387,7 +384,7 @@ chat.bank.error.no_money=§r⩕ §l§cERROR!§r §8» §7На балансі н�
 chat.bank.sent=§r §2Банк §8» §7Переказ гравцю §f%1$s§r§7: §e%2$s§7
 chat.bank.received=§r §2Банк §8» §f%1$s§r§7 переказав(ла) тобі §e%2$s§7
 menu.bank.player=§rВибери гравця:
-menu.bank.balance=§eБаланс§r:
+menu.bank.balance=§rБаланс:
 chat.bank.error.amount=§r⩕ §l§cERROR!§r §8» §7Сума має бути цілим додатним числом
 chat.bank.error.self=§r⩕ §l§cERROR!§r §8» §7Не можна переказувати гроші самому собі
 
@@ -410,13 +407,13 @@ menu.promo.placeholder=§7Введи промокод...
 
 ## --- МЕНЮ ТЕЛЕПОРТАЦІЙ ---
 menu.warps.title=§l§8Меню сервера »  Телепортації
-menu.warps.body=§7«Спавн» перенесе до шахти твого рівня, «Міні-ігри» — у лобі міні-ігор. Куди хочеш телепортуватися?
+menu.warps.body=§7«Спавн» перенесе до шахти твого рівня, «Міні-ігри» — у лобі міні-ігор.
 menu.warps.button.spawn=§8Спавн
 menu.warps.button.minigames=§8Міні-ігри
 
 ## --- МЕНЮ ПРОКАЧКИ ---
 menu.upgrades.title=§l§8Меню сервера »  Прокачка
-menu.upgrades.body=§7VIP відкриває свою шахту й VIP-коїни, ребітх починає все заново, але назавжди дарує Квапливість. Обери свій шлях:
+menu.upgrades.body=§7VIP відкриває свою шахту й VIP-коїни, ребітх починає все заново, але назавжди дарує Квапливість.
 menu.upgrades.button.vip=§2VIP
 menu.upgrades.button.rebirth=§5Ребітх
 
@@ -424,16 +421,15 @@ menu.upgrades.button.rebirth=§5Ребітх
 account.register.title=§l§8Реєстрація акаунта
 account.register.agree=Я погоджуюсь з правилами сервера і підтверджую §cвідсутність§r читів
 chat.account.error.no_cheats=§r⩕ §l§cERROR!§r §8» §7Підтверди §eвідсутність читів§7, щоб грати на сервері
-account.register.greeting=§7Вітаю
+account.register.greeting=§7Вітаю, §b%1$s§7!
 account.register.welcome=§7Ласкаво просимо на сервер! Гарної гри :)
 account.register.info=§7Інформація про акаунт:
-account.register.password=§7Пароль: §f
+account.register.password=§7Пароль: §b%1$s
 account.register.remember=§7Запам'ятай ці дані або зроби скріншот, щоб потім зайти у гру
 
 ## --- МЕНЮ ВХОДУ ---
 account.login.title=§l§8Вхід в акаунт
-account.login.greeting=§7Вітаю§f
-account.login.intro=§7на сервері §l[] Shop for Ore§r§7. Придумай і введи пароль для реєстрації
+account.login.intro=§7вітаю тебе на сервері §l[] Shop for Ore§r§7! Придумай і введи пароль для реєстрації:
 account.login.hint=§7Введи пароль, який ти вводив при реєстрації:
 account.login.placeholder=§7Введі пароль...
 account.change.title=§l§8Зміна пароля

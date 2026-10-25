@@ -157,9 +157,6 @@
 			"path" : "items/menu/menu.json"
 		},
 		{
-			"path" : "items/menu/menu_new.json"
-		},
-		{
 			"path" : "manifest.json"
 		},
 		{

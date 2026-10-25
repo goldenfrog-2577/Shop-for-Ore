@@ -71,7 +71,8 @@ function mapInfo(player) {
 }
 
 // «Как играть?»: абзацы разделены пустой строкой, у первых трёх — отступ
-const HOWTOPLAY = [' ' + lines('menu.howtoplay.line', 5), ' ' + lines('menu.howtoplay.line', 9, 6), ' ' + lines('menu.howtoplay.line', 13, 10),
+// Значки разделов — escape-последовательностями: так их не потеряет ни один редактор
+const HOWTOPLAY = ['\ue101 ' + lines('menu.howtoplay.line', 5), '\ue152 ' + lines('menu.howtoplay.line', 9, 6), '\ue151 ' + lines('menu.howtoplay.line', 13, 10),
 	...Array.from({ length: 8 }, (_, i) => `%menu.howtoplay.line.${14 + i}`)].join('\n\n');
 const VERSION = `%menu.version.line.1\n\n§r%menu.version.label §a${BUILD}§r\n%menu.version.line.2\n\n${lines('menu.version.line', 21, 3)}`;
 
@@ -139,8 +140,8 @@ function settings(player) {
 	const again = () => settings(player);
 	showMenu(player, '%menu.settings.title', '%menu.settings.body', [
 		{ text: '%menu.settings.button.board', icon: 'textures/items/sign', run: () => boardSetting(player, again) },
-		{ text: '%menu.settings.button.particles', icon: 'textures/items/emerald', run: () => tagSetting(player, 'particles', 'player:particle', false, again) },
-		{ text: '%menu.settings.button.sounds', icon: 'textures/blocks/noteblock', run: () => tagSetting(player, 'sounds', 'player:sound', false, again) },
+		{ text: '%menu.settings.button.particles', icon: 'textures/items/emerald', run: () => tagSetting(player, 'particles', 'player:particle', again) },
+		{ text: '%menu.settings.button.sounds', icon: 'textures/blocks/noteblock', run: () => tagSetting(player, 'sounds', 'player:sound', again) },
 		{ text: '%menu.settings.button.music', icon: 'textures/items/record_cat', run: () => musicSetting(player, again) },
 		{ text: '%menu.settings.button.password', icon: 'textures/ui/icon_lock', run: () => ChangePasswordUI(player, again) },
 		backButton(back)
@@ -148,11 +149,10 @@ function settings(player) {
 }
 
 const changed = (player, on) => tellText(player, on ? '%chat.settings.enabled' : '%chat.settings.disabled');
-const defaultLine = (on) => on ? '%menu.settings.default_on' : '%menu.settings.default_off';
 
 // Частицы и звуки при продаже: включено, пока есть тег (по умолчанию выключено)
-function tagSetting(player, kind, tag, defaultOn, back) {
-	toggleMenu(player, `%menu.settings.${kind}.title`, `%menu.settings.${kind}.body\n${defaultLine(defaultOn)}`, player.hasTag(tag), (on) => {
+function tagSetting(player, kind, tag, back) {
+	toggleMenu(player, `%menu.settings.${kind}.title`, `%menu.settings.${kind}.body`, player.hasTag(tag), (on) => {
 		if (on) player.addTag(tag); else player.removeTag(tag);
 		changed(player, on);
 	}, back);
@@ -160,7 +160,7 @@ function tagSetting(player, kind, tag, defaultOn, back) {
 
 // Музыка: выключена, пока есть тег player:music_off (system/music.js)
 function musicSetting(player, back) {
-	toggleMenu(player, '%menu.settings.music.title', `%menu.settings.music.body\n${defaultLine(true)}`, !player.hasTag(MUSIC_OFF), (on) => {
+	toggleMenu(player, '%menu.settings.music.title', '%menu.settings.music.body', !player.hasTag(MUSIC_OFF), (on) => {
 		if (on) player.removeTag(MUSIC_OFF);
 		else {
 			player.addTag(MUSIC_OFF);
@@ -174,7 +174,7 @@ function musicSetting(player, back) {
 function boardSetting(player, back) {
 	const state = player.hasTag('player:board_no') ? 'off' : player.hasTag('player:board_icons') ? 'icons' : 'on';
 	const pick = (fn, msg) => () => { run(player, `function settings/${fn}`); tellText(player, msg); };
-	showMenu(player, '%menu.settings.board.title', `%menu.settings.board.body\n${defaultLine(true)}\n\n%menu.settings.state %menu.settings.state.${state}`, [
+	showMenu(player, '%menu.settings.board.title', `%menu.settings.board.body\n\n%menu.settings.state %menu.settings.state.${state}`, [
 		{ text: ' %menu.settings.button.enable', run: pick('scoreboard_on', '%chat.settings.enabled') },
 		{ text: ' %menu.settings.button.icons_only', run: pick('scoreboard_icons', '%chat.settings.icons_only') },
 		{ text: ' %menu.settings.button.disable', run: pick('scoreboard_off', '%chat.settings.disabled') },

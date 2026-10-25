@@ -275,8 +275,6 @@ cosmetics.sell.lava=§8Лава
 ## --- МЕНЮ НАСТРОЕК ---
 menu.settings.title=§l§8Меню сервера »  Настройки
 menu.settings.body=§7Здесь меняется только то, что видишь и слышишь ты сам: панель, частицы, звуки, музыка и пароль.
-menu.settings.default_on=§7По умолчанию: §2ВКЛЮЧЕНО # строку убрать
-menu.settings.default_off=§7По умолчанию: §4ВЫКЛЮЧЕНО # строку убрать
 menu.settings.state=§7Текущее состояние:
 menu.settings.state.on=§2Включено
 menu.settings.state.off=§4Выключено
@@ -354,7 +352,7 @@ ach.mined_100k.name=Неутомимый
 ach.mined_100k.desc=Сломать 100 000 блоков — для самых упорных шахтёров
 ach.pvp_kills_25.name=Гладиатор
 ach.pvp_kills_25.desc=Победить 25 игроков на PvP-арене
-ach.game_wins_10.name=Неуязвимый # отсылка на сериал Invicible, комментарий потом удалить
+ach.game_wins_10.name=Неуязвимый
 ach.game_wins_10.desc=Выиграть 10 мини-игр
 ach.all_trails.name=Звездопад
 ach.all_trails.desc=Собрать все частицы-следы в Магазин » Косметика
@@ -423,16 +421,15 @@ menu.upgrades.button.rebirth=§5Ребитх
 account.register.title=§l§8Регистрация аккаунта
 account.register.agree=Я соглашаюсь с правилами сервера и подтверждаю §cотсутствие§r читов
 chat.account.error.no_cheats=§r⩕ §l§cERROR!§r §8» §7Подтверди §eотсутствие читов§7, чтобы играть на сервере
-account.register.greeting=§7Приветствую
+account.register.greeting=§7Приветствую, §b%1$s§7!
 account.register.welcome=§7Добро пожаловать на сервер! Приятной игры :)
 account.register.info=§7Информация об аккаунте:
-account.register.password=§7Пароль:§f
+account.register.password=§7Пароль: §b%1$s
 account.register.remember=§7Запомни эти данные или сделай скриншот чтобы потом зайти в игру
 
 ## --- МЕНЮ ВХОДА ---
 account.login.title=§l§8Вход в аккаунт
-account.login.greeting=§7Приветствую§f
-account.login.intro=§7на сервере §l[] Shop for Ore§r§7. Придумай и введи пароль для регистрации
+account.login.intro=§7приветствую тебя на сервере §l[] Shop for Ore§r§7! Придумай и введи пароль для регистрации:
 account.login.hint=§7Введи пароль, который ты вводил(а) при регистрации:
 account.login.placeholder=§7Введи пароль...
 account.change.title=§l§8Смена пароля
