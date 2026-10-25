@@ -248,6 +248,9 @@
 		},
 		{
 			"path" : "scripts/system/migrate.js"
+		},
+		{
+			"path" : "scripts/menu/cosmetics.js"
 		}],
 	"version" : 1
 }
