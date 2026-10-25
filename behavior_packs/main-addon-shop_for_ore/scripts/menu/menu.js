@@ -5,6 +5,7 @@ import { ActionFormData, ModalFormData } from '@minecraft/server-ui';
 import { bank } from './bank_menu.js';
 import { combatSecondsLeft } from '../system/pvp.js';
 import { enchantsMenu } from './enchant_shop.js';
+import { cosmeticsMenu } from './cosmetics.js';
 import { ChangePasswordUI } from '../register/change.js';
 import { isPending, rawTranslate, tellText, closedByPlayer } from '../DataBase.js';
 
@@ -172,6 +173,8 @@ function shop(player) {
 		'textures/items/diamond_chestplate')
 	.button('%menu.shop.button.boosts',
 		'textures/items/experience_bottle')
+	.button('%menu.shop.button.cosmetics',
+		'textures/items/dye_powder_pink')
 	.button('%menu.common.back')
 	shop.show(player).then(tb => {
 		// Крестик — на уровень вверх
@@ -183,6 +186,8 @@ function shop(player) {
 		} else if (tb.selection == 2) {
 			boosts(player)
 		} else if (tb.selection == 3) {
+			cosmeticsMenu(player, () => shop(player))
+		} else if (tb.selection == 4) {
 			menu(player)
 		}
 	});
