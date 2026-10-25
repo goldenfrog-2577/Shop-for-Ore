@@ -6,7 +6,7 @@
 // Идея — по мотивам карты FearCube (с разрешения автора), код свой.
 
 import { world, system } from '@minecraft/server';
-import { run, rawTranslateRich, isPending, findPlayer } from '../DataBase.js';
+import { run, rawTranslateRich, isPending, findPlayer, tell } from '../DataBase.js';
 import { teleportToArena, combatSecondsLeft } from './pvp.js';
 import { showTitle } from './toast.js';
 
@@ -40,7 +40,7 @@ export const gameOf = (player) => listGames().find(g => g.players.has(player.nam
 const tellGame = (g, key, ...args) => {
 	for (const name of g.players) {
 		const p = findPlayer(name);
-		if (p) run(p, `tellraw @s ${rawTranslateRich(key, ...args)}`);
+		if (p) tell(p, key, ...args);
 	}
 };
 const gameName = (g) => ({ translate: `minigame.${g.def.id}.name` });
@@ -48,7 +48,7 @@ const gameName = (g) => ({ translate: `minigame.${g.def.id}.name` });
 /** Записаться в игру. @returns {boolean} */
 export function joinGame(player, id) {
 	const g = getGame(id);
-	const fail = (key, ...a) => { run(player, `tellraw @s ${rawTranslateRich(key, ...a)}`); return false; };
+	const fail = (key, ...a) => { tell(player, key, ...a); return false; };
 	if (!g) return fail('chat.game.error.unknown', String(id ?? ''));
 	if (isPending(player) || player.hasTag('role:bot')) return false;
 	if (gameOf(player)) return fail('chat.game.error.already', gameName(gameOf(player)));
@@ -60,7 +60,7 @@ export function joinGame(player, id) {
 	player.addTag(GAME_TAG + g.def.id);
 	tellGame(g, 'chat.game.joined', player.name, gameName(g), String(g.players.size), String(g.def.maxPlayers));
 	if (g.phase === 'waiting' && g.players.size >= g.def.minPlayers) startCountdown(g);
-	else if (g.phase === 'waiting') run(player, `tellraw @s ${rawTranslateRich('chat.game.waiting', String(g.def.minPlayers - g.players.size))}`);
+	else if (g.phase === 'waiting') tell(player, 'chat.game.waiting', String(g.def.minPlayers - g.players.size));
 	return true;
 }
 
@@ -77,7 +77,7 @@ function removePlayer(g, name, player, reason) {
 	const wasAlive = g.alive.delete(name);
 	player?.removeTag(GAME_TAG + g.def.id);
 	if (player && reason !== 'quit') {
-		run(player, `tellraw @s ${rawTranslateRich(`chat.game.${reason === 'out' ? 'out' : 'left'}`, gameName(g))}`);
+		tell(player, `chat.game.${reason === 'out' ? 'out' : 'left'}`, gameName(g));
 		if (g.phase === 'running' && reason === 'left') run(player, `tp @s ${LOBBY.join(' ')}`);
 	}
 	if (g.phase === 'running' && wasAlive) tellGame(g, 'chat.game.out_other', name, String(g.alive.size));
@@ -124,7 +124,7 @@ export function endGame(g, winner, reason = 'end') {
 		run(p, 'playsound random.levelup @s');
 		const reward = [r.money ? `§e+${r.money} §f${COIN}` : '', r.vip_coins ? `§e+${r.vip_coins} §f${VIP_COIN}` : ''].filter(Boolean).join('§7, ');
 		run(p, `tellraw @a ${rawTranslateRich('chat.game.winner', winner, gameName(g))}`);
-		run(p, `tellraw @s ${rawTranslateRich('chat.game.reward', reward || '—')}`);
+		tell(p, 'chat.game.reward', reward || '—');
 	} else {
 		tellGame(g, reason === 'stop' ? 'chat.game.stopped' : 'chat.game.draw', gameName(g));
 	}
@@ -165,7 +165,7 @@ system.runSchedule(() => {
 					g.alive.delete(name);
 					g.players.delete(name);
 					p.removeTag(GAME_TAG + g.def.id);
-					run(p, `tellraw @s ${rawTranslateRich('chat.game.out', gameName(g))}`);
+					tell(p, 'chat.game.out', gameName(g));
 					tellGame(g, 'chat.game.out_other', name, String(g.alive.size));
 				}
 			}

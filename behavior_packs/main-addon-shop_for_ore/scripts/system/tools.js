@@ -6,6 +6,7 @@
 // Пока игрок копает этой киркой, замену не делаем, чтобы не сбить копание.
 
 import { world, system } from '@minecraft/server';
+import { run } from '../DataBase.js';
 
 const CHECK_EVERY_TICKS = 20;
 const FORCE_RATIO = 0.9;
@@ -21,7 +22,7 @@ system.runSchedule(() => {
 			if (!durability || durability.damage <= 0) continue;
 			const holding = player.selectedSlot === 0;
 			if (holding && durability.damage < durability.maxDurability * FORCE_RATIO) continue;
-			player.runCommandAsync('scoreboard players set @s pick 0').catch(() => undefined);
+			run(player, 'scoreboard players set @s pick 0');
 		} catch (e) {
 			// нет компонента или игрок вышел — пропускаем
 		}

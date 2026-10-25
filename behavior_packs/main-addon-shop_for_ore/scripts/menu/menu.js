@@ -1,521 +1,239 @@
-// --- Главное меню и подменю аддона Shop for Ore ---
-// Импортируем необходимые модули
+// --- Меню сервера (предмет server:menu в 9-м слоте) ---
+// Главное меню и разделы: О карте, Магазин, Настройки, Банк, Правила, Промокоды, Телепортации,
+// Прокачка, Достижения, Мини-игры. Формы строит menu/forms.js: крестик — на уровень вверх.
+
 import { world } from '@minecraft/server';
-import { ActionFormData, ModalFormData } from '@minecraft/server-ui';
+import { isPending, rawTranslate, tellText, tell, run } from '../DataBase.js';
+import { showMenu, showModal, modal, backButton, toggleMenu } from './forms.js';
 import { bank } from './bank_menu.js';
-import { combatSecondsLeft } from '../system/pvp.js';
 import { enchantsMenu } from './enchant_shop.js';
 import { cosmeticsMenu } from './cosmetics_shop.js';
 import { achievementsMenu } from './achievements_menu.js';
 import { minigamesMenu } from './minigames_menu.js';
+import { combatSecondsLeft } from '../system/pvp.js';
 import { MUSIC_OFF } from '../system/music.js';
 import { ChangePasswordUI } from '../register/change.js';
-import { isPending, rawTranslate, tellText, closedByPlayer } from '../DataBase.js';
 
-// --- Открытие меню при использовании специального предмета ---
-world.events.beforeItemUse.subscribe(data => {
-	const player = data.source
-	if (data.item.typeId == 'server:menu') {
-		// До входа в аккаунт меню недоступно
-		if (isPending(player)) {
-			data.cancel = true;
-			player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.account.error.login_required"}]}`);
-			return;
-		}
-		// Замороженный игрок не может уйти варпом из меню
-		if (player.hasTag('state:frozen')) {
-			data.cancel = true;
-			player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.active"}]}`);
-			return;
-		}
-		menu(player)
+const OPEN = '\n%menu.common.tap_to_open';
+const COIN = '', LVL = '';
+// Номер сборки в «Версия карты»
+const BUILD = '0.3.0_20261025_dev';
+
+/** Строки описания из ключей prefix.1 … prefix.N через перенос. */
+const lines = (prefix, n, from = 1) => Array.from({ length: n - from + 1 }, (_, i) => `%${prefix}.${from + i}`).join('\n');
+
+// --- Открытие предметом ---
+world.events.beforeItemUse.subscribe((data) => {
+	if (data.item.typeId !== 'server:menu') return;
+	const player = data.source;
+	// До входа в аккаунт меню недоступно
+	if (isPending(player)) {
+		data.cancel = true;
+		tell(player, 'chat.account.error.login_required');
+		return;
 	}
+	// Замороженный игрок не может уйти варпом из меню
+	if (player.hasTag('state:frozen')) {
+		data.cancel = true;
+		tell(player, 'chat.cmd.freeze.active');
+		return;
+	}
+	menu(player);
 });
 
 // --- Главное меню ---
 export function menu(player) {
-	const menu = new ActionFormData()
-	.title('%menu.main.title')
-	.body('%menu.main.body')
-	.button('%menu.main.button.about\n%menu.common.tap_to_open')
-	.button('%menu.main.button.shop\n%menu.common.tap_to_open')
-	.button('%menu.main.button.settings\n%menu.common.tap_to_open')
-	.button('%menu.main.button.bank\n%menu.common.tap_to_open')
-	.button('%menu.main.button.rules\n%menu.common.tap_to_open')
-	.button('%menu.main.button.promo\n%menu.common.tap_to_open')
-	.button('%menu.main.button.warps\n%menu.common.tap_to_open')
-	.button('%menu.main.button.upgrades\n%menu.common.tap_to_open')
-	.button('%menu.main.button.achievements\n%menu.common.tap_to_open')
-	.button('%menu.main.button.games\n%menu.common.tap_to_open')
-	menu.show(player).then(m => {
-		if (m.selection == 0) {
-			mapInfo(player)
-		} else if (m.selection == 1) {
-			shop(player)
-		} else if (m.selection == 2) {
-			settings(player)
-		} else if (m.selection == 3) {
-			bank(player)
-		} else if (m.selection == 4) {
-			rules(player)
-		} else if (m.selection == 5) {
-			promocodes(player)
-		} else if (m.selection == 6) {
-			warps(player)
-		} else if (m.selection == 7) {
-			upgrading(player)
-		} else if (m.selection == 8) {
-			achievementsMenu(player, () => menu(player))
-		} else if (m.selection == 9) {
-			minigamesMenu(player, () => menu(player))
-		}
-	});
+	showMenu(player, '%menu.main.title', '%menu.main.body', [
+		{ text: '%menu.main.button.about' + OPEN, run: () => mapInfo(player) },
+		{ text: '%menu.main.button.shop' + OPEN, run: () => shop(player) },
+		{ text: '%menu.main.button.settings' + OPEN, run: () => settings(player) },
+		{ text: '%menu.main.button.bank' + OPEN, run: () => bank(player) },
+		{ text: '%menu.main.button.rules' + OPEN, run: () => rules(player) },
+		{ text: '%menu.main.button.promo' + OPEN, run: () => promocodes(player) },
+		{ text: '%menu.main.button.warps' + OPEN, run: () => warps(player) },
+		{ text: '%menu.main.button.upgrades' + OPEN, run: () => upgrading(player) },
+		{ text: '%menu.main.button.achievements' + OPEN, run: () => achievementsMenu(player, () => menu(player)) },
+		{ text: '%menu.main.button.games' + OPEN, run: () => minigamesMenu(player, () => menu(player)) }
+	]);
 }
 
-// --- Информация о карте ---
+// ===== О карте =====
+
 function mapInfo(player) {
-	const mapInfo = new ActionFormData()
-	.title('%menu.about.title')
-	.body('%menu.about.body')
-	.button('%menu.about.button.levels')
-	.button('%menu.about.button.howtoplay')
-	.button('%menu.about.button.creators')
-	.button('%menu.about.button.version')
-	.button('%menu.common.back')
-	mapInfo.show(player).then(i => {
-		// Крестик — на уровень вверх
-		if (closedByPlayer(i)) return menu(player);
-		if (i.selection == 0) {
-			levelsInfo(player)
-		} else if (i.selection == 1) {
-			howtoplay(player)
-		} else if (i.selection == 2) {
-			mapCreator(player)
-		} else if (i.selection == 3) {
-			mapVersion(player)
-		} else if (i.selection == 4) {
-			menu(player)
-		}
-	});
+	const back = () => menu(player);
+	showMenu(player, '%menu.about.title', '%menu.about.body', [
+		{ text: '%menu.about.button.levels', run: () => textPage(player, '%menu.levels.title', lines('menu.levels.line', 25), () => mapInfo(player)) },
+		{ text: '%menu.about.button.howtoplay', run: () => textPage(player, '%menu.howtoplay.title', HOWTOPLAY, () => mapInfo(player)) },
+		{ text: '%menu.about.button.creators', run: () => creators(player) },
+		{ text: '%menu.about.button.version', run: () => textPage(player, '%menu.version.title', VERSION, () => mapInfo(player)) },
+		backButton(back)
+	], back);
 }
 
-// --- Уровни карты ---
-function levelsInfo(player) {
-	const levelsInfo = new ActionFormData()
-	.title('%menu.levels.title')
-	.body('%menu.levels.line.1\n%menu.levels.line.2\n%menu.levels.line.3\n%menu.levels.line.4\n%menu.levels.line.5\n%menu.levels.line.6\n%menu.levels.line.7\n%menu.levels.line.8\n%menu.levels.line.9\n%menu.levels.line.10\n%menu.levels.line.11\n%menu.levels.line.12\n%menu.levels.line.13\n%menu.levels.line.14\n%menu.levels.line.15\n%menu.levels.line.16\n%menu.levels.line.17\n%menu.levels.line.18\n%menu.levels.line.19\n%menu.levels.line.20\n%menu.levels.line.21\n%menu.levels.line.22\n%menu.levels.line.23\n%menu.levels.line.24\n%menu.levels.line.25')
-	.button('%menu.common.back')
-	levelsInfo.show(player).then(tb => {
-		// Крестик — на уровень вверх
-		if (closedByPlayer(tb)) return mapInfo(player);
-		if (tb.selection == 0) {
-			mapInfo(player)
-		}
-	});
+// «Как играть?»: абзацы разделены пустой строкой, у первых трёх — отступ
+const HOWTOPLAY = [' ' + lines('menu.howtoplay.line', 5), ' ' + lines('menu.howtoplay.line', 9, 6), ' ' + lines('menu.howtoplay.line', 13, 10),
+	...Array.from({ length: 8 }, (_, i) => `%menu.howtoplay.line.${14 + i}`)].join('\n\n');
+const VERSION = `%menu.version.line.1\n\n§r%menu.version.label §a${BUILD}§r\n%menu.version.line.2\n\n${lines('menu.version.line', 21, 3)}`;
+
+/** Страница текста с одной кнопкой «Назад». */
+function textPage(player, title, body, back) {
+	showMenu(player, title, body, [backButton(back)], back);
 }
 
-// --- Как играть ---
-function howtoplay(player) {
-	const howtoplay = new ActionFormData()
-	.title('%menu.howtoplay.title')
-	.body(' %menu.howtoplay.line.1\n%menu.howtoplay.line.2\n%menu.howtoplay.line.3\n%menu.howtoplay.line.4\n%menu.howtoplay.line.5\n\n %menu.howtoplay.line.6\n%menu.howtoplay.line.7\n%menu.howtoplay.line.8\n%menu.howtoplay.line.9\n\n %menu.howtoplay.line.10\n%menu.howtoplay.line.11\n%menu.howtoplay.line.12\n%menu.howtoplay.line.13\n\n%menu.howtoplay.line.14\n\n%menu.howtoplay.line.15\n\n%menu.howtoplay.line.16\n\n%menu.howtoplay.line.17\n\n%menu.howtoplay.line.18\n\n%menu.howtoplay.line.19\n\n%menu.howtoplay.line.20\n\n%menu.howtoplay.line.21')
-	.button('%menu.common.back')
-	howtoplay.show(player).then(tb => {
-		// Крестик — на уровень вверх
-		if (closedByPlayer(tb)) return mapInfo(player);
-		if (tb.selection == 0) {
-			mapInfo(player)
-		}
-	});
+// Создатели: любая кнопка возвращает в «О карте»
+function creators(player) {
+	const back = () => mapInfo(player);
+	showMenu(player, '%menu.creators.title', '', [
+		['§8Сreator\n§8kapycta1231484', 'textures/server_icons/steve'],
+		// Соавтор карты: иконки шрифта (glyph_E1) подписаны «BY'NASTYA»
+		['§5Сo-creator\n§8NastyaXs00', 'textures/server_icons/alex'],
+		['§6Оmlet Arcade\n§8@waxenjaguar2209', 'textures/server_icons/omlet'],
+		['§9Discоrd\n§8GoldenFrog#2577', 'textures/server_icons/discord'],
+		['§3Тelegram\n§8@goldenfrog_2577', 'textures/server_icons/telegram'],
+		['§2Хbox\n§8kapycta123#1484', 'textures/server_icons/xbox']
+	].map(([text, icon]) => ({ text, icon, run: back })), back);
 }
 
-// --- Создатели карты ---
-function mapCreator(player) {
-	const mapCreator = new ActionFormData()
-	.title('%menu.creators.title')
-	.body('')
-	.button('§8Сreator\n§8kapycta1231484',
-		'textures/server_icons/steve')
-	// Соавтор карты: иконки шрифта (glyph_E1) подписаны «BY'NASTYA»
-	.button('§5Сo-creator\n§8NastyaXs00',
-		'textures/server_icons/alex')
-	.button('§6Оmlet Arcade\n§8@waxenjaguar2209',
-		'textures/server_icons/omlet')
-	.button('§9Discоrd\n§8GoldenFrog#2577',
-		'textures/server_icons/discord')
-	.button('§3Тelegram\n§8@goldenfrog_2577',
-		'textures/server_icons/telegram')
-	.button('§2Хbox\n§8kapycta123#1484',
-		'textures/server_icons/xbox')
-	mapCreator.show(player).then(tb => {
-		// Крестик — на уровень вверх
-		if (closedByPlayer(tb)) return mapInfo(player);
-		// Все кнопки возвращают к информации о карте
-		if (tb.selection === undefined) return;
-		mapInfo(player)
-	});
-}
+// ===== Магазин =====
 
-// --- Версия карты ---
-function mapVersion(player) {
-	const mapVersion = new ActionFormData()
-	.title('%menu.version.title')
-	.body('%menu.version.line.1\n\n§r%menu.version.label §a0.3.0_20261025_dev§r\n%menu.version.line.2\n\n%menu.version.line.3\n%menu.version.line.4\n%menu.version.line.5\n%menu.version.line.6\n%menu.version.line.7\n%menu.version.line.8\n%menu.version.line.9\n%menu.version.line.10\n%menu.version.line.11\n%menu.version.line.12\n%menu.version.line.13\n%menu.version.line.14\n%menu.version.line.15\n%menu.version.line.16\n%menu.version.line.17\n%menu.version.line.18\n%menu.version.line.19\n%menu.version.line.20')
-	.button('%menu.common.back')
-	mapVersion.show(player).then(tb => {
-		// Крестик — на уровень вверх
-		if (closedByPlayer(tb)) return mapInfo(player);
-		if (tb.selection == 0) {
-			mapInfo(player)
-		}
-	});
-}
-
-// --- Магазин ---
 function shop(player) {
-	const shop = new ActionFormData()
-	.title('%menu.shop.title')
-	.body('%menu.shop.body')
-	.button('%menu.shop.button.enchants',
-		'textures/items/book_enchanted')
-	.button('%menu.shop.button.kits',
-		'textures/items/diamond_chestplate')
-	.button('%menu.shop.button.boosts',
-		'textures/items/experience_bottle')
-	.button('%menu.shop.button.cosmetics',
-		'textures/items/dye_powder_pink')
-	.button('%menu.common.back')
-	shop.show(player).then(tb => {
-		// Крестик — на уровень вверх
-		if (closedByPlayer(tb)) return menu(player);
-		if (tb.selection == 0) {
-			enchants(player)
-		} else if (tb.selection == 1) {
-			pvp_kits(player)
-		} else if (tb.selection == 2) {
-			boosts(player)
-		} else if (tb.selection == 3) {
-			cosmeticsMenu(player, () => shop(player))
-		} else if (tb.selection == 4) {
-			menu(player)
-		}
-	});
+	const back = () => menu(player);
+	showMenu(player, '%menu.shop.title', '%menu.shop.body', [
+		{ text: '%menu.shop.button.enchants', icon: 'textures/items/book_enchanted', run: () => enchantsMenu(player, () => shop(player)) },
+		{ text: '%menu.shop.button.kits', icon: 'textures/items/diamond_chestplate', run: () => pvpKits(player) },
+		{ text: '%menu.shop.button.boosts', icon: 'textures/items/experience_bottle', run: () => boosts(player) },
+		{ text: '%menu.shop.button.cosmetics', icon: 'textures/items/dye_powder_pink', run: () => cosmeticsMenu(player, () => shop(player)) },
+		backButton(back)
+	], back);
 }
 
-// --- Зачарования: кирка уровня, меч, лук, броня (menu/enchant_shop.js) ---
-function enchants(player) {
-	enchantsMenu(player, () => shop(player));
+/** Товар магазина: покупку и проверку денег делает функция .mcfunction от имени игрока. */
+const product = (player, text, price, glyph, fn, icon) => ({ text: `${text}\n§8${price} ${glyph}`, icon, run: () => run(player, `function ${fn}`) });
+
+function pvpKits(player) {
+	const back = () => shop(player);
+	showMenu(player, '%menu.shop.kits.title', '%menu.shop.kits.body', [
+		product(player, '%menu.shop.kits.button.iron', '15.0K', COIN, 'shop/pvp_kits/iron', 'textures/items/iron_chestplate'),
+		product(player, '%menu.shop.kits.button.diamond', '35.0K', COIN, 'shop/pvp_kits/diamond', 'textures/items/diamond_chestplate'),
+		product(player, '%menu.shop.kits.button.netherite', '50.0K', COIN, 'shop/pvp_kits/netherite', 'textures/items/netherite_chestplate'),
+		backButton(back)
+	], back);
 }
 
-// --- PvP-наборы ---
-function pvp_kits(player) {
-	const pvp_kits = new ActionFormData()
-	.title('%menu.shop.kits.title')
-	.body('%menu.shop.kits.body')
-	.button('%menu.shop.kits.button.iron\n§815.0K ',
-		'textures/items/iron_chestplate')
-	.button('%menu.shop.kits.button.diamond\n§835.0K ',
-		'textures/items/diamond_chestplate')
-	.button('%menu.shop.kits.button.netherite\n§850.0K ',
-		'textures/items/netherite_chestplate')
-	.button('%menu.common.back')
-	pvp_kits.show(player).then(pvp => {
-		// Крестик — на уровень вверх
-		if (closedByPlayer(pvp)) return shop(player);
-		if (pvp.selection == 0) {
-			player.runCommandAsync('function shop/pvp_kits/iron')
-		} else if (pvp.selection == 1) {
-			player.runCommandAsync('function shop/pvp_kits/diamond')
-		} else if (pvp.selection == 2) {
-			player.runCommandAsync('function shop/pvp_kits/netherite')
-		} else if (pvp.selection == 3) {
-			shop(player)
-		}
-	});
-}
-
-// --- Бусты ---
 function boosts(player) {
-	const boosts = new ActionFormData()
-	.title('%menu.shop.boosts.title')
-	.body('%menu.shop.boosts.body\n\n%menu.shop.boosts.x2\n%menu.shop.boosts.x4\n%menu.shop.boosts.magnet')
-	.button('%menu.shop.boosts.button.x2\n§810.0K ')
-	.button('%menu.shop.boosts.button.x4\n§850.0K ')
-	.button('%menu.shop.boosts.button.ore_magnet\n§820.0K ')
-	.button('%menu.common.back')
-	boosts.show(player).then(tb => {
-		// Крестик — на уровень вверх
-		if (closedByPlayer(tb)) return shop(player);
-		if (tb.selection == 0) {
-			player.runCommandAsync('function boost/X2boost')
-		} else if (tb.selection == 1) {
-			player.runCommandAsync('function boost/X4boost')
-		} else if (tb.selection == 2) {
-			// «Магнит руды» — личный, на 5 минут (functions/shop/ore_magnet/ore_magnet)
-			player.runCommandAsync('function shop/ore_magnet/ore_magnet')
-		} else if (tb.selection == 3) {
-			shop(player)
-		}
-	});
+	const back = () => shop(player);
+	showMenu(player, '%menu.shop.boosts.title', '%menu.shop.boosts.body\n\n%menu.shop.boosts.x2\n%menu.shop.boosts.x4\n%menu.shop.boosts.magnet', [
+		product(player, '%menu.shop.boosts.button.x2', '10.0K', COIN, 'boost/X2boost'),
+		product(player, '%menu.shop.boosts.button.x4', '50.0K', COIN, 'boost/X4boost'),
+		// «Магнит руды» — личный, на 5 минут
+		product(player, '%menu.shop.boosts.button.ore_magnet', '20.0K', COIN, 'shop/ore_magnet/ore_magnet'),
+		backButton(back)
+	], back);
 }
 
-// --- Настройки ---
+// ===== Настройки =====
+// В описании каждой настройки — что она делает и как стоит сейчас
+
 function settings(player) {
-	const form = new ActionFormData()
-	.title('%menu.settings.title')
-	.body('%menu.settings.body')
-	.button('%menu.settings.button.board',
-		'textures/items/sign')
-	.button('%menu.settings.button.particles',
-		'textures/items/emerald')
-	.button('%menu.settings.button.sounds',
-		'textures/blocks/noteblock')
-	.button('%menu.settings.button.music',
-		'textures/items/record_cat')
-	.button('%menu.settings.button.password',
-		'textures/ui/icon_lock')
-	.button('%menu.common.back')
-	form.show(player).then(tb => {
-		// Крестик — на уровень вверх
-		if (closedByPlayer(tb)) return menu(player);
-		if (tb.selection == 0) {
-			settings_table(player)
-		} else if (tb.selection == 1) {
-			settings_particle(player)
-		} else if (tb.selection == 2) {
-			settings_sound(player)
-		} else if (tb.selection == 3) {
-			settings_music(player)
-		} else if (tb.selection == 4) {
-			ChangePasswordUI(player, () => settings(player))
-		} else if (tb.selection == 5) {
-			menu(player)
+	const back = () => menu(player);
+	const again = () => settings(player);
+	showMenu(player, '%menu.settings.title', '%menu.settings.body', [
+		{ text: '%menu.settings.button.board', icon: 'textures/items/sign', run: () => boardSetting(player, again) },
+		{ text: '%menu.settings.button.particles', icon: 'textures/items/emerald', run: () => tagSetting(player, 'particles', 'player:particle', false, again) },
+		{ text: '%menu.settings.button.sounds', icon: 'textures/blocks/noteblock', run: () => tagSetting(player, 'sounds', 'player:sound', false, again) },
+		{ text: '%menu.settings.button.music', icon: 'textures/items/record_cat', run: () => musicSetting(player, again) },
+		{ text: '%menu.settings.button.password', icon: 'textures/ui/icon_lock', run: () => ChangePasswordUI(player, again) },
+		backButton(back)
+	], back);
+}
+
+const changed = (player, on) => tellText(player, on ? '%chat.settings.enabled' : '%chat.settings.disabled');
+const defaultLine = (on) => on ? '%menu.settings.default_on' : '%menu.settings.default_off';
+
+// Частицы и звуки при продаже: включено, пока есть тег (по умолчанию выключено)
+function tagSetting(player, kind, tag, defaultOn, back) {
+	toggleMenu(player, `%menu.settings.${kind}.title`, `%menu.settings.${kind}.body\n${defaultLine(defaultOn)}`, player.hasTag(tag), (on) => {
+		if (on) player.addTag(tag); else player.removeTag(tag);
+		changed(player, on);
+	}, back);
+}
+
+// Музыка: выключена, пока есть тег player:music_off (system/music.js)
+function musicSetting(player, back) {
+	toggleMenu(player, '%menu.settings.music.title', `%menu.settings.music.body\n${defaultLine(true)}`, !player.hasTag(MUSIC_OFF), (on) => {
+		if (on) player.removeTag(MUSIC_OFF);
+		else {
+			player.addTag(MUSIC_OFF);
+			run(player, 'stopsound @s music.game');
 		}
-	});
+		changed(player, on);
+	}, back);
 }
 
-// --- Настройки: таблица ---
-function settings_table(player) {
-    const settings_table = new ActionFormData()
-    .title('%menu.settings.board.title')
-    .body('%menu.settings.board.body\n\n%menu.settings.default_on\n ')
-    .button(' %menu.settings.button.enable')
-    .button(' %menu.settings.button.icons_only')
-    .button(' %menu.settings.button.disable')
-    settings_table.show(player).then(tb => {
-    	// Крестик — на уровень вверх
-    	if (closedByPlayer(tb)) return settings(player);
-        if (tb.selection == 0) {
-            player.runCommandAsync('function settings/scoreboard_on');
-            tellText(player, '%chat.settings.enabled');
-        } else if (tb.selection == 1) {
-            player.runCommandAsync('function settings/scoreboard_icons');
-            tellText(player, '%chat.settings.icons_only');
-        } else if (tb.selection == 2) {
-            player.runCommandAsync('function settings/scoreboard_off');
-            tellText(player, '%chat.settings.disabled');
-        }
-    });
+// Панель слева: три состояния (теги player:board_icons, player:board_no — functions/settings/*)
+function boardSetting(player, back) {
+	const state = player.hasTag('player:board_no') ? 'off' : player.hasTag('player:board_icons') ? 'icons' : 'on';
+	const pick = (fn, msg) => () => { run(player, `function settings/${fn}`); tellText(player, msg); };
+	showMenu(player, '%menu.settings.board.title', `%menu.settings.board.body\n${defaultLine(true)}\n\n%menu.settings.state %menu.settings.state.${state}`, [
+		{ text: ' %menu.settings.button.enable', run: pick('scoreboard_on', '%chat.settings.enabled') },
+		{ text: ' %menu.settings.button.icons_only', run: pick('scoreboard_icons', '%chat.settings.icons_only') },
+		{ text: ' %menu.settings.button.disable', run: pick('scoreboard_off', '%chat.settings.disabled') },
+		backButton(back)
+	], back);
 }
 
-// --- Настройки: частицы ---
-function settings_particle(player) {
-    const settings_particle = new ActionFormData()
-    .title('%menu.settings.particles.title')
-    .body('%menu.settings.particles.body\n\n%menu.settings.default_off\n ')
-    .button(' %menu.settings.button.enable')
-    .button(' %menu.settings.button.disable')
-    settings_particle.show(player).then(tb => {
-    	// Крестик — на уровень вверх
-    	if (closedByPlayer(tb)) return settings(player);
-        if (tb.selection == 0) {
-            player.runCommandAsync('tag @s add player:particle');
-            tellText(player, '%chat.settings.enabled');
-        } else if (tb.selection == 1) {
-            player.runCommandAsync('tag @s remove player:particle');
-            tellText(player, '%chat.settings.disabled');
-        }
-    });
-}
+// ===== Правила, промокоды, телепортации, прокачка =====
 
-// --- Настройки: звук ---
-function settings_sound(player) {
-    const settings_sound = new ActionFormData()
-    .title('%menu.settings.sounds.title')
-    .body('%menu.settings.sounds.body\n\n%menu.settings.default_off\n ')
-    .button(' %menu.settings.button.enable')
-    .button(' %menu.settings.button.disable')
-    settings_sound.show(player).then(tb => {
-    	// Крестик — на уровень вверх
-    	if (closedByPlayer(tb)) return settings(player);
-        if (tb.selection == 0) {
-            player.runCommandAsync('tag @s add player:sound');
-            tellText(player, '%chat.settings.enabled');
-        } else if (tb.selection == 1) {
-            player.runCommandAsync('tag @s remove player:sound');
-            tellText(player, '%chat.settings.disabled');
-        }
-    });
-}
-
-// --- Настройки: музыка (system/music.js; по умолчанию включена) ---
-function settings_music(player) {
-    const form = new ActionFormData()
-    .title('%menu.settings.music.title')
-    .body('%menu.settings.music.body\n\n%menu.settings.default_on\n ')
-    .button(' %menu.settings.button.enable')
-    .button(' %menu.settings.button.disable')
-    form.show(player).then(tb => {
-    	if (closedByPlayer(tb)) return settings(player);
-        if (tb.selection == 0) {
-            player.removeTag(MUSIC_OFF);
-            tellText(player, '%chat.settings.enabled');
-        } else if (tb.selection == 1) {
-            player.addTag(MUSIC_OFF);
-            player.runCommandAsync('stopsound @s music.game').catch(() => undefined);
-            tellText(player, '%chat.settings.disabled');
-        }
-    });
-}
-
-// --- Правила ---
 function rules(player) {
-	const rules = new ActionFormData()
-	.title('%menu.rules.title')
-	.body('%menu.rules.header\n\n%menu.rules.line.1\n%menu.rules.line.2\n%menu.rules.line.3\n%menu.rules.line.4\n%menu.rules.line.5\n%menu.rules.line.6\n\n%menu.rules.footer')
-	.button('%menu.common.back')
-	rules.show(player).then(tb => {
-		// Крестик — на уровень вверх
-		if (closedByPlayer(tb)) return menu(player);
-		if (tb.selection == 0) {
-			menu(player)
-		}
-	});
+	textPage(player, '%menu.rules.title', `%menu.rules.header\n\n${lines('menu.rules.line', 6)}\n\n%menu.rules.footer`, () => menu(player));
 }
 
-// --- Промокоды ---
+// Промокод — один раз на игрока: отметка в табло promoN (0 — не вводил)
+const PROMOCODES = {
+	kapycta: { scoreboard: 'promo1', objective: 'xp', amount: 500, message: 'chat.promo.reward.1' },
+	parkour: { scoreboard: 'promo2', objective: 'money', amount: 500, message: 'chat.promo.reward.2' },
+	hellbonus: { scoreboard: 'promo3', objective: 'xp', amount: 25000, message: 'chat.promo.reward.3' },
+	VIPbonus: { scoreboard: 'promo4', objective: 'vip_coins', amount: 100, message: 'chat.promo.reward.4' }
+};
+
 function promocodes(player) {
-	const promocodes = new ModalFormData()
-	.title('%menu.promo.title')
-	.textField('%menu.promo.body\n\n%menu.promo.hint',
-		'%menu.promo.placeholder')
-	promocodes.show(player).then(r => {
-		// Форма закрыта — formValues нет; крестиком — назад в главное меню
-		if (!r.formValues) return closedByPlayer(r) ? menu(player) : undefined;
-
-		const enteredCode = r.formValues[0]?.trim();
-		if (validatePromoCode(enteredCode, player)) {} else {
-			tellText(player, '%chat.promo.error.invalid');
-		}
-	});
+	const form = modal('%menu.promo.title').textField('%menu.promo.body\n\n%menu.promo.hint', '%menu.promo.placeholder');
+	showModal(player, form, ([code]) => redeemPromo(player, String(code ?? '').trim()), () => menu(player));
 }
 
-// --- Список наград за промокоды ---
-const promocodeRewards = {
-	"kapycta": {
-		scoreboard: "promo1",
-		reward: {
-			type: "xp", amount: 500
-		},
-		message: "chat.promo.reward.1"
-	},
-	"parkour": {
-		scoreboard: "promo2",
-		reward: {
-			type: "money", amount: 500
-		},
-		message: "chat.promo.reward.2"
-	},
-	"hellbonus": {
-		scoreboard: "promo3",
-		reward: {
-			type: "xp", amount: 25000
-		},
-		message: "chat.promo.reward.3"
-	},
-	"VIPbonus": {
-		scoreboard: "promo4",
-		reward: {
-			type: "vip_coins", amount: 100
-		},
-		message: "chat.promo.reward.4"
-	},
+/** Без учёта регистра: «Kapycta» и «vipbonus» тоже подходят. */
+function redeemPromo(player, code) {
+	const key = Object.keys(PROMOCODES).find(k => k.toLowerCase() === code.toLowerCase());
+	if (!key) return tellText(player, '%chat.promo.error.invalid');
+	const promo = PROMOCODES[key];
+	// execute if … падает, если промокод уже вводили
+	player.runCommandAsync(`execute if score @s ${promo.scoreboard} matches 0`).then(() => {
+		run(player, `scoreboard players add @s ${promo.objective} ${promo.amount}`);
+		run(player, `scoreboard players set @s ${promo.scoreboard} 1`);
+		run(player, `tellraw @a ${rawTranslate(promo.message, player.name)}`);
+	}, () => tellText(player, '%chat.promo.error.used'));
 }
 
-/**
- * Проверка и выдача награды за промокод.
- * @param {string} code - Введённый промокод.
- * @param {Player} player - Игрок.
- * @returns {boolean} - true если промокод валиден.
- */
-function validatePromoCode(code, player) {
-	// Без учёта регистра: «Kapycta» и «vipbonus» тоже подходят
-	const key = Object.keys(promocodeRewards).find(k => k.toLowerCase() === String(code ?? '').toLowerCase());
-	if (!key) return false;
-
-	const promo = promocodeRewards[key];
-	const scoreboard = promo.scoreboard;
-
-	const commandCheck = `execute if score @s ${scoreboard} matches 0`;
-	player.runCommandAsync(commandCheck).then(() => {
-		const rewardCommand =
-		promo.reward.type === "xp"
-		? `scoreboard players add @s xp ${promo.reward.amount}`: `scoreboard players add @s ${promo.reward.type} ${promo.reward.amount}`;
-		player.runCommandAsync(rewardCommand);
-		player.runCommandAsync(`scoreboard players set @s ${scoreboard} 1`);
-		player.runCommandAsync(`tellraw @a ${rawTranslate(promo.message, player.name)}`).catch(() => undefined);
-	}).catch(() => {
-		tellText(player, '%chat.promo.error.used');
-	});
-
-	return true;
-}
-
-// --- Варпы ---
 function warps(player) {
-	const warps = new ActionFormData()
-	.title('%menu.warps.title')
-	.body('%menu.warps.body')
-	.button(' %menu.warps.button.spawn')
-	.button(' %menu.warps.button.minigames')
-	.button('%menu.common.back')
-	warps.show(player).then(tp => {
-		// Крестик — на уровень вверх
-		if (closedByPlayer(tp)) return menu(player);
-		// Режим боя на PvP-арене: телепорт из меню тоже недоступен
-		if (tp.selection !== undefined && tp.selection < 2 && combatSecondsLeft(player) > 0) {
-			player.runCommandAsync(`tellraw @s ${rawTranslate('chat.pvp.combat', combatSecondsLeft(player))}`);
-			return;
-		}
-		if (tp.selection == 0) {
-			player.runCommandAsync('tp @s[scores={lvl=1..15}] 0 5 0')
-			player.runCommandAsync('tp @s[scores={lvl=16..25}] 0 5 -33')
-			player.runCommandAsync('tp @s[scores={lvl=26..26}] -60 5 -60')
-		} else if (tp.selection == 1) {
-			player.runCommandAsync('tp @s -109 5 -60')
-		} else if (tp.selection == 2) {
-			menu(player)
-		}
-	});
+	const back = () => menu(player);
+	// Режим боя на PvP-арене: телепорт из меню тоже недоступен
+	const go = (...commands) => () => {
+		if (combatSecondsLeft(player) > 0) return tell(player, 'chat.pvp.combat', combatSecondsLeft(player));
+		for (const c of commands) run(player, c);
+	};
+	showMenu(player, '%menu.warps.title', '%menu.warps.body', [
+		// Спавн своей шахты по уровню
+		{ text: ' %menu.warps.button.spawn', run: go('tp @s[scores={lvl=1..15}] 0 5 0', 'tp @s[scores={lvl=16..25}] 0 5 -33', 'tp @s[scores={lvl=26..26}] -60 5 -60') },
+		{ text: ' %menu.warps.button.minigames', run: go('tp @s -109 5 -60') },
+		backButton(back)
+	], back);
 }
 
-// --- Улучшения ---
 function upgrading(player) {
-	const upgrading = new ActionFormData()
-	.title('%menu.upgrades.title')
-	.body('%menu.upgrades.body')
-	.button('%menu.upgrades.button.vip\n§8125.0K ')
-	.button('%menu.upgrades.button.rebirth\n§816 - 25 ')
-	.button('%menu.common.back')
-	upgrading.show(player).then(tb => {
-		// Крестик — на уровень вверх
-		if (closedByPlayer(tb)) return menu(player);
-		if (tb.selection == 0) {
-			player.runCommandAsync('function upgrade/upgrade_vip')
-		} else if (tb.selection == 1) {
-			player.runCommandAsync('function upgrade/upgrade_rebirth')
-		} else if (tb.selection == 2) {
-			menu(player)
-		}
-	});
+	const back = () => menu(player);
+	showMenu(player, '%menu.upgrades.title', '%menu.upgrades.body', [
+		product(player, '%menu.upgrades.button.vip', '125.0K', COIN, 'upgrade/upgrade_vip'),
+		product(player, '%menu.upgrades.button.rebirth', '16 - 25', LVL, 'upgrade/upgrade_rebirth'),
+		backButton(back)
+	], back);
 }

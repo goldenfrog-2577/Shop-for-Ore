@@ -76,7 +76,7 @@ export function kickBanned(player, ban) {
 		if (!entry.id) entry.id = player.id;
 		saveBans(bans);
 	}
-	world.getDimension('overworld').runCommandAsync(`kick "${player.name}" Ban${ban.reason ? ': ' + ban.reason : ''}`).catch(() => undefined);
+	run(world.getDimension('overworld'), `kick "${player.name}" Ban${ban.reason ? ': ' + ban.reason : ''}`);
 }
 
 // Проверка при входе: игрок появляется в списке не сразу, поэтому — со следующих тиков, плюс раз в 5 секунд всех

@@ -66,15 +66,15 @@ export function startMythic() {
 	const dim = overworld();
 	const pos = `${CHEST_X} ${y} ${CHEST_Z}`;
 	// Старый лут, если его не забрали, сгорает
-	for (let i = 0; i < CHEST_SLOTS; i++) dim.runCommandAsync(`replaceitem block ${pos} slot.container ${i} air`).catch(() => undefined);
+	for (let i = 0; i < CHEST_SLOTS; i++) run(dim, `replaceitem block ${pos} slot.container ${i} air`);
 	const slots = Array.from({ length: CHEST_SLOTS }, (_, i) => i).sort(() => Math.random() - 0.5);
 	rollLoot(rand(ITEMS_MIN, ITEMS_MAX)).forEach((e, k) => {
 		const amount = rand(e.count[0], e.count[1]);
-		dim.runCommandAsync(`replaceitem block ${pos} slot.container ${slots[k]} ${e.item} ${amount}${e.data !== undefined ? ' ' + e.data : ''}`).catch(() => undefined);
+		run(dim, `replaceitem block ${pos} slot.container ${slots[k]} ${e.item} ${amount}${e.data !== undefined ? ' ' + e.data : ''}`);
 	});
-	dim.runCommandAsync('tellraw @a {"rawtext":[{"translate":"chat.event.mythic_chest"}]}').catch(() => undefined);
-	dim.runCommandAsync('execute as @a at @s run playsound random.levelup @s ~~~ 1.0 0.6').catch(() => undefined);
-	dim.runCommandAsync(`particle minecraft:totem_particle ${CHEST_X} ${y + 1} ${CHEST_Z}`).catch(() => undefined);
+	run(dim, 'tellraw @a {"rawtext":[{"translate":"chat.event.mythic_chest"}]}');
+	run(dim, 'execute as @a at @s run playsound random.levelup @s ~~~ 1.0 0.6');
+	run(dim, `particle minecraft:totem_particle ${CHEST_X} ${y + 1} ${CHEST_Z}`);
 	return true;
 }
 
@@ -91,7 +91,7 @@ let tick = 0;
 world.events.tick.subscribe(() => {
 	tick++;
 	// Один раз после загрузки: держим столбец сундука прогруженным (если зона уже есть — команда просто не сработает)
-	if (tick === 40) overworld().runCommandAsync(`tickingarea add ${CHEST_X} ${SEARCH_Y[1]} ${CHEST_Z} ${CHEST_X} ${SEARCH_Y[0]} ${CHEST_Z} mythic`).catch(() => undefined);
+	if (tick === 40) run(overworld(), `tickingarea add ${CHEST_X} ${SEARCH_Y[1]} ${CHEST_Z} ${CHEST_X} ${SEARCH_Y[0]} ${CHEST_Z} mythic`);
 	if (tick % PERIOD_TICKS !== 0 || !mythicEnabled()) return;
 	if (![...world.getPlayers()].length) return;
 	startMythic();

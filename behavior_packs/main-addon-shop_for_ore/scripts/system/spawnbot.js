@@ -5,6 +5,7 @@
 
 import * as GT from '@minecraft/server-gametest';
 import { world, BlockLocation, DynamicPropertiesDefinition } from '@minecraft/server';
+import { run } from '../DataBase.js';
 
 const hours = 1000;
 const BOT_NAME_PROPERTY = 'shop:bot_name';
@@ -48,7 +49,7 @@ export function getBot() {
 /** Призвать бота; summoner — игрок, к которому его телепортировать. */
 export function spawnBot(summoner) {
 	state.summoner = summoner;
-	summoner.runCommandAsync('function system/spawnbot');
+	run(summoner, 'function system/spawnbot');
 }
 
 /** Убрать бота из мира. @returns {boolean} */
@@ -74,7 +75,7 @@ GT.register('server', 'spawnbot', (test) => {
 	// Бот появляется у тестовой площадки (далеко от карты) — переносим его к призвавшему
 	const summoner = state.summoner;
 	state.summoner = undefined;
-	if (summoner) summoner.runCommandAsync(`tp "${bot.name}" @s`).catch(() => undefined);
+	if (summoner) run(summoner, `tp "${bot.name}" @s`);
 })
-.maxTicks(hours*72000)
-.structureName('server:bot')
+	.maxTicks(hours*72000)
+	.structureName('server:bot');

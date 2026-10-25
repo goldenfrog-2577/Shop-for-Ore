@@ -9,30 +9,31 @@
 */
 
 // Лог о запуске скриптов аддона
-console.warn('[Shop for Ore] Addon scripts is working')
+console.warn('[Shop for Ore] Addon scripts is working');
 
 // Импорт модулей меню
-import './menu/menu.js'         // Основное меню магазина
-import './menu/admin_menu.js'   // Админ-меню
+import './menu/menu.js';         // Основное меню магазина
+import './menu/admin_menu.js';   // Админ-меню
 
 // Импорт модулей чата
-import './chat/chat.js'         // Чат-функционал
-import './chat/commands.js'     // Команды чата
+import './chat/chat.js';         // Чат-функционал
+import './chat/commands.js';     // Команды чата
 
 // Импорт других вспомогательных модулей
-import './system/anticheat.js'   // Античит
-import './system/spawnbot.js'    // Спавн бота
-import './system/tools.js'       // Неразрушаемая кирка уровня
-import './system/pvp.js'         // PvP-арена: случайная точка входа и режим боя
-import './system/mythic.js'      // Ивент «Мистик»: сундук с лутом в центре арены
-import './system/freeze.js'      // Заморозка: игрок застывает на месте
-import './system/ban.js'         // Бан по номеру игрока в мире и нику
-import './system/migrate.js'     // Старые названия тегов → новые (0.3.0)
-import './system/reload.js'      // «Скрипты загружены» администраторам после /reload
-import './system/achievements.js' // Достижения и испытания, счётчики stat_*
-import './system/minigames.js'   // Основа мини-игр (PvP «Последний выживший»)
-import './system/cps.js'         // Проверка CPS против автокликеров
-import './system/music.js'       // Выключатель музыки (Настройки)
+import './system/anticheat.js';   // Античит
+import './system/spawnbot.js';    // Спавн бота
+import './system/tools.js';       // Неразрушаемая кирка уровня
+import './system/pvp.js';         // PvP-арена: случайная точка входа и режим боя
+import './system/mythic.js';      // Ивент «Мистик»: сундук с лутом в центре арены
+import './system/freeze.js';      // Заморозка: игрок застывает на месте
+import './system/ban.js';         // Бан по номеру игрока в мире и нику
+import './system/migrate.js';     // Старые названия тегов → новые (0.3.0)
+import './system/reload.js';      // «Скрипты загружены» администраторам после /reload
+import './system/achievements.js'; // Достижения и испытания, счётчики stat_*
+import './system/minigames.js';   // Основа мини-игр (PvP «Последний выживший»)
+import './system/cps.js';         // Проверка CPS против автокликеров
+import './system/music.js';       // Выключатель музыки (Настройки)
+import './system/wipe.js';        // Вайп: номер вайпа, сброс игроков не в сети при входе
 
 // Импорт загрузчика скриптов
-import './register/loadScript.js'
+import './register/loadScript.js';

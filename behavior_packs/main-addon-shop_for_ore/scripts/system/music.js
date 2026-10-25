@@ -5,11 +5,12 @@
 // По умолчанию музыка включена (тега нет). Громкость — ползунок «Музыка» в настройках игры.
 
 import { system, world } from '@minecraft/server';
+import { run } from '../DataBase.js';
 
 export const MUSIC_OFF = 'player:music_off';
 
 system.runSchedule(() => {
 	for (const player of world.getPlayers()) {
-		if (player.hasTag(MUSIC_OFF)) player.runCommandAsync('stopsound @s music.game').catch(() => undefined);
+		if (player.hasTag(MUSIC_OFF)) run(player, 'stopsound @s music.game');
 	}
 }, 40);
