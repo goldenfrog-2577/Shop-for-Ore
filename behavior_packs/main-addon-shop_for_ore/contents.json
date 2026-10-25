@@ -70,7 +70,7 @@
 			"path" : "functions/shop/pvp_kits/netherite.mcfunction"
 		},
 		{
-			"path" : "functions/shop/tp_ore.mcfunction"
+			"path" : "functions/shop/ore_magnet/ore_magnet.mcfunction"
 		},
 		{
 			"path" : "functions/system/automine.mcfunction"
@@ -254,6 +254,27 @@
 		},
 		{
 			"path" : "scripts/system/reload.js"
+		},
+		{
+			"path" : "scripts/system/toast.js"
+		},
+		{
+			"path" : "scripts/system/achievements.js"
+		},
+		{
+			"path" : "scripts/system/minigames.js"
+		},
+		{
+			"path" : "scripts/system/cps.js"
+		},
+		{
+			"path" : "scripts/system/music.js"
+		},
+		{
+			"path" : "scripts/menu/achievements_menu.js"
+		},
+		{
+			"path" : "scripts/menu/minigames_menu.js"
 		}],
 	"version" : 1
 }

@@ -152,6 +152,7 @@ export function transferMoney(player, targetName, rawAmount) {
 	run(player, `scoreboard players remove @s money ${amount}`).then((res) => {
 		if (res === undefined) return;
 		run(target, `scoreboard players add @s money ${amount}`);
+		player.addTag('stat:paid');   // достижение «Щедрость» (system/achievements.js)
 		run(player, `tellraw @s ${rawTranslate('chat.bank.sent', target.name, amount)}`);
 		run(target, `tellraw @s ${rawTranslate('chat.bank.received', player.name, amount)}`);
 		run(player, 'playsound note.bell @s');
@@ -444,6 +445,11 @@ export const commandsList = [
 		role: 'player'
 	},
 	{
+		command: "!game §7[§fjoin§8/§fleave§7] [§fgame§7]",
+		description: "%chat.help.game",
+		role: 'player'
+	},
+	{
 		command: "!report §7<§fplayer§7> <§freason§7>",
 		description: "%chat.help.report",
 		role: 'player'
@@ -483,6 +489,11 @@ export const commandsList = [
 	{
 		command: "!unfreeze §7<§fplayer§7>",
 		description: "%chat.help.unfreeze",
+		role: 'moder'
+	},
+	{
+		command: "!cps §7<§fplayer§7>",
+		description: "%chat.help.cps",
 		role: 'moder'
 	},
 
@@ -571,6 +582,11 @@ export const commandsList = [
 	{
 		command: "!tag §7<§fplayer§7> <§fadd§8/§fremove§8/§flist§7> [§ftag§7]",
 		description: "%chat.help.tag",
+		role: 'admin'
+	},
+	{
+		command: "!achievement §7<§fplayer§7> <§flist§8/§fgrant§8/§frevoke§7> [§fid§7]",
+		description: "%chat.help.achievement",
 		role: 'admin'
 	},
 	{

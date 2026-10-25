@@ -9,6 +9,9 @@ import { ChangePasswordUI, resetPassword } from '../register/change.js';
 import { freezePlayer, unfreezePlayer } from '../system/freeze.js';
 import { botMenu } from '../menu/admin_menu.js';
 import { addBan, removeBan, getBans, findBan, kickBanned } from '../system/ban.js';
+import { ACHIEVEMENTS, findAchievement, unlock, revoke, has as hasAchievement } from '../system/achievements.js';
+import { listGames, getGame, joinGame, leaveGame, startGame, endGame } from '../system/minigames.js';
+import { cpsOf, cpsLimit } from '../system/cps.js';
 
 // --- Общие помощники команд ---
 
@@ -1019,6 +1022,70 @@ export function runChatCommand(player, command, args) {
 			unfreezePlayer(target);
 			run(player, `tellraw @s ${rawTranslate('chat.cmd.freeze.off', target.name)}`);
 			run(target, 'tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.received.off"}]}');
+			break;
+		}
+
+		case "cps": {
+			// CPS игрока сейчас и максимум за 10 секунд (предупреждения сами приходят модераторам)
+			if (!args[0]) { player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.cps.use"}]}'); break; }
+			const target = findPlayer(args.join(' '));
+			if (!target) { run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', args.join(' '))}`); break; }
+			const { now, max } = cpsOf(target.name);
+			run(player, `tellraw @s ${rawTranslate('chat.cmd.cps.info', target.name, now, max, cpsLimit())}`);
+			break;
+		}
+
+		case "game": {
+			// !game — список; join <игра> / leave; администратор: start / stop <игра>
+			const sub = (args[0] || '').toLowerCase();
+			if (!sub) {
+				const lines = listGames().map(g => ({ translate: 'chat.cmd.game.line', with: { rawtext: [{ text: g.def.id }, { translate: `minigame.${g.def.id}.name` }, { translate: `menu.games.phase.${g.phase}` }, { text: String(g.players.size) }, { text: String(g.def.maxPlayers) }] } }));
+				tellList(player, { translate: 'chat.cmd.game.header' }, lines);
+				break;
+			}
+			if (sub === 'join') { joinGame(player, args[1]); break; }
+			if (sub === 'leave') {
+				if (!leaveGame(player)) player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.game.error.not_in_game"}]}');
+				break;
+			}
+			if (sub === 'start' || sub === 'stop') {
+				if (!hasRole(player, 'admin')) { player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.error.no_permission"}]}'); break; }
+				const g = getGame(args[1]);
+				if (!g) { run(player, `tellraw @s ${rawTranslate('chat.game.error.unknown', args[1] ?? '')}`); break; }
+				if (sub === 'start') {
+					if (!startGame(g)) player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.game.error.start"}]}');
+				} else if (g.players.size) endGame(g, undefined, 'stop');
+				else player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.game.error.empty"}]}');
+				break;
+			}
+			player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.game.use"}]}');
+			break;
+		}
+
+		case "achievement": {
+			// !achievement <ник> list | grant <id> | revoke <id> — для проверки и исправлений
+			const action = (args[1] || '').toLowerCase();
+			if (!args[0] || !['list', 'grant', 'revoke'].includes(action)) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.achievement.use"}]}');
+				break;
+			}
+			const target = findPlayer(args[0]);
+			if (!target) { run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', args[0])}`); break; }
+			if (action === 'list') {
+				const got = ACHIEVEMENTS.filter(a => hasAchievement(target, a.id));
+				const lines = ACHIEVEMENTS.map(a => ({ rawtext: [{ text: `${hasAchievement(target, a.id) ? (a.type === 'challenge' ? '§d✔' : '§a✔') : '§8✘'} §7${a.id} §8— ` }, { translate: `ach.${a.id}.name` }] }));
+				tellList(player, { translate: 'chat.cmd.achievement.list', with: [target.name, String(got.length), String(ACHIEVEMENTS.length)] }, lines);
+				break;
+			}
+			const a = findAchievement(args[2]);
+			if (!a) { run(player, `tellraw @s ${rawTranslate('chat.cmd.achievement.error.unknown', args[2] ?? '')}`); break; }
+			if (action === 'grant') {
+				if (!unlock(target, a.id)) { run(player, `tellraw @s ${rawTranslate('chat.cmd.achievement.error.has', target.name, a.id)}`); break; }
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.achievement.granted', target.name, a.id)}`);
+			} else {
+				if (!revoke(target, a.id)) { run(player, `tellraw @s ${rawTranslate('chat.cmd.achievement.error.missing', target.name, a.id)}`); break; }
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.achievement.revoked', target.name, a.id)}`);
+			}
 			break;
 		}
 

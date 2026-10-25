@@ -29,6 +29,10 @@ import './system/freeze.js'      // Заморозка: игрок застыв�
 import './system/ban.js'         // Бан по номеру игрока в мире и нику
 import './system/migrate.js'     // Старые названия тегов → новые (0.3.0)
 import './system/reload.js'      // «Скрипты загружены» администраторам после /reload
+import './system/achievements.js' // Достижения и испытания, счётчики stat_*
+import './system/minigames.js'   // Основа мини-игр (PvP «Последний выживший»)
+import './system/cps.js'         // Проверка CPS против автокликеров
+import './system/music.js'       // Выключатель музыки (Настройки)
 
 // Импорт загрузчика скриптов
 import './register/loadScript.js'

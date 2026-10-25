@@ -22,5 +22,261 @@
 				"alpha": "@hud.anim_actionbar_text_alpha_out"
 			}
 		}]
+	},
+
+	// Плашка над хотбаром (scripts/system/toast.js): заголовок (/title), который начинается с метки §s§f§o,
+	// показывается не по центру, а снизу посередине — для достижений и других уведомлений.
+	// Сам элемент — ванильный hud_title_text: игра создаёт его на время заголовка и убирает после
+	// исчезновения, поэтому и плашка живёт ровно столько же. Обычные заголовки — как в ванили (копия 1.19.50).
+	"hud_title_text": {
+		"size": [
+			"100%",
+			"100%"
+		],
+		"offset": [
+			0,
+			0
+		],
+		"controls": [
+			{
+				"sfo_root": {
+					"type": "panel",
+					"size": [
+						"100%",
+						"100%"
+					],
+					"controls": [
+						{
+							"sfo_vanilla_title": {
+								"type": "stack_panel",
+								"orientation": "vertical",
+								"size": [
+									"100%",
+									"100%c"
+								],
+								"offset": [
+									0,
+									-19
+								],
+								"anchor_from": "center",
+								"anchor_to": "center",
+								"controls": [
+									{
+										"title_frame": {
+											"type": "panel",
+											"size": [
+												"100%",
+												"100%cm"
+											],
+											"controls": [
+												{
+													"title_background": {
+														"type": "image",
+														"size": [
+															"100%sm + 30px",
+															"100%sm + 6px"
+														],
+														"texture": "textures/ui/hud_tip_text_background",
+														"alpha": "@hud.anim_title_background_alpha_in"
+													}
+												},
+												{
+													"title": {
+														"type": "label",
+														"anchor_from": "top_middle",
+														"anchor_to": "top_middle",
+														"color": "$title_command_text_color",
+														"text": "#text",
+														"layer": 31,
+														"localize": false,
+														"font_size": "extra_large",
+														"variables": [
+															{
+																"requires": "(not $title_shadow)",
+																"$show_shadow": false
+															},
+															{
+																"requires": "$title_shadow",
+																"$show_shadow": true
+															}
+														],
+														"shadow": "$show_shadow",
+														"text_alignment": "center",
+														"offset": [
+															0,
+															6
+														],
+														"bindings": [
+															{
+																"binding_name": "#hud_title_text_string",
+																"binding_name_override": "#text",
+																"binding_type": "global"
+															}
+														]
+													}
+												}
+											]
+										}
+									},
+									{
+										"subtitle_frame": {
+											"type": "panel",
+											"size": [
+												"100%",
+												"100%cm"
+											],
+											"controls": [
+												{
+													"subtitle_background": {
+														"type": "image",
+														"size": [
+															"100%sm + 20px",
+															"100%sm + 5px"
+														],
+														"offset": [
+															0,
+															16
+														],
+														"texture": "textures/ui/hud_tip_text_background",
+														"variables": [
+															{
+																"requires": "$subtitle_initially_visible",
+																"$subtitle_bg": "@hud.anim_title_background_alpha_in"
+															},
+															{
+																"requires": "(not $subtitle_initially_visible)",
+																"$subtitle_bg": "@hud.anim_subtitle_background_alpha_in"
+															}
+														],
+														"alpha": "$subtitle_bg"
+													}
+												},
+												{
+													"subtitle": {
+														"type": "label",
+														"anchor_from": "top_middle",
+														"anchor_to": "top_middle",
+														"color": "$title_command_text_color",
+														"text": "#text",
+														"layer": 31,
+														"localize": false,
+														"font_size": "large",
+														"variables": [
+															{
+																"requires": "$subtitle_initially_visible",
+																"$anim_type": 1.0
+															},
+															{
+																"requires": "(not $subtitle_initially_visible)",
+																"$anim_type": "@hud.anim_subtitle_text_alpha_in"
+															},
+															{
+																"requires": "(not $title_shadow)",
+																"$show_shadow": false
+															},
+															{
+																"requires": "$title_shadow",
+																"$show_shadow": true
+															}
+														],
+														"shadow": "$show_shadow",
+														"alpha": "$anim_type",
+														"text_alignment": "center",
+														"offset": [
+															1,
+															19
+														],
+														"bindings": [
+															{
+																"binding_name": "#hud_subtitle_text_string",
+																"binding_name_override": "#text",
+																"binding_type": "global"
+															}
+														]
+													}
+												}
+											]
+										}
+									}
+								],
+								"bindings": [
+									{
+										"binding_name": "#hud_title_text_string",
+										"binding_name_override": "#sfo_raw",
+										"binding_type": "global"
+									},
+									{
+										"binding_type": "view",
+										"source_property_name": "((#sfo_raw - '§s§f§o') = #sfo_raw)",
+										"target_property_name": "#visible"
+									}
+								]
+							}
+						},
+						{
+							"sfo_toast": {
+								"type": "image",
+								"texture": "textures/ui/hud_tip_text_background",
+								"anchor_from": "bottom_middle",
+								"anchor_to": "bottom_middle",
+								"offset": [
+									0,
+									-74
+								],
+								"size": [
+									"100%c + 16px",
+									"100%c + 8px"
+								],
+								"alpha": 0.85,
+								"layer": 30,
+								"controls": [
+									{
+										"sfo_toast_text": {
+											"type": "label",
+											"anchor_from": "center",
+											"anchor_to": "center",
+											"max_size": [
+												260,
+												"default"
+											],
+											"layer": 31,
+											"color": "$tool_tip_text",
+											"shadow": true,
+											"text_alignment": "center",
+											"localize": false,
+											"text": "#text",
+											"bindings": [
+												{
+													"binding_name": "#hud_title_text_string",
+													"binding_name_override": "#sfo_raw",
+													"binding_type": "global"
+												},
+												{
+													"binding_type": "view",
+													"source_property_name": "(#sfo_raw - '§s§f§o')",
+													"target_property_name": "#text"
+												}
+											]
+										}
+									}
+								],
+								"bindings": [
+									{
+										"binding_name": "#hud_title_text_string",
+										"binding_name_override": "#sfo_raw",
+										"binding_type": "global"
+									},
+									{
+										"binding_type": "view",
+										"source_property_name": "(not ((#sfo_raw - '§s§f§o') = #sfo_raw))",
+										"target_property_name": "#visible"
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
 	}
 }
