@@ -6,7 +6,7 @@
 // достижения и их счётчики, косметика (купленное и выбранное, цвета в чате), запись в мини-игры.
 // Остаются: роль, пароль, баны, наказания, настройки игрока (панель, частицы, звуки, музыка).
 
-import { world, system, DynamicPropertiesDefinition } from '@minecraft/server';
+import { world, DynamicPropertiesDefinition } from '@minecraft/server';
 import { run, tell } from '../DataBase.js';
 
 const WIPE_ID = 'shop:wipe_id';
@@ -52,14 +52,20 @@ export function wipeAll(by) {
 	return id;
 }
 
-// Вошёл после вайпа — сбросить и его
-world.events.playerJoin.subscribe((e) => system.run(() => {
+// Вошёл после вайпа — сбросить и его. Объект e.player в 1.19.50 доступен только в момент события
+// (позже — «Native object bound to prototype does not exist»), поэтому запоминаем ник, а сбрасываем,
+// когда игрок появится в мире (так же, как бан в system/ban.js)
+const joined = new Set();
+world.events.playerJoin.subscribe((e) => joined.add(e.player.name));
+world.events.playerLeave.subscribe((e) => joined.delete(e.playerName));
+world.events.tick.subscribe(() => {
+	if (!joined.size) return;
 	const id = wipeId();
-	const player = e.player;
-	try {
+	for (const player of world.getPlayers()) {
+		if (!joined.delete(player.name)) continue;
 		if (id > 0 && !player.hasTag(WIPE_TAG + id)) {
 			wipePlayer(player, id);
 			tell(player, 'chat.server.wiped.offline');
 		}
-	} catch { /* уже вышел */ }
-}));
+	}
+});
