@@ -11,6 +11,7 @@ import { showMenu, showModal, modal, backButton, confirm } from './forms.js';
 import { runChatCommand, setMoney } from '../chat/commands.js';
 import { sendChatMessage } from '../chat/chat.js';
 import { getBot, getBotName, setBotName, spawnBot, removeBot } from '../system/spawnbot.js';
+import { wipeAll, wipeCounts } from '../system/wipe.js';
 
 const BACK_ICON = 'textures/ui/icon_import';
 // Заголовок «Предупреждение» со знаком «!» из шрифта карты (glyph_E1)
@@ -174,7 +175,8 @@ function sayServer(player) {
 // --- Вайп (только владелец) ---
 function wipe(player) {
 	if (!hasRole(player, 'owner')) return tell(player, 'chat.cmd.error.no_permission');
-	confirm(player, WARN_TITLE, '%admin.wipe.body', () => run(player, 'function system/wipe'), () => admin_menu(player));
+	const { all, online } = wipeCounts();
+	confirm(player, WARN_TITLE, `%admin.wipe.body\n\n%admin.wipe.count §e${all}§7 (%admin.wipe.online §e${online}§7)`, () => wipeAll(player), () => admin_menu(player));
 }
 
 // ===== Игроки =====

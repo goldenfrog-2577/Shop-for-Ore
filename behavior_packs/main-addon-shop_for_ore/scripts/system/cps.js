@@ -4,9 +4,11 @@
 // предупреждение (не чаще раза в ALERT_COOLDOWN секунд на игрока). Игрока не наказывает:
 // решает модератор (!cps <ник> — текущий CPS и максимум за 10 секунд).
 // Предел меняется без правки кода: /scoreboard players set cps_limit settings <число> (0 — по умолчанию).
+// На PvP-арене (тег player:pvp) каждый видит свой CPS строкой над хотбаром (system/toast.js → hud_screen.json).
 
 import { world } from '@minecraft/server';
 import { hasRole, tell } from '../DataBase.js';
+import { showHudLine } from './toast.js';
 
 export const DEFAULT_LIMIT = 16;
 const ALERT_SECONDS = 3;
@@ -56,6 +58,11 @@ world.events.tick.subscribe(() => {
 		h.push(cps);
 		if (h.length > HISTORY) h.shift();
 		history.set(name, h);
+		// Свой CPS — только на арене; цвет: обычный, близко к пределу, предел
+		if (player.hasTag('player:pvp') && !player.hasTag('role:bot')) {
+			const color = cps >= limit ? '§c' : cps >= limit * 0.75 ? '§6' : '§a';
+			showHudLine(player, [{ translate: 'hud.cps', with: [`${color}${cps}`] }]);
+		}
 		const s = cps >= limit ? (streak.get(name) ?? 0) + 1 : 0;
 		streak.set(name, s);
 		if (s < ALERT_SECONDS || player.hasTag('role:bot')) continue;

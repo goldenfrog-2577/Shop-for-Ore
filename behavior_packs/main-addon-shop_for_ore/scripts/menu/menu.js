@@ -73,7 +73,7 @@ function mapInfo(player) {
 // «Как играть?»: абзацы разделены пустой строкой, у первых трёх — отступ
 const HOWTOPLAY = [' ' + lines('menu.howtoplay.line', 5), ' ' + lines('menu.howtoplay.line', 9, 6), ' ' + lines('menu.howtoplay.line', 13, 10),
 	...Array.from({ length: 8 }, (_, i) => `%menu.howtoplay.line.${14 + i}`)].join('\n\n');
-const VERSION = `%menu.version.line.1\n\n§r%menu.version.label §a${BUILD}§r\n%menu.version.line.2\n\n${lines('menu.version.line', 20, 3)}`;
+const VERSION = `%menu.version.line.1\n\n§r%menu.version.label §a${BUILD}§r\n%menu.version.line.2\n\n${lines('menu.version.line', 21, 3)}`;
 
 /** Страница текста с одной кнопкой «Назад». */
 function textPage(player, title, body, back) {

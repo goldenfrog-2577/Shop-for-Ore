@@ -275,6 +275,12 @@
 		},
 		{
 			"path" : "scripts/menu/minigames_menu.js"
+		},
+		{
+			"path" : "scripts/menu/forms.js"
+		},
+		{
+			"path" : "scripts/system/wipe.js"
 		}],
 	"version" : 1
 }

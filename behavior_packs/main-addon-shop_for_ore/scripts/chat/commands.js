@@ -13,6 +13,7 @@ import { addBan, removeBan, getBans, findBan, kickBanned } from '../system/ban.j
 import { ACHIEVEMENTS, findAchievement, unlock, revoke, has as hasAchievement } from '../system/achievements.js';
 import { listGames, getGame, joinGame, leaveGame, startGame, endGame } from '../system/minigames.js';
 import { cpsOf, cpsLimit } from '../system/cps.js';
+import { wipeAll, wipeCounts } from '../system/wipe.js';
 
 // --- Общие помощники команд ---
 
@@ -1102,9 +1103,12 @@ export function runChatCommand(player, command, args) {
 					tell(player, 'chat.cmd.wipe.expired');
 					break;
 				}
-				run(player, 'function system/wipe');
+				wipeAll(player);
 			} else {
+				// Сводка: что сбросится, что останется и скольких игроков затронет
 				wipeRequests.set(player.name, Date.now());
+				const { all, online } = wipeCounts();
+				tell(player, 'chat.cmd.wipe.summary', String(all), String(online));
 				tell(player, 'chat.cmd.wipe.confirm');
 			}
 			break;

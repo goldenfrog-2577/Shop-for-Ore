@@ -33,6 +33,7 @@ import './system/achievements.js'; // Достижения и испытания
 import './system/minigames.js';   // Основа мини-игр (PvP «Последний выживший»)
 import './system/cps.js';         // Проверка CPS против автокликеров
 import './system/music.js';       // Выключатель музыки (Настройки)
+import './system/wipe.js';        // Вайп: номер вайпа, сброс игроков не в сети при входе
 
 // Импорт загрузчика скриптов
 import './register/loadScript.js';

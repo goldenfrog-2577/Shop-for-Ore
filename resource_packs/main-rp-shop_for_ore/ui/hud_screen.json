@@ -25,7 +25,8 @@
 	},
 
 	// Плашка над хотбаром (scripts/system/toast.js): заголовок (/title), который начинается с метки §s§f§o,
-	// показывается не по центру, а снизу посередине — для достижений и других уведомлений.
+	// показывается не по центру, а снизу посередине — для достижений и других уведомлений;
+	// с меткой §s§f§c — строкой пониже (CPS на PvP-арене).
 	// Сам элемент — ванильный hud_title_text: игра создаёт его на время заголовка и убирает после
 	// исчезновения, поэтому и плашка живёт ровно столько же. Обычные заголовки — как в ванили (копия 1.19.50).
 	"hud_title_text": {
@@ -207,9 +208,45 @@
 									},
 									{
 										"binding_type": "view",
-										"source_property_name": "((#sfo_raw - '§s§f§o') = #sfo_raw)",
+										"source_property_name": "(((#sfo_raw - '§s§f§o') = #sfo_raw) and ((#sfo_raw - '§s§f§c') = #sfo_raw))",
 										"target_property_name": "#visible"
 									}
+								]
+							}
+						},
+						{
+							// Строка CPS на PvP-арене (scripts/system/cps.js): метка §s§f§c, над хотбаром и полосой здоровья
+							"sfo_hud_line": {
+								"type": "image",
+								"texture": "textures/ui/hud_tip_text_background",
+								"anchor_from": "bottom_middle",
+								"anchor_to": "bottom_middle",
+								"offset": [0, -52],
+								"size": ["100%c + 10px", "100%c + 4px"],
+								"alpha": 0.7,
+								"layer": 30,
+								"controls": [
+									{
+										"sfo_hud_line_text": {
+											"type": "label",
+											"anchor_from": "center",
+											"anchor_to": "center",
+											"layer": 31,
+											"color": "$tool_tip_text",
+											"shadow": true,
+											"text_alignment": "center",
+											"localize": false,
+											"text": "#text",
+											"bindings": [
+												{ "binding_name": "#hud_title_text_string", "binding_name_override": "#sfo_raw", "binding_type": "global" },
+												{ "binding_type": "view", "source_property_name": "(#sfo_raw - '§s§f§c')", "target_property_name": "#text" }
+											]
+										}
+									}
+								],
+								"bindings": [
+									{ "binding_name": "#hud_title_text_string", "binding_name_override": "#sfo_raw", "binding_type": "global" },
+									{ "binding_type": "view", "source_property_name": "(not ((#sfo_raw - '§s§f§c') = #sfo_raw))", "target_property_name": "#visible" }
 								]
 							}
 						},
