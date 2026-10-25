@@ -4,12 +4,12 @@
 * Scripts made by kapycta1231484 & NastyaXs00
 * Omlet Arcade - @waxenjaguar2209 & @ss1_sashka
 * Discord - GoldenFrog#2577 & xSashaES#0363
-* Telegram - @xdxd1338 & @sasha0FF
+* Telegram - @goldenfrog_2577 & @sasha0FF
 *   (╮°-°)╮┳━┳      (╯°□°)╯︵ ┻━┻
 */
 
 // Лог о запуске скриптов аддона
-console.log('[Shop for Ore] Addon scripts is working')
+console.warn('[Shop for Ore] Addon scripts is working')
 
 // Импорт модулей меню
 import './menu/menu.js'         // Основное меню магазина

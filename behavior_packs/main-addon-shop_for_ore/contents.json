@@ -250,7 +250,7 @@
 			"path" : "scripts/system/migrate.js"
 		},
 		{
-			"path" : "scripts/menu/cosmetics.js"
+			"path" : "scripts/menu/cosmetics_shop.js"
 		},
 		{
 			"path" : "scripts/system/reload.js"
