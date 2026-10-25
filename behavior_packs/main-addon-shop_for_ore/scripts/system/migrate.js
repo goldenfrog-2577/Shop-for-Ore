@@ -22,8 +22,16 @@ const PREFIX = [
 	['pws:', 'auth:salt:'], ['pwh:', 'auth:hash:']
 ];
 
-/** Новое название тега или undefined, если тег уже в новом стиле. */
+// Цвет в чате (до 0.3.0): name:§b / text:§b → chat:name_color:b / chat:text_color:b; пустой или неверный — удаляется
+const COLOR_PREFIX = [['name:', 'chat:name_color:'], ['text:', 'chat:text_color:']];
+
+/** Новое название тега; '' — тег удалить; undefined — тег уже в новом стиле. */
 export function migratedTag(tag) {
+	const c = COLOR_PREFIX.find(([from]) => tag.startsWith(from));
+	if (c) {
+		const code = tag.slice(c[0].length).replace(/^§/, '');
+		return /^[0-9a-g]$/.test(code) ? c[1] + code : '';
+	}
 	if (Object.prototype.hasOwnProperty.call(PLAIN, tag)) return PLAIN[tag];
 	const p = PREFIX.find(([from]) => tag.startsWith(from));
 	return p ? p[1] + tag.slice(p[0].length) : undefined;
@@ -34,9 +42,9 @@ export function migratePlayer(player) {
 	let n = 0;
 	for (const tag of player.getTags()) {
 		const next = migratedTag(tag);
-		if (!next) continue;
+		if (next === undefined) continue;
 		// Сначала новый, потом снять старый: игрок ни на миг не остаётся без тега (например, без пароля)
-		player.addTag(next);
+		if (next) player.addTag(next);
 		player.removeTag(tag);
 		n++;
 	}

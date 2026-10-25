@@ -203,6 +203,65 @@ export const ROLE_COLORS = { player: '§f', moder: '§9', admin: '§c', owner: '
 // Цвет ника и префикса бота карты
 export const BOT_COLOR = '§f';
 
+// --- Цвета ника и текста в чате (!color, меню администратора → Игроки → Цвет) ---
+// Хранятся тегами chat:name_color:<код> и chat:text_color:<код>, код — символ после «§» (без самого «§»).
+// Только цвета, которые есть в 1.19.50 (0–9, a–g); оформление (§l, §o…) не допускается
+export const CHAT_COLORS = {
+	black: '0', dark_blue: '1', dark_green: '2', dark_aqua: '3', dark_red: '4', dark_purple: '5', gold: '6', gray: '7',
+	dark_gray: '8', blue: '9', green: 'a', aqua: 'b', red: 'c', light_purple: 'd', yellow: 'e', white: 'f', minecoin_gold: 'g'
+};
+const COLOR_TAG = { name: 'chat:name_color:', text: 'chat:text_color:' };
+
+// --- Защита от выдачи себя за персонал (цвет ника, префикс, теги) ---
+// Цвета ролей: тёмно-красный — владелец, красный — администратор, синий — модератор. Ник этого цвета
+// и префикс с этим цветом или названием роли может быть только у того, у кого роль не ниже
+const RESERVED_COLORS = { '4': 'owner', 'c': 'admin', '9': 'moder' };
+// Названия ролей на 4 языках карты (основы слов); «бот» — только целым словом
+const ROLE_WORDS = [
+	[/владел|власник|owner|propietari|dueñ/i, 'owner'],
+	[/админ|адмін|admin/i, 'admin'],
+	[/модер|moder/i, 'moder'],
+	[/(^|[^a-zа-яёіїє])(бот|bot)($|[^a-zа-яёіїє])/i, 'bot']
+];
+
+/** Можно ли игроку цвет с кодом code ('0'–'g'). */
+export function colorAllowed(player, code) {
+	const role = RESERVED_COLORS[code];
+	return !role || hasRole(player, role);
+}
+
+/**
+ * Роль, за которую текст (префикс) выдаёт игрока, если у него этой роли нет: по цвету роли или её названию.
+ * @returns {'owner'|'admin'|'moder'|'bot'|undefined}
+ */
+export function impersonatedRole(player, text) {
+	for (const [, code] of String(text).matchAll(/§(.)/g)) {
+		if (!colorAllowed(player, code.toLowerCase())) return RESERVED_COLORS[code.toLowerCase()];
+	}
+	const plain = String(text).replace(/§./g, '');
+	for (const [re, role] of ROLE_WORDS) {
+		if (!re.test(plain)) continue;
+		if (role === 'bot' ? !player.hasTag('role:bot') : !hasRole(player, role)) return role;
+	}
+	return undefined;
+}
+
+/**
+ * Цвет игрока ('§b') для kind = 'name' | 'text' или undefined, если не задан.
+ * Цвет роли, которой у игрока нет (например, роль сняли), не применяется.
+ */
+export function getChatColor(player, kind) {
+	const tag = player.getTags().find(t => t.startsWith(COLOR_TAG[kind]));
+	const code = tag?.slice(COLOR_TAG[kind].length);
+	return code && Object.values(CHAT_COLORS).includes(code) && colorAllowed(player, code) ? `§${code}` : undefined;
+}
+
+/** Задать цвет (код '0'–'g') или снять (undefined). */
+export function setChatColor(player, kind, code) {
+	player.getTags().filter(t => t.startsWith(COLOR_TAG[kind])).forEach(t => player.removeTag(t));
+	if (code) player.addTag(COLOR_TAG[kind] + code);
+}
+
 /**
  * Роль игрока: 'player' | 'moder' | 'admin' | 'owner'.
  * @param {Player} player
@@ -512,6 +571,11 @@ export const commandsList = [
 	{
 		command: "!tag §7<§fplayer§7> <§fadd§8/§fremove§8/§flist§7> [§ftag§7]",
 		description: "%chat.help.tag",
+		role: 'admin'
+	},
+	{
+		command: "!color §7<§fplayer§7> <§fname§8/§ftext§7> <§fcolor§8/§freset§7>",
+		description: "%chat.help.color",
 		role: 'admin'
 	},
 	{
