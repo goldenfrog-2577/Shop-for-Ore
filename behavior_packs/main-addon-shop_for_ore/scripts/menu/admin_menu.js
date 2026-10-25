@@ -21,7 +21,7 @@ const ROLE_GLYPHS = { player: '\ue137', moder: '\ue131', admin: '\ue130' };
 const XP_GLYPH = '\ue154';
 const OPEN = '\n%menu.common.tap_to_open';
 const EVENTS = ['haste', 'rain', 'gift', 'mythic'];
-// Как часто срабатывают ивенты по таймеру (минуты): timers/t3600, t6000, t4800, мистик — system/mythic.js
+// Как часто срабатывают ивенты по таймеру (минуты): timers/ticks_3600, ticks_6000, ticks_4800, мистик — system/mythic.js
 const EVENT_PERIOD = { haste: 3, rain: 5, gift: 4, mythic: 10 };
 
 // --- Открытие админ-меню по использованию специального предмета ---
@@ -90,7 +90,7 @@ export function admin_menu(player) {
 		{ text: '%admin.main.button.effects' + OPEN, icon: 'textures/items/potion_bottle_confusion', run: () => effects(player) },
 		{ text: '%admin.main.button.tools' + OPEN, icon: 'textures/ui/anvil_icon', run: () => tools(player) },
 		{ text: '%admin.main.button.announce' + OPEN, icon: 'textures/ui/comment', run: () => sayServer(player) },
-		{ text: '%admin.main.button.bot' + OPEN, icon: 'textures/server_icons/bot', run: () => botMenu(player) }
+		{ text: '%admin.main.button.bot' + OPEN, icon: 'textures/server_icons/steve', run: () => botMenu(player) }
 	];
 	// Вайп — только владелец: администратору кнопка не показывается
 	if (hasRole(player, 'owner')) {
@@ -381,29 +381,34 @@ function boostsMenu(player) {
 	], () => admin_menu(player));
 }
 
+// Длительность буста и магнита — списком (команда принимает 1–60 минут). Все числа берут форму
+// «минут» (5–20, 30, 45, 60), поэтому одной строки перевода хватает на всех языках
+const BOOST_MINUTES = [5, 10, 15, 20, 30, 45, 60];
+const minutesLabel = (m) => `\ue12c ${m} %admin.common.minutes`;
+
 // «Магнит руды» бесплатно (как !boost magnet): кому и на сколько
 function magnetForm(player) {
 	const names = [...world.getPlayers()].map(p => p.name);
 	new ModalFormData()
 	.title('%admin.boosts.magnet.title')
 	.dropdown('%admin.players.choose', names, Math.max(0, names.indexOf(player.name)))
-	.slider('%admin.boosts.boost.minutes', 1, 60, 1, 5)
+	.dropdown('%admin.boosts.boost.minutes', BOOST_MINUTES.map(minutesLabel), 0)
 	.show(player).then(r => {
 		if (!r.formValues) return closedByPlayer(r) ? boostsMenu(player) : undefined;
-		runChatCommand(player, 'boost', ['magnet', names[r.formValues[0]], String(r.formValues[1])]);
+		runChatCommand(player, 'boost', ['magnet', names[r.formValues[0]], String(BOOST_MINUTES[r.formValues[1]])]);
 	});
 }
 
-// Буст для всех (как !boost): тип и длительность 1–60 минут
+// Буст для всех (как !boost): тип и длительность
 function boostForm(player) {
 	const types = ['x2', 'x4'];
 	new ModalFormData()
 	.title('%admin.boosts.boost.title')
 	.dropdown('%admin.boosts.boost.type', [`§2${XP_GLYPH} x2`, `§3${XP_GLYPH} x4`], 0)
-	.slider('%admin.boosts.boost.minutes', 1, 60, 1, 5)
+	.dropdown('%admin.boosts.boost.minutes', BOOST_MINUTES.map(minutesLabel), 0)
 	.show(player).then(r => {
 		if (!r.formValues) return closedByPlayer(r) ? boostsMenu(player) : undefined;
-		runChatCommand(player, 'boost', [types[r.formValues[0]], String(r.formValues[1])]);
+		runChatCommand(player, 'boost', [types[r.formValues[0]], String(BOOST_MINUTES[r.formValues[1]])]);
 	});
 }
 
@@ -422,7 +427,7 @@ function autoEventsForm(player, onBack) {
 
 // ===== Сервер: сводка =====
 
-/** Идущие бусты: таймер — табло system у стойки X2Boost/X4Boost, в секундах (timers/t20). */
+/** Идущие бусты: таймер — табло system у стойки X2Boost/X4Boost, в секундах (timers/ticks_20). */
 function activeBoosts() {
 	const list = [];
 	for (const [type, stand] of [['x2', 'X2Boost'], ['x4', 'X4Boost']]) {
@@ -479,7 +484,7 @@ export function botMenu(player) {
 			} }
 		);
 	} else {
-		items.push({ text: '%admin.bot.button.spawn', icon: 'textures/server_icons/bot', run: () => {
+		items.push({ text: '%admin.bot.button.spawn', icon: 'textures/server_icons/steve', run: () => {
 			spawnBot(player);
 			tell(player, 'chat.admin.bot.spawned', name);
 		} });

@@ -3,7 +3,7 @@
 // нажал на товар → деньги списались, сообщение в чат (без окна подтверждения).
 // Куплено — тег cosmetic:<вид>:<id>; выбрано: цвет — chat:name_color / chat:text_color (как у !color),
 // частицы — fx:trail:<id> / fx:death:<id> / fx:sell:<id>. Цвета ролей (тёмно-красный, красный, синий)
-// не продаются тем, у кого этой роли нет (colorAllowed). Частицы при продаже — только для VIP.
+// не продаются тем, у кого этой роли нет (colorAllowed). Частицы при продаже смотреть может каждый, покупать и выбирать — только VIP.
 
 import { world, BlockLocation } from '@minecraft/server';
 import { ActionFormData } from '@minecraft/server-ui';
@@ -17,30 +17,32 @@ const COLOR_PRICE = { name: 150, text: 100 };
 // Частицы — только ванильные идентификаторы 1.19.50 (resource_pack/particles)
 export const TRAILS = [
 	{ id: 'heart', particle: 'minecraft:heart_particle', price: 300, icon: 'textures/items/apple_golden' },
-	{ id: 'note', particle: 'minecraft:note_particle', price: 300, icon: 'textures/blocks/noteblock' },
+	{ id: 'note', particle: 'minecraft:note_particle', price: 300, icon: 'textures/server_icons/note_block' },
 	{ id: 'happy', particle: 'minecraft:villager_happy', price: 250, icon: 'textures/items/emerald' },
-	{ id: 'endrod', particle: 'minecraft:endrod', price: 400, icon: 'textures/blocks/end_rod' },
+	{ id: 'endrod', particle: 'minecraft:endrod', price: 400, icon: 'textures/items/nether_star' },
 	{ id: 'flame', particle: 'minecraft:basic_flame_particle', price: 350, icon: 'textures/items/blaze_powder' },
-	{ id: 'soul', particle: 'minecraft:soul_particle', price: 450, icon: 'textures/blocks/soul_sand' },
+	{ id: 'soul', particle: 'minecraft:soul_particle', price: 450, icon: 'textures/server_icons/soul_sand' },
 	{ id: 'snow', particle: 'minecraft:snowflake_particle', price: 350, icon: 'textures/items/snowball' },
 	{ id: 'portal', particle: 'minecraft:basic_portal_particle', price: 400, icon: 'textures/items/ender_pearl' }
 ];
 export const DEATHS = [
 	{ id: 'totem', particle: 'minecraft:totem_particle', price: 400, icon: 'textures/items/totem' },
-	{ id: 'explosion', particle: 'minecraft:large_explosion', price: 300, icon: 'textures/blocks/tnt_side' },
+	{ id: 'explosion', particle: 'minecraft:large_explosion', price: 300, icon: 'textures/server_icons/tnt_block' },
 	{ id: 'dragon', particle: 'minecraft:dragon_breath_lingering', price: 600, icon: 'textures/items/dragons_breath' },
 	{ id: 'sonic', particle: 'minecraft:sonic_explosion', price: 700, icon: 'textures/items/echo_shard' },
 	{ id: 'lava', particle: 'minecraft:lava_particle', price: 350, icon: 'textures/items/bucket_lava' },
-	{ id: 'souls', particle: 'minecraft:soul_particle', price: 450, icon: 'textures/blocks/soul_sand' }
+	{ id: 'souls', particle: 'minecraft:soul_particle', price: 450, icon: 'textures/server_icons/soul_sand' }
 ];
-// Частицы при продаже на золотом блоке (вместо стандартного тотема из autosale) — только VIP
+// Частицы при продаже на золотом блоке (вместо стандартного тотема из autosale) — только VIP.
+// «Лава» раньше была бесплатной у VIP (аметист в autosale), теперь продаётся здесь
 export const SELLS = [
 	{ id: 'heart', particle: 'minecraft:heart_particle', price: 200, icon: 'textures/items/apple_golden' },
 	{ id: 'happy', particle: 'minecraft:villager_happy', price: 200, icon: 'textures/items/emerald' },
-	{ id: 'note', particle: 'minecraft:note_particle', price: 250, icon: 'textures/blocks/noteblock' },
-	{ id: 'endrod', particle: 'minecraft:endrod', price: 300, icon: 'textures/blocks/end_rod' },
+	{ id: 'note', particle: 'minecraft:note_particle', price: 250, icon: 'textures/server_icons/note_block' },
+	{ id: 'endrod', particle: 'minecraft:endrod', price: 300, icon: 'textures/items/nether_star' },
 	{ id: 'flame', particle: 'minecraft:basic_flame_particle', price: 300, icon: 'textures/items/blaze_powder' },
-	{ id: 'portal', particle: 'minecraft:basic_portal_particle', price: 350, icon: 'textures/items/ender_pearl' }
+	{ id: 'portal', particle: 'minecraft:basic_portal_particle', price: 350, icon: 'textures/items/ender_pearl' },
+	{ id: 'lava', particle: 'minecraft:lava_particle', price: 300, icon: 'textures/items/bucket_lava' }
 ];
 const FX = { trail: TRAILS, death: DEATHS, sell: SELLS };
 const SELL_FLAG = 'fx:sell';   // есть — autosale не показывает стандартные частицы продажи
@@ -101,14 +103,7 @@ export function cosmeticsMenu(player, back) {
 		else if (r.selection === 1) colorMenu(player, 'text', again);
 		else if (r.selection === 2) fxMenu(player, 'trail', again);
 		else if (r.selection === 3) fxMenu(player, 'death', again);
-		else if (r.selection === 4) {
-			if (!isVip(player)) {
-				run(player, 'tellraw @s {"rawtext":[{"translate":"chat.shop.cosmetics.error.vip"}]}');
-				run(player, 'playsound note.bass @s');
-				return again();
-			}
-			fxMenu(player, 'sell', again);
-		}
+		else if (r.selection === 4) fxMenu(player, 'sell', again);
 	});
 }
 
@@ -165,6 +160,12 @@ function fxMenu(player, kind, back) {
 			return again();
 		}
 		const e = list[r.selection - 1];
+		// Частицы при продаже: смотреть может каждый, купить и выбрать — только VIP
+		if (kind === 'sell' && !isVip(player)) {
+			run(player, 'tellraw @s {"rawtext":[{"translate":"chat.shop.cosmetics.error.vip"}]}');
+			run(player, 'playsound note.bass @s');
+			return again();
+		}
 		if (!owns(player, kind, e.id) && !buy(player, kind, e.id, e.price, '', `cosmetics.${kind}.${e.id}`)) return again();
 		setFx(player, kind, e.id);
 		run(player, `tellraw @s ${rawTranslateRich(`chat.shop.cosmetics.selected.${kind}`, { translate: `cosmetics.${kind}.${e.id}` })}`);

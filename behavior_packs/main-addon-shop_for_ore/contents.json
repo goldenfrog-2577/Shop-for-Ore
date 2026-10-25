@@ -115,31 +115,31 @@
 			"path" : "functions/tick.json"
 		},
 		{
-			"path" : "functions/timers/t20.mcfunction"
+			"path" : "functions/timers/ticks_20.mcfunction"
 		},
 		{
-			"path" : "functions/timers/t3600.mcfunction"
+			"path" : "functions/timers/ticks_3600.mcfunction"
 		},
 		{
-			"path" : "functions/timers/t40.mcfunction"
+			"path" : "functions/timers/ticks_40.mcfunction"
 		},
 		{
-			"path" : "functions/timers/t4800.mcfunction"
+			"path" : "functions/timers/ticks_4800.mcfunction"
 		},
 		{
-			"path" : "functions/timers/t5.mcfunction"
+			"path" : "functions/timers/ticks_5.mcfunction"
 		},
 		{
-			"path" : "functions/timers/t500.mcfunction"
+			"path" : "functions/timers/ticks_500.mcfunction"
 		},
 		{
-			"path" : "functions/timers/t600.mcfunction"
+			"path" : "functions/timers/ticks_600.mcfunction"
 		},
 		{
-			"path" : "functions/timers/t6000.mcfunction"
+			"path" : "functions/timers/ticks_6000.mcfunction"
 		},
 		{
-			"path" : "functions/timers/t80.mcfunction"
+			"path" : "functions/timers/ticks_80.mcfunction"
 		},
 		{
 			"path" : "functions/upgrade/upgrade_rebirth.mcfunction"
@@ -250,7 +250,7 @@
 			"path" : "scripts/system/migrate.js"
 		},
 		{
-			"path" : "scripts/menu/cosmetics.js"
+			"path" : "scripts/menu/cosmetics_shop.js"
 		},
 		{
 			"path" : "scripts/system/reload.js"

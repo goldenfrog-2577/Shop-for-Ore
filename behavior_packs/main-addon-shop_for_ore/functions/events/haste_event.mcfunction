@@ -1,5 +1,5 @@
 # --- Событие «Ускорение»: случайный игрок (уровень 1-25, без ребитха) получает Спешку V на 10 с ---
-# Запускается из timers/t3600, если включено: /scoreboard players set haste settings 1
+# Запускается из timers/ticks_3600, если включено: /scoreboard players set haste settings 1
 # Раньше тег ставился ещё одному случайному игроку (@r вместо @s), а в заголовке искался
 # несуществующий тег haste — имя победителя не показывалось.
 tag @r[tag=player,tag=!role:owner,scores={lvl=1..25,rebirth=0}] add player:haste

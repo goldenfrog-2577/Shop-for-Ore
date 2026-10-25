@@ -42,9 +42,6 @@
 			"path" : "textures/server_icons/command_block.png"
 		},
 		{
-			"path" : "textures/server_icons/bot.png"
-		},
-		{
 			"path" : "textures/server_icons/allow.png"
 		},
 		{
@@ -252,13 +249,25 @@
 			"path" : "textures/server_icons/chain_command_block.png"
 		},
 		{
-			"path" : "textures/server_icons/chest.png"
-		},
-		{
 			"path" : "textures/server_icons/jigsaw.png"
 		},
 		{
 			"path" : "textures/server_icons/repeating_command_block.png"
+		},
+		{
+			"path" : "textures/server_icons/alex.png"
+		},
+		{
+			"path" : "textures/server_icons/steve.png"
+		},
+		{
+			"path" : "textures/server_icons/note_block.png"
+		},
+		{
+			"path" : "textures/server_icons/soul_sand.png"
+		},
+		{
+			"path" : "textures/server_icons/tnt_block.png"
 		}],
 	"version" : 1
 }

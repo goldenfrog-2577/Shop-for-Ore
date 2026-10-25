@@ -5,7 +5,7 @@ import { ActionFormData, ModalFormData } from '@minecraft/server-ui';
 import { bank } from './bank_menu.js';
 import { combatSecondsLeft } from '../system/pvp.js';
 import { enchantsMenu } from './enchant_shop.js';
-import { cosmeticsMenu } from './cosmetics.js';
+import { cosmeticsMenu } from './cosmetics_shop.js';
 import { ChangePasswordUI } from '../register/change.js';
 import { isPending, rawTranslate, tellText, closedByPlayer } from '../DataBase.js';
 
@@ -126,15 +126,15 @@ function mapCreator(player) {
 	.title('%menu.creators.title')
 	.body('')
 	.button('§8Сreator\n§8kapycta1231484',
-		'textures/ui/icon_steve')
+		'textures/server_icons/steve')
 	// Соавтор карты: иконки шрифта (glyph_E1) подписаны «BY'NASTYA»
 	.button('§5Сo-creator\n§8NastyaXs00',
-		'textures/ui/icon_alex')
+		'textures/server_icons/alex')
 	.button('§6Оmlet Arcade\n§8@waxenjaguar2209',
 		'textures/server_icons/omlet')
 	.button('§9Discоrd\n§8GoldenFrog#2577',
 		'textures/server_icons/discord')
-	.button('§3Тelegram\n§8@xdxd1338',
+	.button('§3Тelegram\n§8@goldenfrog_2577',
 		'textures/server_icons/telegram')
 	.button('§2Хbox\n§8kapycta123#1484',
 		'textures/server_icons/xbox')
@@ -151,7 +151,7 @@ function mapCreator(player) {
 function mapVersion(player) {
 	const mapVersion = new ActionFormData()
 	.title('%menu.version.title')
-	.body('%menu.version.line.1\n\n§r%menu.version.label §a0.3.0_dev§r\n%menu.version.line.2\n\n%menu.version.line.3\n%menu.version.line.4\n%menu.version.line.5\n%menu.version.line.6\n%menu.version.line.7\n%menu.version.line.8\n%menu.version.line.9\n%menu.version.line.10\n%menu.version.line.11\n%menu.version.line.12')
+	.body('%menu.version.line.1\n\n§r%menu.version.label §a0.3.0_20261025_dev§r\n%menu.version.line.2\n\n%menu.version.line.3\n%menu.version.line.4\n%menu.version.line.5\n%menu.version.line.6\n%menu.version.line.7\n%menu.version.line.8\n%menu.version.line.9\n%menu.version.line.10\n%menu.version.line.11\n%menu.version.line.12\n%menu.version.line.13\n%menu.version.line.14\n%menu.version.line.15\n%menu.version.line.16\n%menu.version.line.17\n%menu.version.line.18')
 	.button('%menu.common.back')
 	mapVersion.show(player).then(tb => {
 		// Крестик — на уровень вверх

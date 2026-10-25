@@ -26,7 +26,7 @@ scoreboard players set @a[tag=!player] lvl 1
 scoreboard players set @a[tag=!player] efficiency 0
 scoreboard players set @a[tag=!player] fortune 0
 scoreboard players set @a[tag=!player:rebirth] rebirth 0
-# Недостающие счета (promo1–4, после вайпа — xp, money, lvl…) создаёт раз в секунду timers/t20
+# Недостающие счета (promo1–4, после вайпа — xp, money, lvl…) создаёт раз в секунду timers/ticks_20
 
 # Выдача меню администратора и обычного меню — только если его нет в слоте
 # (раньше предмет перевыдавался каждый тик всем игрокам)
@@ -36,7 +36,7 @@ replaceitem entity @a[tag=role:admin,hasitem={item=server:admin_menu,location=sl
 clear @a[tag=!role:owner,tag=!role:admin,hasitem={item=server:admin_menu}] server:admin_menu
 replaceitem entity @a[hasitem={item=server:menu,location=slot.hotbar,slot=8,quantity=0}] slot.hotbar 8 server:menu 1 0 {"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
 
-# Зачарования, спешка за ребитхи, погода, онлайн — раз в секунду в timers/t20;
+# Зачарования, спешка за ребитхи, погода, онлайн — раз в секунду в timers/ticks_20;
 # счёт предметов — в system/clear_items
 
 ## --- PVP AREA MANAGEMENT ---
@@ -51,7 +51,7 @@ execute as @a[tag=player:pvp] unless entity @s[x=236,y=-32,z=240,dx=127,dy=32,dz
 ## --- ГОЛОД ТОЛЬКО НА PVP-АРЕНЕ ---
 # Вне арены у игрока группа server:hunger_off (entities/player.json): все exhaustion_values = 0,
 # голод не тратится. На арене — server:hunger_normal (ванильные значения).
-# Сами события group on/off шлются раз в секунду из timers/t20 (повторное событие безвредно,
+# Сами события group on/off шлются раз в секунду из timers/ticks_20 (повторное событие безвредно,
 # а если player.json ещё не перечитан — сработает после перезахода).
 # Здесь только разово восполняем голод при выходе с арены; тег sys:hunger_off это и отмечает.
 execute as @a[tag=!player:pvp,tag=!sys:hunger_off] run effect @s saturation 1 20 true

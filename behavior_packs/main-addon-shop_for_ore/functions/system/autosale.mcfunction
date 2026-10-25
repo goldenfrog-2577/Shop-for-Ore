@@ -175,11 +175,11 @@ execute at @a[scores={lvl=25..25},hasitem={item=crying_obsidian},tag=player:part
 execute at @a[scores={lvl=25..25},hasitem={item=crying_obsidian},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=25..25},hasitem={item=crying_obsidian}] run execute if block ~~-1~ gold_block run clear @p crying_obsidian 0 1
 
-# Частицы продажи: у VIP с купленными в Косметике частицами (тег fx:sell) вместо стандартных — свои (scripts/menu/cosmetics.js)
+# Частицы продажи: у VIP с купленными в Косметике частицами (тег fx:sell) вместо стандартных — свои (scripts/menu/cosmetics_shop.js)
 # --- Amethyst (Аметист) ---
 # Продажа аметиста (уровень 26): деньги, эффекты
 execute at @a[scores={lvl=26..26},hasitem={item=amethyst_shard}] run execute if block ~~-1~ gold_block run scoreboard players add @p vip_coins 1
-execute at @a[scores={lvl=26..26},hasitem={item=amethyst_shard},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:lava_particle ~~~
+execute at @a[scores={lvl=26..26},hasitem={item=amethyst_shard},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
 execute at @a[scores={lvl=26..26},hasitem={item=amethyst_shard},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=26..26},hasitem={item=amethyst_shard}] run execute if block ~~-1~ gold_block run clear @p amethyst_shard 0 1
 

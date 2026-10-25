@@ -87,6 +87,7 @@ progressScreen.message.resourceLoading=Host Omlet: @waxenjaguar2209
 ## --- TRANSLATION & UI BUTTONS ---
 admin.common.back=§8Back
 admin.common.min=min
+admin.common.minutes=minutes
 menu.common.tap_to_open=§8[§7Press to open§8]
 menu.common.back=§8 Back
 menu.common.yes=§2Yes
@@ -180,6 +181,12 @@ menu.version.line.9=• Money is no longer taken when a boost or VIP purchase fa
 menu.version.line.10=• Bank: whole amounts only, no transfers to yourself or offline players
 menu.version.line.11=• Anti-cheat no longer removes VIP shop purchases
 menu.version.line.12=• Fixed events, boosts, rebirth (max 5) and chat commands
+menu.version.line.13=• Shop » Cosmetics for VIP coins: name and text color, particles around you, on death and when selling
+menu.version.line.14=• VIP players show VIP coins above their head, !stats has a VIP coins line
+menu.version.line.15=• New icons for the server menu, admin menu and coin
+menu.version.line.16=• New commands: !color, !unfreeze, !unwarn, !debug and more — full list in !help
+menu.version.line.17=• !emotes is a neat grid, !top vip_coins shows the top by VIP coins
+menu.version.line.18=• The PvP arena no longer teleports you onto tree leaves
 
 ## --- SHOP MENU ---
 menu.shop.title=§l§8Server Menu »  Shop
@@ -256,6 +263,7 @@ cosmetics.sell.note=§8Notes
 cosmetics.sell.endrod=§8Star dust
 cosmetics.sell.flame=§8Flame
 cosmetics.sell.portal=§8Portal
+cosmetics.sell.lava=§8Lava
 
 ## --- SETTINGS MENU ---
 menu.settings.title=§l§8Server Menu »  Settings
@@ -506,7 +514,7 @@ admin.boosts.button.auto=§8Timed events
 admin.boosts.boost.title=§l§8Admin menu » Boost
 admin.boosts.magnet.title=§l§8Admin menu » Ore Magnet
 admin.boosts.boost.type=§7Boost:
-admin.boosts.boost.minutes=§r §7Minutes
+admin.boosts.boost.minutes=§7Time:
 admin.boosts.auto.title=§l§8Admin menu » Timed events
 admin.boosts.auto.every=§7every
 chat.admin.auto_events.saved=§r §7CMD §8» §7Timed event settings saved
@@ -663,7 +671,6 @@ chat.help.unfreeze=§7Unfreezes a player
 chat.help.tp=§7Teleports you to a player
 chat.help.tphere=§7Teleports a player to you
 chat.help.wipe=§7Resets all players' progress
-chat.help.reload=§7Reloads scripts and functions without rejoining
 chat.help.role=§7Assigns a role to a player
 chat.help.roles=§7Shows the roles of online players
 chat.help.resetpass=§7Resets a forgotten password of an online player
@@ -821,8 +828,6 @@ chat.cmd.debug.pos=§7Position: §f%1$s §8(%2$s)
 chat.cmd.debug.scores=§7Scores: %1$s
 chat.cmd.debug.tags=§7Tags (§f%1$s§7):
 chat.cmd.debug.other=other
-chat.cmd.reload.start=§r §7CMD §8» §7Reloading scripts…
-chat.cmd.reload.error=§r⩕ §l§cERROR!§r §8» §7Could not run /reload: §f%1$s
 chat.cmd.reload.done=§r §7CMD §8» §aScripts loaded
 chat.cmd.stats.lvl=§7Level: §e%1$s
 chat.cmd.stats.vip=§aVIP
