@@ -21,7 +21,7 @@ xp -100l @a[lm=1]
 # Начальные значения для новых игроков (без тега player)
 scoreboard players set @a[tag=!player] xp 0
 scoreboard players set @a[tag=!player] money 0
-scoreboard players set @a[tag=!player] money2 0
+scoreboard players set @a[tag=!player] vip_coins 0
 scoreboard players set @a[tag=!player] lvl 1
 scoreboard players set @a[tag=!player] efficiency 0
 scoreboard players set @a[tag=!player] fortune 0

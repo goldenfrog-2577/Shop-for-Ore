@@ -19,7 +19,7 @@ scoreboard players add @a promo4 0
 # нет кирки и панели слева. «add 0» создаёт пустой счёт как 0 и не меняет существующий; уровня 0 не бывает
 scoreboard players add @a xp 0
 scoreboard players add @a money 0
-scoreboard players add @a money2 0
+scoreboard players add @a vip_coins 0
 scoreboard players add @a lvl 0
 scoreboard players set @a[scores={lvl=..0}] lvl 1
 scoreboard players add @a efficiency 0

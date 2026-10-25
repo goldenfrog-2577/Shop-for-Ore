@@ -279,7 +279,7 @@ export function runChatCommand(player, command, args) {
 		case "balance": {
 			// Монеты на балансе; у VIP — ещё VIP-монеты
 			run(player, `tellraw @s ${rawTranslate('chat.cmd.balance', getScore(player, 'money'))}`);
-			if (getScore(player, 'lvl') >= 26) run(player, `tellraw @s ${rawTranslate('chat.cmd.balance.vip', getScore(player, 'money2'))}`);
+			if (getScore(player, 'lvl') >= 26) run(player, `tellraw @s ${rawTranslate('chat.cmd.balance.vip', getScore(player, 'vip_coins'))}`);
 			break;
 		}
 

@@ -1,6 +1,6 @@
 # Сброс всех основных счетчиков и прогресса игроков
 scoreboard players reset * money
-scoreboard players reset * money2
+scoreboard players reset * vip_coins
 scoreboard players reset * lvl
 scoreboard players reset * xp
 scoreboard players reset * rebirth

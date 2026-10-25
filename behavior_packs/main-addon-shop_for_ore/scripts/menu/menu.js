@@ -398,7 +398,7 @@ const promocodeRewards = {
 	"VIPbonus": {
 		scoreboard: "promo4",
 		reward: {
-			type: "money2", amount: 100
+			type: "vip_coins", amount: 100
 		},
 		message: "chat.promo.reward.4"
 	},

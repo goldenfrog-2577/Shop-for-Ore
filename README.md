@@ -116,9 +116,9 @@ resource_packs/
 | `sys:` | `sys:buy_ok`, `sys:pick_update`, `sys:rebirth_now`, `sys:hunger_off`, `sys:pvp_v2`, `sys:warp_pvp` | служебные отметки функций |
 | `rank:` | `rank:<префикс>` | префикс в чате (`!prefix`) и уровень |
 
-Табло — короткие слова через `_`: `lvl`, `xp`, `xp_need` (опыт до следующего уровня; до 0.3.0 — `qx`), `money`, `money2` (VIP-коины; так называется и в командных блоках VIP-магазина), `rebirth`, `efficiency`, `fortune`, `magnet` (секунды магнита руды; до 0.3.0 — `tpore`), служебные `system`, `timer`, `settings`, `display`, `online`, `promo1…4`, `pick`.
+Табло — короткие слова через `_`: `lvl`, `xp`, `xp_need` (опыт до следующего уровня; до 0.3.0 — `qx`), `money`, `vip_coins` (VIP-коины; до 0.3.0 — `money2`, так оно и осталось в неактивных командных блоках VIP-магазина), `rebirth`, `efficiency`, `fortune`, `magnet` (секунды магнита руды; до 0.3.0 — `tpore`), служебные `system`, `timer`, `settings`, `display`, `online`, `promo1…4`, `pick`.
 
-Старые названия тегов (до 0.3.0: `host`, `hasRegister`, `frozen`, `mute:`, `x2boost` и т. д.) меняет на новые `scripts/system/migrate.js`, когда игрок заходит; старые табло `qx` и `tpore` удаляет `functions/system/setup` (`setup system` = 2).
+Старые названия тегов (до 0.3.0: `host`, `hasRegister`, `frozen`, `mute:`, `x2boost` и т. д.) меняет на новые `scripts/system/migrate.js`, когда игрок заходит; старые табло `qx`, `tpore` и `money2` удаляет `functions/system/setup` (`setup system` = 3; VIP-коины игроков в сети переносятся в `vip_coins`).
 `!tag` не меняет теги `role:…` и `auth:…`.
 
 ## 🛠 Установка и разработка
