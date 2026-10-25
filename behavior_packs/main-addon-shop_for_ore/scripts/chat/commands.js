@@ -1,7 +1,7 @@
 // --- Обработка пользовательских команд чата для Shop for Ore ---
 // Импортируем необходимые данные и списки команд
 import { world } from '@minecraft/server';
-import { CHAT_COLORS, setChatColor, commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS, setIssuer, clearIssuer, canLift } from '../DataBase.js';
+import { CHAT_COLORS, setChatColor, colorAllowed, impersonatedRole, commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS, setIssuer, clearIssuer, canLift } from '../DataBase.js';
 import { getBot, getBotName, spawnBot } from '../system/spawnbot.js';
 import { teleportToArena, combatSecondsLeft } from '../system/pvp.js';
 import { startMythic } from '../system/mythic.js';
@@ -11,6 +11,11 @@ import { botMenu } from '../menu/admin_menu.js';
 import { addBan, removeBan, getBans, findBan, kickBanned } from '../system/ban.js';
 
 // --- Общие помощники команд ---
+
+// Отказ: цвет, префикс или тег выдают игрока за роль, которой у него нет (role — owner/admin/moder/bot)
+function denyImpersonation(player, target, role) {
+	run(player, `tellraw @s ${rawTranslateRich('chat.cmd.error.target_role', target.name, { translate: role === 'bot' ? 'role.tag.bot' : `role.${role}` })}`);
+}
 
 // Служебные табло: !scoreboard меняет их только у владельца (таймеры, разовая настройка, ивенты, панель)
 const PROTECTED_OBJECTIVES = ['timer', 'system', 'settings', 'display', 'online', 'xp_need'];
@@ -527,6 +532,11 @@ export function runChatCommand(player, command, args) {
 				run(player, `tellraw @s ${rawTranslate('chat.cmd.color.error.color', args[2])}`);
 				break;
 			}
+			// Цвет роли — только тому, у кого эта роль (иначе игрока над головой не отличить от персонала)
+			if (kind === 'name' && !colorAllowed(target, CHAT_COLORS[id])) {
+				denyImpersonation(player, target, impersonatedRole(target, `§${CHAT_COLORS[id]}`));
+				break;
+			}
 			setChatColor(target, kind, CHAT_COLORS[id]);
 			run(player, `tellraw @s ${rawTranslateRich(`chat.cmd.color.done.${kind}`, target.name, { text: `§${CHAT_COLORS[id]}■` }, { translate: `color.${id}` })}`);
 			break;
@@ -551,12 +561,23 @@ export function runChatCommand(player, command, args) {
 					run(player, `tellraw @s ${rawTranslate('chat.cmd.prefix.clear', target.name)}`);
 				}
 			} else if (prefixPlayer && ["set", "take"].includes(prefixAction) && prefixName) {
-				// Тег в кавычках — префикс может содержать пробелы («Super Admin»)
+				const target = findPlayer(prefixPlayer);
+				if (!target) {
+					run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', prefixPlayer)}`);
+					break;
+				}
+				// Префикс с цветом или названием роли (Админ, §cVIP…) — только тому, у кого эта роль
+				const fakeRole = prefixAction === 'set' ? impersonatedRole(target, prefixName) : undefined;
+				if (fakeRole) {
+					denyImpersonation(player, target, fakeRole);
+					break;
+				}
+				// Тег в кавычках — префикс может содержать пробелы («Super Star»)
 				const prefixTag = JSON.stringify(`rank:${prefixName}`);
 				const command = prefixAction === "set"
-				? `tag "${prefixPlayer}" add ${prefixTag}`: `tag "${prefixPlayer}" remove ${prefixTag}`;
+				? `tag "${target.name}" add ${prefixTag}`: `tag "${target.name}" remove ${prefixTag}`;
 				run(player, command);
-				player.runCommandAsync(`tellraw @s ${rawTranslate(prefixAction === "set" ? 'chat.cmd.prefix.set' : 'chat.cmd.prefix.take', prefixName, prefixPlayer)}`);
+				player.runCommandAsync(`tellraw @s ${rawTranslate(prefixAction === "set" ? 'chat.cmd.prefix.set' : 'chat.cmd.prefix.take', prefixName, target.name)}`);
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.prefix.use"}]}');
 			}
@@ -581,6 +602,21 @@ export function runChatCommand(player, command, args) {
 				if (/^(role|auth):|^password:/.test(tagName)) {
 					player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.tag.error.protected"}]}');
 					break;
+				}
+				// Префикс (rank:) и цвет (chat:…_color:, старые name:/text:) — те же проверки, что у !prefix и !color
+				if (tagAction === 'add' && /^(rank:|chat:|name:|text:)/.test(tagName)) {
+					const target = findPlayer(tagTarget);
+					if (!target) {
+						run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', tagTarget)}`);
+						break;
+					}
+					const color = /^(chat:name_color:|name:§?)(.)$/.exec(tagName)?.[2];
+					const fakeRole = tagName.startsWith('rank:') ? impersonatedRole(target, tagName.slice(5))
+						: color && !colorAllowed(target, color.toLowerCase()) ? impersonatedRole(target, `§${color}`) : undefined;
+					if (fakeRole) {
+						denyImpersonation(player, target, fakeRole);
+						break;
+					}
 				}
 				const tagCommand = `tag "${tagTarget}" ${tagAction} ${JSON.stringify(tagName)}`;
 				run(player, tagCommand);

@@ -1,7 +1,7 @@
 // --- Чат-логика и антиспам для Shop for Ore ---
 // Импортируем необходимые функции и данные
 import { world } from '@minecraft/server';
-import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor } from '../DataBase.js';
+import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor, impersonatedRole } from '../DataBase.js';
 
 // --- Значения по умолчанию для тегов игрока ---
 const rank = "rank:";
@@ -60,7 +60,8 @@ function getRanks(player) {
 		if (!v.startsWith(rank)) return null;
 		return v.substring(rank.length);
 	})
-	.filter((x) => x);
+	// Префикс с цветом или названием роли, которой у игрока нет (выдан до проверки или роль сняли), не показываем
+	.filter((x) => x && !impersonatedRole(player, x));
 	return ranks.length === 0 ? [rankDefault]: ranks;
 }
 
