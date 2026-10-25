@@ -23,8 +23,9 @@ const PASSABLE = new Set([
 	'minecraft:tallgrass', 'minecraft:double_plant', 'minecraft:red_flower', 'minecraft:yellow_flower',
 	'minecraft:snow_layer', 'minecraft:deadbush', 'minecraft:vine'
 ]);
-// На этом стоять нельзя
-const UNSAFE_FLOOR = new Set(['minecraft:lava', 'minecraft:flowing_lava', 'minecraft:water', 'minecraft:flowing_water', 'minecraft:fire', 'minecraft:magma', 'minecraft:cactus']);
+// На этом стоять нельзя (листва — чтобы не появляться на кронах деревьев)
+const UNSAFE_FLOOR = new Set(['minecraft:lava', 'minecraft:flowing_lava', 'minecraft:water', 'minecraft:flowing_water', 'minecraft:fire', 'minecraft:magma', 'minecraft:cactus',
+	'minecraft:leaves', 'minecraft:leaves2', 'minecraft:azalea_leaves', 'minecraft:azalea_leaves_flowered', 'minecraft:mangrove_leaves']);
 
 const lastCombat = new Map();   // ник → время последнего удара (мс)
 const pending = [];             // { player, x, z, tries, tick }

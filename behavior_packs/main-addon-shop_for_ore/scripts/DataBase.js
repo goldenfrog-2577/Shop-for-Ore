@@ -338,8 +338,8 @@ export const commandsList = [
 		role: 'player'
 	},
 	{
-		command: "!r §7<§fmessage§7>",
-		description: "%chat.help.r",
+		command: "!reply §7<§fmessage§7>",
+		description: "%chat.help.reply",
 		role: 'player'
 	},
 	{
@@ -418,10 +418,15 @@ export const commandsList = [
 		description: "%chat.help.freeze",
 		role: 'moder'
 	},
+	{
+		command: "!unfreeze §7<§fplayer§7>",
+		description: "%chat.help.unfreeze",
+		role: 'moder'
+	},
 
 	// ===== Модератор: перемещение и наблюдение =====
 	{
-		command: "!tp §7<§fplayer§7> [§fplayer2§7]",
+		command: "!tp §7<§fplayer§7>",
 		description: "%chat.help.tp",
 		role: 'moder'
 	},
@@ -496,11 +501,6 @@ export const commandsList = [
 	},
 
 	// ===== Администратор: игроки и данные =====
-	{
-		command: "!money §7<§fplayer§7> <§fadd§8/§ftake§8/§fset§7> <§famount§7>",
-		description: "%chat.help.money",
-		role: 'admin'
-	},
 	{
 		command: "!scoreboard §7<§fplayer§7> <§fadd§8/§fremove§8/§fset§8/§fget§7> <§fobjective§7> [§famount§7]",
 		description: "%chat.help.scoreboard",
