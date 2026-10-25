@@ -3,7 +3,8 @@
 // нажал на товар → деньги списались, сообщение в чат (без окна подтверждения).
 // Куплено — тег cosmetic:<вид>:<id>; выбрано: цвет — chat:name_color / chat:text_color (как у !color),
 // частицы — fx:trail:<id> / fx:death:<id> / fx:sell:<id>. Цвета ролей (тёмно-красный, красный, синий)
-// не продаются тем, у кого этой роли нет (colorAllowed). Частицы при продаже смотреть может каждый, покупать и выбирать — только VIP.
+// не продаются тем, у кого этой роли нет (colorAllowed). Смотреть Косметику может каждый, покупать — только VIP (уровень 26);
+// купленное раньше (например, до ребитха) выбирается и без VIP, кроме частиц при продаже — они действуют только у VIP.
 
 import { world, BlockLocation } from '@minecraft/server';
 import { CHAT_COLORS, getChatColor, setChatColor, colorAllowed, getScore, metricNumbers, run, tell } from '../DataBase.js';
@@ -71,8 +72,13 @@ function syncSellFlag(player) {
 	if (!on && player.hasTag(SELL_FLAG)) player.removeTag(SELL_FLAG);
 }
 
-/** Купить как в магазине: хватает — списать и сообщить, нет — ошибка. @returns {boolean} */
+/** Купить как в магазине: VIP и хватает коинов — списать и сообщить, иначе ошибка. @returns {boolean} */
 function buy(player, kind, id, cost, mark, nameKey) {
+	if (!isVip(player)) {
+		tell(player, 'chat.shop.cosmetics.error.vip');
+		run(player, 'playsound note.bass @s');
+		return false;
+	}
 	if (coins(player) < cost) {
 		tell(player, 'chat.shop.cosmetics.error.no_coins');
 		run(player, 'playsound note.bass @s');
@@ -133,11 +139,11 @@ function colorMenu(player, kind, back) {
 // --- Частицы ---
 function fxMenu(player, kind, back) {
 	const current = getFx(player, kind);
-	// Частицы при продаже: смотреть может каждый, купить и выбрать — только VIP
+	// Частицы при продаже действуют только у VIP — выбрать их без VIP нельзя, даже купленные
 	const locked = kind === 'sell' && !isVip(player);
 	const choose = (e) => () => {
 		if (locked) {
-			tell(player, 'chat.shop.cosmetics.error.vip');
+			tell(player, 'chat.shop.cosmetics.error.vip_sell');
 			run(player, 'playsound note.bass @s');
 			return;
 		}
