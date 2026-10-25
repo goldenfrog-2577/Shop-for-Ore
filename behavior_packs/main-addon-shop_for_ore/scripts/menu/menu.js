@@ -251,8 +251,8 @@ function boosts(player) {
 		} else if (tb.selection == 1) {
 			player.runCommandAsync('function boost/X4boost')
 		} else if (tb.selection == 2) {
-			// «Магнит руды» — личный, на 5 минут (functions/shop/tp_ore)
-			player.runCommandAsync('function shop/tp_ore')
+			// «Магнит руды» — личный, на 5 минут (functions/shop/ore_magnet/ore_magnet)
+			player.runCommandAsync('function shop/ore_magnet/ore_magnet')
 		} else if (tb.selection == 3) {
 			shop(player)
 		}

@@ -70,7 +70,7 @@
 			"path" : "functions/shop/pvp_kits/netherite.mcfunction"
 		},
 		{
-			"path" : "functions/shop/tp_ore.mcfunction"
+			"path" : "functions/shop/ore_magnet/ore_magnet.mcfunction"
 		},
 		{
 			"path" : "functions/system/automine.mcfunction"
