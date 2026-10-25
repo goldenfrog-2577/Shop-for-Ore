@@ -28,6 +28,7 @@ import './system/mythic.js'      // Ивент «Мистик»: сундук с
 import './system/freeze.js'      // Заморозка: игрок застывает на месте
 import './system/ban.js'         // Бан по номеру игрока в мире и нику
 import './system/migrate.js'     // Старые названия тегов → новые (0.3.0)
+import './system/reload.js'      // «Скрипты загружены» администраторам после /reload
 
 // Импорт загрузчика скриптов
 import './register/loadScript.js'

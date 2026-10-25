@@ -457,6 +457,7 @@ function serverMenu(player) {
 		{ text: '%admin.server.button.top_money', icon: 'textures/items/gold_ingot', run: () => runChatCommand(player, 'top', ['money']) },
 		{ text: '%admin.server.button.top_lvl', icon: 'textures/items/experience_bottle', run: () => runChatCommand(player, 'top', ['lvl']) },
 		{ text: '%admin.server.button.top_rebirth', icon: 'textures/items/nether_star', run: () => runChatCommand(player, 'top', ['rebirth']) },
+		{ text: '%admin.server.button.top_vip_coins', icon: 'textures/items/emerald', run: () => runChatCommand(player, 'top', ['vip_coins']) },
 		{ text: '%admin.boosts.button.auto', icon: 'textures/ui/icon_setting', run: () => autoEventsForm(player, () => serverMenu(player)) },
 		back(() => admin_menu(player))
 	], () => admin_menu(player));

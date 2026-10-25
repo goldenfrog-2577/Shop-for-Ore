@@ -427,7 +427,7 @@ export const commandsList = [
 		role: 'player'
 	},
 	{
-		command: "!top §7[§fmoney§8/§flvl§8/§frebirth§7]",
+		command: "!top §7[§fmoney§8/§flvl§8/§frebirth§8/§fvip_coins§7]",
 		description: "%chat.help.top",
 		role: 'player'
 	},
@@ -574,6 +574,11 @@ export const commandsList = [
 		role: 'admin'
 	},
 	{
+		command: "!debug §7[§fplayer§7]",
+		description: "%chat.help.debug",
+		role: 'admin'
+	},
+	{
 		command: "!color §7<§fplayer§7> <§fname§8/§ftext§7> <§fcolor§8/§freset§7>",
 		description: "%chat.help.color",
 		role: 'admin'
@@ -610,6 +615,11 @@ export const commandsList = [
 	{
 		command: "!resetpass §7<§fplayer§7>",
 		description: "%chat.help.resetpass",
+		role: 'owner'
+	},
+	{
+		command: "!reload",
+		description: "%chat.help.reload",
 		role: 'owner'
 	},
 	{

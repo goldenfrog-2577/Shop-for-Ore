@@ -41,6 +41,45 @@ const RULES_LINES = 6;
  * @param {object} header — элемент rawtext заголовка
  * @param {object[]} lines — элементы rawtext строк
  */
+// Сколько эмодзи в строке у !emotes (на телефоне 4 уже переносятся)
+const EMOTES_PER_ROW = 3;
+
+// Счета, которые показывает !debug (остальные — !scoreboard <ник> list)
+const DEBUG_SCORES = ['money', 'vip_coins', 'lvl', 'xp', 'rebirth'];
+
+/**
+ * Строки !debug: роль, позиция, счета, теги по группам.
+ * Теги паролей (auth:salt:, auth:hash:, password:) скрыты, как в !tag list.
+ * @param {Player} target
+ */
+export function debugLines(target) {
+	const { x, y, z } = target.location;
+	const scores = DEBUG_SCORES.map(id => `§e${id}§7: §f${getScore(target, id)}`).join('§8, ');
+	const tags = target.getTags().filter(t => !/^(auth:(salt|hash):|password:)/.test(t)).sort((a, b) => a.localeCompare(b));
+	const groups = new Map();
+	for (const tag of tags) {
+		const i = tag.indexOf(':');
+		const group = i > 0 ? tag.slice(0, i) : '';
+		if (!groups.has(group)) groups.set(group, []);
+		groups.get(group).push(i > 0 ? tag.slice(i + 1) : tag);
+	}
+	const lines = [
+		{ translate: 'chat.cmd.debug.role', with: { rawtext: [{ translate: `role.${getRole(target)}` }] } },
+		{ translate: 'chat.cmd.debug.pos', with: [`${Math.floor(x)} ${Math.floor(y)} ${Math.floor(z)}`, target.dimension.id.replace('minecraft:', '')] },
+		{ translate: 'chat.cmd.debug.scores', with: [scores] },
+		{ translate: 'chat.cmd.debug.tags', with: [String(tags.length)] }
+	];
+	// Группы по алфавиту, теги без «:» — последними («прочие»)
+	const names = [...groups.keys()].filter(g => g).sort((a, b) => a.localeCompare(b));
+	if (groups.has('')) names.push('');
+	for (const g of names) {
+		const list = groups.get(g).join('§r§8, §7');
+		lines.push(g ? { text: `§6[${g}]§r §7${list}` }
+			: { rawtext: [{ text: '§6[' }, { translate: 'chat.cmd.debug.other' }, { text: `]§r §7${list}` }] });
+	}
+	return lines;
+}
+
 function tellList(player, header, lines) {
 	const rawtext = [header];
 	for (const line of lines) rawtext.push({ text: '\n' }, line);
@@ -250,11 +289,14 @@ export function runChatCommand(player, command, args) {
 			break;
 		}
 
-		case "emotes":
-			// Вывод списка эмодзи
-			const emotesMessage = emotesList.map(emote => `${emote.name} - ${emote.symbol}`).join("\n");
-			tellText(player, `%chat.emotes.header\n${emotesMessage}\n§8------------------------§f`);
+		case "emotes": {
+			// Список эмодзи сеткой по 3 в ряд — короче, чем по одному в строку
+			const cells = emotesList.map(emote => `§7${emote.name} §f${emote.symbol}`);
+			const rows = [];
+			for (let i = 0; i < cells.length; i += EMOTES_PER_ROW) rows.push(cells.slice(i, i + EMOTES_PER_ROW).join('§8  |  '));
+			tellText(player, `%chat.emotes.header\n${rows.join('\n')}\n§8------------------------§f`);
 			break;
+		}
 
 		case "msg":
 			// Личное сообщение другому игроку с поддержкой эмодзи (в муте — нельзя)
@@ -302,9 +344,9 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case "top": {
-			// Топ-5 игроков в сети по деньгам, уровню или ребитхам
+			// Топ-5 игроков в сети по деньгам, уровню, ребитхам или VIP-коинам
 			const by = (args[0] || 'money').toLowerCase();
-			if (!['money', 'lvl', 'rebirth'].includes(by)) {
+			if (!['money', 'lvl', 'rebirth', 'vip_coins'].includes(by)) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.top.use"}]}');
 				break;
 			}
@@ -625,6 +667,27 @@ export function runChatCommand(player, command, args) {
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.tag.use"}]}');
 			}
+			break;
+		}
+
+		case "debug": {
+			// Отладка: роль, позиция, главные счета и все теги игрока, сгруппированные по префиксу до «:»
+			const target = args[0] ? findPlayer(args.join(' ')) : player;
+			if (!target) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', args.join(' '))}`);
+				break;
+			}
+			tellList(player, { translate: 'chat.cmd.debug.header', with: [target.name] }, debugLines(target));
+			break;
+		}
+
+		case "reload": {
+			// Ванильный /reload: скрипты и функции перезапускаются, после загрузки
+			// system/reload.js пишет «Скрипты загружены» (это и есть подтверждение)
+			run(player, `tellraw @s ${rawTranslate('chat.cmd.reload.start')}`);
+			player.runCommandAsync('reload').catch(err => {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.reload.error', String(err?.message ?? err).slice(0, 120))}`);
+			});
 			break;
 		}
 
