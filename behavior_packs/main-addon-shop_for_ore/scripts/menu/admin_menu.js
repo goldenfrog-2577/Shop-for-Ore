@@ -8,10 +8,9 @@
 import { world } from '@minecraft/server';
 import { ActionFormData, ModalFormData, MessageFormData } from '@minecraft/server-ui';
 import { isPending, rawTranslate, closedByPlayer, showWhenFree, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer } from '../DataBase.js';
-import { runChatCommand } from '../chat/commands.js';
+import { runChatCommand, setMoney } from '../chat/commands.js';
 import { sendChatMessage } from '../chat/chat.js';
 import { getBot, getBotName, setBotName, spawnBot, removeBot } from '../system/spawnbot.js';
-import { giveMythicChest } from '../system/mythic.js';
 
 const BACK_ICON = 'textures/ui/icon_import';
 // Заголовок «Предупреждение» со знаком «!» из шрифта карты (glyph_E1)
@@ -190,8 +189,6 @@ function tools(player) {
 		{ text: '%admin.tools.button.hologram_egg', icon: 'textures/items/floating_text', run: give('server:floating_text_spawn_egg') },
 		{ text: '%admin.tools.button.admin_stick', icon: 'textures/items/stick', run: give('server:admin_stick') },
 		{ text: '%admin.tools.button.name_tag', icon: 'textures/items/name_tag', run: give('name_tag 16') },
-		// Сундук с именем мистика — поставить в центр PvP-арены (x 300, z 300) вместо обычного
-		{ text: '%admin.tools.button.mythic_chest', icon: 'textures/server_icons/chest', run: () => giveMythicChest(player) },
 		// Очистка всего инвентаря — теперь с подтверждением
 		{ text: '%admin.tools.button.clear_inventory', icon: 'textures/ui/cancel', run: () => confirm(player, WARN_TITLE, '%admin.tools.clear.body', () => player.runCommandAsync('clear @s'), () => tools(player)) },
 		back(() => admin_menu(player))
@@ -256,11 +253,11 @@ function playerActions(player, target) {
 	if (!self) {
 		const muted = muteMinutesLeft(target) > 0;
 		items.push(
-			{ text: target.hasTag('frozen') ? '%admin.players.button.unfreeze' : '%admin.players.button.freeze', icon: 'textures/ui/freeze_heart', run: cmd('freeze') },
+			{ text: target.hasTag('frozen') ? '%admin.players.button.unfreeze' : '%admin.players.button.freeze', icon: 'textures/ui/freeze_heart', run: cmd(target.hasTag('frozen') ? 'unfreeze' : 'freeze') },
 			muted
 				? { text: '%admin.players.button.unmute', icon: 'textures/ui/mute_off', run: cmd('unmute') }
 				: { text: '%admin.players.button.mute', icon: 'textures/ui/mute_on', run: () => playerMute(player, target) },
-			{ text: '%admin.players.button.warn', icon: 'textures/ui/ErrorGlyph', run: () => playerReason(player, target, 'warn', '%admin.players.warn.title', '%admin.players.reason') },
+			{ text: '%admin.players.button.warn', icon: 'textures/ui/WarningGlyph', run: () => playerReason(player, target, 'warn', '%admin.players.warn.title', '%admin.players.reason') },
 			// Снять одно предупреждение (если есть)
 			...(getWarns(target) > 0 ? [{ text: '%admin.players.button.unwarn', icon: 'textures/ui/check', run: cmd('unwarn') }] : []),
 			{ text: '%admin.players.button.kick', icon: 'textures/ui/cancel', run: () => playerReason(player, target, 'kick', '%admin.players.kick.title', '%admin.players.reason_optional') },
@@ -302,7 +299,10 @@ function playerMoney(player, target) {
 	.textField('%admin.players.money.amount', '%menu.bank.amount_placeholder')
 	.show(player).then(r => {
 		if (!r.formValues) return closedByPlayer(r) ? playerActions(player, target) : undefined;
-		runChatCommand(player, 'money', [target.name, actions[r.formValues[0]], String(r.formValues[1] ?? '').trim()]);
+		// Игрок мог выйти, пока окно было открыто
+		const online = findPlayer(target.name);
+		if (!online) return run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', target.name)}`);
+		setMoney(player, online, actions[r.formValues[0]], String(r.formValues[1] ?? '').trim());
 	});
 }
 

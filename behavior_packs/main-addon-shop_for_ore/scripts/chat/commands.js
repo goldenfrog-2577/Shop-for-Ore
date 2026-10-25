@@ -49,7 +49,7 @@ function tellList(player, header, lines) {
  * @param {string} otherRole
  * @returns {Player|null}
  */
-function resolveTarget(player, name, otherRole) {
+function resolveTarget(player, name, otherRole, targetRole) {
 	if (!name) return player;
 	const target = findPlayer(name);
 	if (!target) {
@@ -60,7 +60,31 @@ function resolveTarget(player, name, otherRole) {
 		player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.error.no_permission"}]}');
 		return null;
 	}
+	// Права, которые даёт команда (креатив, наблюдатель, полёт, палочка админа), — только тому, чья роль
+	// сама позволяет такую команду: игроку и модератору креатив не выдать даже от администратора
+	if (targetRole && target.name !== player.name && !hasRole(target, targetRole)) {
+		run(player, `tellraw @s ${rawTranslateRich('chat.cmd.error.target_role', target.name, { translate: `role.${targetRole}` })}`);
+		return null;
+	}
 	return target;
+}
+
+/**
+ * Изменить баланс игрока: add / take / set (меню администратора → Игроки → Деньги).
+ * Снять больше, чем есть, нельзя — баланс станет 0. @returns {boolean} изменено
+ */
+export function setMoney(player, target, action, raw) {
+	const amount = Number(raw);
+	if (!['add', 'take', 'set'].includes(action) || !/^\d+$/.test(raw) || amount > 2147483647) {
+		player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.money.error.amount"}]}');
+		return false;
+	}
+	const before = getScore(target, 'money');
+	const after = action === 'add' ? Math.min(before + amount, 2147483647) : action === 'take' ? Math.max(before - amount, 0) : amount;
+	run(target, `scoreboard players set @s money ${after}`);
+	run(player, `tellraw @s ${rawTranslate('chat.cmd.money.done', target.name, String(after))}`);
+	if (target.name !== player.name) run(target, `tellraw @s ${rawTranslate('chat.cmd.money.received', String(after))}`);
+	return true;
 }
 
 /**
@@ -237,15 +261,15 @@ export function runChatCommand(player, command, args) {
 			}
 			break;
 
-		case "r": {
+		case "reply": {
 			// Ответ тому, с кем последним переписывался в ЛС
 			const partner = lastPrivate.get(player.name);
 			if (muteMinutesLeft(player) > 0) {
 				run(player, `tellraw @s ${rawTranslate('chat.cmd.mute.active', muteMinutesLeft(player))}`);
 			} else if (!args.length) {
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.r.use"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.reply.use"}]}');
 			} else if (!partner) {
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.r.none"}]}');
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.reply.none"}]}');
 			} else {
 				sendPrivate(player, partner, args.join(" "));
 			}
@@ -366,7 +390,8 @@ export function runChatCommand(player, command, args) {
 			// Режим себе; другому игроку — администратор+.
 			// Обычному игроку system.mcfunction каждый тик возвращает приключение — режим у него не удержится
 			const mode = { gm1: 'creative', gm2: 'adventure', gm6: 'spectator' }[command];
-			const target = resolveTarget(player, args[0], 'admin');
+			// Приключение (обычный режим) — любому; креатив и наблюдатель — только роли, которой положена эта команда
+			const target = resolveTarget(player, args[0], 'admin', { gm1: 'admin', gm6: 'moder' }[command]);
 			if (!target) break;
 			run(target, `gamemode ${mode} @s`);
 			run(target, `tellraw @s {"rawtext":[{"translate":"chat.cmd.${command}"}]}`);
@@ -380,9 +405,11 @@ export function runChatCommand(player, command, args) {
 			let state = args[0] ? args[0].toLowerCase() : undefined;
 			let targetName = args[1];
 			if (state && state !== 'on' && state !== 'off') { targetName = args[0]; state = undefined; }
-			const target = resolveTarget(player, targetName, 'admin');
-			if (!target) break;
-			const on = state ? state === 'on' : !target.hasTag('fly:on');
+			const target = findPlayer(targetName ?? player.name);
+			// Включить полёт — только администратору и выше; выключить — любому
+			const turnOn = state ? state === 'on' : !(target ?? player).hasTag('fly:on');
+			if (!resolveTarget(player, targetName, 'admin', turnOn ? 'admin' : undefined)) break;
+			const on = turnOn;
 			run(target, `ability @s mayfly ${on}`);
 			if (on) target.addTag('fly:on'); else target.removeTag('fly:on');
 			run(target, `tellraw @s {"rawtext":[{"translate":"chat.cmd.fly.${on ? 'on' : 'off'}"}]}`);
@@ -447,8 +474,8 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case "stick": {
-			// Палочка админа себе или другому (администратор+)
-			const target = resolveTarget(player, args[0], 'admin');
+			// Палочка админа себе или другому администратору (игроку и модератору — нельзя)
+			const target = resolveTarget(player, args[0], 'admin', 'admin');
 			if (!target) break;
 			run(target, "give @s server:admin_stick");
 			run(target, 'tellraw @s {"rawtext":[{"translate":"chat.cmd.stick"}]}');
@@ -576,28 +603,6 @@ export function runChatCommand(player, command, args) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.kick.use"}]}');
 			}
 			break;
-
-		case "money": {
-			// Деньги игроку в сети: add/take/set. Снять больше, чем есть, нельзя — баланс станет 0
-			const action = (args[1] || '').toLowerCase();
-			const raw = args[2] || '';
-			const amount = Number(raw);
-			if (!args[0] || !['add', 'take', 'set'].includes(action) || !/^\d+$/.test(raw) || amount > 2147483647) {
-				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.money.use"}]}');
-				break;
-			}
-			const target = findPlayer(args[0]);
-			if (!target) {
-				run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', args[0])}`);
-				break;
-			}
-			const before = getScore(target, 'money');
-			const after = action === 'add' ? Math.min(before + amount, 2147483647) : action === 'take' ? Math.max(before - amount, 0) : amount;
-			run(target, `scoreboard players set @s money ${after}`);
-			run(player, `tellraw @s ${rawTranslate('chat.cmd.money.done', target.name, String(after))}`);
-			if (target.name !== player.name) run(target, `tellraw @s ${rawTranslate('chat.cmd.money.received', String(after))}`);
-			break;
-		}
 
 		case "event": {
 			// Запустить ивент сразу (по таймеру они идут, только если включены в settings)
@@ -781,7 +786,7 @@ export function runChatCommand(player, command, args) {
 
 		case "freeze": {
 			// Заморозка: игрок застывает на месте (даже в воздухе), недоступны меню, меню администратора и !warp.
-			// Повторная команда — разморозка
+			// Разморозка — !unfreeze
 			if (!args[0]) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.use"}]}');
 				break;
@@ -793,18 +798,36 @@ export function runChatCommand(player, command, args) {
 			}
 			if (!canPunish(player, target)) break;
 			if (target.hasTag('frozen')) {
-				// Разморозить может только роль не ниже заморозившего
-				if (!canLift(player, target, 'frozen')) break;
-				unfreezePlayer(target);
-				run(player, `tellraw @s ${rawTranslate('chat.cmd.freeze.off', target.name)}`);
-				run(target, 'tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.received.off"}]}');
-			} else {
-				// Игрок застывает там, где стоит (в том числе в воздухе): system/freeze.js возвращает его на место каждый тик
-				freezePlayer(target);
-				setIssuer(target, 'frozen', getRole(player));
-				run(player, `tellraw @s ${rawTranslate('chat.cmd.freeze.on', target.name)}`);
-				run(target, 'tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.received.on"}]}');
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.freeze.error.already', target.name)}`);
+				break;
 			}
+			// Игрок застывает там, где стоит (в том числе в воздухе): system/freeze.js возвращает его на место каждый тик
+			freezePlayer(target);
+			setIssuer(target, 'frozen', getRole(player));
+			run(player, `tellraw @s ${rawTranslate('chat.cmd.freeze.on', target.name)}`);
+			run(target, 'tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.received.on"}]}');
+			break;
+		}
+
+		case "unfreeze": {
+			if (!args[0]) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.unfreeze.use"}]}');
+				break;
+			}
+			const target = findPlayer(args[0]);
+			if (!target) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', args[0])}`);
+				break;
+			}
+			if (!target.hasTag('frozen')) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.unfreeze.error.not_frozen', target.name)}`);
+				break;
+			}
+			// Разморозить может только роль не ниже заморозившего
+			if (!canLift(player, target, 'frozen')) break;
+			unfreezePlayer(target);
+			run(player, `tellraw @s ${rawTranslate('chat.cmd.freeze.off', target.name)}`);
+			run(target, 'tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.received.off"}]}');
 			break;
 		}
 
@@ -826,7 +849,7 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case "tp": {
-			// !tp <ник> — ты к игроку; !tp <ник1> <ник2> — первого ко второму
+			// !tp <ник> — ты к игроку (отправить другого игрока к себе — !tphere)
 			if (!args[0]) {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.tp.use"}]}');
 				break;
@@ -834,20 +857,6 @@ export function runChatCommand(player, command, args) {
 			const first = findPlayer(args[0]);
 			if (!first) {
 				run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', args[0])}`);
-				break;
-			}
-			if (args[1]) {
-				const second = findPlayer(args[1]);
-				if (!second) {
-					run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', args[1])}`);
-					break;
-				}
-				if (first.name === second.name) {
-					player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.tp.error.self"}]}');
-					break;
-				}
-				run(player, `tp "${first.name}" "${second.name}"`);
-				run(player, `tellraw @s ${rawTranslate('chat.cmd.tp.between', first.name, second.name)}`);
 				break;
 			}
 			if (first.name === player.name) {

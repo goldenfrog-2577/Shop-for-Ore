@@ -6,6 +6,25 @@ execute if entity @e[name="X2Boost",scores={system=1..}] run function boost/x2_t
 execute if entity @e[name="X4Boost",scores={system=1..}] run function boost/x4_tick
 # было: командный блок (58, 5, 58)
 tag @a[tag=!player] add player
+
+# Недостающие счета (раньше — каждый тик в system/system; секунды хватает)
+# promo1-4: «add 0» только создаёт счёт новичку и не обнуляет его после перерождения,
+# иначе промокоды снова срабатывают после каждого rebirth
+scoreboard players add @a promo1 0
+scoreboard players add @a promo2 0
+scoreboard players add @a promo3 0
+scoreboard players add @a promo4 0
+# Счёта нет, а тег player есть — так бывает после вайпа у тех, кто был не в сети: вайп сбрасывает
+# табло у всех («reset *»), а тег player снимает только с тех, кто в сети (@e). Без уровня у игрока
+# нет кирки и панели слева. «add 0» создаёт пустой счёт как 0 и не меняет существующий; уровня 0 не бывает
+scoreboard players add @a xp 0
+scoreboard players add @a money 0
+scoreboard players add @a money2 0
+scoreboard players add @a lvl 0
+scoreboard players set @a[scores={lvl=..0}] lvl 1
+scoreboard players add @a efficiency 0
+scoreboard players add @a fortune 0
+scoreboard players add @a rebirth 0
 # было: командный блок (58, 6, 58)
 scoreboard players remove @e[name="rainEvent",scores={system=1..30}] system 1
 
