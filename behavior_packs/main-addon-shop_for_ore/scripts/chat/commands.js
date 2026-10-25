@@ -44,6 +44,38 @@ const RULES_LINES = 6;
 // Сколько эмодзи в строке у !emotes (на телефоне 4 уже переносятся)
 const EMOTES_PER_ROW = 3;
 
+// --- Выравнивание !emotes ---
+// Шрифт чата не моноширинный: ширина в пикселях — по шрифту default8 (буква + 1 пиксель между буквами),
+// значки — по glyph_E1 (половина ширины рисунка + 1). Пробел — 4 пикселя, поэтому колонки
+// совпадают с точностью до 2 пикселей.
+const CHAR_WIDTH = { i: 2, l: 3, t: 4, f: 5, k: 5, j: 4, ':': 2, ' ': 4 };
+const GLYPH_WIDTH = {
+	'\ue1f0': 6, '\ue1f1': 6, '\ue1f2': 6, '\ue1f3': 6, '\ue1f4': 6, '\ue1f5': 6, '\ue1f6': 6, '\ue1f9': 7,
+	'\ue1e0': 8, '\ue1e1': 8, '\ue1e2': 8, '\ue1e3': 7, '\ue1e4': 7,
+	'\ue10e': 6, '\ue10f': 6, '\ue151': 9, '\ue152': 7, '\ue153': 7, '\ue154': 6
+};
+export const textWidth = (s) => [...s].reduce((w, ch) => w + (GLYPH_WIDTH[ch] ?? CHAR_WIDTH[ch] ?? 6), 0);
+
+/** Строки сетки эмодзи: «значок :имя:», дополненные пробелами до общей ширины колонки. */
+export function emoteGrid() {
+	const cells = emotesList.map(e => ({ text: `§f${e.symbol} §7${e.name}`, width: textWidth(`${e.symbol} ${e.name}`) }));
+	const column = Math.max(...cells.map(c => c.width)) + 4;
+	const rows = [];
+	for (let i = 0; i < cells.length; i += EMOTES_PER_ROW) {
+		// Пробелы считаются от уже набранной ширины строки — ошибка округления не копится от колонки к колонке
+		let line = '', x = 0;
+		cells.slice(i, i + EMOTES_PER_ROW).forEach((c, j) => {
+			if (j > 0) {
+				const spaces = Math.max(1, Math.round((j * column - x) / 4));
+				line += ' '.repeat(spaces); x += spaces * 4;
+			}
+			line += c.text; x += c.width;
+		});
+		rows.push(line);
+	}
+	return rows;
+}
+
 // Счета, которые показывает !debug (остальные — !scoreboard <ник> list)
 const DEBUG_SCORES = ['money', 'vip_coins', 'lvl', 'xp', 'rebirth'];
 
@@ -154,7 +186,7 @@ function canPunish(player, target) {
 }
 
 /**
- * «Магнит руды» бесплатно (персонал): табло magnet — секунды, тег boost:magnet (timers/t5, t20).
+ * «Магнит руды» бесплатно (персонал): табло magnet — секунды, тег boost:magnet (timers/ticks_5, ticks_20).
  * Если магнит уже работает — время заменяется новым.
  */
 export function giveOreMagnet(player, target, minutes) {
@@ -290,11 +322,8 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case "emotes": {
-			// Список эмодзи сеткой по 3 в ряд — короче, чем по одному в строку
-			const cells = emotesList.map(emote => `§7${emote.name} §f${emote.symbol}`);
-			const rows = [];
-			for (let i = 0; i < cells.length; i += EMOTES_PER_ROW) rows.push(cells.slice(i, i + EMOTES_PER_ROW).join('§8  |  '));
-			tellText(player, `%chat.emotes.header\n${rows.join('\n')}\n§8------------------------§f`);
+			// Список эмодзи сеткой по 3 в ряд: значок, имя и пробелы до ширины колонки
+			tellText(player, `%chat.emotes.header\n${emoteGrid().join('\n')}\n§8------------------------§f`);
 			break;
 		}
 
@@ -678,16 +707,6 @@ export function runChatCommand(player, command, args) {
 				break;
 			}
 			tellList(player, { translate: 'chat.cmd.debug.header', with: [target.name] }, debugLines(target));
-			break;
-		}
-
-		case "reload": {
-			// Ванильный /reload: скрипты и функции перезапускаются, после загрузки
-			// system/reload.js пишет «Скрипты загружены» (это и есть подтверждение)
-			run(player, `tellraw @s ${rawTranslate('chat.cmd.reload.start')}`);
-			player.runCommandAsync('reload').catch(err => {
-				run(player, `tellraw @s ${rawTranslate('chat.cmd.reload.error', String(err?.message ?? err).slice(0, 120))}`);
-			});
 			break;
 		}
 

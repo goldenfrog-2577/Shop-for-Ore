@@ -1,4 +1,4 @@
-# Стоимость следующего уровня. Вызывается из timers/t20 и сразу после повышения (system/levelup_apply)
+# Стоимость следующего уровня. Вызывается из timers/ticks_20 и сразу после повышения (system/levelup_apply)
 scoreboard players set @a[scores={lvl=1..1}] xp_need 100
 scoreboard players set @a[scores={lvl=2..2}] xp_need 125
 scoreboard players set @a[scores={lvl=3..3}] xp_need 250

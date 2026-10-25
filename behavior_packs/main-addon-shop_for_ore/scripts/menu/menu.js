@@ -151,7 +151,7 @@ function mapCreator(player) {
 function mapVersion(player) {
 	const mapVersion = new ActionFormData()
 	.title('%menu.version.title')
-	.body('%menu.version.line.1\n\n§r%menu.version.label §a0.3.0_dev§r\n%menu.version.line.2\n\n%menu.version.line.3\n%menu.version.line.4\n%menu.version.line.5\n%menu.version.line.6\n%menu.version.line.7\n%menu.version.line.8\n%menu.version.line.9\n%menu.version.line.10\n%menu.version.line.11\n%menu.version.line.12')
+	.body('%menu.version.line.1\n\n§r%menu.version.label §a0.3.0_20261025_dev§r\n%menu.version.line.2\n\n%menu.version.line.3\n%menu.version.line.4\n%menu.version.line.5\n%menu.version.line.6\n%menu.version.line.7\n%menu.version.line.8\n%menu.version.line.9\n%menu.version.line.10\n%menu.version.line.11\n%menu.version.line.12\n%menu.version.line.13\n%menu.version.line.14\n%menu.version.line.15\n%menu.version.line.16\n%menu.version.line.17\n%menu.version.line.18')
 	.button('%menu.common.back')
 	mapVersion.show(player).then(tb => {
 		// Крестик — на уровень вверх

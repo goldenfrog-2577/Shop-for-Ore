@@ -87,6 +87,7 @@ progressScreen.message.resourceLoading=Omlet хоста: @waxenjaguar2209
 ## --- ПЕРЕКЛАД ТА КНОПКИ ІНТЕРФЕЙСУ ---
 admin.common.back=§8Назад
 admin.common.min=хв
+admin.common.minutes=хвилин
 menu.common.tap_to_open=§8[§7Натисніть, щоб відкрити§8]
 menu.common.back=§8 Назад
 menu.common.yes=§2Так
@@ -180,6 +181,12 @@ menu.version.line.9=• Гроші не списуються, якщо поку�
 menu.version.line.10=• Банк: лише цілі суми, не можна переказати собі чи гравцю не в мережі
 menu.version.line.11=• Античит більше не видаляє покупки з VIP-крамниці
 menu.version.line.12=• Виправлено івенти, бустери, ребітх (максимум 5) і команди чату
+menu.version.line.13=• Магазин » Косметика за VIP-коїни: колір ніка й тексту, частинки навколо гравця, при смерті й при продажу
+menu.version.line.14=• У VIP над головою — VIP-коїни, у !stats — рядок VIP-коїнів
+menu.version.line.15=• Нові іконки меню сервера, меню адміністратора й монети
+menu.version.line.16=• Нові команди: !color, !unfreeze, !unwarn, !debug та інші — повний список у !help
+menu.version.line.17=• !emotes — рівною сіткою, !top vip_coins — топ за VIP-коїнами
+menu.version.line.18=• На PvP-арену більше не телепортує на листя
 
 ## --- МЕНЮ МАГАЗИНУ ---
 menu.shop.title=§l§8Меню сервера »  Магазин
@@ -256,6 +263,7 @@ cosmetics.sell.note=§8Ноти
 cosmetics.sell.endrod=§8Зоряний пил
 cosmetics.sell.flame=§8Полум'я
 cosmetics.sell.portal=§8Портал
+cosmetics.sell.lava=§8Лава
 
 ## --- МЕНЮ НАЛАШТУВАНЬ ---
 menu.settings.title=§l§8Меню сервера »  Налаштування
@@ -506,7 +514,7 @@ admin.boosts.button.auto=§8Івенти за таймером
 admin.boosts.boost.title=§l§8Меню адміна » Буст
 admin.boosts.magnet.title=§l§8Меню адміна » Магніт руди
 admin.boosts.boost.type=§7Буст:
-admin.boosts.boost.minutes=§r §7Хвилин
+admin.boosts.boost.minutes=§7Час:
 admin.boosts.auto.title=§l§8Меню адміна » Таймер івентів
 admin.boosts.auto.every=§7кожні
 chat.admin.auto_events.saved=§r §7CMD §8» §7Налаштування івентів за таймером збережено
@@ -663,7 +671,6 @@ chat.help.unfreeze=§7Розморожує гравця
 chat.help.tp=§7Телепортує тебе до гравця
 chat.help.tphere=§7Телепортує гравця до тебе
 chat.help.wipe=§7Повністю скидає прогрес усіх гравців
-chat.help.reload=§7Перезавантажує скрипти й функції без перезаходу
 chat.help.role=§7Призначає роль гравцю
 chat.help.roles=§7Показує ролі гравців у мережі
 chat.help.resetpass=§7Скидає забутий пароль гравцю в мережі
@@ -821,8 +828,6 @@ chat.cmd.debug.pos=§7Позиція: §f%1$s §8(%2$s)
 chat.cmd.debug.scores=§7Рахунки: %1$s
 chat.cmd.debug.tags=§7Теги (§f%1$s§7):
 chat.cmd.debug.other=інші
-chat.cmd.reload.start=§r §7CMD §8» §7Перезавантажую скрипти…
-chat.cmd.reload.error=§r⩕ §l§cERROR!§r §8» §7Не вдалося виконати /reload: §f%1$s
 chat.cmd.reload.done=§r §7CMD §8» §aСкрипти завантажено
 chat.cmd.stats.lvl=§7Рівень: §e%1$s
 chat.cmd.stats.vip=§aVIP

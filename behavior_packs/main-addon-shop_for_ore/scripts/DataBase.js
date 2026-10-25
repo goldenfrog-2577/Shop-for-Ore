@@ -574,11 +574,6 @@ export const commandsList = [
 		role: 'admin'
 	},
 	{
-		command: "!debug §7[§fplayer§7]",
-		description: "%chat.help.debug",
-		role: 'admin'
-	},
-	{
 		command: "!color §7<§fplayer§7> <§fname§8/§ftext§7> <§fcolor§8/§freset§7>",
 		description: "%chat.help.color",
 		role: 'admin'
@@ -600,6 +595,11 @@ export const commandsList = [
 		description: "%chat.help.bot",
 		role: 'admin'
 	},
+	{
+		command: "!debug §7[§fplayer§7]",
+		description: "%chat.help.debug",
+		role: 'admin'
+	},
 
 	// ===== Владелец =====
 	{
@@ -615,11 +615,6 @@ export const commandsList = [
 	{
 		command: "!resetpass §7<§fplayer§7>",
 		description: "%chat.help.resetpass",
-		role: 'owner'
-	},
-	{
-		command: "!reload",
-		description: "%chat.help.reload",
 		role: 'owner'
 	},
 	{

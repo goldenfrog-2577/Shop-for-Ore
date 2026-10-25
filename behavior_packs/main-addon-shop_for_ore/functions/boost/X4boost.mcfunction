@@ -19,6 +19,6 @@ execute as @s[tag=sys:buy_ok] positioned as @a run playsound note.bell @a
 execute as @s[tag=sys:buy_ok] run scoreboard players set scoreboards.x4boost display 0
 execute as @s[tag=sys:buy_ok] run tellraw @a {"rawtext":[{"translate":"chat.boost.x4","with":{"rawtext":[{"selector":"@s"}]}}]}
 execute as @s[tag=sys:buy_ok] run scoreboard players set @e[name="X4Boost"] system 300
-# Тег буста получают все онлайн; зашедшим позже его выдаёт timers/t20, пока таймер X4Boost идёт
+# Тег буста получают все онлайн; зашедшим позже его выдаёт timers/ticks_20, пока таймер X4Boost идёт
 execute as @s[tag=sys:buy_ok] run tag @a add boost:x4
 tag @s remove sys:buy_ok

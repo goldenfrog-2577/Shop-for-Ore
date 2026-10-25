@@ -87,6 +87,7 @@ progressScreen.message.resourceLoading=Omlet хоста: @waxenjaguar2209
 ## --- ПЕРЕВОД И КНОПКИ ИНТЕРФЕЙСА ---
 admin.common.back=§8Назад
 admin.common.min=мин
+admin.common.minutes=минут
 menu.common.tap_to_open=§8[§7Нажми, чтобы открыть§8]
 menu.common.back=§8 Назад
 menu.common.yes=§2Да
@@ -180,6 +181,12 @@ menu.version.line.9=• Деньги не списываются при неуд
 menu.version.line.10=• Банк: только целые суммы, нельзя перевести себе или игроку не в сети
 menu.version.line.11=• Античит больше не удаляет покупки из VIP-лавки
 menu.version.line.12=• Исправлены ивенты, бусты, ребитх (максимум 5) и команды чата
+menu.version.line.13=• Магазин » Косметика за VIP-коины: цвет ника и текста, частицы вокруг игрока, при смерти и при продаже
+menu.version.line.14=• У VIP над головой — VIP-коины, в !stats — строка VIP-коинов
+menu.version.line.15=• Новые иконки меню сервера, меню администратора и монеты
+menu.version.line.16=• Новые команды: !color, !unfreeze, !unwarn, !debug и другие — полный список в !help
+menu.version.line.17=• !emotes — ровной сеткой, !top vip_coins — топ по VIP-коинам
+menu.version.line.18=• На PvP-арену больше не телепортирует на листву
 
 ## --- МЕНЮ МАГАЗИНА ---
 menu.shop.title=§l§8Меню сервера »  Магазин
@@ -256,6 +263,7 @@ cosmetics.sell.note=§8Ноты
 cosmetics.sell.endrod=§8Звёздная пыль
 cosmetics.sell.flame=§8Пламя
 cosmetics.sell.portal=§8Портал
+cosmetics.sell.lava=§8Лава
 
 ## --- МЕНЮ НАСТРОЕК ---
 menu.settings.title=§l§8Меню сервера »  Настройки
@@ -506,7 +514,7 @@ admin.boosts.button.auto=§8Ивенты по таймеру
 admin.boosts.boost.title=§l§8Меню админа » Буст
 admin.boosts.magnet.title=§l§8Меню админа » Магнит руды
 admin.boosts.boost.type=§7Буст:
-admin.boosts.boost.minutes=§r §7Минут
+admin.boosts.boost.minutes=§7Время:
 admin.boosts.auto.title=§l§8Меню админа » Таймер ивентов
 admin.boosts.auto.every=§7каждые
 chat.admin.auto_events.saved=§r §7CMD §8» §7Настройки ивентов по таймеру сохранены
@@ -663,7 +671,6 @@ chat.help.unfreeze=§7Размораживает игрока
 chat.help.tp=§7Телепортирует тебя к игроку
 chat.help.tphere=§7Телепортирует игрока к тебе
 chat.help.wipe=§7Полностью сбрасывает прогресс всех игроков
-chat.help.reload=§7Перезагружает скрипты и функции без перезахода
 chat.help.role=§7Назначает роль игроку
 chat.help.roles=§7Показывает роли игроков в сети
 chat.help.resetpass=§7Сбрасывает забытый пароль игроку в сети
@@ -821,8 +828,6 @@ chat.cmd.debug.pos=§7Позиция: §f%1$s §8(%2$s)
 chat.cmd.debug.scores=§7Счета: %1$s
 chat.cmd.debug.tags=§7Теги (§f%1$s§7):
 chat.cmd.debug.other=прочие
-chat.cmd.reload.start=§r §7CMD §8» §7Перезагружаю скрипты…
-chat.cmd.reload.error=§r⩕ §l§cERROR!§r §8» §7Не удалось выполнить /reload: §f%1$s
 chat.cmd.reload.done=§r §7CMD §8» §aСкрипты загружены
 chat.cmd.stats.lvl=§7Уровень: §e%1$s
 chat.cmd.stats.vip=§aVIP
