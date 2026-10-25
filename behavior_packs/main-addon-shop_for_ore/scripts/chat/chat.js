@@ -166,8 +166,8 @@ world.events.tick.subscribe(() => {
 			continue;
 		}
 		const role = getRole(player);
-		// Ник над головой: цвет из !color, иначе у игрока серый, у персонала — цвет роли
-		const nameTag = `${getChatColor(player, 'name') ?? (role === 'player' ? '§7' : ROLE_COLORS[role])}${player.name}\n§f - ${metricNumbers(getScore(player,"lvl"))}\n§f - ${metricNumbers(getScore(player,"xp"))}/${metricNumbers(getScore(player,"xp_need"))}\n§f - ${metricNumbers(getScore(player,"money"))}\n§f - ${metricNumbers(getScore(player,"rebirth"))}`;
+		// Ник над головой: цвет из !color, иначе у игрока серый, у персонала — цвет роли. У VIP вместо монет — VIP-коины
+		const nameTag = `${getChatColor(player, 'name') ?? (role === 'player' ? '§7' : ROLE_COLORS[role])}${player.name}\n§f - ${metricNumbers(getScore(player,"lvl"))}\n§f - ${metricNumbers(getScore(player,"xp"))}/${metricNumbers(getScore(player,"xp_need"))}\n${getScore(player, "lvl") >= 26 ? `§f - ${metricNumbers(getScore(player, "vip_coins"))}` : `§f - ${metricNumbers(getScore(player, "money"))}`}\n§f - ${metricNumbers(getScore(player,"rebirth"))}`;
 		if (player.nameTag !== nameTag) player.nameTag = nameTag;
 	}
 });
