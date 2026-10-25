@@ -19,7 +19,7 @@ world.events.beforeItemUse.subscribe(data => {
 			return;
 		}
 		// Замороженный игрок не может уйти варпом из меню
-		if (player.hasTag('frozen')) {
+		if (player.hasTag('state:frozen')) {
 			data.cancel = true;
 			player.runCommandAsync(`tellraw @s {"rawtext":[{"translate":"chat.cmd.freeze.active"}]}`);
 			return;
@@ -398,7 +398,7 @@ const promocodeRewards = {
 	"VIPbonus": {
 		scoreboard: "promo4",
 		reward: {
-			type: "money2", amount: 100
+			type: "vip_coins", amount: 100
 		},
 		message: "chat.promo.reward.4"
 	},

@@ -32,12 +32,12 @@ export function RegisterUI(player) {
 			player.runCommandAsync('playsound note.bass @s');
 			return;
 		}
-		// Теги ставим синхронно и в правильном порядке: сначала пароль (соль + хеш), потом hasRegister.
+		// Теги ставим синхронно и в правильном порядке: сначала пароль (соль + хеш), потом auth:done.
 		// Раньше это были отдельные команды tag: если команда с паролем падала
 		// (например, из-за кавычки в пароле), игрок становился «зарегистрированным» без пароля
 		setPassword(player, password);
-		player.addTag('hasRegister');
-		player.removeTag('chekRegister');
+		player.addTag('auth:done');
+		player.removeTag('auth:register');
 		unlockPlayer(player);
 		tellText(player, `\n%account.register.greeting §b${player.name}\n\n%account.register.welcome\n\n%account.register.info\n %account.register.password §b${password}\n\n%account.register.remember\n `);
 		player.runCommandAsync('playsound random.levelup @s');

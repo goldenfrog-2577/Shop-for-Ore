@@ -68,7 +68,7 @@ export function removeBot() {
 GT.register('server', 'spawnbot', (test) => {
 	const bot = test.spawnSimulatedPlayer(new BlockLocation(0, 2, 0), getBotName());
 	// По тегу бота узнают чат (префикс «Бот» вместо ролей и рангов) и роли (у бота роли нет)
-	bot.addTag('bot');
+	bot.addTag('role:bot');
 	state.bot = bot;
 	state.test = test;
 	// Бот появляется у тестовой площадки (далеко от карты) — переносим его к призвавшему

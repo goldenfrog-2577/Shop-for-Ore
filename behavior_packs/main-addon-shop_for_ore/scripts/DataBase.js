@@ -115,7 +115,7 @@ export function closedByPlayer(response) {
  * @returns {boolean}
  */
 export function isPending(player) {
-	return player.hasTag('chekLogin') || player.hasTag('chekRegister');
+	return player.hasTag('auth:login') || player.hasTag('auth:register');
 };
 
 /**
@@ -160,7 +160,9 @@ export function transferMoney(player, targetName, rawAmount) {
 };
 
 // --- Наказания: мут, предупреждения, заморозка (хранятся тегами — переживают перезаход) ---
-// mute:<время окончания в мс>, warn:<1|2>, frozen
+// state:mute:<время окончания в мс>, state:warn:<1|2>, state:frozen
+const MUTE_TAG = 'state:mute:';
+const WARN_TAG = 'state:warn:';
 
 /**
  * Сколько ещё минут игрок в муте (0 — не в муте). Истёкший мут снимается.
@@ -168,9 +170,9 @@ export function transferMoney(player, targetName, rawAmount) {
  * @returns {number}
  */
 export function muteMinutesLeft(player) {
-	const tag = player.getTags().find(t => t.startsWith('mute:'));
+	const tag = player.getTags().find(t => t.startsWith(MUTE_TAG));
 	if (!tag) return 0;
-	const left = Number(tag.slice(5)) - Date.now();
+	const left = Number(tag.slice(MUTE_TAG.length)) - Date.now();
 	if (!(left > 0)) {
 		player.removeTag(tag);
 		clearIssuer(player, 'mute');
@@ -180,17 +182,17 @@ export function muteMinutesLeft(player) {
 };
 
 /**
- * Число предупреждений игрока (тег warn:N).
+ * Число предупреждений игрока (тег state:warn:N).
  * @param {Player} player
  * @returns {number}
  */
 export function getWarns(player) {
-	const tag = player.getTags().find(t => t.startsWith('warn:'));
-	return tag ? Number(tag.slice(5)) || 0 : 0;
+	const tag = player.getTags().find(t => t.startsWith(WARN_TAG));
+	return tag ? Number(tag.slice(WARN_TAG.length)) || 0 : 0;
 };
 
 // --- Роли: уровни доступа к командам и меню ---
-// Владелец — хост мира (тег host), он один. Модератора и администратора назначает
+// Владелец — хост мира (тег role:owner, до 0.3.0 — host), он один. Модератора и администратора назначает
 // владелец командой !role, роль хранится тегом role:<id>. Префикс в чате (тег rank:,
 // команда !prefix) — отдельное украшение и прав не даёт.
 export const ROLES = ['player', 'moder', 'admin', 'owner'];
@@ -208,8 +210,8 @@ export const BOT_COLOR = '§f';
  */
 export function getRole(player) {
 	// Бот карты (тег bot) — всегда без роли: прав у него нет, в чате у него свой префикс «Бот»
-	if (player.hasTag('bot')) return 'player';
-	if (player.hasTag('host')) return 'owner';
+	if (player.hasTag('role:bot')) return 'player';
+	if (player.hasTag('role:owner')) return 'owner';
 	if (player.hasTag('role:admin')) return 'admin';
 	if (player.hasTag('role:moder')) return 'moder';
 	return 'player';
@@ -225,17 +227,18 @@ export function hasRole(player, role) {
 	return ROLES.indexOf(getRole(player)) >= ROLES.indexOf(role);
 };
 
-// --- Кто выдал ограничение (мут, заморозку, предупреждения): тег <вид>by:<роль> ---
+// --- Кто выдал ограничение (мут, заморозку, предупреждения): тег state:<вид>_by:<роль> (вид — mute, warn, frozen) ---
 // Снять ограничение может только тот, чья роль не ниже роли выдавшего (владелец — любое).
+const issuerTag = (kind) => `state:${kind}_by:`;
 
 /** Роль, выдавшая ограничение, или undefined (старые ограничения — без записи). */
 export function getIssuer(target, kind) {
-	const tag = target.getTags().find(t => t.startsWith(`${kind}by:`));
-	return tag ? tag.slice(kind.length + 3) : undefined;
+	const tag = target.getTags().find(t => t.startsWith(issuerTag(kind)));
+	return tag ? tag.slice(issuerTag(kind).length) : undefined;
 }
 
 export function clearIssuer(target, kind) {
-	target.getTags().filter(t => t.startsWith(`${kind}by:`)).forEach(t => target.removeTag(t));
+	target.getTags().filter(t => t.startsWith(issuerTag(kind))).forEach(t => target.removeTag(t));
 }
 
 /** Запомнить роль выдавшего. keepHigher — оставить прежнюю, если она старше (предупреждения копятся). */
@@ -243,7 +246,7 @@ export function setIssuer(target, kind, role, keepHigher = false) {
 	const old = getIssuer(target, kind);
 	if (keepHigher && old && ROLES.indexOf(old) > ROLES.indexOf(role)) return;
 	clearIssuer(target, kind);
-	target.addTag(`${kind}by:${role}`);
+	target.addTag(issuerTag(kind) + role);
 }
 
 /** Может ли player снять ограничение kind с target; при отказе сообщает, кто его выдал. */

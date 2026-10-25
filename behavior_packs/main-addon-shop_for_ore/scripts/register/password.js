@@ -14,8 +14,8 @@ export const PASSWORD_MAX = 32;
 // От перебора короткого пароля защищает в первую очередь минимальная длина.
 const ROUNDS = 64;
 
-const SALT_TAG = 'pws:';
-const HASH_TAG = 'pwh:';
+const SALT_TAG = 'auth:salt:';
+const HASH_TAG = 'auth:hash:';
 const LEGACY_TAG = 'password:'; // старый формат — пароль открытым текстом
 
 // ---------- SHA-256 (чистый JS: в Script API 1.19.5x нет встроенной криптографии) ----------

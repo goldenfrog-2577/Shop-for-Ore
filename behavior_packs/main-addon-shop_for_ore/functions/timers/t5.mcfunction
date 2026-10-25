@@ -6,4 +6,4 @@ function system/autosale
 # только при автопродаже, раз в 5 тиков
 function system/scoreboards
 # «Магнит руды» (shop/tp_ore): предметы в радиусе 6 блоков летят к купившему
-execute as @a[tag=player:tp_ore] at @s run tp @e[type=item,r=6] @s
+execute as @a[tag=boost:magnet] at @s run tp @e[type=item,r=6] @s

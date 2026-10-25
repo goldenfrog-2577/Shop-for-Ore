@@ -1,6 +1,6 @@
 # Сброс всех основных счетчиков и прогресса игроков
 scoreboard players reset * money
-scoreboard players reset * money2
+scoreboard players reset * vip_coins
 scoreboard players reset * lvl
 scoreboard players reset * xp
 scoreboard players reset * rebirth
@@ -11,14 +11,14 @@ scoreboard players reset * promo1
 scoreboard players reset * promo2
 scoreboard players reset * promo3
 scoreboard players reset * promo4
-scoreboard players reset * qx
-scoreboard players reset * tpore
+scoreboard players reset * xp_need
+scoreboard players reset * magnet
 scoreboard players reset * pick
 
 # Удаление тегов player и rebirth у всех сущностей
 tag @e remove player
-tag @e remove rebirth
-tag @e remove player:tp_ore
+tag @e remove player:rebirth
+tag @e remove boost:magnet
 
 # Воспроизведение звука и сообщение об успешном вайпе
 playsound random.levelup @s

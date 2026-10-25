@@ -23,7 +23,7 @@ export function LoginUI(player) {
 		// Теги меняем синхронно (addTag/removeTag), а не командой tag — иначе тег снимался
 		// с задержкой и форма открывалась повторно
 		if (password && checkPassword(player, password)) {
-			player.removeTag('chekLogin');
+			player.removeTag('auth:login');
 			unlockPlayer(player);
 			tellText(player, '\n%chat.account.logged_in\n ');
 			player.runCommandAsync('playsound random.levelup @s');

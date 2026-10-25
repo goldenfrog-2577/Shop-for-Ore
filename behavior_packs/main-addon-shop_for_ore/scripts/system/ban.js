@@ -61,7 +61,7 @@ export function removeBan(nameOrIndex) {
 
 /** Бан, под который попадает игрок (по номеру или нику), или undefined. Владельца не банят. */
 export function findBan(player) {
-	if (player.hasTag('host')) return undefined;
+	if (player.hasTag('role:owner')) return undefined;
 	const name = player.name.toLowerCase();
 	return getBans().find(b => (b.id && b.id === player.id) || b.names.some(n => n.toLowerCase() === name));
 }

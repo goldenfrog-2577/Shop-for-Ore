@@ -203,7 +203,7 @@
 						{
 							"test": "has_tag",
 							"subject": "self",
-							"value": "kick"
+							"value": "state:kick"
 						}
 					]
 				}
@@ -223,7 +223,7 @@
 									{
 										"test": "has_tag",
 										"subject": "other",
-										"value": "host"
+										"value": "role:owner"
 									}
 								]
 							},
@@ -309,7 +309,7 @@
 				"run_command": {
 					"command": [
 						"tellraw @a {\"rawtext\":[{\"translate\":\"chat.server.kicked\",\"with\":{\"rawtext\":[{\"selector\":\"@s\"}]}}]}",
-						"tag @s add kick"
+						"tag @s add state:kick"
 					]
 				}
 			},

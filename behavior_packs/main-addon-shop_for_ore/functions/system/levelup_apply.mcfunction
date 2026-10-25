@@ -100,7 +100,7 @@ execute if score @s lvl matches 24 run title @s title 24 §7>>§a 25
 execute if score @s lvl matches 24 run execute as @a at @s run playsound minecraft.challenge.complete @s
 
 # Списываем стоимость текущего уровня и повышаем
-scoreboard players operation @s xp -= @s qx
+scoreboard players operation @s xp -= @s xp_need
 scoreboard players add @s lvl 1
 # Сразу пересчитать стоимость нового уровня (иначе до timers/t20 действовала бы старая, меньшая)
 function system/qx

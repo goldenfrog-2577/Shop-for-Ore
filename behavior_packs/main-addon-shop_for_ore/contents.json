@@ -245,6 +245,9 @@
 		},
 		{
 			"path" : "scripts/system/ban.js"
+		},
+		{
+			"path" : "scripts/system/migrate.js"
 		}],
 	"version" : 1
 }

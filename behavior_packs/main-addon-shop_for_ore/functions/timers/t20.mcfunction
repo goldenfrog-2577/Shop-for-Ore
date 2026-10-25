@@ -19,7 +19,7 @@ scoreboard players add @a promo4 0
 # нет кирки и панели слева. «add 0» создаёт пустой счёт как 0 и не меняет существующий; уровня 0 не бывает
 scoreboard players add @a xp 0
 scoreboard players add @a money 0
-scoreboard players add @a money2 0
+scoreboard players add @a vip_coins 0
 scoreboard players add @a lvl 0
 scoreboard players set @a[scores={lvl=..0}] lvl 1
 scoreboard players add @a efficiency 0
@@ -30,16 +30,16 @@ scoreboard players remove @e[name="rainEvent",scores={system=1..30}] system 1
 
 # Бусты общие: пока таймер стойки идёт, тег есть у всех онлайн (в том числе у зашедших позже),
 # иначе снимается (в том числе у тех, кто был офлайн в момент окончания буста)
-execute if entity @e[name="X2Boost",scores={system=1..}] run tag @a[tag=!x2boost] add x2boost
-execute unless entity @e[name="X2Boost",scores={system=1..}] run tag @a[tag=x2boost] remove x2boost
-execute if entity @e[name="X4Boost",scores={system=1..}] run tag @a[tag=!x4boost] add x4boost
-execute unless entity @e[name="X4Boost",scores={system=1..}] run tag @a[tag=x4boost] remove x4boost
+execute if entity @e[name="X2Boost",scores={system=1..}] run tag @a[tag=!boost:x2] add boost:x2
+execute unless entity @e[name="X2Boost",scores={system=1..}] run tag @a[tag=boost:x2] remove boost:x2
+execute if entity @e[name="X4Boost",scores={system=1..}] run tag @a[tag=!boost:x4] add boost:x4
+execute unless entity @e[name="X4Boost",scores={system=1..}] run tag @a[tag=boost:x4] remove boost:x4
 
 # Погода по «золотому дождю» (раньше — каждый тик в system/system)
 execute as @e[name="rainEvent",scores={system=1..30}] run weather rain
 execute as @e[name="rainEvent",scores={system=-1..0}] run weather clear
 
-# Ранги в чате и стоимость уровня (раньше — каждый тик в tick.json; qx ещё и сразу после повышения)
+# Ранги в чате и стоимость уровня (раньше — каждый тик в tick.json; xp_need ещё и сразу после повышения)
 function ranks/rank_lvl_add
 function ranks/rank_lvl_remove
 function ranks/rank_lvl_reset
@@ -69,9 +69,9 @@ effect @a[scores={rebirth=4..4}] haste 2 3 true
 effect @a[scores={rebirth=5..}] haste 2 4 true
 
 # «Магнит руды»: секунды идут только онлайн; по окончании — сообщение и снятие тега
-scoreboard players remove @a[scores={tpore=1..}] tpore 1
-execute as @a[tag=player:tp_ore,scores={tpore=..0}] run tellraw @s {"rawtext":[{"translate":"chat.ore_magnet.end"}]}
-tag @a[tag=player:tp_ore,scores={tpore=..0}] remove player:tp_ore
+scoreboard players remove @a[scores={magnet=1..}] magnet 1
+execute as @a[tag=boost:magnet,scores={magnet=..0}] run tellraw @s {"rawtext":[{"translate":"chat.ore_magnet.end"}]}
+tag @a[tag=boost:magnet,scores={magnet=..0}] remove boost:magnet
 
 # Подарок «в игре» (events/gift_event): обратный отсчёт, пока его не подобрали
 execute if score gift system matches 1.. run scoreboard players remove gift system 1
