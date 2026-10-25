@@ -91,11 +91,11 @@ const VIP_ONLY = '%common.vip_only';
 // --- Главное окно ---
 export function cosmeticsMenu(player, back) {
 	const again = () => cosmeticsMenu(player, back);
-	showMenu(player, '%menu.shop.cosmetics.title', `%menu.shop.cosmetics.body\n%menu.shop.cosmetics.balance ${price(coins(player))}`, [
-		{ text: '%menu.shop.cosmetics.button.name', icon: 'textures/items/name_tag', run: () => colorMenu(player, 'name', again) },
-		{ text: '%menu.shop.cosmetics.button.text', icon: 'textures/items/book_writable', run: () => colorMenu(player, 'text', again) },
-		{ text: '%menu.shop.cosmetics.button.trail', icon: 'textures/items/blaze_powder', run: () => fxMenu(player, 'trail', again) },
-		{ text: '%menu.shop.cosmetics.button.death', icon: 'textures/items/totem', run: () => fxMenu(player, 'death', again) },
+	showMenu(player, `%menu.shop.cosmetics.title\n${isVip(player) ? '' : VIP_ONLY}`, `%menu.shop.cosmetics.body\n%menu.shop.cosmetics.balance ${price(coins(player))}`, [
+		{ text: `%menu.shop.cosmetics.button.name\n${isVip(player) ? '' : VIP_ONLY}`, icon: 'textures/items/name_tag', run: () => colorMenu(player, 'name', again) },
+		{ text: `%menu.shop.cosmetics.button.text\n${isVip(player) ? '' : VIP_ONLY}`, icon: 'textures/items/book_writable', run: () => colorMenu(player, 'text', again) },
+		{ text: `%menu.shop.cosmetics.button.trail\n${isVip(player) ? '' : VIP_ONLY}`, icon: 'textures/items/blaze_powder', run: () => fxMenu(player, 'trail', again) },
+		{ text: `%menu.shop.cosmetics.button.death\n${isVip(player) ? '' : VIP_ONLY}`, icon: 'textures/items/totem', run: () => fxMenu(player, 'death', again) },
 		{ text: `%menu.shop.cosmetics.button.sell\n${isVip(player) ? '' : VIP_ONLY}`, icon: 'textures/items/gold_ingot', run: () => fxMenu(player, 'sell', again) },
 		backButton(back)
 	], back);

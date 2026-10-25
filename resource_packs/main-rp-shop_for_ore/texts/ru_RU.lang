@@ -1,7 +1,7 @@
 ## =============================
 ##  Shop for Ore: РУССКАЯ ЛОКАЛИЗАЦИЯ
-##  Автор: kapycta1231484 & Copilot
-##  Последнее обновление: 2026-01-06
+##  Автор: GoldenFrog & Claude
+##  Последнее обновление: 2026-10-25
 ##  В этом файле все игровые тексты для карты Shop for Ore на русском языке.
 ##  Пожалуйста, сохраняйте секции и комментарии для удобной навигации!
 ## =============================
@@ -38,9 +38,8 @@ item.gold_ingot.name=§eМонета§r
 tile.emerald_block.name=§2Подарок§r
 
 ## --- СЕРВЕРНЫЕ ПРЕДМЕТЫ ---
-item.server:menu=§eМеню сервера §7[Press to open§7]§r
-item.server:menu_new=§eМеню сервера §7[Press to open§7]§r
-item.server:admin_menu=§eМеню админа §7[Press to open§7]§r
+item.server:menu=§eМеню сервера §7[Нажми, чтобы открыть§7]§r
+item.server:admin_menu=§eМеню админа §7[Нажми, чтобы открыть§7]§r
 item.server:admin_stick=§cПалочка админа§r
 item.spawn_egg.entity.server:floating_text.name=Яйцо призыва голограммы
 
@@ -54,7 +53,7 @@ button.deleteText=Удалить текст
 admin.kick.button=Выгнать игрока
 chat.title=Чат
 chat.title.cheats=Чат и команды
-ui.command_block.placeholder=Введи команду сюда...
+command_block.placeholder=Введи команду сюда...
 commands.scoreboard.players.offlinePlayerName=§r §cOffline
 death.attack.explosion=§r %1$s §r§cвзорвался
 death.attack.flyIntoWall=§r %1$s §r§cразбился на элитрах
@@ -81,8 +80,8 @@ pack.description=Содержит в себе небольшие улучшен�
 
 ## --- СООБЩЕНИЯ ПРИ ПОДКЛЮЧЕНИИ ---
 progressScreen.message.building=Используйте меню в 9 слоте инвентаря, чтобы открыть больше функций
-progressScreen.message.locating=Прежде чем задавать много вопросов, прочитайте таблички на спавне
-progressScreen.message.resourceLoading=Omlet хоста: @waxenjaguar2209
+progressScreen.message.locating=Прежде чем задавать много вопросов, прочитайте голограммы на спавне
+progressScreen.message.resourceLoading=Telegram хоста: @goldenfrog_2577
 
 ## --- ПЕРЕВОД И КНОПКИ ИНТЕРФЕЙСА ---
 admin.common.back=§8Назад
@@ -90,7 +89,7 @@ admin.common.min=мин
 admin.common.minutes=минут
 menu.common.tap_to_open=§8[§7Нажми, чтобы открыть§8]
 menu.common.back=§8 Назад
-common.vip_only=§c[Только для VIP]
+common.vip_only=§8[§cТолько для VIP§8]
 menu.common.yes=§2Да
 menu.common.no=§4Нет
 
@@ -110,7 +109,7 @@ menu.main.button.games=§8 Мини-игры
 
 ## --- МЕНЮ О КАРТЕ ---
 menu.about.title=§l§8Меню сервера »  О карте
-menu.about.body=§7Всё о карте: уровни и шахты, как играть, создатели и что нового в версии. Выбери раздел:
+menu.about.body=§7Всё о карте: уровни и шахты, как играть, создатели и что нового в версии.
 menu.about.button.levels=§8 Уровни
 menu.about.button.howtoplay=§f⩆ §8Как играть?
 menu.about.button.creators=§f⩇ §8Создатели
@@ -196,18 +195,18 @@ menu.version.line.21=• Вайп со сводкой, CPS над хотбаро
 
 ## --- МЕНЮ МАГАЗИНА ---
 menu.shop.title=§l§8Меню сервера »  Магазин
-menu.shop.body=§7Зачарования для кирки и снаряжения, наборы для PvP-арены, бусты и косметика. Что ты хочешь купить?
+menu.shop.body=§7Здесь ты можешь купить зачарования для кирки и снаряжения, наборы для PvP-арены, бусты и даже косметику!
 menu.shop.button.enchants=§8Зачарования
 menu.shop.button.kits=§8PvP Наборы
 menu.shop.button.boosts=§8Бусты
 menu.shop.button.cosmetics=§8Косметика
 
 menu.shop.enchants.title=§l§8 Магазин » Зачарования
-menu.shop.enchants.body=§7Что зачаровать? Каждая покупка — §e+1§7 уровень.
-menu.shop.enchants.body2=§7Меч, лук и броня берутся из инвентаря: надетую броню сначала сними.
-menu.shop.enchants.button.pickaxe=§8Кирка уровня
-menu.shop.enchants.pickaxe.title=§l§8 Магазин » Кирка уровня
-menu.shop.enchants.pickaxe.body=§7Зачарования кирки уровня сохраняются при смене кирки, перерождение их сбрасывает. Выбери зачарование:
+menu.shop.enchants.body=§7Что ты хочешь зачаровать? Каждая покупка — §e+1§7 уровень.
+menu.shop.enchants.body2=§7Меч, лук и броня берутся из инвентаря, надетую броню сначала сними.
+menu.shop.enchants.button.pickaxe=§8Кирка текущего уровня
+menu.shop.enchants.pickaxe.title=§l§8 Магазин » Кирка
+menu.shop.enchants.pickaxe.body=§7Зачарования кирки уровня сохраняются при её смене, перерождение их сбрасывает.
 menu.shop.enchants.pickaxe.stick=§6У тебя пока палка (1 уровень): зачарования откроются с деревянной кирки на 2 уровне.
 menu.shop.item_enchants.item=§7Предмет:§f
 menu.shop.item_enchants.current=§7Сейчас:§f
@@ -242,15 +241,15 @@ menu.shop.cosmetics.owned=§8Куплено — нажми, чтобы выбр�
 menu.shop.cosmetics.reset=§8Как у роли (сбросить)
 menu.shop.cosmetics.off=§8Выключить
 menu.shop.cosmetics.name.title=§l§8Косметика » Цвет ника
-menu.shop.cosmetics.name.body=§7Цвет твоего ника в чате и над головой; цвета ролей — только для персонала. Купленный цвет выбирается бесплатно:
+menu.shop.cosmetics.name.body=§7Цвет твоего ника в чате и над головой; цвета ролей — только для персонала. Купленный цвет выбирается бесплатно.
 menu.shop.cosmetics.text.title=§l§8Косметика » Цвет текста
-menu.shop.cosmetics.text.body=§7Цвет твоих сообщений в чате — его видят все. Купленный цвет выбирается бесплатно:
+menu.shop.cosmetics.text.body=§7Цвет твоих сообщений в чате — его видят все. Купленный цвет выбирается бесплатно.
 menu.shop.cosmetics.trail.title=§l§8Косметика » Частицы
-menu.shop.cosmetics.trail.body=§7Частицы тянутся за тобой, пока ты идёшь; стоишь на месте — их нет. Купленные выбираются бесплатно:
-menu.shop.cosmetics.death.title=§l§8Косметика » Смерть
-menu.shop.cosmetics.death.body=§7Облако частиц на месте, где ты погиб (например, на PvP-арене). Купленные выбираются бесплатно:
+menu.shop.cosmetics.trail.body=§7Частицы тянутся за тобой, пока ты идёшь; стоишь на месте — их нет. Купленные выбираются бесплатно.
+menu.shop.cosmetics.death.title=§l§8Косметика » Смерть игрока
+menu.shop.cosmetics.death.body=§7Облако частиц на месте, где ты погиб (например, на PvP-арене). Купленные выбираются бесплатно.
 menu.shop.cosmetics.sell.title=§l§8Косметика » Продажа
-menu.shop.cosmetics.sell.body=§7Частицы, когда продаёшь на золотом блоке (если они включены в настройках):
+menu.shop.cosmetics.sell.body=§7Частицы, когда продаёшь на золотом блоке (если они включены в настройках).
 cosmetics.trail.heart=§8Сердечки
 cosmetics.trail.note=§8Ноты
 cosmetics.trail.happy=§8Искры удачи
@@ -275,13 +274,13 @@ cosmetics.sell.lava=§8Лава
 
 ## --- МЕНЮ НАСТРОЕК ---
 menu.settings.title=§l§8Меню сервера »  Настройки
-menu.settings.body=§7Здесь меняется только то, что видишь и слышишь ты сам: панель, частицы, звуки, музыка и пароль. Выбери, что настроить:
-menu.settings.default_on=§7По умолчанию: §2ВКЛЮЧЕНО
-menu.settings.default_off=§7По умолчанию: §4ВЫКЛЮЧЕНО
-menu.settings.state=§7Сейчас:
-menu.settings.state.on=§2включено
-menu.settings.state.off=§4выключено
-menu.settings.state.icons=§gтолько значки
+menu.settings.body=§7Здесь меняется только то, что видишь и слышишь ты сам: панель, частицы, звуки, музыка и пароль.
+menu.settings.default_on=§7По умолчанию: §2ВКЛЮЧЕНО # строку убрать
+menu.settings.default_off=§7По умолчанию: §4ВЫКЛЮЧЕНО # строку убрать
+menu.settings.state=§7Текущее состояние:
+menu.settings.state.on=§2Включено
+menu.settings.state.off=§4Выключено
+menu.settings.state.icons=§gТолько значки
 menu.settings.button.board=§8Панель слева
 menu.settings.button.particles=§8Частицы при продаже
 menu.settings.button.sounds=§8Звуки при продаже
@@ -303,7 +302,7 @@ menu.settings.sounds.body=§7Короткий звук при каждой пр�
 menu.settings.music.title=§l§8 Настройки » Музыка
 menu.settings.music.body=§7Фоновая музыка карты. Если выключить, она перестанет играть только у тебя. Громкость — ползунок «Музыка» в настройках самой игры.
 menu.achievements.title=§l§8Меню сервера » Достижения
-menu.achievements.body=§7Зелёные — §2достижения§7, фиолетовые — §5испытания§7. Нажми, чтобы узнать условие и награду.
+menu.achievements.body=§7Зелёными обозначены §2достижения§7, фиолетовыми §5испытания§7. Нажми, чтобы узнать условие и награду.
 menu.achievements.count=§7Получено:
 menu.achievements.done=Получено
 menu.achievements.locked=Ещё не получено
@@ -324,9 +323,9 @@ ach.lvl_15.desc=Достичь 15 уровня — дальше откроетс
 ach.lvl_20.name=Мастер кирки
 ach.lvl_20.desc=Достичь 20 уровня — до VIP останется совсем немного
 ach.vip.name=VIP-персона
-ach.vip.desc=Достичь VIP-уровня (26): своя шахта, аметист и VIP-коины за продажу
+ach.vip.desc=Достичь VIP-уровня (26): своя шахта, аметист и VIP-коины за продажу редкой руды
 ach.rebirth_1.name=Новая жизнь
-ach.rebirth_1.desc=Сделать первый ребитх (Меню сервера » Прокачка, с 16 по 25 уровень) — получишь постоянную Спешку
+ach.rebirth_1.desc=Сделать первый ребитх (Меню сервера » Прокачка, с 16 по 25 уровень) — получишь постоянный эффект Спешки
 ach.mined_1k.name=Каменщик
 ach.mined_1k.desc=Сломать 1 000 блоков в шахтах — считаются все блоки, не только руда
 ach.mined_10k.name=Землеройка
@@ -334,11 +333,11 @@ ach.mined_10k.desc=Сломать 10 000 блоков — бусты и зача
 ach.rich_100k.name=Сотня тысяч
 ach.rich_100k.desc=Накопить 100 000 монет на счету одновременно
 ach.enchant.name=Зачарователь
-ach.enchant.desc=Купить зачарование для кирки уровня (Магазин » Зачарования)
+ach.enchant.desc=Купить первое зачарование для кирки (Магазин » Зачарования)
 ach.cosmetic.name=Модник
 ach.cosmetic.desc=Купить первую косметику в Магазин » Косметика: цвет ника, текста или частицы
 ach.pay.name=Щедрая душа
-ach.pay.desc=Перевести монеты другому игроку через Банк или команду !pay
+ach.pay.desc=Перевести монеты другому игроку через Банк или командой !pay
 ach.pvp_kill.name=Первая кровь
 ach.pvp_kill.desc=Победить игрока на PvP-арене — добивающий удар должен быть твоим
 ach.game_win.name=Чемпион
@@ -346,7 +345,7 @@ ach.game_win.desc=Выиграть мини-игру — остаться пос
 ach.playtime_1h.name=Завсегдатай
 ach.playtime_1h.desc=Провести на сервере 1 час — считаются только минуты после входа в аккаунт
 ach.rebirth_5.name=Феникс
-ach.rebirth_5.desc=Сделать 5 ребитхов — больше нельзя: максимальная Спешка навсегда
+ach.rebirth_5.desc=Сделать 5 ребитхов — больше нельзя: максимальный эффект Спешки навсегда
 ach.rich_1m.name=Миллионер
 ach.rich_1m.desc=Накопить 1 000 000 монет на счету одновременно
 ach.vip_coins_1k.name=Сокровищница
@@ -355,7 +354,7 @@ ach.mined_100k.name=Неутомимый
 ach.mined_100k.desc=Сломать 100 000 блоков — для самых упорных шахтёров
 ach.pvp_kills_25.name=Гладиатор
 ach.pvp_kills_25.desc=Победить 25 игроков на PvP-арене
-ach.game_wins_10.name=Непобедимый
+ach.game_wins_10.name=Неуязвимый # отсылка на сериал Invicible, комментарий потом удалить
 ach.game_wins_10.desc=Выиграть 10 мини-игр
 ach.all_trails.name=Звездопад
 ach.all_trails.desc=Собрать все частицы-следы в Магазин » Косметика
@@ -369,15 +368,15 @@ menu.games.title=§l§8Меню сервера » Мини-игры
 menu.games.body=§7Выбери игру, чтобы записаться. Она начнётся, когда наберётся достаточно игроков.
 menu.games.body.in_game=§7Ты записан(а) в игру. Нажми на неё ещё раз, чтобы выйти.
 menu.games.leave=Выйти из игры
-menu.games.phase.waiting=Ждём игроков
-menu.games.phase.countdown=Скоро начало
-menu.games.phase.running=Идёт игра
+menu.games.phase.waiting=Ожидание игроков
+menu.games.phase.countdown=Игра скоро начнется
+menu.games.phase.running=Игра уже идёт
 minigame.pvp_ffa.name=PvP: последний выживший
 title.game.go=Вперёд!
 
-chat.settings.enabled=§r §3Настройки §8» §7Настройка изменена: §aвключено
-chat.settings.disabled=§r §3Настройки §8» §7Настройка изменена: §cвыключено
-chat.settings.icons_only=§r §3Настройки §8» §7Настройка изменена: §eтолько значки
+chat.settings.enabled=§r §3Настройки §8» §7Настройка изменена: §2Включено
+chat.settings.disabled=§r §3Настройки §8» §7Настройка изменена: §4Выключено
+chat.settings.icons_only=§r §3Настройки §8» §7Настройка изменена: §gТолько значки
 
 ## --- МЕНЮ БАНКА ---
 menu.bank.title=§l§8Меню сервера »  Банк
@@ -387,7 +386,7 @@ chat.bank.error.no_money=§r⩕ §l§cERROR!§r §8» §7На балансе н�
 chat.bank.sent=§r §2Банк §8» §7Перевод игроку §f%1$s§r§7: §e%2$s§7
 chat.bank.received=§r §2Банк §8» §f%1$s§r§7 перевёл(а) тебе §e%2$s§7
 menu.bank.player=§rВыбери игрока:
-menu.bank.balance=§eБаланс§r:
+menu.bank.balance=§rБаланс:
 chat.bank.error.amount=§r⩕ §l§cERROR!§r §8» §7Сумма должна быть целым положительным числом
 chat.bank.error.self=§r⩕ §l§cERROR!§r §8» §7Нельзя переводить деньги самому себе
 
@@ -410,13 +409,13 @@ menu.promo.placeholder=§7Введи промокод...
 
 ## --- МЕНЮ ТЕЛЕПОРТАЦИЙ ---
 menu.warps.title=§l§8Меню сервера »  Телепортации
-menu.warps.body=§7«Спавн» перенесёт к шахте твоего уровня, «Мини-игры» — в лобби мини-игр. Куда хочешь телепортироваться?
+menu.warps.body=§7«Спавн» перенесёт к шахте твоего уровня, «Мини-игры» — в лобби мини-игр.
 menu.warps.button.spawn=§8Спавн
 menu.warps.button.minigames=§8Мини-игры
 
 ## --- МЕНЮ ПРОКАЧКИ ---
 menu.upgrades.title=§l§8Меню сервера »  Прокачка
-menu.upgrades.body=§7VIP открывает свою шахту и VIP-коины, ребитх начинает всё заново, но навсегда дарит Спешку. Выбери свой путь развития:
+menu.upgrades.body=§7VIP открывает свою шахту и VIP-коины, ребитх начинает всё заново, но навсегда дарит эффект Спешки.
 menu.upgrades.button.vip=§2VIP
 menu.upgrades.button.rebirth=§5Ребитх
 
@@ -427,7 +426,7 @@ chat.account.error.no_cheats=§r⩕ §l§cERROR!§r §8» §7Подтверди 
 account.register.greeting=§7Приветствую
 account.register.welcome=§7Добро пожаловать на сервер! Приятной игры :)
 account.register.info=§7Информация об аккаунте:
-account.register.password=§7Пароль: §f
+account.register.password=§7Пароль:§f
 account.register.remember=§7Запомни эти данные или сделай скриншот чтобы потом зайти в игру
 
 ## --- МЕНЮ ВХОДА ---
