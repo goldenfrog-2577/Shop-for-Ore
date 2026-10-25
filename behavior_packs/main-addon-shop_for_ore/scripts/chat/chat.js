@@ -1,15 +1,11 @@
 // --- Чат-логика и антиспам для Shop for Ore ---
 // Импортируем необходимые функции и данные
 import { world } from '@minecraft/server';
-import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft } from '../DataBase.js';
+import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor } from '../DataBase.js';
 
 // --- Значения по умолчанию для тегов игрока ---
 const rank = "rank:";
 const rankDefault = "§7Player";
-const text = "text:";
-const textDefault = "§f";
-const name = "name:";
-const nameDefault = "§f";
 
 // --- Настройки антиспама и антифлуда ---
 const MAX_MESSAGE_LENGTH = 200; // Максимальная длина сообщения
@@ -68,30 +64,9 @@ function getRanks(player) {
 	return ranks.length === 0 ? [rankDefault]: ranks;
 }
 
-// --- Получение цвета текста из тегов ---
-function getTexts(player) {
-	const texts = player
-	.getTags()
-	.map((v) => {
-		if (!v.startsWith(text)) return null;
-		return v.substring(text.length);
-	})
-	.filter((x) => x);
-	return texts.length === 0 ? [textDefault]: texts;
-}
-
-// --- Получение цвета имени из тегов ---
-// Без тега name: ник окрашивается в цвет роли (у игрока — белый)
-function getNames(player) {
-	const names = player
-	.getTags()
-	.map((v) => {
-		if (!v.startsWith(name)) return null;
-		return v.substring(name.length);
-	})
-	.filter((x) => x);
-	return names.length === 0 ? [ROLE_COLORS[getRole(player)] ?? nameDefault]: names;
-}
+// --- Цвет ника и текста в чате: тег chat:name_color / chat:text_color (команда !color), иначе ник — цвет роли ---
+const nameColorOf = (player) => getChatColor(player, 'name') ?? ROLE_COLORS[getRole(player)] ?? '§f';
+const textColorOf = (player) => getChatColor(player, 'text') ?? '§f';
 
 // --- Замена эмодзи в сообщении на символы ---
 function replaceEmotes(message) {
@@ -156,8 +131,8 @@ world.events.beforeChat.subscribe((data) => {
  */
 export function sendChatMessage(sender, message) {
 	const ranks = getRanks(sender).join("§r§8] | [§r");
-	const nameColor = getNames(sender);
-	const textColor = getTexts(sender);
+	const nameColor = nameColorOf(sender);
+	const textColor = textColorOf(sender);
 	// Московское время (UTC+3) считаем от UTC, чтобы не зависеть от часового пояса движка/устройства
 	const now = new Date(Date.now() + 3 * 60 * 60 * 1000);
 	const time = `${now.getUTCHours()}:${now.getUTCMinutes().toString().padStart(2, '0')}`;
@@ -190,8 +165,8 @@ world.events.tick.subscribe(() => {
 			continue;
 		}
 		const role = getRole(player);
-		// Ник над головой: у игрока серый, у персонала — цвет роли
-		const nameTag = `${role === 'player' ? '§7' : ROLE_COLORS[role]}${player.name}\n§f - ${metricNumbers(getScore(player,"lvl"))}\n§f - ${metricNumbers(getScore(player,"xp"))}/${metricNumbers(getScore(player,"xp_need"))}\n§f - ${metricNumbers(getScore(player,"money"))}\n§f - ${metricNumbers(getScore(player,"rebirth"))}`;
+		// Ник над головой: цвет из !color, иначе у игрока серый, у персонала — цвет роли
+		const nameTag = `${getChatColor(player, 'name') ?? (role === 'player' ? '§7' : ROLE_COLORS[role])}${player.name}\n§f - ${metricNumbers(getScore(player,"lvl"))}\n§f - ${metricNumbers(getScore(player,"xp"))}/${metricNumbers(getScore(player,"xp_need"))}\n§f - ${metricNumbers(getScore(player,"money"))}\n§f - ${metricNumbers(getScore(player,"rebirth"))}`;
 		if (player.nameTag !== nameTag) player.nameTag = nameTag;
 	}
 });

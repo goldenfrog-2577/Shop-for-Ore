@@ -7,7 +7,7 @@
 
 import { world } from '@minecraft/server';
 import { ActionFormData, ModalFormData, MessageFormData } from '@minecraft/server-ui';
-import { isPending, rawTranslate, closedByPlayer, showWhenFree, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer } from '../DataBase.js';
+import { isPending, rawTranslate, closedByPlayer, showWhenFree, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS } from '../DataBase.js';
 import { runChatCommand, setMoney } from '../chat/commands.js';
 import { sendChatMessage } from '../chat/chat.js';
 import { getBot, getBotName, setBotName, spawnBot, removeBot } from '../system/spawnbot.js';
@@ -248,7 +248,8 @@ function playerActions(player, target) {
 	items.push(
 		{ text: '%admin.players.button.spawn', icon: 'textures/ui/World', run: () => runChatCommand(player, 'warp', ['spawn', name]) },
 		{ text: '%admin.players.button.gamemode', icon: 'textures/ui/heart_new', run: () => playerGamemode(player, target) },
-		{ text: '%admin.players.button.money', icon: 'textures/items/gold_ingot', run: () => playerMoney(player, target) }
+		{ text: '%admin.players.button.money', icon: 'textures/items/gold_ingot', run: () => playerMoney(player, target) },
+		...(target.hasTag('role:bot') ? [] : [{ text: '%admin.players.button.color', icon: 'textures/items/dye_powder_pink', run: () => playerColor(player, target) }])
 	);
 	if (!self) {
 		const muted = muteMinutesLeft(target) > 0;
@@ -289,6 +290,21 @@ function playerGamemode(player, target) {
 		{ text: '%admin.gamemode.button.spectator', icon: 'textures/ui/freeze_heart', run: mode('gm6') },
 		back(() => playerActions(player, target))
 	], () => playerActions(player, target));
+}
+
+// Цвет ника или текста в чате: что красить и цвет (первый пункт — «как у роли»)
+function playerColor(player, target) {
+	const colors = Object.keys(CHAT_COLORS);
+	new ModalFormData()
+	.title('%admin.players.color.title')
+	.dropdown('%admin.players.color.kind', ['%admin.players.color.kind.name', '%admin.players.color.kind.text'], 0)
+	.dropdown('%admin.players.color.color', ['%admin.players.color.reset', ...colors.map(c => `§${CHAT_COLORS[c]}■§r %color.${c}`)], 0)
+	.show(player).then(r => {
+		if (!r.formValues) return closedByPlayer(r) ? playerActions(player, target) : undefined;
+		const kind = r.formValues[0] === 1 ? 'text' : 'name';
+		const i = r.formValues[1];
+		runChatCommand(player, 'color', [target.name, kind, i === 0 ? 'reset' : colors[i - 1]]);
+	});
 }
 
 function playerMoney(player, target) {

@@ -1,7 +1,7 @@
 // --- Обработка пользовательских команд чата для Shop for Ore ---
 // Импортируем необходимые данные и списки команд
 import { world } from '@minecraft/server';
-import { commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS, setIssuer, clearIssuer, canLift } from '../DataBase.js';
+import { CHAT_COLORS, setChatColor, commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS, setIssuer, clearIssuer, canLift } from '../DataBase.js';
 import { getBot, getBotName, spawnBot } from '../system/spawnbot.js';
 import { teleportToArena, combatSecondsLeft } from '../system/pvp.js';
 import { startMythic } from '../system/mythic.js';
@@ -496,6 +496,39 @@ export function runChatCommand(player, command, args) {
 			} else {
 				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.timeset.use"}]}');
 			}
+			break;
+		}
+
+		case "color": {
+			// !color <ник> <name|text> <цвет|reset> — цвет ника (в чате и над головой) или текста сообщений в чате.
+			// Цвет — словом (aqua, gold…) или кодом без «§» (b, 6…)
+			const kind = (args[1] || '').toLowerCase();
+			const value = (args[2] || '').toLowerCase();
+			if (!args[0] || !['name', 'text'].includes(kind) || !value) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.color.use"}]}');
+				break;
+			}
+			const target = findPlayer(args[0]);
+			if (!target) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.error.offline', args[0])}`);
+				break;
+			}
+			if (target.hasTag('role:bot')) {
+				player.runCommandAsync('tellraw @s {"rawtext":[{"translate":"chat.cmd.color.error.bot"}]}');
+				break;
+			}
+			if (value === 'reset') {
+				setChatColor(target, kind, undefined);
+				run(player, `tellraw @s ${rawTranslate(`chat.cmd.color.reset.${kind}`, target.name)}`);
+				break;
+			}
+			const id = CHAT_COLORS[value] !== undefined ? value : Object.keys(CHAT_COLORS).find(k => CHAT_COLORS[k] === value.replace(/^§/, ''));
+			if (!id) {
+				run(player, `tellraw @s ${rawTranslate('chat.cmd.color.error.color', args[2])}`);
+				break;
+			}
+			setChatColor(target, kind, CHAT_COLORS[id]);
+			run(player, `tellraw @s ${rawTranslateRich(`chat.cmd.color.done.${kind}`, target.name, { text: `§${CHAT_COLORS[id]}■` }, { translate: `color.${id}` })}`);
 			break;
 		}
 
