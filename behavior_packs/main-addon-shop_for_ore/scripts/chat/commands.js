@@ -329,6 +329,7 @@ export function runChatCommand(player, command, args) {
 				{ translate: 'chat.cmd.stats.lvl', with: { rawtext: [lvl >= 26 ? { translate: 'chat.cmd.stats.vip' } : { text: String(lvl) }] } },
 				{ translate: 'chat.cmd.stats.xp', with: [String(getScore(target, 'xp')), String(getScore(target, 'xp_need'))] },
 				{ translate: 'chat.cmd.stats.money', with: [String(getScore(target, 'money'))] },
+				{ translate: 'chat.cmd.stats.vip_coins', with: [String(getScore(target, 'vip_coins'))] },
 				{ translate: 'chat.cmd.stats.rebirth', with: [String(getScore(target, 'rebirth'))] },
 				{ translate: 'chat.cmd.stats.role', with: { rawtext: [{ translate: `role.${getRole(target)}` }] } },
 				{ translate: 'chat.cmd.stats.warns', with: [String(getWarns(target))] }
