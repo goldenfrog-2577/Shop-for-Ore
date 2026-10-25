@@ -52,21 +52,30 @@ export function rawTranslate(key, ...args) {
  * Раньше это делал player.tell(): после переименования ключей (#24) такие сообщения перестали
  * появляться в игре, а tellraw с translate для тех же ключей работает (проверено на 1.19.51).
  * Поэтому строка разбирается на куски {text} и {translate} и уходит через tellraw.
+ * Параметры ключей (%1$s в .lang) — в args: { 'account.register.greeting': [ник] }, тогда порядок слов
+ * задаёт перевод, а не скрипт.
  * @param {Player} player
  * @param {string} message
+ * @param {Record<string, (string|number)[]>} [args]
  */
-export function tellText(player, message) {
+export function tellText(player, message, args = {}) {
 	const rawtext = [];
 	const re = /%([a-z][a-z0-9_]*(?:\.[a-z0-9_]+)+)/g;
 	let last = 0, m;
 	while ((m = re.exec(message)) !== null) {
 		if (m.index > last) rawtext.push({ text: message.slice(last, m.index) });
-		rawtext.push({ translate: m[1] });
+		rawtext.push(args[m[1]] ? { translate: m[1], with: args[m[1]].map(String) } : { translate: m[1] });
 		last = re.lastIndex;
 	}
 	if (last < message.length) rawtext.push({ text: message.slice(last) });
 	return run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
 };
+
+// Сколько сообщений (tellraw @s — через tell, tellText и run) получил игрок: menu/forms.js по нему
+// закрывает всю цепочку меню, если после нажатия в чат пришло сообщение (ошибка, покупка и т. п.)
+const told = new Map();
+/** @param {Entity} entity */
+export const toldCount = (entity) => told.get(entity.name) ?? 0;
 
 /**
  * Выполнить команду и не ронять ошибку в ContentLog, если она не сработала
@@ -75,6 +84,7 @@ export function tellText(player, message) {
  * @param {string} command
  */
 export function run(entity, command) {
+	if (command.startsWith('tellraw @s ')) told.set(entity.name, toldCount(entity) + 1);
 	return entity.runCommandAsync(command).then((r) => r ?? {}, () => undefined);
 };
 

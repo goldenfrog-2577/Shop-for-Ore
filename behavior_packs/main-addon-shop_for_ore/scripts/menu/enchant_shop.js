@@ -142,8 +142,8 @@ function pickaxeMenu(player, back) {
 	showMenu(player, '%menu.shop.enchants.pickaxe.title', `%menu.shop.enchants.pickaxe.body${stick ? '\n\n%menu.shop.enchants.pickaxe.stick' : ''}`, [
 		...PICKAXE_ENCHANTS.map(e => ({
 			text: buyButton(e.name, getScore(player, e.id), e.max, e.price), icon: 'textures/items/book_enchanted',
-			// Покупка — функцией shop/enchants/* (проверки палки, денег и максимума, сообщения); окно — снова, с новым уровнем
-			run: () => run(player, `function shop/enchants/${e.id}`).then(() => pickaxeMenu(player, back))
+			// Покупка — функцией shop/enchants/* (проверки палки, денег и максимума, сообщение в чат); меню закрывается
+			run: () => run(player, `function shop/enchants/${e.id}`)
 		})),
 		backButton(back)
 	], back);
@@ -159,8 +159,8 @@ function itemEnchantMenu(player, slot, back) {
 	showMenu(player, '%menu.shop.enchants.title', body, [
 		...options.map(o => ({
 			text: buyButton(o.e.name, o.level, o.e.max, priceFor(o.e, Math.min(o.level + 1, o.e.max))), icon: 'textures/items/book_enchanted',
-			// После покупки окно открывается снова — удобно поднять несколько уровней подряд
-			run: () => { if (buyEnchant(player, slot, typeId, o.e.id)) itemEnchantMenu(player, slot, back); }
+			// Покупка или ошибка — сообщение в чат, меню закрывается (menu/forms.js)
+			run: () => buyEnchant(player, slot, typeId, o.e.id)
 		})),
 		backButton(back)
 	], back);

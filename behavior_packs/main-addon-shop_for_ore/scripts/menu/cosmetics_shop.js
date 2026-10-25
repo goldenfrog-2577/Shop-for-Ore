@@ -3,7 +3,8 @@
 // нажал на товар → деньги списались, сообщение в чат (без окна подтверждения).
 // Куплено — тег cosmetic:<вид>:<id>; выбрано: цвет — chat:name_color / chat:text_color (как у !color),
 // частицы — fx:trail:<id> / fx:death:<id> / fx:sell:<id>. Цвета ролей (тёмно-красный, красный, синий)
-// не продаются тем, у кого этой роли нет (colorAllowed). Частицы при продаже смотреть может каждый, покупать и выбирать — только VIP.
+// не продаются тем, у кого этой роли нет (colorAllowed). Смотреть Косметику может каждый, покупать — только VIP (уровень 26);
+// купленное раньше (например, до ребитха) выбирается и без VIP, кроме частиц при продаже — они действуют только у VIP.
 
 import { world, BlockLocation } from '@minecraft/server';
 import { CHAT_COLORS, getChatColor, setChatColor, colorAllowed, getScore, metricNumbers, run, tell } from '../DataBase.js';
@@ -71,8 +72,13 @@ function syncSellFlag(player) {
 	if (!on && player.hasTag(SELL_FLAG)) player.removeTag(SELL_FLAG);
 }
 
-/** Купить как в магазине: хватает — списать и сообщить, нет — ошибка. @returns {boolean} */
+/** Купить как в магазине: VIP и хватает коинов — списать и сообщить, иначе ошибка. @returns {boolean} */
 function buy(player, kind, id, cost, mark, nameKey) {
+	if (!isVip(player)) {
+		tell(player, 'chat.shop.cosmetics.error.vip');
+		run(player, 'playsound note.bass @s');
+		return false;
+	}
 	if (coins(player) < cost) {
 		tell(player, 'chat.shop.cosmetics.error.no_coins');
 		run(player, 'playsound note.bass @s');
@@ -85,41 +91,43 @@ function buy(player, kind, id, cost, mark, nameKey) {
 	return true;
 }
 
-// Пометка «[Только для VIP]» — одна на всё, что доступно только VIP (common.vip_only)
+// Пометка «[Только для VIP]» (common.vip_only) — второй строкой у заголовка и разделов; у товаров её нет.
+// Не VIP — пометка есть, VIP — строки нет совсем (без пустого переноса)
 const VIP_ONLY = '%common.vip_only';
+const vipMark = (player, text) => isVip(player) ? text : `${text}\n${VIP_ONLY}`;
 
 // --- Главное окно ---
 export function cosmeticsMenu(player, back) {
 	const again = () => cosmeticsMenu(player, back);
-	showMenu(player, '%menu.shop.cosmetics.title', `%menu.shop.cosmetics.body\n%menu.shop.cosmetics.balance ${price(coins(player))}`, [
-		{ text: '%menu.shop.cosmetics.button.name', icon: 'textures/items/name_tag', run: () => colorMenu(player, 'name', again) },
-		{ text: '%menu.shop.cosmetics.button.text', icon: 'textures/items/book_writable', run: () => colorMenu(player, 'text', again) },
-		{ text: '%menu.shop.cosmetics.button.trail', icon: 'textures/items/blaze_powder', run: () => fxMenu(player, 'trail', again) },
-		{ text: '%menu.shop.cosmetics.button.death', icon: 'textures/items/totem', run: () => fxMenu(player, 'death', again) },
-		{ text: `%menu.shop.cosmetics.button.sell\n${isVip(player) ? '' : VIP_ONLY}`, icon: 'textures/items/gold_ingot', run: () => fxMenu(player, 'sell', again) },
+	const section = (kind, icon, open) => ({ text: vipMark(player, `%menu.shop.cosmetics.button.${kind}`), icon, run: () => open(player, kind, again) });
+	showMenu(player, vipMark(player, '%menu.shop.cosmetics.title'), `%menu.shop.cosmetics.body\n%menu.shop.cosmetics.balance ${price(coins(player))}`, [
+		section('name', 'textures/items/name_tag', colorMenu),
+		section('text', 'textures/items/book_writable', colorMenu),
+		section('trail', 'textures/items/blaze_powder', fxMenu),
+		section('death', 'textures/items/totem', fxMenu),
+		section('sell', 'textures/items/gold_ingot', fxMenu),
 		backButton(back)
 	], back);
 }
 
-// Состояние кнопки: выбрано / куплено / цена (+ пометка VIP, если купить нельзя)
-const state = (selected, owned, cost, vipOnly = false) => selected ? '%menu.shop.cosmetics.selected' : owned ? '%menu.shop.cosmetics.owned' : `${price(cost)}${vipOnly ? ` ${VIP_ONLY}` : ''}`;
+// Состояние кнопки: выбрано / куплено / цена
+const state = (selected, owned, cost) => selected ? '%menu.shop.cosmetics.selected' : owned ? '%menu.shop.cosmetics.owned' : price(cost);
 const body = (player, kind) => `%menu.shop.cosmetics.${kind}.body\n%menu.shop.cosmetics.balance ${price(coins(player))}`;
 
 // --- Цвет ника / текста ---
+// После покупки, выбора или ошибки в чат приходит сообщение — и меню закрывается (menu/forms.js)
 function colorMenu(player, kind, back) {
-	const again = () => colorMenu(player, kind, back);
 	// Цвета ролей — только своей роли и ниже (как у !color); текст сообщений — любым цветом
 	const ids = Object.keys(CHAT_COLORS).filter(id => kind === 'text' || colorAllowed(player, CHAT_COLORS[id]));
 	const current = getChatColor(player, kind);
 	const choose = (id) => () => {
 		const code = CHAT_COLORS[id];
-		if (!owns(player, kind, code) && !buy(player, kind, code, COLOR_PRICE[kind], `§${code}■`, `color.${id}`)) return again();
+		if (!owns(player, kind, code) && !buy(player, kind, code, COLOR_PRICE[kind], `§${code}■`, `color.${id}`)) return;
 		setChatColor(player, kind, code);
 		tell(player, `chat.shop.cosmetics.selected.${kind}`, { text: `§${code}■` }, { translate: `color.${id}` });
-		again();
 	};
 	showMenu(player, `%menu.shop.cosmetics.${kind}.title`, body(player, kind), [
-		{ text: '%menu.shop.cosmetics.reset', icon: 'textures/ui/refresh_light', run: () => { setChatColor(player, kind, undefined); tell(player, `chat.shop.cosmetics.reset.${kind}`); again(); } },
+		{ text: '%menu.shop.cosmetics.reset', icon: 'textures/ui/refresh_light', run: () => { setChatColor(player, kind, undefined); tell(player, `chat.shop.cosmetics.reset.${kind}`); } },
 		...ids.map(id => {
 			const code = CHAT_COLORS[id];
 			return { text: `§${code}■§r %color.${id}\n${state(current === `§${code}`, owns(player, kind, code), COLOR_PRICE[kind])}`, run: choose(id) };
@@ -130,27 +138,25 @@ function colorMenu(player, kind, back) {
 
 // --- Частицы ---
 function fxMenu(player, kind, back) {
-	const again = () => fxMenu(player, kind, back);
 	const current = getFx(player, kind);
-	// Частицы при продаже: смотреть может каждый, купить и выбрать — только VIP
+	// Частицы при продаже действуют только у VIP — выбрать их без VIP нельзя, даже купленные
 	const locked = kind === 'sell' && !isVip(player);
 	const choose = (e) => () => {
 		if (locked) {
-			tell(player, 'chat.shop.cosmetics.error.vip');
+			tell(player, 'chat.shop.cosmetics.error.vip_sell');
 			run(player, 'playsound note.bass @s');
-			return again();
+			return;
 		}
-		if (!owns(player, kind, e.id) && !buy(player, kind, e.id, e.price, '', `cosmetics.${kind}.${e.id}`)) return again();
+		if (!owns(player, kind, e.id) && !buy(player, kind, e.id, e.price, '', `cosmetics.${kind}.${e.id}`)) return;
 		setFx(player, kind, e.id);
 		tell(player, `chat.shop.cosmetics.selected.${kind}`, { translate: `cosmetics.${kind}.${e.id}` });
 		// Показать сразу, как это выглядит
 		if (kind === 'death') burst(player.dimension, player.location, e.particle);
 		else run(player, `particle ${e.particle} ~ ~1 ~`);
-		again();
 	};
 	showMenu(player, `%menu.shop.cosmetics.${kind}.title`, body(player, kind), [
-		{ text: '%menu.shop.cosmetics.off', icon: 'textures/ui/cancel', run: () => { setFx(player, kind, undefined); tell(player, `chat.shop.cosmetics.off.${kind}`); again(); } },
-		...FX[kind].map(e => ({ text: `%cosmetics.${kind}.${e.id}\n${state(current?.id === e.id, owns(player, kind, e.id), e.price, locked)}`, icon: e.icon, run: choose(e) })),
+		{ text: '%menu.shop.cosmetics.off', icon: 'textures/ui/cancel', run: () => { setFx(player, kind, undefined); tell(player, `chat.shop.cosmetics.off.${kind}`); } },
+		...FX[kind].map(e => ({ text: `%cosmetics.${kind}.${e.id}\n${state(current?.id === e.id, owns(player, kind, e.id), e.price)}`, icon: e.icon, run: choose(e) })),
 		backButton(back)
 	], back);
 }

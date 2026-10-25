@@ -40,5 +40,6 @@ function details(player, a, back) {
 		'',
 		has(player, a.id) ? `${color(a)}%menu.achievements.done` : '§8%menu.achievements.locked'
 	].filter((l, i, arr) => l !== '' || arr[i - 1] !== '');
-	showMenu(player, `${color(a)}${GLYPH[a.type]} %ach.${a.id}.name`, lines.join('\n'), [backButton(back)], back);
+	// Заголовок: сначала §l, потом цвет
+	showMenu(player, `§l${color(a)}${GLYPH[a.type]} %ach.${a.id}.name`, lines.join('\n'), [backButton(back)], back);
 }
