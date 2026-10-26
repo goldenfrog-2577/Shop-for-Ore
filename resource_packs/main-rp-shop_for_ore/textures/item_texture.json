@@ -10,6 +10,9 @@
 		},
 		"floating_text": {
 			"textures": "textures/items/floating_text"
+		},
+		"portable_ender_crystal": {
+			"textures": "textures/items/end_crystal"
 		}
 	}
 }

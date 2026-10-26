@@ -3,6 +3,8 @@
 // в конце файла). Игрок в игре — тег game:<id>. Фазы: waiting (ждём игроков) → countdown → running.
 // Выбывает тот, кто умер, вышел с сервера, ушёл командой или (по правилу игры) покинул площадку.
 // Остался один — он победил: награда, +1 к табло stat_wins (достижения), сообщение всем.
+// Игра может держать выбывших зрителями (def.spectate — куда их отправить, тег game:watch) и запрещать
+// телепорт участникам и зрителям, пока идёт игра (def.lockTeleport; владельцу можно) — так устроен сплиф.
 // Идея — по мотивам карты FearCube (с разрешения автора), код свой.
 
 import { world, system } from '@minecraft/server';
@@ -15,7 +17,8 @@ export const GAME_TAG = 'game:';
 export const LOBBY = [-109, 5, -60];
 const COIN = '', VIP_COIN = '';
 
-const games = new Map();          // id → { def, phase, players:Set<ник>, alive:Set<ник>, count, seconds, startedWith }
+const games = new Map();          // id → { def, phase, players:Set<ник>, alive:Set<ник>, watchers:Set<ник>, count, seconds, startedWith }
+export const WATCH_TAG = 'game:watch';
 
 /**
  * Зарегистрировать мини-игру.
@@ -24,18 +27,42 @@ const games = new Map();          // id → { def, phase, players:Set<ник>, a
  * @param {number} def.minPlayers / def.maxPlayers
  * @param {number} [def.countdown=10] — секунд до начала
  * @param {number} [def.maxSeconds=600] — дольше — ничья
- * @param {(p: Player) => void} def.start — перенести игрока на площадку
+ * @param {(p: Player, index: number, total: number) => void} def.start — перенести игрока на площадку (index — его номер, для точек старта)
  * @param {(p: Player, seconds: number) => boolean} [def.isOut] — выбыл ли (seconds — сколько идёт игра)
  * @param {{money?: number, vip_coins?: number}} def.reward — победителю
+ * @param {(g: object) => void} [def.onStart] — перед переносом игроков (подготовить площадку)
+ * @param {(g: object) => void} [def.onEnd] — после игры (вернуть площадку как было)
+ * @param {(p: Player) => void} [def.cleanup] — забрать у игрока выданное игрой (выбыл, вышел, игра кончилась)
+ * @param {number[]} [def.spectate] — x y z: выбывшие смотрят игру отсюда до её конца, потом — в лобби
+ * @param {boolean} [def.lockTeleport] — пока идёт игра, участникам и зрителям нельзя телепортироваться
  */
 export function registerGame(def) {
-	games.set(def.id, { def: { countdown: 10, maxSeconds: 600, ...def }, phase: 'waiting', players: new Set(), alive: new Set(), count: 0, seconds: 0, startedWith: 0 });
+	games.set(def.id, { def: { countdown: 10, maxSeconds: 600, ...def }, phase: 'waiting', players: new Set(), alive: new Set(), watchers: new Set(), count: 0, seconds: 0, startedWith: 0 });
 }
 
 export const listGames = () => [...games.values()];
 export const getGame = (id) => games.get(String(id ?? '').toLowerCase());
 /** Игра, в которой сейчас игрок, или undefined. */
 export const gameOf = (player) => listGames().find(g => g.players.has(player.name));
+/** Игра, которую игрок сейчас смотрит как выбывший, или undefined. */
+export const watchingOf = (player) => listGames().find(g => g.watchers.has(player.name));
+
+/**
+ * Телепорт запрещён: игрок участвует или смотрит игру с def.lockTeleport, и она идёт. Владельцу можно.
+ * @returns {object|undefined} игра, из-за которой нельзя
+ */
+export function teleportLock(player) {
+	if (player.hasTag('role:owner')) return undefined;
+	return listGames().find(g => g.def.lockTeleport && g.phase === 'running' && (g.alive.has(player.name) || g.watchers.has(player.name)));
+}
+/** Проверить телепорт и, если нельзя, написать игроку (who — кому писать, если двигают другого). @returns {boolean} можно */
+export function canTeleport(target, who = target) {
+	const g = teleportLock(target);
+	if (!g) return true;
+	if (who === target) tell(who, 'chat.game.error.teleport', gameName(g));
+	else tell(who, 'chat.game.error.teleport_other', target.name, gameName(g));
+	return false;
+}
 
 const tellGame = (g, key, ...args) => {
 	for (const name of g.players) {
@@ -52,6 +79,8 @@ export function joinGame(player, id) {
 	if (!g) return fail('chat.game.error.unknown', String(id ?? ''));
 	if (isPending(player) || player.hasTag('role:bot')) return false;
 	if (gameOf(player)) return fail('chat.game.error.already', gameName(gameOf(player)));
+	// Зритель игры с запретом телепорта не может уйти в другую игру, пока та идёт
+	if (teleportLock(player)) return fail('chat.game.error.teleport', gameName(teleportLock(player)));
 	if (player.hasTag('state:frozen')) return fail('chat.cmd.freeze.active');
 	if (combatSecondsLeft(player) > 0) return fail('chat.pvp.combat', combatSecondsLeft(player));
 	if (g.phase === 'running') return fail('chat.game.error.running', gameName(g));
@@ -66,10 +95,38 @@ export function joinGame(player, id) {
 
 /** Выйти из игры (сам или выбыл). reason: left | out | quit (вышел с сервера) */
 export function leaveGame(player, reason = 'left') {
-	const g = gameOf(player);
+	const g = gameOf(player) ?? (reason === 'left' ? watchingOf(player) : undefined);
 	if (!g) return false;
+	// Игра с запретом телепорта: пока идёт, уйти нельзя ни участнику, ни зрителю (кроме владельца)
+	if (reason === 'left' && teleportLock(player) === g) {
+		tell(player, 'chat.game.error.teleport', gameName(g));
+		return false;
+	}
+	if (g.watchers.has(player.name)) {
+		stopWatching(g, player);
+		run(player, `tp @s ${LOBBY.join(' ')}`);
+		return true;
+	}
 	removePlayer(g, player.name, player, reason);
 	return true;
+}
+
+function stopWatching(g, player) {
+	g.watchers.delete(player.name);
+	player.removeTag(WATCH_TAG);
+}
+
+/** Игрок выбыл из идущей игры: забрать выданное, у игры со зрителями — на место зрителя. */
+function knockOut(g, player) {
+	g.def.cleanup?.(player);
+	if (!g.def.spectate) return;
+	g.watchers.add(player.name);
+	player.addTag(WATCH_TAG);
+	// Последний выбывший (игра на этом кончается) сразу идёт в лобби вместе со всеми
+	if (g.alive.size >= 2) {
+		run(player, `tp @s ${g.def.spectate.join(' ')}`);
+		tell(player, 'chat.game.spectate', gameName(g));
+	}
 }
 
 function removePlayer(g, name, player, reason) {
@@ -78,7 +135,10 @@ function removePlayer(g, name, player, reason) {
 	player?.removeTag(GAME_TAG + g.def.id);
 	if (player && reason !== 'quit') {
 		tell(player, `chat.game.${reason === 'out' ? 'out' : 'left'}`, gameName(g));
-		if (g.phase === 'running' && reason === 'left') run(player, `tp @s ${LOBBY.join(' ')}`);
+		if (g.phase === 'running' && wasAlive) {
+			if (reason === 'out') knockOut(g, player);
+			else { g.def.cleanup?.(player); run(player, `tp @s ${LOBBY.join(' ')}`); }
+		}
 	}
 	if (g.phase === 'running' && wasAlive) tellGame(g, 'chat.game.out_other', name, String(g.alive.size));
 	if (g.phase === 'countdown' && g.players.size < g.def.minPlayers) {
@@ -100,11 +160,14 @@ export function startGame(g) {
 	g.phase = 'running';
 	g.seconds = 0;
 	g.alive = new Set(g.players);
+	g.watchers.clear();
 	g.startedWith = g.players.size;
+	g.def.onStart?.(g);
+	let index = 0;
 	for (const name of g.players) {
 		const p = findPlayer(name);
 		if (!p) continue;
-		g.def.start(p);
+		g.def.start(p, index++, g.players.size);
 		showTitle(p, [{ text: '§a' }, { translate: 'title.game.go' }]);
 		run(p, 'playsound note.pling @s ~ ~ ~ 1 2');
 	}
@@ -134,11 +197,21 @@ export function endGame(g, winner, reason = 'end') {
 		const q = findPlayer(name);
 		if (!q) continue;
 		q.removeTag(GAME_TAG + g.def.id);
+		g.def.cleanup?.(q);
+		run(q, `tp @s ${LOBBY.join(' ')}`);
+	}
+	// Зрители (выбывшие) — тоже в лобби
+	for (const name of g.watchers) {
+		const q = findPlayer(name);
+		if (!q) continue;
+		q.removeTag(WATCH_TAG);
 		run(q, `tp @s ${LOBBY.join(' ')}`);
 	}
 	g.players.clear();
 	g.alive.clear();
+	g.watchers.clear();
 	g.phase = 'waiting';
+	g.def.onEnd?.(g);
 }
 
 function checkEnd(g) {
@@ -152,6 +225,7 @@ system.runSchedule(() => {
 	for (const g of games.values()) {
 		// Вышедшие с сервера
 		for (const name of [...g.players]) if (!findPlayer(name)) removePlayer(g, name, undefined, 'quit');
+		for (const name of [...g.watchers]) if (!findPlayer(name)) g.watchers.delete(name);
 		if (g.phase === 'countdown') {
 			if (g.count <= 0) { startGame(g); continue; }
 			for (const name of g.players) {
@@ -168,6 +242,7 @@ system.runSchedule(() => {
 					g.players.delete(name);
 					p.removeTag(GAME_TAG + g.def.id);
 					tell(p, 'chat.game.out', gameName(g));
+					knockOut(g, p);
 					tellGame(g, 'chat.game.out_other', name, String(g.alive.size));
 				}
 			}

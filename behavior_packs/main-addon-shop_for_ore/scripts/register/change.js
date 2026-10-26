@@ -68,7 +68,7 @@ export function resetPassword(owner, target) {
 	run(target, 'playsound note.pling @s');
 	// Персоналу в сети — кто кому сбросил
 	for (const p of world.getPlayers()) {
-		if (p.hasTag('role:owner') || p.hasTag('role:admin') || p.hasTag('role:moder')) {
+		if (p.hasTag('role:owner') || p.hasTag('role:admin') || p.hasTag('role:moder') || p.hasTag('role:helper')) {
 			tell(p, 'chat.account.reset.staff', owner.name, target.name);
 		}
 	}

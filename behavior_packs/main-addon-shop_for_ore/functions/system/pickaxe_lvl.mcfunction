@@ -24,6 +24,8 @@ tag @a[scores={lvl=20..21},hasitem={item=netherite_pickaxe,location=slot.hotbar,
 tag @a[scores={lvl=22..23},hasitem={item=netherite_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
 tag @a[scores={lvl=24..24},hasitem={item=netherite_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
 tag @a[scores={lvl=25..},hasitem={item=netherite_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
+# В сплифе в этом слоте лопата (scripts/system/spleef.js) — кирку не выдаём, её вернут после игры
+tag @a[tag=game:spleef] remove sys:pick_update
 replaceitem entity @a[tag=sys:pick_update,scores={lvl=1..1}] slot.hotbar 0 stick 1 0 {"minecraft:can_destroy":{"blocks":["dirt"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
 replaceitem entity @a[tag=sys:pick_update,scores={lvl=2..2}] slot.hotbar 0 wooden_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["dirt","stone"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
 replaceitem entity @a[tag=sys:pick_update,scores={lvl=3..4}] slot.hotbar 0 stone_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["dirt","stone","coal_ore"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}

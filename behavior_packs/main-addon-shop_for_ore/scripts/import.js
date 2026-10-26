@@ -31,6 +31,7 @@ import './system/migrate.js';     // Старые названия тегов �
 import './system/reload.js';      // «Скрипты загружены» администраторам после /reload
 import './system/achievements.js'; // Достижения и испытания, счётчики stat_*
 import './system/minigames.js';   // Основа мини-игр (PvP «Последний выживший»)
+import './system/spleef.js';      // Мини-игра «Сплиф»
 import './system/cps.js';         // Проверка CPS против автокликеров
 import './system/music.js';       // Выключатель музыки (Настройки)
 import './system/wipe.js';        // Вайп: номер вайпа, сброс игроков не в сети при входе

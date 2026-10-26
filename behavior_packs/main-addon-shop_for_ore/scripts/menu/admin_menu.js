@@ -12,12 +12,13 @@ import { runChatCommand, setMoney } from '../chat/commands.js';
 import { sendChatMessage } from '../chat/chat.js';
 import { getBot, getBotName, setBotName, spawnBot, removeBot } from '../system/spawnbot.js';
 import { wipeAll, wipeCounts } from '../system/wipe.js';
+import { canTeleport } from '../system/minigames.js';
 
 const BACK_ICON = 'textures/ui/icon_import';
 // Заголовок «Предупреждение» со знаком «!» из шрифта карты (glyph_E1)
 const WARN_TITLE = '\ue1f8 %admin.wipe.title';
 // Кружки цвета роли из шрифта карты: серый, синий, красный
-const ROLE_GLYPHS = { player: '\ue137', moder: '\ue131', admin: '\ue130' };
+const ROLE_GLYPHS = { player: '\ue137', helper: '\ue135', moder: '\ue131', admin: '\ue130' };
 // Значок опыта, как у бустов в магазине
 const XP_GLYPH = '\ue154';
 const OPEN = '\n%menu.common.tap_to_open';
@@ -86,7 +87,7 @@ function timeSet(player) {
 
 // --- Телепортации ---
 function warps(player) {
-	const tp = (x, y, z) => () => run(player, `tp @s ${x} ${y} ${z}`);
+	const tp = (x, y, z) => () => { if (canTeleport(player)) run(player, `tp @s ${x} ${y} ${z}`); };
 	showMenu(player, '%admin.warps.title', '%admin.warps.body', [
 		{ text: '%admin.warps.button.mine', icon: 'textures/ui/World', run: tp(0, 5, 0) },
 		{ text: '%admin.warps.button.mine_2', icon: 'textures/ui/World', run: tp(0, 5, -33) },
@@ -102,6 +103,7 @@ function warps(player) {
 			const list = [...world.getPlayers()].filter(p => getRole(p) === 'player');
 			if (!list.length) return tell(player, 'chat.admin.error.no_players');
 			const target = list[Math.floor(Math.random() * list.length)];
+			if (!canTeleport(player)) return;
 			run(player, `tp @s "${target.name}"`);
 			tell(player, 'chat.cmd.tp.to', target.name);
 		} },
@@ -303,7 +305,7 @@ function playerReason(player, target, command, title, label) {
 }
 
 function playerRole(player, target) {
-	const roles = ['player', 'moder', 'admin'];
+	const roles = ['player', 'helper', 'moder', 'admin'];
 	const form = modal('%admin.players.role.title')
 		.dropdown('%admin.players.role.choose', roles.map(r => `${ROLE_GLYPHS[r]} %role.${r}`), Math.max(0, roles.indexOf(getRole(target))));
 	showModal(player, form, (values) => {
@@ -396,6 +398,7 @@ function serverMenu(player) {
 		`%admin.server.online §f${players.length}`,
 		`%admin.server.staff §f${count('owner', 'admin')}`,
 		`%admin.server.moders §f${count('moder')}`,
+		`%admin.server.helpers §f${count('helper')}`,
 		'',
 		boosts.length
 			? boosts.map(b => `%admin.server.boost §a${b.type} §8— %admin.server.left ${b.minutes} %admin.common.min`).join('\n')

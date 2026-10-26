@@ -41,7 +41,9 @@ export const MYTHIC_LOOT = [
 	{ w: 3, item: 'arrow', count: [4, 8], data: 41 },
 	{ w: 4, item: 'shield', count: [1, 1] },
 	{ w: 2, item: 'trident', count: [1, 1] },
-	{ w: 3, item: 'crossbow', count: [1, 1] }
+	{ w: 3, item: 'crossbow', count: [1, 1] },
+	// Только отсюда: портативный кристалл Энда (жёлтая редкость, бросается только на арене — system/pvp.js)
+	{ w: 2, item: 'server:portable_ender_crystal', count: [1, 2] }
 ];
 
 const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
