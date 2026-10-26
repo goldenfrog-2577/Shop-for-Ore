@@ -1023,6 +1023,7 @@ chat.cmd.game.error.start=§r⩕ §l§cERROR!§r §8» §7Нельзя нача�
 chat.cmd.game.error.empty=§r⩕ §l§cERROR!§r §8» §7В этой игре никого нет
 chat.cps.alert=§r §cAnti-Cheat §8» §7§f%1$s§r§7: §c%2$s CPS§7 %3$s с подряд (предел §e%4$s§7) — возможен автокликер
 hud.cps=§7CPS: %1$s §8• §f%2$s §7м/с
+hud.cps.hp=§7CPS: %1$s §8• §f%2$s §7м/с §8• §7HP: %3$s
 chat.cmd.cps.use=§r §7CMD §8» §7Использование: §e!cps§7 <игрок>
 chat.cmd.cps.info=§r §7CMD §8» §7CPS игрока §f%1$s§r§7: сейчас §e%2$s§7, максимум за 10 с — §e%3$s§7 (предел §e%4$s§7)
 chat.cmd.ac.use=§r §7CMD §8» §7Использование: §e!ac§7 [игрок] · §e!ac reset§7 <игрок> · §e!ac mode§7 <alerts/rollback/kick>
