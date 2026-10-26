@@ -5,6 +5,7 @@ import { world, system, Items, ItemStack } from '@minecraft/server';
 import { rawTranslate, hasRole, run } from '../DataBase.js';
 
 // --- Список запрещённых предметов ---
+// Взрывные зелья и арбалет разрешены с 0.3.0: они выпадают в мистике (system/mythic.js); оседающие — по-прежнему нет
 const bannedItems = new Set([
 	'minecraft:beehive',
 	'minecraft:bee_nest',
@@ -20,9 +21,7 @@ const bannedItems = new Set([
 	'minecraft:movingblock',
 	'minecraft:info_update2',
 	'minecraft:stickyPinstonArmCollision',
-	'minecraft:splash_potion',
 	'minecraft:lingering_potion',
-	'minecraft:crossbow',
 	'minecraft:fire',
 	'minecraft:bedrock',
 	'minecraft:invisiblebedrock',

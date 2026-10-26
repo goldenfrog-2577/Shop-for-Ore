@@ -34,6 +34,8 @@ import './system/minigames.js';   // Основа мини-игр (PvP «Пос�
 import './system/cps.js';         // Проверка CPS против автокликеров
 import './system/music.js';       // Выключатель музыки (Настройки)
 import './system/wipe.js';        // Вайп: номер вайпа, сброс игроков не в сети при входе
+import './system/offline_reset.js'; // !resetoffline: всё сбросить игрокам не в сети
+import './system/trident.js';     // Трезубец с «Громовержцем»: молния в поражённого игрока
 
 // Импорт загрузчика скриптов
 import './register/loadScript.js';

@@ -1,5 +1,5 @@
 // --- Чат-логика и антиспам для Shop for Ore ---
-import { world } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor, impersonatedRole, tell, run } from '../DataBase.js';
 
 // --- Значения по умолчанию для тегов игрока ---
@@ -170,3 +170,11 @@ world.events.tick.subscribe(() => {
 		if (player.nameTag !== nameTag) player.nameTag = nameTag;
 	}
 });
+
+// Мут истекает сам: раз в секунду проверяем замученных — muteMinutesLeft снимет тег и напишет игроку,
+// что писать снова можно (раньше тег снимался молча, только при следующей попытке написать)
+system.runSchedule(() => {
+	for (const player of world.getPlayers()) {
+		if (player.getTags().some(t => t.startsWith('state:mute:'))) muteMinutesLeft(player);
+	}
+}, 20);

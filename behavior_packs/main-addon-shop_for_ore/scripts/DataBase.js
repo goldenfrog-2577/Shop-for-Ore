@@ -187,8 +187,10 @@ export function muteMinutesLeft(player) {
 	if (!tag) return 0;
 	const left = Number(tag.slice(MUTE_TAG.length)) - Date.now();
 	if (!(left > 0)) {
+		// Мут истёк сам — тег снимается здесь (проверка в чате и раз в секунду в chat/chat.js) и игроку пишем
 		player.removeTag(tag);
 		clearIssuer(player, 'mute');
+		tell(player, 'chat.cmd.mute.expired');
 		return 0;
 	}
 	return Math.ceil(left / 60000);
@@ -453,7 +455,7 @@ export const commandsList = [
 		role: 'player'
 	},
 	{
-		command: '!top §7[§fmoney§8/§flvl§8/§frebirth§8/§fvip_coins§7]',
+		command: '!top §7<§fmoney§8/§flvl§8/§frebirth§8/§fvip_coins§8/§fkd§8/§fpvp§8/§fspleef§7>',
 		description: '%chat.help.top',
 		role: 'player'
 	},
@@ -661,6 +663,11 @@ export const commandsList = [
 	{
 		command: '!wipe §7[§fconfirm§7]',
 		description: '%chat.help.wipe',
+		role: 'owner'
+	},
+	{
+		command: '!resetoffline §7[§fconfirm§7]',
+		description: '%chat.help.resetoffline',
 		role: 'owner'
 	}
 ];

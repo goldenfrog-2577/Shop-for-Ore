@@ -121,6 +121,8 @@ export function endGame(g, winner, reason = 'end') {
 		if (r.money) run(p, `scoreboard players add @s money ${r.money}`);
 		if (r.vip_coins) run(p, `scoreboard players add @s vip_coins ${r.vip_coins}`);
 		run(p, 'scoreboard players add @s stat_wins 1');
+		// По играм — для !top pvp / spleef (табло stat_win_<id>, functions/system/setup)
+		run(p, `scoreboard players add @s stat_win_${g.def.id} 1`);
 		run(p, 'playsound random.levelup @s');
 		const reward = [r.money ? `§e+${r.money} §f${COIN}` : '', r.vip_coins ? `§e+${r.vip_coins} §f${VIP_COIN}` : ''].filter(Boolean).join('§7, ');
 		run(p, `tellraw @a ${rawTranslateRich('chat.game.winner', winner, gameName(g))}`);
@@ -185,6 +187,16 @@ world.events.entityHurt.subscribe((e) => {
 	try { hp = p.getComponent('health').current; } catch { return; }
 	if (hp <= 0) removePlayer(g, p.name, p, 'out');
 });
+
+// Победы по играм появились, когда игра была одна (PvP): прежние stat_wins переносятся в stat_win_pvp_ffa
+// один раз на игрока (тег sys:wins_split; ставится, только если команда прошла — табло уже создано)
+const SPLIT_TAG = 'sys:wins_split';
+system.runSchedule(() => {
+	for (const p of world.getPlayers()) {
+		if (p.hasTag(SPLIT_TAG) || isPending(p)) continue;
+		run(p, 'scoreboard players operation @s stat_win_pvp_ffa = @s stat_wins').then(r => { if (r) try { p.addTag(SPLIT_TAG); } catch { /* вышел */ } });
+	}
+}, 100);
 
 // После перезагрузки скриптов игры в памяти нет — снять старые теги game:*
 const clearStale = (p) => p.getTags().filter(t => t.startsWith(GAME_TAG)).forEach(t => p.removeTag(t));

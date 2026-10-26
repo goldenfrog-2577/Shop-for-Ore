@@ -14,6 +14,7 @@ import { ACHIEVEMENTS, findAchievement, unlock, revoke, has as hasAchievement } 
 import { listGames, getGame, joinGame, leaveGame, startGame, endGame } from '../system/minigames.js';
 import { cpsOf, cpsLimit } from '../system/cps.js';
 import { wipeAll, wipeCounts } from '../system/wipe.js';
+import { resetOffline, offlineCounts } from '../system/offline_reset.js';
 
 // --- Общие помощники команд ---
 
@@ -27,15 +28,34 @@ const PROTECTED_OBJECTIVES = ['timer', 'system', 'settings', 'display', 'online'
 
 // С кем игрок последним переписывался в ЛС (для !r): имя → имя собеседника
 const lastPrivate = new Map();
-world.events.playerLeave.subscribe((data) => { lastPrivate.delete(data.playerName); wipeRequests.delete(data.playerName); lastReport.delete(data.playerName); });
+world.events.playerLeave.subscribe((data) => { lastPrivate.delete(data.playerName); wipeRequests.delete(data.playerName); resetRequests.delete(data.playerName); lastReport.delete(data.playerName); });
 
 // Запросы на вайп, ждущие «!wipe confirm»: имя → время запроса
 const wipeRequests = new Map();
+// То же для !resetoffline
+const resetRequests = new Map();
 const WIPE_CONFIRM_MS = 30000;
 
 // Последняя жалоба игрока (!report) — не чаще раза в минуту: имя → время
 const lastReport = new Map();
 const REPORT_COOLDOWN_MS = 60000;
+
+// !top: значение для сортировки и (если нужно) то, что показать вместо числа
+const score = (objective) => (p) => ({ value: getScore(p, objective) });
+const TOP = {
+	money: score('money'),
+	lvl: score('lvl'),
+	rebirth: score('rebirth'),
+	vip_coins: score('vip_coins'),
+	// K/D — убийства/смерти; без смертей отношение равно числу убийств
+	kd: (p) => {
+		const kills = getScore(p, 'stat_kills'), deaths = getScore(p, 'stat_deaths');
+		const ratio = deaths ? kills / deaths : kills;
+		return { value: ratio, shown: { translate: 'chat.cmd.top.kd_value', with: [String(kills), String(deaths), ratio.toFixed(2)] } };
+	},
+	pvp: score('stat_win_pvp_ffa'),
+	spleef: score('stat_win_spleef')
+};
 
 // Сколько строк правил в .lang (menu.rules.line.1…N) — те же, что в меню «Правила»
 const RULES_LINES = 6;
@@ -379,18 +399,20 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case 'top': {
-			// Топ-5 игроков в сети по деньгам, уровню, ребитхам или VIP-коинам
-			const by = (args[0] || 'money').toLowerCase();
-			if (!['money', 'lvl', 'rebirth', 'vip_coins'].includes(by)) {
+			// Топ-5 игроков в сети. Без аргумента — подсказка (раньше сразу топ по монетам)
+			const by = (args[0] || '').toLowerCase();
+			const source = TOP[by];
+			if (!source) {
 				tell(player, 'chat.cmd.top.use');
 				break;
 			}
 			const top = [...world.getPlayers()]
-				.map(p => ({ name: p.name, value: getScore(p, by) }))
+				.filter(p => !p.hasTag('role:bot'))
+				.map(p => ({ name: p.name, ...source(p) }))
 				.sort((a, b) => b.value - a.value || a.name.localeCompare(b.name))
 				.slice(0, 5);
 			tellList(player, { translate: `chat.cmd.top.header.${by}` },
-				top.map((p, i) => ({ translate: 'chat.cmd.top.line', with: [String(i + 1), p.name, String(p.value)] })));
+				top.map((p, i) => ({ translate: 'chat.cmd.top.line', with: { rawtext: [{ text: String(i + 1) }, { text: p.name }, p.shown ?? { text: String(p.value) }] } })));
 			break;
 		}
 
@@ -1090,6 +1112,25 @@ export function runChatCommand(player, command, args) {
 			} else {
 				if (!revoke(target, a.id)) { tell(player, 'chat.cmd.achievement.error.missing', target.name, a.id); break; }
 				tell(player, 'chat.cmd.achievement.revoked', target.name, a.id);
+			}
+			break;
+		}
+
+		case 'resetoffline': {
+			// Как !wipe: сводка, выполнение — только «!resetoffline confirm» в течение 30 секунд
+			const asked = resetRequests.get(player.name);
+			if ((args[0] || '').toLowerCase() === 'confirm') {
+				resetRequests.delete(player.name);
+				if (!asked || Date.now() - asked > WIPE_CONFIRM_MS) {
+					tell(player, 'chat.cmd.resetoffline.expired');
+					break;
+				}
+				resetOffline(player);
+			} else {
+				resetRequests.set(player.name, Date.now());
+				const { offline, online } = offlineCounts();
+				tell(player, 'chat.cmd.resetoffline.summary', String(offline), String(online));
+				tell(player, 'chat.cmd.resetoffline.confirm');
 			}
 			break;
 		}

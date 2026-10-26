@@ -13,7 +13,7 @@ const WIPE_ID = 'shop:wipe_id';
 const WIPE_TAG = 'sys:wipe:';
 // Табло прогресса — те же, что сбрасывает functions/system/wipe
 export const WIPE_OBJECTIVES = ['money', 'vip_coins', 'lvl', 'xp', 'rebirth', 'online', 'efficiency', 'fortune', 'promo1', 'promo2', 'promo3', 'promo4',
-	'xp_need', 'magnet', 'pick', 'stat_mined', 'stat_kills', 'stat_playtime', 'stat_wins'];
+	'xp_need', 'magnet', 'pick', 'stat_mined', 'stat_kills', 'stat_playtime', 'stat_wins', 'stat_deaths', 'stat_win_pvp_ffa', 'stat_win_spleef'];
 // Теги: точное имя или префикс (с «:» на конце)
 const WIPE_TAGS = ['player', 'player:rebirth', 'boost:', 'ach:', 'stat:', 'cosmetic:', 'fx:', 'chat:name_color:', 'chat:text_color:', 'game:', WIPE_TAG];
 

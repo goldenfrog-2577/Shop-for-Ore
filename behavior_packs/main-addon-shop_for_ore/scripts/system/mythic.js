@@ -13,9 +13,11 @@ const CHEST_SLOTS = 27;
 const PERIOD_TICKS = 10 * 60 * 20;   // 10 минут
 const ITEMS_MIN = 4, ITEMS_MAX = 6;
 
-// Лут: вес (чем больше, тем чаще), предмет, количество [от, до], data (для зелий).
-// Только то, что пропускает античит: без взрывных зелий, без зачарований выше максимума.
-// Зелья (обычные, не взрывные): 22 — исцеление II, 30 — регенерация II, 33 — сила II, 16 — скорость II.
+// Лут: вес (чем больше, тем чаще), предмет, количество [от, до], data (для зелий и стрел).
+// Зелья с полезными эффектами — взрывные (splash_potion, античит их больше не удаляет), id зелий Bedrock:
+// 22 — исцеление II, 30 — регенерация II, 33 — сила II, 16 — скорость II.
+// Стрелы с эффектом: data = id зелья + 1 — 18 медлительность, 25 моментальный урон II, 26 отравление,
+// 35 слабость, 37 иссушение, 41 замедленное падение.
 export const MYTHIC_LOOT = [
 	{ w: 2, item: 'enchanted_golden_apple', count: [1, 1] },
 	{ w: 3, item: 'totem_of_undying', count: [1, 1] },
@@ -25,12 +27,21 @@ export const MYTHIC_LOOT = [
 	{ w: 6, item: 'diamond', count: [4, 10] },
 	{ w: 4, item: 'emerald_block', count: [2, 4] },
 	{ w: 5, item: 'experience_bottle', count: [16, 32] },
-	{ w: 6, item: 'potion', count: [2, 3], data: 22 },
-	{ w: 4, item: 'potion', count: [1, 1], data: 30 },
-	{ w: 5, item: 'potion', count: [1, 2], data: 33 },
-	{ w: 4, item: 'potion', count: [1, 2], data: 16 },
+	{ w: 6, item: 'splash_potion', count: [2, 3], data: 22 },
+	{ w: 4, item: 'splash_potion', count: [1, 1], data: 30 },
+	{ w: 5, item: 'splash_potion', count: [1, 2], data: 33 },
+	{ w: 4, item: 'splash_potion', count: [1, 2], data: 16 },
 	{ w: 4, item: 'bow', count: [1, 1] },
-	{ w: 5, item: 'arrow', count: [16, 32] }
+	{ w: 5, item: 'arrow', count: [16, 32] },
+	{ w: 3, item: 'arrow', count: [4, 8], data: 18 },
+	{ w: 2, item: 'arrow', count: [2, 4], data: 25 },
+	{ w: 3, item: 'arrow', count: [4, 8], data: 26 },
+	{ w: 3, item: 'arrow', count: [4, 8], data: 35 },
+	{ w: 2, item: 'arrow', count: [2, 4], data: 37 },
+	{ w: 3, item: 'arrow', count: [4, 8], data: 41 },
+	{ w: 4, item: 'shield', count: [1, 1] },
+	{ w: 2, item: 'trident', count: [1, 1] },
+	{ w: 3, item: 'crossbow', count: [1, 1] }
 ];
 
 const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));

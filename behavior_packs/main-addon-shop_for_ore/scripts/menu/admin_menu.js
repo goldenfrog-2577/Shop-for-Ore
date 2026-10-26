@@ -410,6 +410,9 @@ function serverMenu(player) {
 		{ text: '%admin.server.button.top_lvl', icon: 'textures/items/experience_bottle', run: () => runChatCommand(player, 'top', ['lvl']) },
 		{ text: '%admin.server.button.top_rebirth', icon: 'textures/items/nether_star', run: () => runChatCommand(player, 'top', ['rebirth']) },
 		{ text: '%admin.server.button.top_vip_coins', icon: 'textures/items/emerald', run: () => runChatCommand(player, 'top', ['vip_coins']) },
+		{ text: '%admin.server.button.top_kd', icon: 'textures/items/iron_sword', run: () => runChatCommand(player, 'top', ['kd']) },
+		{ text: '%admin.server.button.top_pvp', icon: 'textures/items/diamond_sword', run: () => runChatCommand(player, 'top', ['pvp']) },
+		{ text: '%admin.server.button.top_spleef', icon: 'textures/items/diamond_shovel', run: () => runChatCommand(player, 'top', ['spleef']) },
 		{ text: '%admin.boosts.button.auto', icon: 'textures/ui/icon_setting', run: () => autoEventsForm(player, () => serverMenu(player)) },
 		back(() => admin_menu(player))
 	], () => admin_menu(player));
@@ -426,6 +429,11 @@ export function botMenu(player) {
 			{ text: '%admin.bot.button.tp_here', icon: 'textures/items/ender_pearl', run: () => run(player, `tp "${bot.name}" @s`) },
 			{ text: '%admin.bot.button.tp_to', icon: 'textures/items/ender_pearl', run: () => run(player, `tp @s "${bot.name}"`) },
 			{ text: '%admin.bot.button.say', icon: 'textures/ui/comment', run: () => botSay(player) },
+			{ text: '%admin.bot.button.effects', icon: 'textures/items/potion_bottle_splash_heal', run: () => botEffects(player) },
+			{ text: '%admin.bot.button.clear_effects', icon: 'textures/items/bucket_milk', run: () => {
+				run(bot, 'effect @s clear');
+				tell(player, 'chat.admin.bot.effect.cleared', bot.name);
+			} },
 			{ text: '%admin.bot.button.remove', icon: 'textures/ui/cancel', run: () => {
 				if (removeBot()) tell(player, 'chat.admin.bot.removed', name);
 			} }
@@ -452,6 +460,32 @@ function botRename(player) {
 		if (!setBotName(name)) return tell(player, 'chat.admin.bot.error.name');
 		if (removeBot()) spawnBot(player);
 		tell(player, 'chat.admin.bot.renamed', name);
+	}, () => botMenu(player));
+}
+
+// Эффекты на бота (и отрицательные): эффект, усиление (ползунок 0–255, как у /effect: 0 — уровень I), время, частицы. Названия — effect.<id>.name в .lang
+// (отрицательные — красным, полезные — §a). Время — списком, как у бустов; «бесконечно» — 1 000 000 с (максимум /effect в 1.19.50)
+export const BOT_EFFECTS = ['speed', 'slowness', 'haste', 'mining_fatigue', 'strength', 'instant_health', 'instant_damage', 'jump_boost',
+	'nausea', 'regeneration', 'resistance', 'fire_resistance', 'water_breathing', 'invisibility', 'blindness', 'night_vision', 'hunger',
+	'weakness', 'poison', 'wither', 'health_boost', 'absorption', 'saturation', 'levitation', 'fatal_poison', 'slow_falling', 'conduit_power',
+	'bad_omen', 'village_hero', 'darkness'];
+const EFFECT_SECONDS = [30, 60, 300, 600, 1800, 1000000];
+const secondsLabel = (s) => s >= 1000000 ? '\ue12c %admin.bot.effects.infinite'
+	: s < 60 ? `\ue12c ${s} %admin.bot.effects.sec` : `\ue12c ${s / 60} %admin.bot.effects.min`;
+
+function botEffects(player) {
+	const form = modal('%admin.bot.effects.title')
+		.dropdown('%admin.bot.effects.effect', BOT_EFFECTS.map(id => `%effect.${id}.name`), 0)
+		.slider('%admin.bot.effects.level', 0, 255, 1, 0)
+		.dropdown('%admin.bot.effects.time', EFFECT_SECONDS.map(secondsLabel), 1)
+		.toggle('%admin.bot.effects.hide', false);
+	showModal(player, form, ([effect, level, time, hide]) => {
+		const bot = getBot();
+		if (!bot) return tell(player, 'chat.admin.bot.error.absent');
+		const id = BOT_EFFECTS[effect], seconds = EFFECT_SECONDS[time];
+		run(bot, `effect @s ${id} ${seconds} ${Math.round(level)} ${hide ? 'true' : 'false'}`);
+		tell(player, 'chat.admin.bot.effect.added', bot.name, { translate: `effect.${id}.name` }, String(level + 1),
+			seconds >= 1000000 ? { translate: 'admin.bot.effects.infinite' } : { rawtext: [{ text: String(seconds < 60 ? seconds : seconds / 60) + ' ' }, { translate: seconds < 60 ? 'admin.bot.effects.sec' : 'admin.bot.effects.min' }] });
 	}, () => botMenu(player));
 }
 

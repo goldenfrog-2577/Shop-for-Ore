@@ -7,6 +7,7 @@ import { LoginUI } from './login.js';
 import { RegisterUI } from './register.js';
 import { hasPassword } from './password.js';
 import { migratePlayer } from '../system/migrate.js';
+import { applyOfflineReset } from '../system/offline_reset.js';
 
 // Через сколько тиков после входа показывать форму (и повторять, пока игрок не вошёл)
 const FORM_DELAY_TICKS = 40;
@@ -41,6 +42,8 @@ function canLogin(player) {
 // с обоими сразу — старый код показывал им две формы одновременно
 world.events.playerJoin.subscribe((data) => {
 	const player = data.player;
+	// Не был в сети во время !resetoffline — все теги снимаются (до проверки пароля: регистрация заново)
+	applyOfflineReset(player);
 	// Старые названия тегов (до 0.3.0) — сразу на новые, иначе зарегистрированный игрок попал бы на регистрацию
 	migratePlayer(player);
 	// Кик админ-палкой (событие server:kick в player.json) ставит тег state:kick, из-за которого
