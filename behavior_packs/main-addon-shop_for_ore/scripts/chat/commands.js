@@ -11,7 +11,7 @@ import { freezePlayer, unfreezePlayer } from '../system/freeze.js';
 import { botMenu } from '../menu/admin_menu.js';
 import { addBan, removeBan, getBans, findBan, kickBanned } from '../system/ban.js';
 import { ACHIEVEMENTS, findAchievement, unlock, revoke, has as hasAchievement } from '../system/achievements.js';
-import { listGames, getGame, joinGame, leaveGame, startGame, endGame } from '../system/minigames.js';
+import { listGames, getGame, joinGame, leaveGame, startGame, endGame, canTeleport } from '../system/minigames.js';
 import { cpsOf, cpsLimit } from '../system/cps.js';
 import { wipeAll, wipeCounts } from '../system/wipe.js';
 import { resetOffline, offlineCounts } from '../system/offline_reset.js';
@@ -335,6 +335,8 @@ export function runChatCommand(player, command, args) {
 			}
 			const target = resolveTarget(player, args.slice(1).join(' ') || undefined, 'moder');
 			if (!target) break;
+			// Сплиф: участникам и зрителям телепорт закрыт до конца игры (кроме владельца)
+			if (!canTeleport(target, player)) break;
 			if (warp.arena) {
 				teleportToArena(target);
 			} else {
@@ -469,7 +471,7 @@ export function runChatCommand(player, command, args) {
 				tell(player, 'chat.cmd.report.error.cooldown');
 				break;
 			}
-			const staff = [...world.getPlayers()].filter(p => hasRole(p, 'moder') && p.name !== player.name);
+			const staff = [...world.getPlayers()].filter(p => hasRole(p, 'helper') && p.name !== player.name);
 			if (!staff.length) {
 				tell(player, 'chat.cmd.report.error.no_staff');
 				break;
@@ -1170,6 +1172,7 @@ export function runChatCommand(player, command, args) {
 				tell(player, 'chat.cmd.tp.error.self');
 				break;
 			}
+			if (!canTeleport(player)) break;
 			run(player, `tp @s "${first.name}"`);
 			tell(player, 'chat.cmd.tp.to', first.name);
 			break;
@@ -1191,6 +1194,7 @@ export function runChatCommand(player, command, args) {
 				tell(player, 'chat.cmd.tp.error.self');
 				break;
 			}
+			if (!canTeleport(tpTarget, player)) break;
 			run(player, `tp "${tpTarget.name}" @s`);
 			tell(player, 'chat.cmd.tp.done', tpTarget.name);
 			break;
@@ -1200,7 +1204,7 @@ export function runChatCommand(player, command, args) {
 			// Назначение роли — только владелец (проверено выше по commandsList)
 			const roleTargetName = args[0];
 			const newRole = (args[1] || '').toLowerCase();
-			if (!roleTargetName || !['player', 'moder', 'admin'].includes(newRole)) {
+			if (!roleTargetName || !['player', 'helper', 'moder', 'admin'].includes(newRole)) {
 				tell(player, 'chat.cmd.role.use');
 				break;
 			}
@@ -1219,6 +1223,7 @@ export function runChatCommand(player, command, args) {
 				tell(player, 'chat.cmd.role.error.owner');
 				break;
 			}
+			roleTarget.removeTag('role:helper');
 			roleTarget.removeTag('role:moder');
 			roleTarget.removeTag('role:admin');
 			if (newRole !== 'player') roleTarget.addTag(`role:${newRole}`);

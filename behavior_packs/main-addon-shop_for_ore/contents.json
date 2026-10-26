@@ -284,6 +284,15 @@
 		},
 		{
 			"path" : "scripts/system/trident.js"
+		},
+		{
+			"path" : "scripts/system/spleef.js"
+		},
+		{
+			"path" : "items/weapons/portable_ender_crystal.json"
+		},
+		{
+			"path" : "entities/thrown_ender_crystal.json"
 		}],
 	"version" : 1
 }

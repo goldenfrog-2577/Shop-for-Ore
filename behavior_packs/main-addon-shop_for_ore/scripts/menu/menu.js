@@ -11,6 +11,7 @@ import { cosmeticsMenu } from './cosmetics_shop.js';
 import { achievementsMenu } from './achievements_menu.js';
 import { minigamesMenu } from './minigames_menu.js';
 import { combatSecondsLeft } from '../system/pvp.js';
+import { canTeleport } from '../system/minigames.js';
 import { MUSIC_OFF } from '../system/music.js';
 import { ChangePasswordUI } from '../register/change.js';
 
@@ -219,6 +220,7 @@ function warps(player) {
 	// Режим боя на PvP-арене: телепорт из меню тоже недоступен
 	const go = (...commands) => () => {
 		if (combatSecondsLeft(player) > 0) return tell(player, 'chat.pvp.combat', combatSecondsLeft(player));
+		if (!canTeleport(player)) return;
 		for (const c of commands) run(player, c);
 	};
 	showMenu(player, '%menu.warps.title', '%menu.warps.body', [

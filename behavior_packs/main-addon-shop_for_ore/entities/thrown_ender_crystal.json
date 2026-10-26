@@ -1,0 +1,58 @@
+{
+	"format_version": "1.16.100",
+	"minecraft:entity": {
+		"description": {
+			"identifier": "server:thrown_ender_crystal",
+			"is_spawnable": false,
+			"is_summonable": true,
+			"is_experimental": false,
+			"runtime_identifier": "minecraft:snowball"
+		},
+		"component_groups": {
+			"server:explode": {
+				"minecraft:explode": {
+					"fuse_length": 0,
+					"fuse_lit": true,
+					"power": 6,
+					"causes_fire": false,
+					"breaks_blocks": false,
+					"destroy_affected_by_griefing": false
+				}
+			}
+		},
+		"components": {
+			"minecraft:collision_box": {
+				"width": 0.25,
+				"height": 0.25
+			},
+			"minecraft:projectile": {
+				"on_hit": {
+					"definition_event": {
+						"affect_projectile": true,
+						"event_trigger": {
+							"event": "server:explode",
+							"target": "self"
+						}
+					}
+				},
+				"anchor": 1,
+				"power": 1.5,
+				"gravity": 0.03,
+				"angle_offset": 0.0,
+				"offset": [0, -0.1, 0]
+			},
+			"minecraft:physics": {},
+			"minecraft:pushable": {
+				"is_pushable": true,
+				"is_pushable_by_piston": true
+			}
+		},
+		"events": {
+			"server:explode": {
+				"add": {
+					"component_groups": ["server:explode"]
+				}
+			}
+		}
+	}
+}

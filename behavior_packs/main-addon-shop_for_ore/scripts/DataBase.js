@@ -207,13 +207,14 @@ export function getWarns(player) {
 };
 
 // --- Роли: уровни доступа к командам и меню ---
-// Владелец — хост мира (тег role:owner, до 0.3.0 — host), он один. Модератора и администратора назначает
+// Владелец — хост мира (тег role:owner, до 0.3.0 — host), он один. Хелпера (только наблюдение: !tp, !invis,
+// !gm6, !cps, жалобы и предупреждения CPS), модератора и администратора назначает
 // владелец командой !role, роль хранится тегом role:<id>. Префикс в чате (тег rank:,
 // команда !prefix) — отдельное украшение и прав не даёт.
-export const ROLES = ['player', 'moder', 'admin', 'owner'];
+export const ROLES = ['player', 'helper', 'moder', 'admin', 'owner'];
 
 // Цвет ника по роли (в чате и над головой), если у игрока нет своего тега name:
-export const ROLE_COLORS = { player: '§f', moder: '§9', admin: '§c', owner: '§4' };
+export const ROLE_COLORS = { player: '§f', helper: '§3', moder: '§9', admin: '§c', owner: '§4' };
 
 // Цвет ника и префикса бота карты
 export const BOT_COLOR = '§f';
@@ -229,13 +230,15 @@ const COLOR_TAG = { name: 'chat:name_color:', text: 'chat:text_color:' };
 
 // --- Защита от выдачи себя за персонал (цвет ника, префикс, теги) ---
 // Цвета ролей: тёмно-красный — владелец, красный — администратор, синий — модератор. Ник этого цвета
-// и префикс с этим цветом или названием роли может быть только у того, у кого роль не ниже
+// и префикс с этим цветом или названием роли может быть только у того, у кого роль не ниже.
+// Цвет хелпера (тёмно-бирюзовый, §3) не закреплён: его продают в Косметике, а купленное не отбираем — защищено только название
 const RESERVED_COLORS = { '4': 'owner', 'c': 'admin', '9': 'moder' };
 // Названия ролей на 4 языках карты (основы слов); «бот» — только целым словом
 const ROLE_WORDS = [
 	[/владел|власник|owner|propietari|dueñ/i, 'owner'],
 	[/админ|адмін|admin/i, 'admin'],
 	[/модер|moder/i, 'moder'],
+	[/хелпер|helper|ayudante|помічник/i, 'helper'],
 	[/(^|[^a-zа-яёіїє])(бот|bot)($|[^a-zа-яёіїє])/i, 'bot']
 ];
 
@@ -247,7 +250,7 @@ export function colorAllowed(player, code) {
 
 /**
  * Роль, за которую текст (префикс) выдаёт игрока, если у него этой роли нет: по цвету роли или её названию.
- * @returns {'owner'|'admin'|'moder'|'bot'|undefined}
+ * @returns {'owner'|'admin'|'moder'|'helper'|'bot'|undefined}
  */
 export function impersonatedRole(player, text) {
 	for (const [, code] of String(text).matchAll(/§(.)/g)) {
@@ -278,7 +281,7 @@ export function setChatColor(player, kind, code) {
 }
 
 /**
- * Роль игрока: 'player' | 'moder' | 'admin' | 'owner'.
+ * Роль игрока: 'player' | 'helper' | 'moder' | 'admin' | 'owner'.
  * @param {Player} player
  * @returns {string}
  */
@@ -288,6 +291,7 @@ export function getRole(player) {
 	if (player.hasTag('role:owner')) return 'owner';
 	if (player.hasTag('role:admin')) return 'admin';
 	if (player.hasTag('role:moder')) return 'moder';
+	if (player.hasTag('role:helper')) return 'helper';
 	return 'player';
 };
 
@@ -482,6 +486,28 @@ export const commandsList = [
 		role: 'player'
 	},
 
+	// ===== Хелпер: наблюдение (модератор и выше — тоже) =====
+	{
+		command: '!cps §7<§fplayer§7>',
+		description: '%chat.help.cps',
+		role: 'helper'
+	},
+	{
+		command: '!tp §7<§fplayer§7>',
+		description: '%chat.help.tp',
+		role: 'helper'
+	},
+	{
+		command: '!invis §7[§fon§8/§foff§7]',
+		description: '%chat.help.invis',
+		role: 'helper'
+	},
+	{
+		command: '!gm6 §7[§fplayer§7]',
+		description: '%chat.help.gm6',
+		role: 'helper'
+	},
+
 	// ===== Модератор: наказания =====
 	{
 		command: '!kick §7<§fplayer§7> [§freason§7]',
@@ -518,31 +544,11 @@ export const commandsList = [
 		description: '%chat.help.unfreeze',
 		role: 'moder'
 	},
-	{
-		command: '!cps §7<§fplayer§7>',
-		description: '%chat.help.cps',
-		role: 'moder'
-	},
 
 	// ===== Модератор: перемещение и наблюдение =====
 	{
-		command: '!tp §7<§fplayer§7>',
-		description: '%chat.help.tp',
-		role: 'moder'
-	},
-	{
 		command: '!tphere §7<§fplayer§7>',
 		description: '%chat.help.tphere',
-		role: 'moder'
-	},
-	{
-		command: '!invis §7[§fon§8/§foff§7]',
-		description: '%chat.help.invis',
-		role: 'moder'
-	},
-	{
-		command: '!gm6 §7[§fplayer§7]',
-		description: '%chat.help.gm6',
 		role: 'moder'
 	},
 
@@ -646,7 +652,7 @@ export const commandsList = [
 
 	// ===== Владелец =====
 	{
-		command: '!role §7<§fplayer§7> <§fplayer§8/§fmoder§8/§fadmin§7>',
+		command: '!role §7<§fplayer§7> <§fplayer§8/§fhelper§8/§fmoder§8/§fadmin§7>',
 		description: '%chat.help.role',
 		role: 'owner'
 	},

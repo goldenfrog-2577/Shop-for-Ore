@@ -1,7 +1,7 @@
 // --- Проверка CPS (ударов в секунду) против автокликеров ---
 // Считаются только удары по сущностям (entityHit с hitEntity): копание блоков не в счёт.
 // Если CPS не ниже предела ALERT_SECONDS секунд подряд — модераторам и выше в сети приходит
-// предупреждение (не чаще раза в ALERT_COOLDOWN секунд на игрока). Игрока не наказывает:
+// предупреждение хелперам и выше (не чаще раза в ALERT_COOLDOWN секунд на игрока). Игрока не наказывает:
 // решает модератор (!cps <ник> — текущий CPS и максимум за 10 секунд).
 // Предел меняется без правки кода: /scoreboard players set cps_limit settings <число> (0 — по умолчанию).
 // На PvP-арене (тег player:pvp) каждый видит свой CPS и скорость (м/с, по горизонтали за последнюю секунду)
@@ -83,7 +83,7 @@ world.events.tick.subscribe(() => {
 		if ((lastAlert.get(name) ?? -Infinity) > tick - ALERT_COOLDOWN * 20) continue;
 		lastAlert.set(name, tick);
 		for (const staff of world.getPlayers()) {
-			if (hasRole(staff, 'moder')) tell(staff, 'chat.cps.alert', name, cps, s, limit);
+			if (hasRole(staff, 'helper')) tell(staff, 'chat.cps.alert', name, cps, s, limit);
 		}
 	}
 });

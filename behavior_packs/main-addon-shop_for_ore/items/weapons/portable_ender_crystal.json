@@ -1,0 +1,28 @@
+{
+	"format_version": "1.16.100",
+	"minecraft:item": {
+		"description": {
+			"identifier": "server:portable_ender_crystal",
+			"category": "equipment"
+		},
+		"components": {
+			"minecraft:icon": {
+				"texture": "portable_ender_crystal"
+			},
+			"minecraft:display_name": {
+				"value": "item.server:portable_ender_crystal.name"
+			},
+			"minecraft:max_stack_size": 16,
+			"minecraft:foil": true,
+			"minecraft:throwable": {
+				"do_swing_animation": true,
+				"launch_power_scale": 1.0,
+				"max_launch_power": 1.0
+			},
+			"minecraft:projectile": {
+				"projectile_entity": "server:thrown_ender_crystal",
+				"minimum_critical_power": 1.25
+			}
+		}
+	}
+}

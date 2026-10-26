@@ -67,7 +67,8 @@ const itemIcon = (typeId) => shortId(typeId) === 'shield' ? undefined
  * Пустой список — предмет не зачаровывается (или это кирка уровня).
  */
 export function optionsFor(item) {
-	if (!item || item.typeId.endsWith('_pickaxe')) return [];
+	// Кирка уровня зачаровывается отдельно; лопаты не продаём (в сплифе лопата игры — её зачаровать нельзя)
+	if (!item || item.typeId.endsWith('_pickaxe') || item.typeId.endsWith('_shovel')) return [];
 	const comp = item.getComponent('enchantments');
 	if (!comp) return [];
 	const list = comp.enchantments;

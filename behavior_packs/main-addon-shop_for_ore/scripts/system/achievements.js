@@ -139,7 +139,8 @@ world.events.tick.subscribe(() => {
 const mined = new Map();
 world.events.blockBreak.subscribe((e) => {
 	const p = e.player;
-	if (!p || isPending(p)) return;
+	// Снег в сплифе — не добыча (stat_mined считает шахты)
+	if (!p || isPending(p) || p.hasTag('game:spleef')) return;
 	mined.set(p.name, (mined.get(p.name) ?? 0) + 1);
 });
 system.runSchedule(() => {

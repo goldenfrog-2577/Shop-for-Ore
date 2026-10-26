@@ -1,0 +1,24 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "server:thrown_ender_crystal",
+			"materials": {
+				"default": "snowball"
+			},
+			"textures": {
+				"default": "textures/items/end_crystal"
+			},
+			"geometry": {
+				"default": "geometry.item_sprite"
+			},
+			"render_controllers": ["controller.render.item_sprite"],
+			"animations": {
+				"flying": "animation.actor.billboard"
+			},
+			"scripts": {
+				"animate": ["flying"]
+			}
+		}
+	}
+}
