@@ -15,8 +15,8 @@ tag @a[x=-103,y=0,z=-51,r=1,tag=!sys:warp_pvp] add sys:warp_pvp
 execute as @a[x=-115,y=0,z=-51,r=1] at @s run tp @s 500 3 500
 
 # Установка режима приключения и снятие опыта
-# Владельцу, администраторам и модераторам режим не сбрасывается (!gm1, !gm6)
-gamemode a @a[tag=!role:owner,tag=!role:admin,tag=!role:moder,m=!a]
+# Владельцу, администраторам, модераторам и хелперам режим не сбрасывается (!gm1, !gm6)
+gamemode a @a[tag=!role:owner,tag=!role:admin,tag=!role:moder,tag=!role:helper,m=!a]
 xp -100l @a[lm=1]
 
 # Начальные значения для новых игроков (без тега player)
