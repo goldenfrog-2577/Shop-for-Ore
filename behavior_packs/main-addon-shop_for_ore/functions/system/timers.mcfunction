@@ -4,7 +4,7 @@
 # В Bedrock «execute if/unless score» с несуществующим счётом не срабатывает ни в одном варианте,
 # поэтому счёт сначала создаётся через «add 0».
 scoreboard players add setup system 0
-execute if score setup system matches ..3 run function system/setup
+execute if score setup system matches ..4 run function system/setup
 
 # Каждый тик: конец «золотого дождя»
 # было: командный блок (56, 4, 56)

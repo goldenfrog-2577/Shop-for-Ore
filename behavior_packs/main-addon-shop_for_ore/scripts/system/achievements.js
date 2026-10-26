@@ -1,7 +1,8 @@
 // --- Достижения и испытания (как в Java Edition: зелёные — обычные, фиолетовые — испытания) ---
 // Идея — по мотивам карты FearCube (с разрешения автора), код свой.
 // Получено — тег ach:<id>. Счётчики для условий — табло stat_mined (сломано блоков),
-// stat_kills (победы над игроками), stat_playtime (минут в игре), stat_wins (победы в мини-играх);
+// stat_kills (победы над игроками), stat_deaths (смерти на PvP-арене или от игрока — для !top kd),
+// stat_playtime (минут в игре), stat_wins (победы во всех мини-играх; по играм — stat_win_<id>, minigames.js);
 // перевод денег отмечает тег stat:paid (DataBase.transferMoney).
 // Проверка раз в секунду; за раз игроку выдаётся не больше одного достижения, следующее — когда
 // погаснет плашка (иначе старый игрок при первом входе получил бы десяток сразу).
@@ -12,7 +13,7 @@ import { TRAILS } from '../menu/cosmetics_shop.js';
 import { showToast, TOAST_TICKS } from './toast.js';
 
 export const ACH_TAG = 'ach:';
-export const STATS = ['stat_mined', 'stat_kills', 'stat_playtime', 'stat_wins'];
+export const STATS = ['stat_mined', 'stat_kills', 'stat_deaths', 'stat_playtime', 'stat_wins', 'stat_win_pvp_ffa', 'stat_win_spleef'];
 
 // Глифы шрифта: кубок — достижение, звезда — испытание; монета, VIP-коин, опыт — награды
 export const GLYPH = { task: '', challenge: '' };
@@ -157,15 +158,19 @@ system.runSchedule(() => {
 	}
 }, 1200);
 
-// Победа над игроком: удар добил (здоровье ≤ 0), бил другой игрок. Одна смерть — один раз
+// Смерть (удар добил: здоровье ≤ 0). Одна смерть — один раз.
+// Убил другой игрок — ему +1 к stat_kills. Смерть для K/D (stat_deaths) — от игрока или любая на PvP-арене
 const lastDeath = new Map();
 world.events.entityHurt.subscribe((e) => {
 	const victim = e.hurtEntity, killer = e.damagingEntity;
-	if (victim?.typeId !== 'minecraft:player' || killer?.typeId !== 'minecraft:player' || killer === victim) return;
+	if (victim?.typeId !== 'minecraft:player' || victim.hasTag('role:bot')) return;
+	const byPlayer = killer?.typeId === 'minecraft:player' && killer !== victim;
+	if (!byPlayer && !victim.hasTag('player:pvp')) return;
 	let hp;
 	try { hp = victim.getComponent('health').current; } catch { return; }
 	if (hp > 0) return;
 	if ((lastDeath.get(victim.name) ?? -100) > tick - 40) return;
 	lastDeath.set(victim.name, tick);
-	run(killer, 'scoreboard players add @s stat_kills 1');
+	run(victim, 'scoreboard players add @s stat_deaths 1');
+	if (byPlayer) run(killer, 'scoreboard players add @s stat_kills 1');
 });

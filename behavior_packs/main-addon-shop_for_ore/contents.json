@@ -278,6 +278,12 @@
 		},
 		{
 			"path" : "scripts/system/wipe.js"
+		},
+		{
+			"path" : "scripts/system/offline_reset.js"
+		},
+		{
+			"path" : "scripts/system/trident.js"
 		}],
 	"version" : 1
 }

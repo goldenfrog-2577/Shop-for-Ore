@@ -22,6 +22,16 @@ export const ITEM_ENCHANTS = [
 	{ id: 'power', name: 'enchantment.arrowDamage', max: 5, price: 4000 },
 	{ id: 'punch', name: 'enchantment.arrowKnockback', max: 2, price: 4000 },
 	{ id: 'infinity', name: 'enchantment.arrowInfinite', max: 1, price: 30000 },
+	// Трезубец (с «Громовержцем» попадание в игрока бьёт молнией — system/trident.js) и арбалет.
+	// Несовместимые (тягун с верностью и громовержцем, тройной выстрел с пронзанием) отсекает canAddEnchantment
+	{ id: 'loyalty', name: 'enchantment.tridentLoyalty', max: 3, price: 6000 },
+	{ id: 'impaling', name: 'enchantment.tridentImpaling', max: 5, price: 5000 },
+	{ id: 'riptide', name: 'enchantment.tridentRiptide', max: 3, price: 6000 },
+	{ id: 'channeling', name: 'enchantment.tridentChanneling', max: 1, price: 50000 },
+	{ id: 'multishot', name: 'enchantment.crossbowMultishot', max: 1, price: 20000 },
+	{ id: 'piercing', name: 'enchantment.crossbowPiercing', max: 4, price: 5000 },
+	{ id: 'quickCharge', name: 'enchantment.crossbowQuickCharge', max: 3, price: 6000 },
+	// Общие: щит берёт только эти два
 	{ id: 'unbreaking', name: 'enchantment.durability', max: 3, price: 4000 },
 	{ id: 'mending', name: 'enchantment.mending', max: 1, price: 40000 }
 ];
@@ -47,8 +57,10 @@ export function enchantableItems(player) {
 }
 
 const shortId = (typeId) => typeId.replace('minecraft:', '');
-// Иконка предмета: textures/items/<id>, у золотых и деревянных в ванили другие имена файлов
-const itemIcon = (typeId) => `textures/items/${shortId(typeId).replace(/^golden_/, 'gold_').replace(/^wooden_/, 'wood_').replace(/^bow$/, 'bow_standby')}`;
+// Иконка предмета: textures/items/<id>, у золотых, деревянных, лука и арбалета в ванили другие имена файлов.
+// У щита отдельной иконки предмета в ванили нет — кнопка без значка
+const itemIcon = (typeId) => shortId(typeId) === 'shield' ? undefined
+	: `textures/items/${shortId(typeId).replace(/^golden_/, 'gold_').replace(/^wooden_/, 'wood_').replace(/^bow$/, 'bow_standby').replace(/^crossbow$/, 'crossbow_standby')}`;
 
 /**
  * Что можно купить для предмета: [{ e, level (текущий), next (или undefined, если максимум) }].

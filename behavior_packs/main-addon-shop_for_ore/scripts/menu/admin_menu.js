@@ -426,6 +426,11 @@ export function botMenu(player) {
 			{ text: '%admin.bot.button.tp_here', icon: 'textures/items/ender_pearl', run: () => run(player, `tp "${bot.name}" @s`) },
 			{ text: '%admin.bot.button.tp_to', icon: 'textures/items/ender_pearl', run: () => run(player, `tp @s "${bot.name}"`) },
 			{ text: '%admin.bot.button.say', icon: 'textures/ui/comment', run: () => botSay(player) },
+			{ text: '%admin.bot.button.effects', icon: 'textures/items/potion_bottle_splash_heal', run: () => botEffects(player) },
+			{ text: '%admin.bot.button.clear_effects', icon: 'textures/items/bucket_milk', run: () => {
+				run(bot, 'effect @s clear');
+				tell(player, 'chat.admin.bot.effect.cleared', bot.name);
+			} },
 			{ text: '%admin.bot.button.remove', icon: 'textures/ui/cancel', run: () => {
 				if (removeBot()) tell(player, 'chat.admin.bot.removed', name);
 			} }
@@ -452,6 +457,33 @@ function botRename(player) {
 		if (!setBotName(name)) return tell(player, 'chat.admin.bot.error.name');
 		if (removeBot()) spawnBot(player);
 		tell(player, 'chat.admin.bot.renamed', name);
+	}, () => botMenu(player));
+}
+
+// Эффекты на бота (и отрицательные): эффект, уровень, время, частицы. Названия — effect.<id>.name в .lang
+// (отрицательные — красным). Время — списком, как у бустов; «бесконечно» — 1 000 000 с (максимум /effect в 1.19.50)
+export const BOT_EFFECTS = ['speed', 'slowness', 'haste', 'mining_fatigue', 'strength', 'instant_health', 'instant_damage', 'jump_boost',
+	'nausea', 'regeneration', 'resistance', 'fire_resistance', 'water_breathing', 'invisibility', 'blindness', 'night_vision', 'hunger',
+	'weakness', 'poison', 'wither', 'health_boost', 'absorption', 'saturation', 'levitation', 'fatal_poison', 'slow_falling', 'conduit_power',
+	'bad_omen', 'village_hero', 'darkness'];
+const EFFECT_SECONDS = [30, 60, 300, 600, 1800, 1000000];
+const EFFECT_LEVELS = ['I', 'II', 'III', 'IV', 'V'];
+const secondsLabel = (s) => s >= 1000000 ? '\ue12c %admin.bot.effects.infinite'
+	: s < 60 ? `\ue12c ${s} %admin.bot.effects.sec` : `\ue12c ${s / 60} %admin.bot.effects.min`;
+
+function botEffects(player) {
+	const form = modal('%admin.bot.effects.title')
+		.dropdown('%admin.bot.effects.effect', BOT_EFFECTS.map(id => `%effect.${id}.name`), 0)
+		.dropdown('%admin.bot.effects.level', EFFECT_LEVELS, 0)
+		.dropdown('%admin.bot.effects.time', EFFECT_SECONDS.map(secondsLabel), 1)
+		.toggle('%admin.bot.effects.hide', false);
+	showModal(player, form, ([effect, level, time, hide]) => {
+		const bot = getBot();
+		if (!bot) return tell(player, 'chat.admin.bot.error.absent');
+		const id = BOT_EFFECTS[effect], seconds = EFFECT_SECONDS[time];
+		run(bot, `effect @s ${id} ${seconds} ${level} ${hide ? 'true' : 'false'}`);
+		tell(player, 'chat.admin.bot.effect.added', bot.name, { translate: `effect.${id}.name` }, EFFECT_LEVELS[level],
+			seconds >= 1000000 ? { translate: 'admin.bot.effects.infinite' } : { rawtext: [{ text: String(seconds < 60 ? seconds : seconds / 60) + ' ' }, { translate: seconds < 60 ? 'admin.bot.effects.sec' : 'admin.bot.effects.min' }] });
 	}, () => botMenu(player));
 }
 

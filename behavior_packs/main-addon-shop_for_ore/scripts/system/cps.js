@@ -4,7 +4,8 @@
 // предупреждение (не чаще раза в ALERT_COOLDOWN секунд на игрока). Игрока не наказывает:
 // решает модератор (!cps <ник> — текущий CPS и максимум за 10 секунд).
 // Предел меняется без правки кода: /scoreboard players set cps_limit settings <число> (0 — по умолчанию).
-// На PvP-арене (тег player:pvp) каждый видит свой CPS строкой над хотбаром (system/toast.js → hud_screen.json).
+// На PvP-арене (тег player:pvp) каждый видит свой CPS и скорость (м/с, по горизонтали за последнюю секунду)
+// строкой над хотбаром (system/toast.js → hud_screen.json).
 
 import { world } from '@minecraft/server';
 import { hasRole, tell } from '../DataBase.js';
@@ -20,6 +21,19 @@ const hits = new Map();           // ник → тики ударов за по�
 const history = new Map();        // ник → CPS по секундам, последние HISTORY
 const streak = new Map();         // ник → секунд подряд выше предела
 const lastAlert = new Map();      // ник → тик последнего предупреждения
+const lastPos = new Map();        // ник → позиция секунду назад (для скорости)
+// Больше этого за секунду — телепорт, а не бег: скорость не показываем
+const TELEPORT_BLOCKS = 40;
+
+/** Скорость по горизонтали, м/с (блоков в секунду) с одним знаком; '—' — телепорт или первая секунда. */
+export function speedOf(player) {
+	const { x, z } = player.location;
+	const prev = lastPos.get(player.name);
+	lastPos.set(player.name, { x, z });
+	if (!prev) return '—';
+	const d = Math.hypot(x - prev.x, z - prev.z);
+	return d > TELEPORT_BLOCKS ? '—' : d.toFixed(1);
+}
 
 /** Предел CPS из табло settings (cps_limit), иначе DEFAULT_LIMIT. */
 export function cpsLimit() {
@@ -61,8 +75,8 @@ world.events.tick.subscribe(() => {
 		// Свой CPS — только на арене; цвет: обычный, близко к пределу, предел
 		if (player.hasTag('player:pvp') && !player.hasTag('role:bot')) {
 			const color = cps >= limit ? '§c' : cps >= limit * 0.75 ? '§6' : '§a';
-			showHudLine(player, [{ translate: 'hud.cps', with: [`${color}${cps}`] }]);
-		}
+			showHudLine(player, [{ translate: 'hud.cps', with: [`${color}${cps}`, speedOf(player)] }]);
+		} else lastPos.delete(name);
 		const s = cps >= limit ? (streak.get(name) ?? 0) + 1 : 0;
 		streak.set(name, s);
 		if (s < ALERT_SECONDS || player.hasTag('role:bot')) continue;
@@ -75,5 +89,5 @@ world.events.tick.subscribe(() => {
 });
 
 world.events.playerLeave.subscribe((e) => {
-	for (const m of [hits, history, streak, lastAlert]) m.delete(e.playerName);
+	for (const m of [hits, history, streak, lastAlert, lastPos]) m.delete(e.playerName);
 });
