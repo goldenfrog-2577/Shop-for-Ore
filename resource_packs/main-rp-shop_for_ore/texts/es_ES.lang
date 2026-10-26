@@ -1023,6 +1023,7 @@ chat.cmd.game.error.start=§r⩕ §l§cERROR!§r §8» §7No se puede empezar: e
 chat.cmd.game.error.empty=§r⩕ §l§cERROR!§r §8» §7No hay nadie en este juego
 chat.cps.alert=§r §cAnti-Cheat §8» §7§f%1$s§r§7: §c%2$s CPS§7 durante %3$s s seguidos (límite §e%4$s§7): posible autoclicker
 hud.cps=§7CPS: %1$s §8• §f%2$s §7m/s
+hud.cps.hp=§7CPS: %1$s §8• §f%2$s §7m/s §8• §7HP: %3$s
 chat.cmd.cps.use=§r §7CMD §8» §7Uso: §e!cps§7 <jugador>
 chat.cmd.cps.info=§r §7CMD §8» §7CPS de §f%1$s§r§7: ahora §e%2$s§7, máximo en 10 s: §e%3$s§7 (límite §e%4$s§7)
 chat.cmd.ac.use=§r §7CMD §8» §7Uso: §e!ac§7 [jugador] · §e!ac reset§7 <jugador> · §e!ac mode§7 <alerts/rollback/kick>

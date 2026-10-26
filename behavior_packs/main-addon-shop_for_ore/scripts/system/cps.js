@@ -5,7 +5,8 @@
 // решает модератор (!cps <ник> — текущий CPS и максимум за 10 секунд).
 // Предел меняется без правки кода: /scoreboard players set cps_limit settings <число> (0 — по умолчанию).
 // На PvP-арене (тег player:pvp) каждый видит свой CPS и скорость (м/с, по горизонтали за последнюю секунду)
-// строкой над хотбаром (system/toast.js → hud_screen.json).
+// строкой над хотбаром (system/toast.js → hud_screen.json), а после удара — ещё и здоровье противника
+// (последний, кого ты ударил или кто ударил тебя, 10 секунд; обновляется дважды в секунду).
 
 import { world } from '@minecraft/server';
 import { hasRole, tell } from '../DataBase.js';
@@ -59,8 +60,53 @@ export function cpsOf(name) {
 	return { now, max };
 }
 
+// --- Здоровье противника на арене: последний, кого ты ударил или кто ударил тебя (до OPPONENT_SECONDS секунд) ---
+const OPPONENT_SECONDS = 10;
+const opponent = new Map();       // ник → { name, tick }
+const shown = new Map();          // ник → [CPS с цветом, скорость] за последнюю секунду
+
+world.events.entityHurt.subscribe((e) => {
+	const a = e.damagingEntity, v = e.hurtEntity;
+	if (a?.typeId !== 'minecraft:player' || v?.typeId !== 'minecraft:player' || a === v) return;
+	if (!a.hasTag('player:pvp') || !v.hasTag('player:pvp')) return;
+	opponent.set(a.name, { name: v.name, tick });
+	opponent.set(v.name, { name: a.name, tick });
+});
+
+/** Здоровье противника для строки над хотбаром: '§a17' (цвет по доле от максимума) или undefined. */
+export function opponentHp(player) {
+	const o = opponent.get(player.name);
+	if (!o || o.tick < tick - OPPONENT_SECONDS * 20) return undefined;
+	const target = [...world.getPlayers()].find(p => p.name === o.name);
+	if (!target || !target.hasTag('player:pvp')) return undefined;
+	try {
+		const health = target.getComponent('health');
+		if (!(health.current > 0)) return undefined;
+		const max = health.value > 0 ? health.value : 20;
+		const color = health.current > max * 0.6 ? '§a' : health.current > max * 0.3 ? '§6' : '§c';
+		return `${color}${Math.ceil(health.current)}`;
+	} catch {
+		return undefined;
+	}
+}
+
+/** Строка над хотбаром: CPS, скорость и — если есть противник — его здоровье. */
+function renderHud(player) {
+	const [cps, speed] = shown.get(player.name) ?? ['§a0', '—'];
+	const hp = opponentHp(player);
+	showHudLine(player, [hp === undefined
+		? { translate: 'hud.cps', with: [cps, speed] }
+		: { translate: 'hud.cps.hp', with: [cps, speed, hp] }]);
+}
+
 world.events.tick.subscribe(() => {
 	tick++;
+	// Здоровье меняется быстрее, чем раз в секунду: между секундными пересчётами строка обновляется на полсекунде
+	if (tick % 20 === 10) {
+		for (const player of world.getPlayers()) {
+			if (player.hasTag('player:pvp') && !player.hasTag('role:bot') && opponentHp(player) !== undefined) renderHud(player);
+		}
+	}
 	if (tick % 20 !== 0) return;
 	const limit = cpsLimit();
 	for (const player of world.getPlayers()) {
@@ -75,8 +121,9 @@ world.events.tick.subscribe(() => {
 		// Свой CPS — только на арене; цвет: обычный, близко к пределу, предел
 		if (player.hasTag('player:pvp') && !player.hasTag('role:bot')) {
 			const color = cps >= limit ? '§c' : cps >= limit * 0.75 ? '§6' : '§a';
-			showHudLine(player, [{ translate: 'hud.cps', with: [`${color}${cps}`, speedOf(player)] }]);
-		} else lastPos.delete(name);
+			shown.set(name, [`${color}${cps}`, speedOf(player)]);
+			renderHud(player);
+		} else { lastPos.delete(name); shown.delete(name); opponent.delete(name); }
 		const s = cps >= limit ? (streak.get(name) ?? 0) + 1 : 0;
 		streak.set(name, s);
 		if (s < ALERT_SECONDS || player.hasTag('role:bot')) continue;
@@ -89,5 +136,5 @@ world.events.tick.subscribe(() => {
 });
 
 world.events.playerLeave.subscribe((e) => {
-	for (const m of [hits, history, streak, lastAlert, lastPos]) m.delete(e.playerName);
+	for (const m of [hits, history, streak, lastAlert, lastPos, opponent, shown]) m.delete(e.playerName);
 });

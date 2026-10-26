@@ -271,6 +271,12 @@
 		},
 		{
 			"path" : "entity/thrown_ender_crystal.entity.json"
+		},
+		{
+			"path" : "textures/ui/server/server_scoreboard_entry.png"
+		},
+		{
+			"path" : "textures/ui/server/server_scoreboard_entry.json"
 		}],
 	"version" : 1
 }
