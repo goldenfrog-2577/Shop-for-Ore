@@ -20,7 +20,8 @@ import './chat/chat.js';         // Чат-функционал
 import './chat/commands.js';     // Команды чата
 
 // Импорт других вспомогательных модулей
-import './system/anticheat.js';   // Античит
+import './system/anticheat.js';   // Античит: очки нарушений, сигналы персоналу, проверка инвентаря
+import './system/ac_checks.js';   // Античит: скорость, полёт, сквозь блоки, дальность и направление удара, копание
 import './system/spawnbot.js';    // Спавн бота
 import './system/tools.js';       // Неразрушаемая кирка уровня
 import './system/pvp.js';         // PvP-арена: случайная точка входа и режим боя
