@@ -410,6 +410,9 @@ function serverMenu(player) {
 		{ text: '%admin.server.button.top_lvl', icon: 'textures/items/experience_bottle', run: () => runChatCommand(player, 'top', ['lvl']) },
 		{ text: '%admin.server.button.top_rebirth', icon: 'textures/items/nether_star', run: () => runChatCommand(player, 'top', ['rebirth']) },
 		{ text: '%admin.server.button.top_vip_coins', icon: 'textures/items/emerald', run: () => runChatCommand(player, 'top', ['vip_coins']) },
+		{ text: '%admin.server.button.top_kd', icon: 'textures/items/iron_sword', run: () => runChatCommand(player, 'top', ['kd']) },
+		{ text: '%admin.server.button.top_pvp', icon: 'textures/items/diamond_sword', run: () => runChatCommand(player, 'top', ['pvp']) },
+		{ text: '%admin.server.button.top_spleef', icon: 'textures/items/diamond_shovel', run: () => runChatCommand(player, 'top', ['spleef']) },
 		{ text: '%admin.boosts.button.auto', icon: 'textures/ui/icon_setting', run: () => autoEventsForm(player, () => serverMenu(player)) },
 		back(() => admin_menu(player))
 	], () => admin_menu(player));
@@ -460,29 +463,28 @@ function botRename(player) {
 	}, () => botMenu(player));
 }
 
-// Эффекты на бота (и отрицательные): эффект, уровень, время, частицы. Названия — effect.<id>.name в .lang
+// Эффекты на бота (и отрицательные): эффект, усиление (ползунок 0–255, как у /effect: 0 — уровень I), время, частицы. Названия — effect.<id>.name в .lang
 // (отрицательные — красным). Время — списком, как у бустов; «бесконечно» — 1 000 000 с (максимум /effect в 1.19.50)
 export const BOT_EFFECTS = ['speed', 'slowness', 'haste', 'mining_fatigue', 'strength', 'instant_health', 'instant_damage', 'jump_boost',
 	'nausea', 'regeneration', 'resistance', 'fire_resistance', 'water_breathing', 'invisibility', 'blindness', 'night_vision', 'hunger',
 	'weakness', 'poison', 'wither', 'health_boost', 'absorption', 'saturation', 'levitation', 'fatal_poison', 'slow_falling', 'conduit_power',
 	'bad_omen', 'village_hero', 'darkness'];
 const EFFECT_SECONDS = [30, 60, 300, 600, 1800, 1000000];
-const EFFECT_LEVELS = ['I', 'II', 'III', 'IV', 'V'];
 const secondsLabel = (s) => s >= 1000000 ? '\ue12c %admin.bot.effects.infinite'
 	: s < 60 ? `\ue12c ${s} %admin.bot.effects.sec` : `\ue12c ${s / 60} %admin.bot.effects.min`;
 
 function botEffects(player) {
 	const form = modal('%admin.bot.effects.title')
 		.dropdown('%admin.bot.effects.effect', BOT_EFFECTS.map(id => `%effect.${id}.name`), 0)
-		.dropdown('%admin.bot.effects.level', EFFECT_LEVELS, 0)
+		.slider('%admin.bot.effects.level', 0, 255, 1, 0)
 		.dropdown('%admin.bot.effects.time', EFFECT_SECONDS.map(secondsLabel), 1)
 		.toggle('%admin.bot.effects.hide', false);
 	showModal(player, form, ([effect, level, time, hide]) => {
 		const bot = getBot();
 		if (!bot) return tell(player, 'chat.admin.bot.error.absent');
 		const id = BOT_EFFECTS[effect], seconds = EFFECT_SECONDS[time];
-		run(bot, `effect @s ${id} ${seconds} ${level} ${hide ? 'true' : 'false'}`);
-		tell(player, 'chat.admin.bot.effect.added', bot.name, { translate: `effect.${id}.name` }, EFFECT_LEVELS[level],
+		run(bot, `effect @s ${id} ${seconds} ${Math.round(level)} ${hide ? 'true' : 'false'}`);
+		tell(player, 'chat.admin.bot.effect.added', bot.name, { translate: `effect.${id}.name` }, String(level + 1),
 			seconds >= 1000000 ? { translate: 'admin.bot.effects.infinite' } : { rawtext: [{ text: String(seconds < 60 ? seconds : seconds / 60) + ' ' }, { translate: seconds < 60 ? 'admin.bot.effects.sec' : 'admin.bot.effects.min' }] });
 	}, () => botMenu(player));
 }
