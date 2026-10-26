@@ -4,7 +4,10 @@
 // телепорт участникам и зрителям, пока идёт игра, запрещён всем, кроме владельца (lockTeleport в minigames.js).
 // Урона нет (сопротивление 255 на время игры): падение с этажа на этаж — 10 блоков.
 // Полы — точная форма бетонных полов карты (снята с мира), перед игрой и после неё заливаются снегом
-// заново (fill по рядам). Башню держит прогруженной ticking area «spleef».
+// заново (fill по рядам). Команд заливки больше сотни, а очередь команд скриптов в 1.19.50 ограничена
+// («command queue is full»), поэтому они уходят порциями по FILL_PER_TICK за тик.
+// Снег падает снежками: выпавшее убираем сразу у сломанного блока и раз в секунду по всей башне.
+// Башню держит прогруженной ticking area «spleef».
 // Идея — по мотивам карты FearCube (с разрешения автора), код свой.
 
 import { world } from '@minecraft/server';
@@ -28,6 +31,9 @@ const AREA = { x: 485, y: -47, z: 486, dx: 32, dy: 44, dz: 32 };
 const SHOVEL = 'replaceitem entity @s slot.hotbar 0 diamond_shovel 1 0 {"minecraft:can_destroy":{"blocks":["snow"]},"minecraft:item_lock":{"mode":"lock_in_slot"}}';
 
 const overworld = () => world.getDimension('overworld');
+const FILL_PER_TICK = 8;
+const queue = [];               // команды заливки, ждущие своего тика
+const killItems = (a = AREA) => `kill @e[type=item,x=${a.x},y=${a.y},z=${a.z},dx=${a.dx},dy=${a.dy},dz=${a.dz}]`;
 
 /** Команды заливки всех этажей снегом. */
 export function arenaFillCommands() {
@@ -38,12 +44,13 @@ export function arenaFillCommands() {
 	return out;
 }
 
-/** Залить этажи снегом заново (перед игрой, после неё и при загрузке — так бетон и стал снегом). */
+/** Залить этажи снегом заново (перед игрой, после неё и при загрузке — так бетон и стал снегом). Порциями по тикам. */
 export function resetArena() {
-	const dim = overworld();
-	for (const c of arenaFillCommands()) run(dim, c);
-	run(dim, `kill @e[type=item,x=${AREA.x},y=${AREA.y},z=${AREA.z},dx=${AREA.dx},dy=${AREA.dy},dz=${AREA.dz}]`);
+	if (queue.length) return;      // заливка уже идёт
+	queue.push(...arenaFillCommands(), killItems());
 }
+/** Сколько команд заливки ещё ждёт. */
+export const pendingFill = () => queue.length;
 
 /** Точка старта игрока index из total — по кругу на верхнем этаже, лицом к центру. */
 export function startPoint(index, total) {
@@ -86,9 +93,18 @@ registerGame({
 let tick = 0;
 world.events.tick.subscribe(() => {
 	tick++;
+	if (queue.length) for (const c of queue.splice(0, FILL_PER_TICK)) run(overworld(), c);
 	// Один раз после загрузки: держим башню прогруженной и заливаем полы снегом (бетон → снег)
 	if (tick === 40) run(overworld(), `tickingarea add ${AREA.x} ${AREA.y} ${AREA.z} ${AREA.x + AREA.dx} ${AREA.y + AREA.dy} ${AREA.z + AREA.dz} spleef`);
 	if (tick === 100) resetArena();
 	if (tick % 20 !== 0 || getGame('spleef')?.phase !== 'running') return;
-	run(overworld(), `kill @e[type=item,x=${AREA.x},y=${AREA.y},z=${AREA.z},dx=${AREA.dx},dy=${AREA.dy},dz=${AREA.dz}]`);
+	run(overworld(), killItems());
+});
+
+// Сломал снег в игре — снежки у этого блока убираем сразу (событие приходит, когда они уже выпали)
+world.events.blockBreak.subscribe((e) => {
+	const g = getGame('spleef');
+	if (!e.player || g?.phase !== 'running' || !g.alive.has(e.player.name)) return;
+	const { x, y, z } = e.block.location;
+	run(overworld(), killItems({ x: x - 1, y: y - 1, z: z - 1, dx: 2, dy: 2, dz: 2 }));
 });

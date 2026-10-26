@@ -431,7 +431,7 @@ account.register.remember=§7Recuerda estos datos o haz una captura para entrar 
 
 ## --- MENÚ INICIO DE SESIÓN ---
 account.login.title=§l§8Inicio de sesión
-account.login.intro=§7¡bienvenido al servidor §l[] Shop for Ore§r§7! Crea e introduce una contraseña para registrarte:
+account.login.intro=§7¡bienvenido al servidor §l[] Shop for Ore§r§7! Crea e introduce una contraseña para registrarte:
 account.login.hint=§7Introduce la contraseña que usaste al registrarte:
 account.login.placeholder=§7Introduce la contraseña...
 account.change.title=§l§8Cambiar contraseña

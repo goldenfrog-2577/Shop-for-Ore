@@ -431,7 +431,7 @@ account.register.remember=§7Запомни эти данные или сдел�
 
 ## --- МЕНЮ ВХОДА ---
 account.login.title=§l§8Вход в аккаунт
-account.login.intro=§7приветствую тебя на сервере §l[] Shop for Ore§r§7! Придумай и введи пароль для регистрации:
+account.login.intro=§7приветствую тебя на сервере §l[] Shop for Ore§r§7! Придумай и введи пароль для регистрации:
 account.login.hint=§7Введи пароль, который ты вводил(а) при регистрации:
 account.login.placeholder=§7Введи пароль...
 account.change.title=§l§8Смена пароля

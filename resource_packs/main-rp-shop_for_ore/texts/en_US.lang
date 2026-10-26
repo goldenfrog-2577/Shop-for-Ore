@@ -431,7 +431,7 @@ account.register.remember=§7Remember these details or take a screenshot to log 
 
 ## --- LOGIN MENU ---
 account.login.title=§l§8Account Login
-account.login.intro=§7welcome to the server §l[] Shop for Ore§r§7! Come up with and enter a password to register:
+account.login.intro=§7welcome to the server §l[] Shop for Ore§r§7! Come up with and enter a password to register:
 account.login.hint=§7Enter the password you used during registration:
 account.login.placeholder=§7Enter password...
 account.change.title=§l§8Change Password
