@@ -13,6 +13,7 @@ import { addBan, removeBan, getBans, findBan, kickBanned } from '../system/ban.j
 import { ACHIEVEMENTS, findAchievement, unlock, revoke, has as hasAchievement } from '../system/achievements.js';
 import { listGames, getGame, joinGame, leaveGame, startGame, endGame, canTeleport } from '../system/minigames.js';
 import { cpsOf, cpsLimit } from '../system/cps.js';
+import { CHECKS, violationsOf, flaggedPlayers, acMode, modeName, MODE, clearViolations } from '../system/anticheat.js';
 import { wipeAll, wipeCounts } from '../system/wipe.js';
 import { resetOffline, offlineCounts } from '../system/offline_reset.js';
 
@@ -1061,6 +1062,41 @@ export function runChatCommand(player, command, args) {
 			if (!target) { tell(player, 'chat.cmd.error.offline', args.join(' ')); break; }
 			const { now, max } = cpsOf(target.name);
 			tell(player, 'chat.cmd.cps.info', target.name, now, max, cpsLimit());
+			break;
+		}
+
+		case 'ac': {
+			// !ac — режим и игроки с очками; !ac <ник> — очки по проверкам;
+			// !ac mode <alerts|rollback|kick> — режим (администратор); !ac reset <ник> — сбросить очки (модератор)
+			const sub = (args[0] || '').toLowerCase();
+			if (sub === 'mode') {
+				if (!hasRole(player, 'admin')) { tell(player, 'chat.cmd.error.no_permission'); break; }
+				const mode = MODE[(args[1] || '').toLowerCase()];
+				if (!mode) { tell(player, 'chat.cmd.ac.mode_use'); break; }
+				run(player, `scoreboard players set ac_mode settings ${mode}`);
+				tell(player, 'chat.cmd.ac.mode_set', { translate: `anticheat.mode.${modeName(mode)}` });
+				break;
+			}
+			if (sub === 'reset') {
+				if (!hasRole(player, 'moder')) { tell(player, 'chat.cmd.error.no_permission'); break; }
+				const name = args.slice(1).join(' ');
+				if (!name) { tell(player, 'chat.cmd.ac.use'); break; }
+				const target = findPlayer(name);
+				clearViolations(target?.name ?? name);
+				tell(player, 'chat.cmd.ac.reset', target?.name ?? name);
+				break;
+			}
+			if (!sub) {
+				const list = flaggedPlayers().slice(0, 10).map(f => ({ translate: 'chat.cmd.ac.flagged', with: [f.name, String(f.total)] }));
+				tellList(player, { translate: 'chat.cmd.ac.header', with: { rawtext: [{ translate: `anticheat.mode.${modeName(acMode())}` }] } },
+					list.length ? list : [{ translate: 'chat.cmd.ac.none' }]);
+				break;
+			}
+			const target = findPlayer(args.join(' '));
+			const name = target?.name ?? args.join(' ');
+			const v = violationsOf(name);
+			const lines = Object.keys(CHECKS).filter(c => v[c]).map(c => ({ translate: 'chat.cmd.ac.line', with: { rawtext: [{ translate: `anticheat.check.${c}` }, { text: String(v[c]) }, { text: String(CHECKS[c]) }] } }));
+			tellList(player, { translate: 'chat.cmd.ac.player', with: [name] }, lines.length ? lines : [{ translate: 'chat.cmd.ac.clean' }]);
 			break;
 		}
 

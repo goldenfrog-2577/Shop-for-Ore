@@ -208,7 +208,7 @@ export function getWarns(player) {
 
 // --- Роли: уровни доступа к командам и меню ---
 // Владелец — хост мира (тег role:owner, до 0.3.0 — host), он один. Хелпера (только наблюдение: !tp, !invis,
-// !gm6, !cps, жалобы и предупреждения CPS), модератора и администратора назначает
+// !gm6, !cps, !ac, жалобы, предупреждения CPS и сигналы античита), модератора и администратора назначает
 // владелец командой !role, роль хранится тегом role:<id>. Префикс в чате (тег rank:,
 // команда !prefix) — отдельное украшение и прав не даёт.
 export const ROLES = ['player', 'helper', 'moder', 'admin', 'owner'];
@@ -490,6 +490,11 @@ export const commandsList = [
 	{
 		command: '!cps §7<§fplayer§7>',
 		description: '%chat.help.cps',
+		role: 'helper'
+	},
+	{
+		command: '!ac §7[§fplayer§7]',
+		description: '%chat.help.ac',
 		role: 'helper'
 	},
 	{
