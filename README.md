@@ -162,7 +162,7 @@ resource_packs/
 ## 👥 Авторство
 * **[GoldenFrog](https://github.com/goldenfrog-2577)** (в Minecraft Bedrock — `kapycta1231484`) — автор карты и аддона, командная логика (`functions/`), развитие скриптов
 * **NastyaXs00** — основа JS-скриптов (Script API)
-* **GitHub Copilot** — помощь в разработке
+* **MisterFear2023** - выдача разрешения на использование идей из карты [XYZ MiniGames](https://legacy.curseforge.com/minecraft-bedrock/maps/xyz-minigames/files/all) от FearCube
 * **Claude (Anthropic)** — сопровождение репозитория: синхронизация паков, перенос командных блоков в функции, исправления функций и скриптов, локализация, README, лицензия
 
 ## 📄 Лицензия
