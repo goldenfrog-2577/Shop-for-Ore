@@ -464,7 +464,7 @@ function botRename(player) {
 }
 
 // Эффекты на бота (и отрицательные): эффект, усиление (ползунок 0–255, как у /effect: 0 — уровень I), время, частицы. Названия — effect.<id>.name в .lang
-// (отрицательные — красным). Время — списком, как у бустов; «бесконечно» — 1 000 000 с (максимум /effect в 1.19.50)
+// (отрицательные — красным, полезные — §a). Время — списком, как у бустов; «бесконечно» — 1 000 000 с (максимум /effect в 1.19.50)
 export const BOT_EFFECTS = ['speed', 'slowness', 'haste', 'mining_fatigue', 'strength', 'instant_health', 'instant_damage', 'jump_boost',
 	'nausea', 'regeneration', 'resistance', 'fire_resistance', 'water_breathing', 'invisibility', 'blindness', 'night_vision', 'hunger',
 	'weakness', 'poison', 'wither', 'health_boost', 'absorption', 'saturation', 'levitation', 'fatal_poison', 'slow_falling', 'conduit_power',
