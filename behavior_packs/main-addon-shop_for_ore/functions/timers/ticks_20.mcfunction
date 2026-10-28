@@ -43,7 +43,7 @@ execute as @e[name="rainEvent",scores={system=-1..0}] run weather clear
 function ranks/rank_lvl_add
 function ranks/rank_lvl_remove
 function ranks/rank_lvl_reset
-function system/qx
+function system/xp_need
 
 # Онлайн: один подсчёт вместо N² команд
 scoreboard players set onlinecount system 0

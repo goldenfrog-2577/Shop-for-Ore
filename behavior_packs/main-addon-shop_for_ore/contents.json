@@ -7,10 +7,10 @@
 			"path" : "entities/player.json"
 		},
 		{
-			"path" : "functions/boost/X2boost.mcfunction"
+			"path" : "functions/boost/x2_boost.mcfunction"
 		},
 		{
-			"path" : "functions/boost/X4boost.mcfunction"
+			"path" : "functions/boost/x4_boost.mcfunction"
 		},
 		{
 			"path" : "functions/boost/x2_end.mcfunction"
@@ -82,7 +82,7 @@
 			"path" : "functions/system/clear_items.mcfunction"
 		},
 		{
-			"path" : "functions/system/levelup.mcfunction"
+			"path" : "functions/system/levelup_check.mcfunction"
 		},
 		{
 			"path" : "functions/system/levelup_apply.mcfunction"
@@ -91,7 +91,7 @@
 			"path" : "functions/system/pickaxe_lvl.mcfunction"
 		},
 		{
-			"path" : "functions/system/qx.mcfunction"
+			"path" : "functions/system/xp_need.mcfunction"
 		},
 		{
 			"path" : "functions/system/scoreboards.mcfunction"
@@ -181,7 +181,7 @@
 			"path" : "scripts/menu/bank_menu.js"
 		},
 		{
-			"path" : "scripts/menu/menu.js"
+			"path" : "scripts/menu/main_menu.js"
 		},
 		{
 			"path" : "scripts/register/loadScript.js"
@@ -200,6 +200,9 @@
 		},
 		{
 			"path" : "scripts/system/anticheat.js"
+		},
+		{
+			"path" : "scripts/system/anticheat_checks.js"
 		},
 		{
 			"path" : "scripts/system/spawnbot.js"

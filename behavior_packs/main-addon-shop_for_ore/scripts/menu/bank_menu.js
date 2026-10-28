@@ -4,7 +4,7 @@
 import { world } from '@minecraft/server';
 import { getScore, transferMoney } from '../DataBase.js';
 import { showModal, modal } from './forms.js';
-import { menu } from './menu.js';
+import { menu } from './main_menu.js';
 
 export function bank(player) {
 	const names = [...world.getPlayers()].map(p => p.name);

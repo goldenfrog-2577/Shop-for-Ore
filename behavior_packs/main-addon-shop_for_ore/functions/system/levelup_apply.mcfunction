@@ -103,4 +103,4 @@ execute if score @s lvl matches 24 run execute as @a at @s run playsound minecra
 scoreboard players operation @s xp -= @s xp_need
 scoreboard players add @s lvl 1
 # Сразу пересчитать стоимость нового уровня (иначе до timers/ticks_20 действовала бы старая, меньшая)
-function system/qx
+function system/xp_need

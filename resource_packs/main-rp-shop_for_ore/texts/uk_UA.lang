@@ -1,10 +1,14 @@
 ## =============================
 ##  Shop for Ore: УКРАЇНСЬКА ЛОКАЛІЗАЦІЯ
-##  Автор: kapycta1231484 & Copilot
-##  Останнє оновлення: 2026-01-06
+##  Автор: kapycta1231484 & Claude
+##  Останнє оновлення: 2026-10-26
 ##  У цьому файлі всі ігрові тексти для карти Shop for Ore українською мовою.
 ##  Будь ласка, зберігайте секції та коментарі для зручної навігації!
 ## =============================
+
+## --- ІНФОРМАЦІЯ ПРО ПАК ---
+pack.name=Дата-пак для карти §lShop for Ore§r
+pack.description=Містить невеликі покращення для комфортної гри. §cНе рекомендується вимикати! §fВерсiя: §7[0.3.0_20261025_resources]
 
 ## --- КІРКИ ---
 item.stick.name=§lКирка §a1§b рівня
@@ -43,46 +47,6 @@ item.server:admin_menu=§eМеню адміна §7[Натисніть, щоб �
 item.server:admin_stick=§cПалочка адміна§r
 item.server:portable_ender_crystal.name=§eПортативний кристал Енду
 item.spawn_egg.entity.server:floating_text.name=Яйце призову голограми
-
-## --- СИСТЕМА ТА ІНТЕРФЕЙС ---
-accessibility.chat.tts.autocomplete=Автозаповнення
-accessibility.chat.tts.autocompleteBack=Зворотне автозаповнення
-accessibility.chat.tts.nextMessage=Наступне повідомлення
-accessibility.chat.tts.previousMessage=Попереднє повідомлення
-advMode.setCommand.success=§r
-button.deleteText=Видалити текст
-admin.kick.button=Вигнати гравця
-chat.title=Чат
-chat.title.cheats=Чат і команди
-command_block.placeholder=Введіть команду сюди...
-commands.scoreboard.players.offlinePlayerName=§r §cOffline
-death.attack.explosion=§r %1$s §r§cвибухнув
-death.attack.flyIntoWall=§r %1$s §r§cрозбився на елітрах
-death.attack.generic=§r %1$s §r§cзагадково помер
-death.attack.outOfWorld=§r %1$s §r§cпотрапив у порожнечу
-death.attack.player=§r %1$s §r§cбув убитий  гравцем§r %2$s
-death.attack.player.item=§r %1$s §r§cбув убитий  гравцем§r %2$s §r§cза допомогою§r %3$s
-disconnect.kicked=Вас було кікнуто з сервера
-disconnect.kicked.reason=Вас було кікнуто з сервера з причини:
-disconnectionScreen.disconnected=Втрачено з'єднання, можливо хост вимкнув сервер
-disconnectionScreen.unexpectedPacket=§lВас виключив§c адміністратор
-entity.server:floating_text.name=Голограма
-map.position=Координати: %s %s %s
-multiplayer.player.changeToPersona=§b%s §r§bзмінив свій скін
-multiplayer.player.changeToSkin=§b%s §r§bзмінив свій скін
-multiplayer.player.joined.realms=§r§r %s §r§7приєднався
-multiplayer.player.joined=§r§r %s §r§7приєднався
-multiplayer.player.left.realms=§r§r %s §r§7вийшов
-multiplayer.player.left=§r§r %s §r§7вийшов
-
-## --- ІНФОРМАЦІЯ ПРО ПАК ---
-pack.name=Дата-пак для карти §lShop for Ore§r (U)
-pack.description=Містить невеликі покращення для комфортної гри. §cНе рекомендується вимикати!
-
-## --- ПОВІДОМЛЕННЯ ПРИ ПІДКЛЮЧЕННІ ---
-progressScreen.message.building=Використовуйте меню в 9 слоті інвентаря, щоб відкрити більше функцій
-progressScreen.message.locating=Перш ніж ставити багато питань, прочитайте таблички на спавні
-progressScreen.message.resourceLoading=Omlet хоста: @waxenjaguar2209
 
 ## --- ПЕРЕКЛАД ТА КНОПКИ ІНТЕРФЕЙСУ ---
 admin.common.back=§8Назад
@@ -416,8 +380,8 @@ menu.warps.button.minigames=§8Міні-ігри
 ## --- МЕНЮ ПРОКАЧКИ ---
 menu.upgrades.title=§l§8Меню сервера »  Прокачка
 menu.upgrades.body=§7VIP відкриває свою шахту й VIP-коїни, ребітх починає все заново, але назавжди дарує Квапливість.
-menu.upgrades.button.vip=§2VIP
-menu.upgrades.button.rebirth=§5Ребітх
+menu.upgrades.button.vip= §2VIP
+menu.upgrades.button.rebirth= §5Ребітх
 
 ## --- МЕНЮ РЕЄСТРАЦІЇ ---
 account.register.title=§l§8Реєстрація акаунта
@@ -528,7 +492,7 @@ admin.tools.button.light=§5Блок світла
 admin.tools.button.npc_egg=§5Яйце призову NPC
 admin.tools.button.hologram_egg=§5Яйце призову голограми
 admin.tools.button.admin_stick=§cПалочка адміна
-admin.tools.button.name_tag=§8Бірки (16 шт.)
+admin.tools.button.portable_ender_crystal=§eПортативний кристал Енду
 admin.tools.button.clear_inventory=§8Очистити інвентар
 admin.tools.clear.body=§7Увесь твій інвентар буде очищено. Ти впевнений(а)?
 
@@ -689,6 +653,9 @@ chat.server.wiped=§r §cСервер §8» §7Статистику всіх 
 chat.server.wiped.offline=§r §cСервер §8» §7Поки тебе не було, сервер почав усе заново (вайп): прогрес, досягнення й косметику скинуто. Роль, пароль і налаштування на місці
 chat.server.reset_offline=§r §cСервер §8» §7Поки тебе не було, власник скинув дані гравців не в мережі: прогрес, роль і пароль. Зареєструйся знову
 
+## --- АДМІН-ПАЛОЧКА ---
+chat.server.kicked=§r §cСервер §8» §f%1$s§r§7 виключений(а) адміністратором
+
 ## --- СИСТЕМНІ ТА РІВНЕВІ ПОВІДОМЛЕННЯ ---
 chat.lvlup.level.2=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e2§7 рівня, нова кирка: §eДерев'яна кирка
 chat.lvlup.level.3=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e3§7 рівня, нова кирка: §eКам'яна кирка
@@ -715,6 +682,38 @@ chat.lvlup.level.23=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e23�
 chat.lvlup.level.24=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e24§7 рівня
 chat.lvlup.level.25=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e25§7 рівня — це максимум!
 
+## --- НАГОРОДИ ЗА ПРОМОКОДИ ---
+chat.promo.reward.1=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e500 
+chat.promo.reward.2=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e500 
+chat.promo.reward.3=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e25k 
+chat.promo.reward.4=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e100 
+chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7Ти вже активував(ла) цей §eпромокод
+chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Невірний промокод
+
+## --- НАГОРОДИ МАГАЗИНУ ---
+chat.shop.enchant.efficiency=§r §eМагазин §8» §7Куплено: §eЕфективність§7 (§e+1§7)
+chat.shop.enchant.fortune=§r §eМагазин §8» §7Куплено: §eУдача§7 (§e+1§7)
+chat.shop.item_enchant.done=§r §eМагазин §8» §7Куплено: §e%1$s %2$s§7 за §e%3$s §f
+chat.shop.enchant.error.stick=§r §eМагазин §8» §7Зараз у тебе §eпалиця§7, а не кирка: зачаровувати нічого. Кирку (дерев’яну) дають на §e2 рівні§7 — тоді й приходь
+chat.shop.cosmetics.error.no_coins=§r⩕ §l§cERROR!§r §8» §7Не вистачає VIP-коїнів — їх дають за аметист на VIP-рівні
+chat.shop.cosmetics.error.vip=§r⩕ §l§cERROR!§r §8» §7Косметику купують лише VIP (з 26 рівня) — подивитися можуть усі
+chat.shop.cosmetics.error.vip_sell=§r⩕ §l§cERROR!§r §8» §7Частинки при продажу — тільки для VIP
+chat.shop.cosmetics.bought=§r §eМагазин §8» §7Куплено: %1$s §e%2$s§7 за §e%3$s
+chat.shop.cosmetics.reset.name=§r §eМагазин §8» §7Колір ніку знову як у ролі
+chat.shop.cosmetics.reset.text=§r §eМагазин §8» §7Колір тексту знову білий
+chat.shop.cosmetics.selected.name=§r §eМагазин §8» §7Колір ніку: %1$s §7%2$s
+chat.shop.cosmetics.selected.text=§r §eМагазин §8» §7Колір тексту: %1$s §7%2$s
+chat.shop.cosmetics.off.trail=§r §eМагазин §8» §7Частинки навколо тебе вимкнено
+chat.shop.cosmetics.off.death=§r §eМагазин §8» §7Частинки при смерті вимкнено
+chat.shop.cosmetics.off.sell=§r §eМагазин §8» §7Твої частинки при продажу вимкнено — знову стандартні
+chat.shop.cosmetics.selected.trail=§r §eМагазин §8» §7Частинки навколо тебе: §e%1$s
+chat.shop.cosmetics.selected.death=§r §eМагазин §8» §7Частинки при смерті: §e%1$s
+chat.shop.cosmetics.selected.sell=§r §eМагазин §8» §7Частинки при продажу: §e%1$s
+chat.shop.item_enchant.error.changed=§r⩕ §l§cERROR!§r §8» §7Предмет у цьому слоті змінився — відкрий вікно знову
+chat.shop.kit.iron=§r §eМагазин §8» §7Куплено: §eЗалізний набір
+chat.shop.kit.diamond=§r §eМагазин §8» §7Куплено: §eДіамантовий набір
+chat.shop.kit.netherite=§r §eМагазин §8» §7Куплено: §eНезеритовий набір
+
 ## --- VIP І РЕБІТХ ---
 chat.error.no_money=§r⩕ §l§cERROR!§r §8» §7Недостатньо 
 chat.vip.error.requirements=§r⩕ §l§cERROR!§r §8» §7Для §eVIP§7 потрібен §e25§7 рівень  і §e125 000§7 
@@ -736,16 +735,6 @@ chat.rebirth.error.max=§r⩕ §l§cERROR!§r §8» §7У тебе вже §eм�
 chat.ore_magnet.bought=§r §eМагазин §8» §eМагніт руди§7 увімкнено на §e5 хвилин§7: предмети, що випали поруч, летять до тебе
 chat.ore_magnet.error.active=§r⩕ §l§cERROR!§r §8» §eМагніт руди§7 вже працює. Залишилося секунд: §e%1$s
 chat.ore_magnet.end=§r §eМагазин §8» §eМагніт руди§7 закінчився. Новий можна купити в §eМагазин → Бустери
-
-## --- НАГОРОДИ ЗА ПРОМОКОДИ ---
-chat.promo.reward.1=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e500 
-chat.promo.reward.2=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e500 
-chat.promo.reward.3=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e25k 
-chat.promo.reward.4=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e100 
-chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7Ти вже активував(ла) цей §eпромокод
-chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Невірний промокод
-
-## --- АНТИЧИТ ---
 
 ## --- ОЧИСТКА ПРЕДМЕТІВ ---
 screen.clear_items.title=§l§eОчищення сміття
@@ -1086,33 +1075,6 @@ role.tag.helper=§3Хелпер
 role.tag.moder=§9Модератор
 role.tag.bot=§7Бот
 
-## --- НАГОРОДИ МАГАЗИНУ ---
-chat.shop.enchant.efficiency=§r §eМагазин §8» §7Куплено: §eЕфективність§7 (§e+1§7)
-chat.shop.enchant.fortune=§r §eМагазин §8» §7Куплено: §eУдача§7 (§e+1§7)
-chat.shop.item_enchant.done=§r §eМагазин §8» §7Куплено: §e%1$s %2$s§7 за §e%3$s §f
-chat.shop.enchant.error.stick=§r §eМагазин §8» §7Зараз у тебе §eпалиця§7, а не кирка: зачаровувати нічого. Кирку (дерев’яну) дають на §e2 рівні§7 — тоді й приходь
-chat.shop.cosmetics.error.no_coins=§r⩕ §l§cERROR!§r §8» §7Не вистачає VIP-коїнів — їх дають за аметист на VIP-рівні
-chat.shop.cosmetics.error.vip=§r⩕ §l§cERROR!§r §8» §7Косметику купують лише VIP (з 26 рівня) — подивитися можуть усі
-chat.shop.cosmetics.error.vip_sell=§r⩕ §l§cERROR!§r §8» §7Частинки при продажу — тільки для VIP
-chat.shop.cosmetics.bought=§r §eМагазин §8» §7Куплено: %1$s §e%2$s§7 за §e%3$s
-chat.shop.cosmetics.reset.name=§r §eМагазин §8» §7Колір ніку знову як у ролі
-chat.shop.cosmetics.reset.text=§r §eМагазин §8» §7Колір тексту знову білий
-chat.shop.cosmetics.selected.name=§r §eМагазин §8» §7Колір ніку: %1$s §7%2$s
-chat.shop.cosmetics.selected.text=§r §eМагазин §8» §7Колір тексту: %1$s §7%2$s
-chat.shop.cosmetics.off.trail=§r §eМагазин §8» §7Частинки навколо тебе вимкнено
-chat.shop.cosmetics.off.death=§r §eМагазин §8» §7Частинки при смерті вимкнено
-chat.shop.cosmetics.off.sell=§r §eМагазин §8» §7Твої частинки при продажу вимкнено — знову стандартні
-chat.shop.cosmetics.selected.trail=§r §eМагазин §8» §7Частинки навколо тебе: §e%1$s
-chat.shop.cosmetics.selected.death=§r §eМагазин §8» §7Частинки при смерті: §e%1$s
-chat.shop.cosmetics.selected.sell=§r §eМагазин §8» §7Частинки при продажу: §e%1$s
-chat.shop.item_enchant.error.changed=§r⩕ §l§cERROR!§r §8» §7Предмет у цьому слоті змінився — відкрий вікно знову
-chat.shop.kit.iron=§r §eМагазин §8» §7Куплено: §eЗалізний набір
-chat.shop.kit.diamond=§r §eМагазин §8» §7Куплено: §eДіамантовий набір
-chat.shop.kit.netherite=§r §eМагазин §8» §7Куплено: §eНезеритовий набір
-
-## --- АДМІН-ПАЛОЧКА ---
-chat.server.kicked=§r §cСервер §8» §f%1$s§r§7 виключений(а) адміністратором
-
 ## --- СКОРБОРД ---
 scoreboards.map=§l[] Магазин за руду§r
 hud.profile=§l[] §7Профіль§f: §r
@@ -1126,7 +1088,42 @@ hud.online=[] §6Онлайн§f:
 scoreboards.x2boost=§r §l§ax2 бустер
 scoreboards.x4boost=§r §l§bx4 бустер
 
-
 ## --- ПОМИЛКИ ЧАТУ ---
 chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Повідомлення занадто довге (понад §e200§7 символів)
 chat.error.spam=§r⩕ §l§cERROR!§r §8» §7Не спам у чаті!
+
+## --- ПОВІДОМЛЕННЯ ПРИ ПІДКЛЮЧЕННІ ---
+progressScreen.message.building=Використовуйте меню в 9 слоті інвентаря, щоб відкрити більше функцій
+progressScreen.message.locating=Перш ніж ставити багато питань, прочитайте таблички на спавні
+progressScreen.message.resourceLoading=Telegram хоста: @goldenfrog_2577
+
+## --- СИСТЕМА ТА ІНТЕРФЕЙС ---
+accessibility.chat.tts.autocomplete=Автозаповнення
+accessibility.chat.tts.autocompleteBack=Зворотне автозаповнення
+accessibility.chat.tts.nextMessage=Наступне повідомлення
+accessibility.chat.tts.previousMessage=Попереднє повідомлення
+advMode.setCommand.success=§r
+button.deleteText=Видалити текст
+admin.kick.button=Вигнати гравця
+chat.title=Чат
+chat.title.cheats=Чат і команди
+command_block.placeholder=Введіть команду сюди...
+commands.scoreboard.players.offlinePlayerName=§r §cOffline
+death.attack.explosion=§r %1$s §r§cвибухнув
+death.attack.flyIntoWall=§r %1$s §r§cрозбився на елітрах
+death.attack.generic=§r %1$s §r§cзагадково помер
+death.attack.outOfWorld=§r %1$s §r§cпотрапив у порожнечу
+death.attack.player=§r %1$s §r§cбув убитий  гравцем§r %2$s
+death.attack.player.item=§r %1$s §r§cбув убитий  гравцем§r %2$s §r§cза допомогою§r %3$s
+disconnect.kicked=Вас було кікнуто з сервера
+disconnect.kicked.reason=Вас було кікнуто з сервера з причини:
+disconnectionScreen.disconnected=Втрачено з'єднання, можливо хост вимкнув сервер
+disconnectionScreen.unexpectedPacket=§lВас виключив§c адміністратор
+entity.server:floating_text.name=Голограма
+map.position=Координати: %s %s %s
+multiplayer.player.changeToPersona=§b%s §r§bзмінив свій скін
+multiplayer.player.changeToSkin=§b%s §r§bзмінив свій скін
+multiplayer.player.joined.realms=§r§r %s §r§7приєднався
+multiplayer.player.joined=§r§r %s §r§7приєднався
+multiplayer.player.left.realms=§r§r %s §r§7вийшов
+multiplayer.player.left=§r§r %s §r§7вийшов
