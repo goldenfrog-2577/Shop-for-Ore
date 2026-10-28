@@ -125,8 +125,8 @@ function pvpKits(player) {
 function boosts(player) {
 	const back = () => shop(player);
 	showMenu(player, '%menu.shop.boosts.title', '%menu.shop.boosts.body\n\n%menu.shop.boosts.x2\n%menu.shop.boosts.x4\n%menu.shop.boosts.magnet', [
-		product(player, '%menu.shop.boosts.button.x2', '10.0K', COIN, 'boost/X2boost'),
-		product(player, '%menu.shop.boosts.button.x4', '50.0K', COIN, 'boost/X4boost'),
+		product(player, '%menu.shop.boosts.button.x2', '10.0K', COIN, 'boost/x2_boost'),
+		product(player, '%menu.shop.boosts.button.x4', '50.0K', COIN, 'boost/x4_boost'),
 		// «Магнит руды» — личный, на 5 минут
 		product(player, '%menu.shop.boosts.button.ore_magnet', '20.0K', COIN, 'shop/ore_magnet/ore_magnet'),
 		backButton(back)

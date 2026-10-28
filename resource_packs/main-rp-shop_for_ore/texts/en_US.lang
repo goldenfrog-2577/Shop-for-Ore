@@ -1,10 +1,14 @@
 ## =============================
 ##  Shop for Ore: ENGLISH LOCALE
-##  Author: kapycta1231484 & Copilot
-##  Last updated: 2026-01-06
+##  Author: kapycta1231484 & Claude
+##  Last updated: 2026-10-26
 ##  This file contains all in-game texts for the Shop for Ore map in English.
 ##  Please keep sections and comments for easy navigation!
 ## =============================
+
+## --- PACK INFO ---
+pack.name=Datapack for map §lShop for Ore§r
+pack.description=Includes some small improvements for a smoother game. §cNot recommended to disable! §fVersion: §7[0.3.0_20261025_resources]
 
 ## --- PICKAXES ---
 item.stick.name=§lPickaxe §aLevel§b 1
@@ -43,46 +47,6 @@ item.server:admin_menu=§eAdmin Menu §7[Press to open§7]§r
 item.server:admin_stick=§cAdmin Stick§r
 item.server:portable_ender_crystal.name=§ePortable End Crystal
 item.spawn_egg.entity.server:floating_text.name=Hologram Spawn Egg
-
-## --- SYSTEM & UI ---
-accessibility.chat.tts.autocomplete=Autocomplete
-accessibility.chat.tts.autocompleteBack=Reverse Autocomplete
-accessibility.chat.tts.nextMessage=Next Message
-accessibility.chat.tts.previousMessage=Previous Message
-advMode.setCommand.success=§r
-button.deleteText=Delete Text
-admin.kick.button=Kick Player
-chat.title=Chat
-chat.title.cheats=Chat & Commands
-command_block.placeholder=Enter command here...
-commands.scoreboard.players.offlinePlayerName=§r §cOffline
-death.attack.explosion=§r %1$s §r§cblew up
-death.attack.flyIntoWall=§r %1$s §r§ccrashed with elytra
-death.attack.generic=§r %1$s §r§cmysteriously died
-death.attack.outOfWorld=§r %1$s §r§cfell into the void
-death.attack.player=§r %1$s §r§cwas slain by  player§r %2$s
-death.attack.player.item=§r %1$s §r§cwas slain by  player§r %2$s §r§cusing§r %3$s
-disconnect.kicked=You were kicked from the server
-disconnect.kicked.reason=You were kicked for:
-disconnectionScreen.disconnected=Connection lost, maybe the host shut down the server
-disconnectionScreen.unexpectedPacket=§lYou were kicked by§c an admin
-entity.server:floating_text.name=Hologram
-map.position=Coordinates: %s %s %s
-multiplayer.player.changeToPersona=§b%s §r§bchanged their persona
-multiplayer.player.changeToSkin=§b%s §r§bchanged their skin
-multiplayer.player.joined.realms=§r§r %s §r§7joined
-multiplayer.player.joined=§r§r %s §r§7joined
-multiplayer.player.left.realms=§r§r %s §r§7left
-multiplayer.player.left=§r§r %s §r§7left
-
-## --- PACK INFO ---
-pack.name=Datapack for map §lShop for Ore§r (R)
-pack.description=Includes some small improvements for a smoother game. §cNot recommended to disable!
-
-## --- GAME CONNECTION MESSAGES ---
-progressScreen.message.building=Use the menu in slot 9 of your hotbar to unlock more features
-progressScreen.message.locating=Before asking too many questions, read the signs at spawn
-progressScreen.message.resourceLoading=Host Omlet: @waxenjaguar2209
 
 ## --- TRANSLATION & UI BUTTONS ---
 admin.common.back=§8Back
@@ -416,8 +380,8 @@ menu.warps.button.minigames=§8Mini-games
 ## --- UPGRADES MENU ---
 menu.upgrades.title=§l§8Server Menu »  Upgrades
 menu.upgrades.body=§7VIP unlocks your own mine and VIP coins; a rebirth starts over but gives permanent Haste.
-menu.upgrades.button.vip=§2VIP
-menu.upgrades.button.rebirth=§5Rebirth
+menu.upgrades.button.vip= §2VIP
+menu.upgrades.button.rebirth= §5Rebirth
 
 ## --- REGISTRATION MENU ---
 account.register.title=§l§8Account Registration
@@ -528,7 +492,7 @@ admin.tools.button.light=§5Light Block
 admin.tools.button.npc_egg=§5NPC Spawn Egg
 admin.tools.button.hologram_egg=§5Hologram Spawn Egg
 admin.tools.button.admin_stick=§cAdmin Stick
-admin.tools.button.name_tag=§8Name Tags (16)
+admin.tools.button.portable_ender_crystal=§ePortable End Crystal
 admin.tools.button.clear_inventory=§8Clear Inventory
 admin.tools.clear.body=§7Your whole inventory will be cleared. Are you sure?
 
@@ -689,6 +653,9 @@ chat.server.wiped=§r §cServer §8» §7All players' stats have been reset. 
 chat.server.wiped.offline=§r §cServer §8» §7While you were away the server started over (wipe): progress, achievements and cosmetics were reset. Your role, password and settings are kept
 chat.server.reset_offline=§r §cServer §8» §7While you were away, the owner reset offline players’ data: progress, role and password. Please register again
 
+## --- ADMIN STICK ---
+chat.server.kicked=§r §cServer §8» §f%1$s§r§7 was removed by an administrator
+
 ## --- LEVEL-UP & SYSTEM MESSAGES ---
 chat.lvlup.level.2=§r §aLvL UP §8» §f%1$s§r§7 reached level §e2§7, new pickaxe: §eWooden Pickaxe
 chat.lvlup.level.3=§r §aLvL UP §8» §f%1$s§r§7 reached level §e3§7, new pickaxe: §eStone Pickaxe
@@ -715,6 +682,38 @@ chat.lvlup.level.23=§r §aLvL UP §8» §f%1$s§r§7 reached level §e23
 chat.lvlup.level.24=§r §aLvL UP §8» §f%1$s§r§7 reached level §e24
 chat.lvlup.level.25=§r §aLvL UP §8» §f%1$s§r§7 reached level §e25§7 — the max level!
 
+## --- PROMO REWARDS ---
+chat.promo.reward.1=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e500 
+chat.promo.reward.2=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e500 
+chat.promo.reward.3=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e25k 
+chat.promo.reward.4=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e100 
+chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7You have already activated this §epromo code
+chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Invalid promo code
+
+## --- SHOP REWARDS ---
+chat.shop.enchant.efficiency=§r §eShop §8» §7Purchased: §eEfficiency§7 (§e+1§7)
+chat.shop.enchant.fortune=§r §eShop §8» §7Purchased: §eFortune§7 (§e+1§7)
+chat.shop.item_enchant.done=§r §eShop §8» §7Bought: §e%1$s %2$s§7 for §e%3$s §f
+chat.shop.enchant.error.stick=§r §eShop §8» §7Right now you hold a §estick§7, not a pickaxe: there is nothing to enchant. You get a (wooden) pickaxe at §elevel 2§7 — come back then
+chat.shop.cosmetics.error.no_coins=§r⩕ §l§cERROR!§r §8» §7Not enough VIP coins — you get them for amethyst on the VIP level
+chat.shop.cosmetics.error.vip=§r⩕ §l§cERROR!§r §8» §7Only VIPs (level 26+) can buy cosmetics — everyone can browse
+chat.shop.cosmetics.error.vip_sell=§r⩕ §l§cERROR!§r §8» §7Sale particles are VIP only
+chat.shop.cosmetics.bought=§r §eShop §8» §7Bought: %1$s §e%2$s§7 for §e%3$s
+chat.shop.cosmetics.reset.name=§r §eShop §8» §7Name color is back to the role color
+chat.shop.cosmetics.reset.text=§r §eShop §8» §7Text color is white again
+chat.shop.cosmetics.selected.name=§r §eShop §8» §7Name color: %1$s §7%2$s
+chat.shop.cosmetics.selected.text=§r §eShop §8» §7Text color: %1$s §7%2$s
+chat.shop.cosmetics.off.trail=§r §eShop §8» §7Particles around you are off
+chat.shop.cosmetics.off.death=§r §eShop §8» §7Death particles are off
+chat.shop.cosmetics.off.sell=§r §eShop §8» §7Your sale particles are off — back to the standard ones
+chat.shop.cosmetics.selected.trail=§r §eShop §8» §7Particles around you: §e%1$s
+chat.shop.cosmetics.selected.death=§r §eShop §8» §7Death particles: §e%1$s
+chat.shop.cosmetics.selected.sell=§r §eShop §8» §7Sale particles: §e%1$s
+chat.shop.item_enchant.error.changed=§r⩕ §l§cERROR!§r §8» §7The item in that slot changed — open the window again
+chat.shop.kit.iron=§r §eShop §8» §7Purchased: §eIron Kit
+chat.shop.kit.diamond=§r §eShop §8» §7Purchased: §eDiamond Kit
+chat.shop.kit.netherite=§r §eShop §8» §7Purchased: §eNetherite Kit
+
 ## --- VIP & REBIRTH MESSAGES ---
 chat.error.no_money=§r⩕ §l§cERROR!§r §8» §7Not enough 
 chat.vip.error.requirements=§r⩕ §l§cERROR!§r §8» §eVIP§7 requires level §e25§7  and §e125,000§7 
@@ -736,16 +735,6 @@ chat.rebirth.error.max=§r⩕ §l§cERROR!§r §8» §7You already have the §em
 chat.ore_magnet.bought=§r §eShop §8» §eOre Magnet§7 is on for §e5 minutes§7: items dropped nearby fly to you
 chat.ore_magnet.error.active=§r⩕ §l§cERROR!§r §8» §eOre Magnet§7 is already active. Seconds left: §e%1$s
 chat.ore_magnet.end=§r §eShop §8» §7The §eOre Magnet§7 has run out. Buy a new one in §eShop → Boosts
-
-## --- PROMO REWARDS ---
-chat.promo.reward.1=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e500 
-chat.promo.reward.2=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e500 
-chat.promo.reward.3=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e25k 
-chat.promo.reward.4=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e100 
-chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7You have already activated this §epromo code
-chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Invalid promo code
-
-## --- ANTICHEAT MESSAGES ---
 
 ## --- CLEAR ITEMS ---
 screen.clear_items.title=§l§eItem Cleanup
@@ -1023,7 +1012,7 @@ chat.cmd.game.error.start=§r⩕ §l§cERROR!§r §8» §7Cannot start: the game
 chat.cmd.game.error.empty=§r⩕ §l§cERROR!§r §8» §7No one is in this game
 chat.cps.alert=§r §cAnti-Cheat §8» §7§f%1$s§r§7: §c%2$s CPS§7 for %3$s s in a row (limit §e%4$s§7) — possible autoclicker
 hud.cps=§7CPS: %1$s §8• §f%2$s §7m/s
-hud.cps.hp=§7CPS: %1$s §8• §f%2$s §7m/s §8• §7HP: %3$s
+hud.cps.hp=§7CPS: %1$s §8• §f%2$s §7м/с §8• §7HP: %3$s
 chat.cmd.cps.use=§r §7CMD §8» §7Usage: §e!cps§7 <player>
 chat.cmd.cps.info=§r §7CMD §8» §7CPS of §f%1$s§r§7: now §e%2$s§7, max over 10 s — §e%3$s§7 (limit §e%4$s§7)
 chat.cmd.ac.use=§r §7CMD §8» §7Usage: §e!ac§7 [player] · §e!ac reset§7 <player> · §e!ac mode§7 <alerts/rollback/kick>
@@ -1049,7 +1038,7 @@ chat.cmd.debug.pos=§7Position: §f%1$s §8(%2$s)
 chat.cmd.debug.scores=§7Scores: %1$s
 chat.cmd.debug.tags=§7Tags (§f%1$s§7):
 chat.cmd.debug.other=other
-chat.cmd.reload.done=§r §7CMD §8» §aScripts loaded
+chat.cmd.reload.done=§r §7CMD §8» §aAll scripts loaded
 chat.cmd.stats.lvl=§7Level: §e%1$s §f
 chat.cmd.stats.vip=§aVIP
 chat.cmd.stats.xp=§7XP: §e%1$s§7/§e%2$s §f
@@ -1086,33 +1075,6 @@ role.tag.helper=§3Helper
 role.tag.moder=§9Moderator
 role.tag.bot=§7Bot
 
-## --- SHOP REWARDS ---
-chat.shop.enchant.efficiency=§r §eShop §8» §7Purchased: §eEfficiency§7 (§e+1§7)
-chat.shop.enchant.fortune=§r §eShop §8» §7Purchased: §eFortune§7 (§e+1§7)
-chat.shop.item_enchant.done=§r §eShop §8» §7Bought: §e%1$s %2$s§7 for §e%3$s §f
-chat.shop.enchant.error.stick=§r §eShop §8» §7Right now you hold a §estick§7, not a pickaxe: there is nothing to enchant. You get a (wooden) pickaxe at §elevel 2§7 — come back then
-chat.shop.cosmetics.error.no_coins=§r⩕ §l§cERROR!§r §8» §7Not enough VIP coins — you get them for amethyst on the VIP level
-chat.shop.cosmetics.error.vip=§r⩕ §l§cERROR!§r §8» §7Only VIPs (level 26+) can buy cosmetics — everyone can browse
-chat.shop.cosmetics.error.vip_sell=§r⩕ §l§cERROR!§r §8» §7Sale particles are VIP only
-chat.shop.cosmetics.bought=§r §eShop §8» §7Bought: %1$s §e%2$s§7 for §e%3$s
-chat.shop.cosmetics.reset.name=§r §eShop §8» §7Name color is back to the role color
-chat.shop.cosmetics.reset.text=§r §eShop §8» §7Text color is white again
-chat.shop.cosmetics.selected.name=§r §eShop §8» §7Name color: %1$s §7%2$s
-chat.shop.cosmetics.selected.text=§r §eShop §8» §7Text color: %1$s §7%2$s
-chat.shop.cosmetics.off.trail=§r §eShop §8» §7Particles around you are off
-chat.shop.cosmetics.off.death=§r §eShop §8» §7Death particles are off
-chat.shop.cosmetics.off.sell=§r §eShop §8» §7Your sale particles are off — back to the standard ones
-chat.shop.cosmetics.selected.trail=§r §eShop §8» §7Particles around you: §e%1$s
-chat.shop.cosmetics.selected.death=§r §eShop §8» §7Death particles: §e%1$s
-chat.shop.cosmetics.selected.sell=§r §eShop §8» §7Sale particles: §e%1$s
-chat.shop.item_enchant.error.changed=§r⩕ §l§cERROR!§r §8» §7The item in that slot changed — open the window again
-chat.shop.kit.iron=§r §eShop §8» §7Purchased: §eIron Kit
-chat.shop.kit.diamond=§r §eShop §8» §7Purchased: §eDiamond Kit
-chat.shop.kit.netherite=§r §eShop §8» §7Purchased: §eNetherite Kit
-
-## --- ADMIN STICK ---
-chat.server.kicked=§r §cServer §8» §f%1$s§r§7 was removed by an administrator
-
 ## --- SCOREBOARD ---
 scoreboards.map=§l[] Shop for Ore§r
 hud.profile=§l[] §7Profile§f: §r
@@ -1126,7 +1088,42 @@ hud.online=[] §6Online§f:
 scoreboards.x2boost=§r §l§ax2 Boost
 scoreboards.x4boost=§r §l§bx4 Boost
 
-
 ## --- CHAT ERRORS ---
 chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Your message is too long (over §e200§7 characters)
 chat.error.spam=§r⩕ §l§cERROR!§r §8» §7Don't spam the chat!
+
+## --- GAME CONNECTION MESSAGES ---
+progressScreen.message.building=Use the menu in slot 9 of your hotbar to unlock more features
+progressScreen.message.locating=Before asking too many questions, read the signs at spawn
+progressScreen.message.resourceLoading=Host Telegram: @goldenfrog_2577
+
+## --- SYSTEM & UI ---
+accessibility.chat.tts.autocomplete=Autocomplete
+accessibility.chat.tts.autocompleteBack=Reverse Autocomplete
+accessibility.chat.tts.nextMessage=Next Message
+accessibility.chat.tts.previousMessage=Previous Message
+advMode.setCommand.success=§r
+button.deleteText=Delete Text
+admin.kick.button=Kick Player
+chat.title=Chat
+chat.title.cheats=Chat & Commands
+command_block.placeholder=Enter command here...
+commands.scoreboard.players.offlinePlayerName=§r §cOffline
+death.attack.explosion=§r %1$s §r§cblew up
+death.attack.flyIntoWall=§r %1$s §r§ccrashed with elytra
+death.attack.generic=§r %1$s §r§cmysteriously died
+death.attack.outOfWorld=§r %1$s §r§cfell into the void
+death.attack.player=§r %1$s §r§cwas slain by  player§r %2$s
+death.attack.player.item=§r %1$s §r§cwas slain by  player§r %2$s §r§cusing§r %3$s
+disconnect.kicked=You were kicked from the server
+disconnect.kicked.reason=You were kicked for:
+disconnectionScreen.disconnected=Connection lost, maybe the host shut down the server
+disconnectionScreen.unexpectedPacket=§lYou were kicked by§c an admin
+entity.server:floating_text.name=Hologram
+map.position=Coordinates: %s %s %s
+multiplayer.player.changeToPersona=§b%s §r§bchanged their persona
+multiplayer.player.changeToSkin=§b%s §r§bchanged their skin
+multiplayer.player.joined.realms=§r§r %s §r§7joined
+multiplayer.player.joined=§r§r %s §r§7joined
+multiplayer.player.left.realms=§r§r %s §r§7left
+multiplayer.player.left=§r§r %s §r§7left

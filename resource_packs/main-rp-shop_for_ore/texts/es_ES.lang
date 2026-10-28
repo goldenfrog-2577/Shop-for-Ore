@@ -1,10 +1,14 @@
 ## =============================
 ##  Shop for Ore: LOCALIZACIÓN ESPAÑOLA
-##  Autor: kapycta1231484 & Copilot
-##  Última actualización: 2026-01-06
+##  Autor: kapycta1231484 & Claude
+##  Última actualización: 2026-10-26
 ##  Este archivo contiene todos los textos del mapa Shop for Ore en español.
 ##  ¡Por favor, mantén las secciones y comentarios para facilitar la navegación!
 ## =============================
+
+## --- INFORMACIÓN DEL PACK ---
+pack.name=Datapack para el mapa §lShop for Ore§r
+pack.description=Incluye pequeñas mejoras para una experiencia más cómoda. §c¡No se recomienda desactivar! §fVersión: §7[0.3.0_20261025_resources]
 
 ## --- PICOLES ---
 item.stick.name=§lPico §aNivel§b 1
@@ -43,46 +47,6 @@ item.server:admin_menu=§eMenú de admin §7[Pulsa para abrir§7]§r
 item.server:admin_stick=§cVara de admin§r
 item.server:portable_ender_crystal.name=§eCristal del End portátil
 item.spawn_egg.entity.server:floating_text.name=Huevo de holograma
-
-## --- SISTEMA Y UI ---
-accessibility.chat.tts.autocomplete=Autocompletar
-accessibility.chat.tts.autocompleteBack=Autocompletar inverso
-accessibility.chat.tts.nextMessage=Siguiente mensaje
-accessibility.chat.tts.previousMessage=Mensaje anterior
-advMode.setCommand.success=§r
-button.deleteText=Eliminar texto
-admin.kick.button=Expulsar jugador
-chat.title=Chat
-chat.title.cheats=Chat y comandos
-command_block.placeholder=Introduce el comando aquí...
-commands.scoreboard.players.offlinePlayerName=§r §cDesconectado
-death.attack.explosion=§r %1$s §r§cexplotó
-death.attack.flyIntoWall=§r %1$s §r§cse estrelló con el élytra
-death.attack.generic=§r %1$s §r§cmurió misteriosamente
-death.attack.outOfWorld=§r %1$s §r§ccayó al vacío
-death.attack.player=§r %1$s §r§cfue asesinado por  jugador§r %2$s
-death.attack.player.item=§r %1$s §r§cfue asesinado por  jugador§r %2$s §r§cusando§r %3$s
-disconnect.kicked=Fuiste expulsado del servidor
-disconnect.kicked.reason=Fuiste expulsado por:
-disconnectionScreen.disconnected=Conexión perdida, tal vez el host apagó el servidor
-disconnectionScreen.unexpectedPacket=§lFuiste expulsado por§c un admin
-entity.server:floating_text.name=Holograma
-map.position=Coordenadas: %s %s %s
-multiplayer.player.changeToPersona=§b%s §r§bcambió su personaje
-multiplayer.player.changeToSkin=§b%s §r§bcambió su skin
-multiplayer.player.joined.realms=§r§r %s §r§7se unió
-multiplayer.player.joined=§r§r %s §r§7se unió
-multiplayer.player.left.realms=§r§r %s §r§7salió
-multiplayer.player.left=§r§r %s §r§7salió
-
-## --- INFORMACIÓN DEL PACK ---
-pack.name=Datapack para el mapa §lShop for Ore§r (E)
-pack.description=Incluye pequeñas mejoras para una experiencia más cómoda. §c¡No se recomienda desactivar!
-
-## --- MENSAJES DE CONEXIÓN ---
-progressScreen.message.building=Usa el menú en la ranura 9 de tu barra para desbloquear más funciones
-progressScreen.message.locating=Antes de hacer muchas preguntas, lee los carteles en el spawn
-progressScreen.message.resourceLoading=Host Omlet: @waxenjaguar2209
 
 ## --- TRADUCCIÓN Y BOTONES DE UI ---
 admin.common.back=§8Atrás
@@ -416,8 +380,8 @@ menu.warps.button.minigames=§8Mini-juegos
 ## --- MENÚ MEJORAS ---
 menu.upgrades.title=§l§8Menú del servidor »  Mejoras
 menu.upgrades.body=§7El VIP abre tu propia mina y las monedas VIP; el renacimiento empieza de cero, pero da Prisa para siempre.
-menu.upgrades.button.vip=§2VIP
-menu.upgrades.button.rebirth=§5Reinicio
+menu.upgrades.button.vip= §2VIP
+menu.upgrades.button.rebirth= §5Reinicio
 
 ## --- MENÚ REGISTRO ---
 account.register.title=§l§8Registro de cuenta
@@ -528,7 +492,7 @@ admin.tools.button.light=§5Bloque de luz
 admin.tools.button.npc_egg=§5Huevo de NPC
 admin.tools.button.hologram_egg=§5Huevo de holograma
 admin.tools.button.admin_stick=§cVara de admin
-admin.tools.button.name_tag=§8Etiquetas (16)
+admin.tools.button.portable_ender_crystal=§eCristal del End portátil
 admin.tools.button.clear_inventory=§8Limpiar inventario
 admin.tools.clear.body=§7Se vaciará todo tu inventario. ¿Estás seguro/a?
 
@@ -689,6 +653,9 @@ chat.server.wiped=§r §cServidor §8» §7Se han reiniciado las estadística
 chat.server.wiped.offline=§r §cServidor §8» §7Mientras no estabas, el servidor empezó de nuevo (reinicio): se borraron el progreso, los logros y los cosméticos. Tu rol, contraseña y ajustes siguen igual
 chat.server.reset_offline=§r §cServidor §8» §7Mientras no estabas, el dueño reinició los datos de los jugadores desconectados: progreso, rol y contraseña. Regístrate de nuevo
 
+## --- VARA ADMIN ---
+chat.server.kicked=§r §cServidor §8» §f%1$s§r§7 fue expulsado por un administrador
+
 ## --- MENSAJES DE NIVEL Y SISTEMA ---
 chat.lvlup.level.2=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e2§7, nuevo pico: §ePico de madera
 chat.lvlup.level.3=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e3§7, nuevo pico: §ePico de piedra
@@ -715,6 +682,38 @@ chat.lvlup.level.23=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e23
 chat.lvlup.level.24=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e24
 chat.lvlup.level.25=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e25§7: ¡el nivel máximo!
 
+## --- PREMIOS PROMOCIONALES ---
+chat.promo.reward.1=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo §e500 
+chat.promo.reward.2=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo §e500 
+chat.promo.reward.3=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo §e25k 
+chat.promo.reward.4=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo §e100 
+chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7Ya has activado este §ecódigo promocional
+chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Código promocional inválido
+
+## --- PREMIOS DE TIENDA ---
+chat.shop.enchant.efficiency=§r §eTienda §8» §7Comprado: §eEficiencia§7 (§e+1§7)
+chat.shop.enchant.fortune=§r §eTienda §8» §7Comprado: §eFortuna§7 (§e+1§7)
+chat.shop.item_enchant.done=§r §eTienda §8» §7Comprado: §e%1$s %2$s§7 por §e%3$s §f
+chat.shop.enchant.error.stick=§r §eTienda §8» §7Ahora tienes un §epalo§7, no un pico: no hay nada que encantar. El pico (de madera) se da en el §enivel 2§7; vuelve entonces
+chat.shop.cosmetics.error.no_coins=§r⩕ §l§cERROR!§r §8» §7No tienes suficientes monedas VIP — se obtienen con amatista en el nivel VIP
+chat.shop.cosmetics.error.vip=§r⩕ §l§cERROR!§r §8» §7Solo los VIP (desde el nivel 26) pueden comprar cosméticos; mirar puede cualquiera
+chat.shop.cosmetics.error.vip_sell=§r⩕ §l§cERROR!§r §8» §7Las partículas de venta son solo para VIP
+chat.shop.cosmetics.bought=§r §eTienda §8» §7Comprado: %1$s §e%2$s§7 por §e%3$s
+chat.shop.cosmetics.reset.name=§r §eTienda §8» §7El color del nombre vuelve a ser el del rol
+chat.shop.cosmetics.reset.text=§r §eTienda §8» §7El color del texto vuelve a ser blanco
+chat.shop.cosmetics.selected.name=§r §eTienda §8» §7Color del nombre: %1$s §7%2$s
+chat.shop.cosmetics.selected.text=§r §eTienda §8» §7Color del texto: %1$s §7%2$s
+chat.shop.cosmetics.off.trail=§r §eTienda §8» §7Partículas a tu alrededor desactivadas
+chat.shop.cosmetics.off.death=§r §eTienda §8» §7Partículas al morir desactivadas
+chat.shop.cosmetics.off.sell=§r §eTienda §8» §7Tus partículas de venta están desactivadas — vuelven las estándar
+chat.shop.cosmetics.selected.trail=§r §eTienda §8» §7Partículas a tu alrededor: §e%1$s
+chat.shop.cosmetics.selected.death=§r §eTienda §8» §7Partículas al morir: §e%1$s
+chat.shop.cosmetics.selected.sell=§r §eTienda §8» §7Partículas de venta: §e%1$s
+chat.shop.item_enchant.error.changed=§r⩕ §l§cERROR!§r §8» §7El objeto de esa ranura cambió: vuelve a abrir la ventana
+chat.shop.kit.iron=§r §eTienda §8» §7Comprado: §eKit de hierro
+chat.shop.kit.diamond=§r §eTienda §8» §7Comprado: §eKit de diamante
+chat.shop.kit.netherite=§r §eTienda §8» §7Comprado: §eKit de netherita
+
 ## --- VIP Y REINICIO ---
 chat.error.no_money=§r⩕ §l§cERROR!§r §8» §7No tienes suficientes 
 chat.vip.error.requirements=§r⩕ §l§cERROR!§r §8» §7Para §eVIP§7 necesitas nivel §e25§7  y §e125 000§7 
@@ -736,16 +735,6 @@ chat.rebirth.error.max=§r⩕ §l§cERROR!§r §8» §7Ya tienes el §eReinicio 
 chat.ore_magnet.bought=§r §eTienda §8» §7El §eImán de mineral§7 está activo §e5 minutos§7: los objetos cercanos vuelan hacia ti
 chat.ore_magnet.error.active=§r⩕ §l§cERROR!§r §8» §7El §eImán de mineral§7 ya está activo. Segundos restantes: §e%1$s
 chat.ore_magnet.end=§r §eTienda §8» §7El §eImán de mineral§7 se agotó. Compra otro en §eTienda → Potenciadores
-
-## --- PREMIOS PROMOCIONALES ---
-chat.promo.reward.1=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo §e500 
-chat.promo.reward.2=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo §e500 
-chat.promo.reward.3=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo §e25k 
-chat.promo.reward.4=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo §e100 
-chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7Ya has activado este §ecódigo promocional
-chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Código promocional inválido
-
-## --- ANTITRAMPAS ---
 
 ## --- LIMPIEZA DE OBJETOS ---
 screen.clear_items.title=§l§eLimpieza de objetos
@@ -1023,7 +1012,7 @@ chat.cmd.game.error.start=§r⩕ §l§cERROR!§r §8» §7No se puede empezar: e
 chat.cmd.game.error.empty=§r⩕ §l§cERROR!§r §8» §7No hay nadie en este juego
 chat.cps.alert=§r §cAnti-Cheat §8» §7§f%1$s§r§7: §c%2$s CPS§7 durante %3$s s seguidos (límite §e%4$s§7): posible autoclicker
 hud.cps=§7CPS: %1$s §8• §f%2$s §7m/s
-hud.cps.hp=§7CPS: %1$s §8• §f%2$s §7m/s §8• §7HP: %3$s
+hud.cps.hp=§7CPS: %1$s §8• §f%2$s §7м/с §8• §7HP: %3$s
 chat.cmd.cps.use=§r §7CMD §8» §7Uso: §e!cps§7 <jugador>
 chat.cmd.cps.info=§r §7CMD §8» §7CPS de §f%1$s§r§7: ahora §e%2$s§7, máximo en 10 s: §e%3$s§7 (límite §e%4$s§7)
 chat.cmd.ac.use=§r §7CMD §8» §7Uso: §e!ac§7 [jugador] · §e!ac reset§7 <jugador> · §e!ac mode§7 <alerts/rollback/kick>
@@ -1086,33 +1075,6 @@ role.tag.helper=§3Ayudante
 role.tag.moder=§9Moderador
 role.tag.bot=§7Bot
 
-## --- PREMIOS DE TIENDA ---
-chat.shop.enchant.efficiency=§r §eTienda §8» §7Comprado: §eEficiencia§7 (§e+1§7)
-chat.shop.enchant.fortune=§r §eTienda §8» §7Comprado: §eFortuna§7 (§e+1§7)
-chat.shop.item_enchant.done=§r §eTienda §8» §7Comprado: §e%1$s %2$s§7 por §e%3$s §f
-chat.shop.enchant.error.stick=§r §eTienda §8» §7Ahora tienes un §epalo§7, no un pico: no hay nada que encantar. El pico (de madera) se da en el §enivel 2§7; vuelve entonces
-chat.shop.cosmetics.error.no_coins=§r⩕ §l§cERROR!§r §8» §7No tienes suficientes monedas VIP — se obtienen con amatista en el nivel VIP
-chat.shop.cosmetics.error.vip=§r⩕ §l§cERROR!§r §8» §7Solo los VIP (desde el nivel 26) pueden comprar cosméticos; mirar puede cualquiera
-chat.shop.cosmetics.error.vip_sell=§r⩕ §l§cERROR!§r §8» §7Las partículas de venta son solo para VIP
-chat.shop.cosmetics.bought=§r §eTienda §8» §7Comprado: %1$s §e%2$s§7 por §e%3$s
-chat.shop.cosmetics.reset.name=§r §eTienda §8» §7El color del nombre vuelve a ser el del rol
-chat.shop.cosmetics.reset.text=§r §eTienda §8» §7El color del texto vuelve a ser blanco
-chat.shop.cosmetics.selected.name=§r §eTienda §8» §7Color del nombre: %1$s §7%2$s
-chat.shop.cosmetics.selected.text=§r §eTienda §8» §7Color del texto: %1$s §7%2$s
-chat.shop.cosmetics.off.trail=§r §eTienda §8» §7Partículas a tu alrededor desactivadas
-chat.shop.cosmetics.off.death=§r §eTienda §8» §7Partículas al morir desactivadas
-chat.shop.cosmetics.off.sell=§r §eTienda §8» §7Tus partículas de venta están desactivadas — vuelven las estándar
-chat.shop.cosmetics.selected.trail=§r §eTienda §8» §7Partículas a tu alrededor: §e%1$s
-chat.shop.cosmetics.selected.death=§r §eTienda §8» §7Partículas al morir: §e%1$s
-chat.shop.cosmetics.selected.sell=§r §eTienda §8» §7Partículas de venta: §e%1$s
-chat.shop.item_enchant.error.changed=§r⩕ §l§cERROR!§r §8» §7El objeto de esa ranura cambió: vuelve a abrir la ventana
-chat.shop.kit.iron=§r §eTienda §8» §7Comprado: §eKit de hierro
-chat.shop.kit.diamond=§r §eTienda §8» §7Comprado: §eKit de diamante
-chat.shop.kit.netherite=§r §eTienda §8» §7Comprado: §eKit de netherita
-
-## --- VARA ADMIN ---
-chat.server.kicked=§r §cServidor §8» §f%1$s§r§7 fue expulsado por un administrador
-
 ## --- MARCADOR ---
 scoreboards.map=§l[] Shop for Orel§r
 hud.profile=§l[] §7Perfil§f: §r
@@ -1126,7 +1088,42 @@ hud.online=[] §6Online§f:
 scoreboards.x2boost=§r §l§ax2 potenciador
 scoreboards.x4boost=§r §l§bx4 potenciador
 
-
 ## --- ERRORES DE CHAT ---
 chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Tu mensaje es demasiado largo (más de §e200§7 caracteres)
 chat.error.spam=§r⩕ §l§cERROR!§r §8» §7¡No hagas spam en el chat!
+
+## --- MENSAJES DE CONEXIÓN ---
+progressScreen.message.building=Usa el menú en la ranura 9 de tu barra para desbloquear más funciones
+progressScreen.message.locating=Antes de hacer muchas preguntas, lee los carteles en el spawn
+progressScreen.message.resourceLoading=Host Telegram: @goldenfrog_2577
+
+## --- SISTEMA Y UI ---
+accessibility.chat.tts.autocomplete=Autocompletar
+accessibility.chat.tts.autocompleteBack=Autocompletar inverso
+accessibility.chat.tts.nextMessage=Siguiente mensaje
+accessibility.chat.tts.previousMessage=Mensaje anterior
+advMode.setCommand.success=§r
+button.deleteText=Eliminar texto
+admin.kick.button=Expulsar jugador
+chat.title=Chat
+chat.title.cheats=Chat y comandos
+command_block.placeholder=Introduce el comando aquí...
+commands.scoreboard.players.offlinePlayerName=§r §cDesconectado
+death.attack.explosion=§r %1$s §r§cexplotó
+death.attack.flyIntoWall=§r %1$s §r§cse estrelló con el élytra
+death.attack.generic=§r %1$s §r§cmurió misteriosamente
+death.attack.outOfWorld=§r %1$s §r§ccayó al vacío
+death.attack.player=§r %1$s §r§cfue asesinado por  jugador§r %2$s
+death.attack.player.item=§r %1$s §r§cfue asesinado por  jugador§r %2$s §r§cusando§r %3$s
+disconnect.kicked=Fuiste expulsado del servidor
+disconnect.kicked.reason=Fuiste expulsado por:
+disconnectionScreen.disconnected=Conexión perdida, tal vez el host apagó el servidor
+disconnectionScreen.unexpectedPacket=§lFuiste expulsado por§c un admin
+entity.server:floating_text.name=Holograma
+map.position=Coordenadas: %s %s %s
+multiplayer.player.changeToPersona=§b%s §r§bcambió su personaje
+multiplayer.player.changeToSkin=§b%s §r§bcambió su skin
+multiplayer.player.joined.realms=§r§r %s §r§7se unió
+multiplayer.player.joined=§r§r %s §r§7se unió
+multiplayer.player.left.realms=§r§r %s §r§7salió
+multiplayer.player.left=§r§r %s §r§7salió
