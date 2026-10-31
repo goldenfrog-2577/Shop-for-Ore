@@ -43,6 +43,8 @@ import './system/wipe.js';        // Вайп: номер вайпа, сброс
 import './system/offline_reset.js'; // !resetoffline: всё сбросить игрокам не в сети
 import './system/trident.js';     // Трезубец с «Громовержцем»: молния в поражённого игрока
 import './system/void.js';        // Бездна: упал ниже мира — на спавн
+import './system/ranks.js';       // Префикс уровня в чате (rank:§rN, у VIP — rank:§aVIP)
+import './system/hud.js';         // Панель слева (actionbar)
 
 // Импорт загрузчика скриптов
 import './register/loadScript.js';

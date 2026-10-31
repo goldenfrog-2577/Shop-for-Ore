@@ -37,15 +37,6 @@
 			"path" : "functions/events/rain_start.mcfunction"
 		},
 		{
-			"path" : "functions/ranks/rank_lvl_add.mcfunction"
-		},
-		{
-			"path" : "functions/ranks/rank_lvl_remove.mcfunction"
-		},
-		{
-			"path" : "functions/ranks/rank_lvl_reset.mcfunction"
-		},
-		{
 			"path" : "functions/settings/scoreboard_icons.mcfunction"
 		},
 		{
@@ -94,9 +85,6 @@
 			"path" : "functions/system/xp_need.mcfunction"
 		},
 		{
-			"path" : "functions/system/scoreboards.mcfunction"
-		},
-		{
 			"path" : "functions/system/setup.mcfunction"
 		},
 		{
@@ -107,9 +95,6 @@
 		},
 		{
 			"path" : "functions/system/timers.mcfunction"
-		},
-		{
-			"path" : "functions/system/wipe.mcfunction"
 		},
 		{
 			"path" : "functions/tick.json"
@@ -290,6 +275,12 @@
 		},
 		{
 			"path" : "scripts/system/void.js"
+		},
+		{
+			"path" : "scripts/system/ranks.js"
+		},
+		{
+			"path" : "scripts/system/hud.js"
 		},
 		{
 			"path" : "scripts/system/spleef.js"

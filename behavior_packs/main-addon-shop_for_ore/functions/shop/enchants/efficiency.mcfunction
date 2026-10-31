@@ -1,6 +1,5 @@
 # --- Покупка уровня зачарования «efficiency» за 25000 (максимум 5) ---
 # Вызывается из меню (Магазин → Зачарования) от имени игрока (@s). Уровень накладывается в timers/ticks_20.
-# Раньше можно было платить и сверх максимума: уровни выше 5 ничего не давали.
 # Палка (уровень 1) — не кирка: зачаровывать нечего, нужна хотя бы деревянная (уровень 2)
 execute as @s[scores={lvl=..1}] run tellraw @s {"rawtext":[{"translate":"chat.shop.enchant.error.stick"}]}
 execute as @s[scores={lvl=2..,efficiency=5..}] run tellraw @s {"rawtext":[{"translate":"chat.shop.error.enchant_max"}]}

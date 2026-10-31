@@ -1,0 +1,66 @@
+// --- Панель слева (actionbar): ник, монеты, опыт, уровень, ребитхи, онлайн ---
+// Настройки → Панель слева (functions/settings/*): обычная, «только значки» (тег player:board_icons)
+// или выключена (player:board_no). У VIP вместо монет — VIP-коины, на любом уровне.
+// Опыт — «текущий/нужный» (нужный — табло xp_need, functions/system/xp_need, сокращённо: «/195.0K»),
+// уровень — «N >> N+1»; на последнем уровне опыт без «/…», уровень — «40 >> МАКС.».
+// Числа подставляет игра (компоненты score), поэтому панель всегда показывает текущий счёт.
+// Раз в HUD_TICKS тиков — так же часто, как автопродажа меняет деньги и опыт.
+
+import { world } from '@minecraft/server';
+import { getScore, isVip, metricNumbers, run, MAX_LEVEL } from '../DataBase.js';
+
+export const ICONS_TAG = 'player:board_icons';
+export const OFF_TAG = 'player:board_no';
+const HUD_TICKS = 5;
+// Следующий уровень другим цветом — переход в новую локацию: 16 — Адская шахта
+const NEXT_LEVEL_COLOR = { 16: '§c' };
+
+const score = (objective) => ({ score: { name: '@s', objective } });
+const line = (text) => ({ text: `\n${text}` });
+const nextLevel = (n) => NEXT_LEVEL_COLOR[n] ? `${NEXT_LEVEL_COLOR[n]}${n}§f` : String(n);
+
+/** Строки панели «только значки». */
+function iconsRawtext(coins) {
+	return [
+		{ text: '§l\ue101 ➠ §r' }, { selector: '@s' },
+		line('§l\ue152 ➠ '), score(coins),
+		line('\ue154 ➠ '), score('xp'),
+		line('\ue153 ➠ '), score('lvl'),
+		{ text: ' \n\ue116 ➠ ' }, score('rebirth'),
+		line('\ue110 ➠ '), score('online')
+	];
+}
+
+/** Обычная панель: подписи из .lang (hud.*). */
+function fullRawtext(player, vip, coins, level) {
+	const last = level >= MAX_LEVEL;
+	const need = getScore(player, 'xp_need');
+	return [
+		{ translate: 'hud.profile' }, { selector: '@s' },
+		line(''), { translate: vip ? 'hud.vip_coins' : 'hud.money' }, score(coins),
+		line(''), { translate: 'hud.xp' }, score('xp'), ...(last || need <= 0 ? [] : [{ text: `/${metricNumbers(need)}` }]),
+		line(''), { translate: 'hud.lvl' }, score('lvl'), ...(last ? [{ text: ' >> ' }, { translate: 'hud.lvl.max' }] : [{ text: ` >> ${nextLevel(level + 1)}` }]),
+		line(''), { translate: 'hud.rebirth' }, score('rebirth'),
+		line(''), { translate: 'hud.online' }, score('online')
+	];
+}
+
+/** rawtext панели игрока или undefined — панель выключена или уровня ещё нет. */
+export function hudRawtext(player) {
+	if (player.hasTag(OFF_TAG)) return undefined;
+	const vip = isVip(player);
+	const coins = vip ? 'vip_coins' : 'money';
+	if (player.hasTag(ICONS_TAG)) return iconsRawtext(coins);
+	const level = getScore(player, 'lvl');
+	if (level < 1) return undefined;
+	return fullRawtext(player, vip, coins, level);
+}
+
+let tick = 0;
+world.events.tick.subscribe(() => {
+	if (++tick % HUD_TICKS !== 0) return;
+	for (const player of world.getPlayers()) {
+		const rawtext = hudRawtext(player);
+		if (rawtext) run(player, `titleraw @s actionbar ${JSON.stringify({ rawtext })}`);
+	}
+});
