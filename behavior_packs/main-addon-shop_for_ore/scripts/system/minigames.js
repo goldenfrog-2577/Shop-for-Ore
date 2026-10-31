@@ -7,6 +7,7 @@
 // телепорт участникам и зрителям, пока идёт игра (def.lockTeleport; владельцу можно) — так устроен сплиф.
 // Идея — по мотивам карты FearCube (с разрешения автора), код свой.
 
+import { isJailed, jailMinutesLeft } from './jail.js';
 import { world, system } from '@minecraft/server';
 import { run, rawTranslateRich, isPending, findPlayer, tell } from '../DataBase.js';
 import { teleportToArena, combatSecondsLeft } from './pvp.js';
@@ -76,12 +77,13 @@ const gameName = (g) => ({ translate: `minigame.${g.def.id}.name` });
 export function joinGame(player, id) {
 	const g = getGame(id);
 	const fail = (key, ...a) => { tell(player, key, ...a); return false; };
-	if (!g) return fail('chat.game.error.unknown', String(id ?? ''));
+	if (!g) return fail('chat.cmd.error.not_found', String(id ?? ''), '!game');
 	if (isPending(player) || player.hasTag('role:bot')) return false;
 	if (gameOf(player)) return fail('chat.game.error.already', gameName(gameOf(player)));
 	// Зритель игры с запретом телепорта не может уйти в другую игру, пока та идёт
 	if (teleportLock(player)) return fail('chat.game.error.teleport', gameName(teleportLock(player)));
 	if (player.hasTag('state:frozen')) return fail('chat.cmd.freeze.active');
+	if (isJailed(player)) return fail(jailMinutesLeft(player) === Infinity ? 'chat.jail.active.permanent' : 'chat.jail.active', String(jailMinutesLeft(player)));
 	if (combatSecondsLeft(player) > 0) return fail('chat.pvp.combat', combatSecondsLeft(player));
 	if (g.phase === 'running') return fail('chat.game.error.running', gameName(g));
 	if (g.players.size >= g.def.maxPlayers) return fail('chat.game.error.full', gameName(g));
@@ -93,7 +95,7 @@ export function joinGame(player, id) {
 	return true;
 }
 
-/** Выйти из игры (сам или выбыл). reason: left | out | quit (вышел с сервера) */
+/** Выйти из игры (сам или выбыл). reason: left | out | quit (вышел с сервера) | jail (посажен в тюрьму) */
 export function leaveGame(player, reason = 'left') {
 	const g = gameOf(player) ?? (reason === 'left' ? watchingOf(player) : undefined);
 	if (!g) return false;

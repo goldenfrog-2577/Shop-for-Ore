@@ -72,6 +72,8 @@ effect @a[scores={rebirth=5..}] haste 2 4 true
 scoreboard players remove @a[scores={magnet=1..}] magnet 1
 execute as @a[tag=boost:magnet,scores={magnet=..0}] run tellraw @s {"rawtext":[{"translate":"chat.ore_magnet.end"}]}
 tag @a[tag=boost:magnet,scores={magnet=..0}] remove boost:magnet
+# Магнит, выданный администратором, закончился — знак «выдан» больше не нужен (system/boosts.js)
+tag @a[tag=boost:magnet_admin,scores={magnet=..0}] remove boost:magnet_admin
 
 # Подарок «в игре» (events/gift_event): обратный отсчёт, пока его не подобрали
 execute if score gift system matches 1.. run scoreboard players remove gift system 1

@@ -4,6 +4,7 @@
 // вместе с ником, так что фактически это бан по нику — сменой ника он обходится. Номер оставлен: он не мешает,
 // а если номер где-то окажется постоянным — бан заодно сработает и по нему.
 // Список хранится в свойствах мира shop:bans0…3 (JSON по частям: одно свойство — до 1000 символов).
+// Срок: until — время окончания в мс (0 — навсегда); истёкший бан не действует и убирается из списка при проверке.
 
 import { world } from '@minecraft/server';
 import { DynamicPropertiesDefinition } from '@minecraft/server';
@@ -21,7 +22,7 @@ world.events.worldInitialize.subscribe((e) => {
 	e.propertyRegistry.registerWorldDynamicProperties(def);
 });
 
-/** Список банов: [{ id, names: [ники], by, reason, t }] */
+/** Список банов: [{ id, names: [ники], by, reason, t, until }] (until 0 / нет — навсегда) */
 export function getBans() {
 	let json = '';
 	try {
@@ -41,10 +42,10 @@ function saveBans(bans) {
 }
 
 /** Бан игрока, который сейчас в сети (номер + ник) или не в сети (только ник). @returns {boolean} */
-export function addBan({ id, name }, by, reason) {
+export function addBan({ id, name }, by, reason, minutes = Infinity, now = Date.now()) {
 	const lower = name.toLowerCase();
 	const bans = getBans().filter(b => !(id && b.id === id) && !b.names.some(n => n.toLowerCase() === lower));
-	bans.push({ id: id ?? '', names: [name], by, reason: String(reason ?? '').slice(0, REASON_MAX), t: Date.now() });
+	bans.push({ id: id ?? '', names: [name], by, reason: String(reason ?? '').slice(0, REASON_MAX), t: now, until: minutes === Infinity ? 0 : now + minutes * 60000 });
 	return saveBans(bans);
 }
 
@@ -59,11 +60,19 @@ export function removeBan(nameOrIndex) {
 	return removed;
 }
 
-/** Бан, под который попадает игрок (по номеру или нику), или undefined. Владельца не банят. */
+/** Бан ещё действует: навсегда или срок не вышел. */
+export const banActive = (b, now = Date.now()) => !b.until || b.until > now;
+/** Сколько минут бана осталось: Infinity — навсегда. */
+export const banMinutesLeft = (b, now = Date.now()) => b.until ? Math.max(0, Math.ceil((b.until - now) / 60000)) : Infinity;
+
+/** Бан, под который попадает игрок (по номеру или нику), или undefined. Владельца не банят. Истёкшие — убираются. */
 export function findBan(player) {
 	if (player.hasTag('role:owner')) return undefined;
 	const name = player.name.toLowerCase();
-	return getBans().find(b => (b.id && b.id === player.id) || b.names.some(n => n.toLowerCase() === name));
+	const bans = getBans();
+	const alive = bans.filter(b => banActive(b));
+	if (alive.length !== bans.length) saveBans(alive);
+	return alive.find(b => (b.id && b.id === player.id) || b.names.some(n => n.toLowerCase() === name));
 }
 
 /** Выгнать забаненного. Причина бана — в тексте кика (его показывает сама игра, без перевода). */
@@ -76,7 +85,9 @@ export function kickBanned(player, ban) {
 		if (!entry.id) entry.id = player.id;
 		saveBans(bans);
 	}
-	run(world.getDimension('overworld'), `kick "${player.name}" Ban${ban.reason ? ': ' + ban.reason : ''}`);
+	// Срок — в тексте кика (игра показывает его без перевода): «Ban 90 min: причина»
+	const left = banMinutesLeft(ban);
+	run(world.getDimension('overworld'), `kick "${player.name}" Ban${left === Infinity ? '' : ` ${left} min`}${ban.reason ? ': ' + ban.reason : ''}`);
 }
 
 // Проверка при входе: игрок появляется в списке не сразу, поэтому — со следующих тиков, плюс раз в 5 секунд всех

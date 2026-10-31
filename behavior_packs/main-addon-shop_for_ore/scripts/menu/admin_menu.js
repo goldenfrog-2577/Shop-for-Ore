@@ -6,21 +6,23 @@
 // (сразу после ключа не ставим ни скобок, ни §-кодов).
 
 import { world } from '@minecraft/server';
+import { isJailed, tellJailed } from '../system/jail.js';
 import { isPending, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS } from '../DataBase.js';
-import { showMenu, showModal, modal, backButton, confirm } from './forms.js';
+import { showMenu, showModal, modal, backButton, confirm, wipeConfirm, WARN_TITLE } from './forms.js';
 import { runChatCommand, setMoney } from '../chat/commands.js';
 import { sendChatMessage } from '../chat/chat.js';
 import { getBot, getBotName, setBotName, spawnBot, removeBot } from '../system/spawnbot.js';
 import { wipeAll, wipeCounts } from '../system/wipe.js';
+import { resetOffline, offlineCounts } from '../system/offline_reset.js';
 import { canTeleport } from '../system/minigames.js';
 
 const BACK_ICON = 'textures/ui/icon_import';
-// Заголовок «Предупреждение» со знаком «!» из шрифта карты (glyph_E1)
-const WARN_TITLE = '\ue1f8 %admin.wipe.title';
 // Кружки цвета роли из шрифта карты: серый, синий, красный
 const ROLE_GLYPHS = { player: '\ue137', helper: '\ue135', moder: '\ue131', admin: '\ue130' };
 // Значок опыта, как у бустов в магазине
 const XP_GLYPH = '\ue154';
+// Значок монеты (как в балансе на панели слева)
+const COIN_GLYPH = '\ue152';
 const OPEN = '\n%menu.common.tap_to_open';
 const EVENTS = ['haste', 'rain', 'gift', 'mythic'];
 // Как часто срабатывают ивенты по таймеру (минуты): timers/ticks_3600, ticks_6000, ticks_4800, мистик — system/mythic.js
@@ -36,6 +38,12 @@ world.events.beforeItemUse.subscribe((data) => {
 	if (player.hasTag('state:frozen')) {
 		data.cancel = true;
 		tell(player, 'chat.cmd.freeze.active');
+		return;
+	}
+	// В тюрьме (!jail) — тоже: меню телепортаций вывело бы из камеры
+	if (isJailed(player)) {
+		data.cancel = true;
+		tellJailed(player);
 		return;
 	}
 	admin_menu(player);
@@ -91,12 +99,15 @@ function warps(player) {
 	showMenu(player, '%admin.warps.title', '%admin.warps.body', [
 		{ text: '%admin.warps.button.mine', icon: 'textures/ui/World', run: tp(0, 5, 0) },
 		{ text: '%admin.warps.button.mine_2', icon: 'textures/ui/World', run: tp(0, 5, -33) },
+		{ text: '%admin.warps.button.mine_3', icon: 'textures/ui/World', run: tp(0, 5, -69) },
 		{ text: '%admin.warps.button.vip', icon: 'textures/ui/World', run: tp(-60, 5, -60) },
 		{ text: '%menu.warps.button.minigames', icon: 'textures/ui/World', run: tp(-109, 5, -60) },
 		// Туда же ведёт портал из мини-игр (system/system: -103 0 -51)
-		{ text: '%admin.warps.button.pvp_arena', icon: 'textures/ui/World', run: tp(292, -25, 259) },
+		{ text: '%menu.warps.button.pvp', icon: 'textures/ui/World', run: tp(292, -25, 259) },
 		// Сплиф (второй портал из мини-игр: -115 0 -51)
-		{ text: '%admin.warps.button.spleef', icon: 'textures/ui/World', run: tp(500, 3, 500) },
+		{ text: '%menu.warps.button.spleef', icon: 'textures/ui/World', run: tp(500, 3, 500) },
+		{ text: '%menu.warps.button.tir', icon: 'textures/ui/World', run: tp(435, -45, 338) },
+		{ text: '%admin.warps.button.boss_zone', icon: 'textures/ui/World', run: tp(184, 11, 287) },
 		{ text: '%admin.warps.button.cmd_zone', icon: 'textures/ui/World', run: tp(50, 5, 50) },
 		{ text: '%admin.warps.button.random_player', icon: 'textures/ui/World', run: () => {
 			// Случайный игрок без роли; если таких нет — сообщение (раньше команда молча не срабатывала)
@@ -156,10 +167,39 @@ function tools(player) {
 		{ text: '%admin.tools.button.hologram_egg', icon: 'textures/items/floating_text', run: give('server:floating_text_spawn_egg') },
 		{ text: '%admin.tools.button.admin_stick', icon: 'textures/items/stick', run: give('server:admin_stick') },
 		{ text: '%admin.tools.button.portable_ender_crystal', icon: 'textures/items/end_crystal', run: give('server:portable_ender_crystal 16') },
+		{ text: '%admin.tools.button.by_id', icon: 'textures/ui/magnifyingGlass', run: () => itemById(player, 'give @s', () => tools(player)) },
 		// Очистка всего инвентаря — теперь с подтверждением
 		{ text: '%admin.tools.button.clear_inventory', icon: 'textures/ui/cancel', run: () => confirm(player, WARN_TITLE, '%admin.tools.clear.body', () => run(player, 'clear @s'), () => tools(player)) },
 		back(() => admin_menu(player))
 	], () => admin_menu(player));
+}
+
+// --- Предмет по ID: id (minecraft:… можно не писать), количество, метаданные ---
+// command — начало команды: «give @s» себе или «replaceitem entity "<бот>" slot.hotbar 0» (слоты бота)
+export const ITEM_ID = /^([a-z0-9_]+:)?[a-z0-9_.]+$/;
+/** Проверить поля формы предмета: { id, count, data } или ключ ошибки. */
+export function parseItemFields(id, count, data, maxCount = 255) {
+	const item = String(id ?? '').trim().toLowerCase();
+	const n = Number(String(count ?? '').trim() || 1), d = Number(String(data ?? '').trim() || 0);
+	if (!ITEM_ID.test(item)) return { error: 'chat.admin.item.error.id' };
+	if (!Number.isInteger(n) || n < 1 || n > maxCount) return { error: 'chat.cmd.error.number', args: [String(count ?? ''), 1, maxCount] };
+	if (!Number.isInteger(d) || d < 0 || d > 32767) return { error: 'chat.cmd.error.number', args: [String(data ?? ''), 0, 32767] };
+	return { id: item, count: n, data: d };
+}
+function itemById(player, command, onBack) {
+	const form = modal('%admin.item.title')
+		.textField('%admin.item.id', 'minecraft:diamond_sword')
+		.textField('%admin.item.count', '1', '1')
+		.textField('%admin.item.data', '0', '0');
+	showModal(player, form, ([id, count, data]) => {
+		const parsed = parseItemFields(id, count, data);
+		if (parsed.error) return tell(player, parsed.error, ...(parsed.args ?? []));
+		// Нет такого предмета — команда не сработает (run вернёт undefined)
+		run(player, `${command} ${parsed.id} ${parsed.count} ${parsed.data}`).then(r => {
+			if (r === undefined) tell(player, 'chat.admin.item.error.unknown', parsed.id);
+			else tell(player, 'chat.admin.item.given', parsed.id, String(parsed.count));
+		});
+	}, onBack);
 }
 
 // --- Объявление: то же, что !say (эмодзи, без пустых сообщений) ---
@@ -174,11 +214,21 @@ function sayServer(player) {
 	}, () => admin_menu(player));
 }
 
-// --- Вайп (только владелец) ---
+// --- Вайп (только владелец): полный вайп и сброс игроков не в сети, у каждого — окно «Да / Нет» (forms.js) ---
 function wipe(player) {
 	if (!hasRole(player, 'owner')) return tell(player, 'chat.cmd.error.no_permission');
-	const { all, online } = wipeCounts();
-	confirm(player, WARN_TITLE, `%admin.wipe.body\n\n%admin.wipe.count §e${all}§7 (%admin.wipe.online §e${online}§7)`, () => wipeAll(player), () => admin_menu(player));
+	const again = () => wipe(player);
+	showMenu(player, '%admin.wipe.menu.title', '%admin.wipe.menu.body', [
+		{ text: '%admin.wipe.button.full', icon: 'textures/ui/friend_glyph_desaturated', run: () => {
+			const { all, online } = wipeCounts();
+			wipeConfirm(player, `%admin.wipe.body\n\n%admin.wipe.count §e${all}§7 (%admin.wipe.online §e${online}§7)`, () => wipeAll(player), again);
+		} },
+		{ text: '%admin.wipe.button.offline', icon: 'textures/ui/permissions_visitor_hand', run: () => {
+			const { offline, online } = offlineCounts();
+			wipeConfirm(player, `%admin.wipe.offline.body\n\n%admin.wipe.offline.count §e${offline}§7 (%admin.wipe.online §e${online}§7)`, () => resetOffline(player), again);
+		} },
+		back(() => admin_menu(player))
+	], () => admin_menu(player));
 }
 
 // ===== Игроки =====
@@ -211,7 +261,7 @@ function playerActions(player, target) {
 	}
 	items.push(
 		{ text: '%admin.players.button.spawn', icon: 'textures/ui/World', run: () => runChatCommand(player, 'warp', ['spawn', name]) },
-		{ text: '%admin.players.button.gamemode', icon: 'textures/ui/heart_new', run: () => playerGamemode(player, target) },
+		{ text: '%admin.main.button.gamemode', icon: 'textures/ui/heart_new', run: () => playerGamemode(player, target) },
 		{ text: '%admin.players.button.money', icon: 'textures/items/gold_ingot', run: () => playerMoney(player, target) },
 		...(target.hasTag('role:bot') ? [] : [{ text: '%admin.players.button.color', icon: 'textures/items/dye_powder_pink', run: () => playerColor(player, target) }])
 	);
@@ -240,7 +290,7 @@ function playerActions(player, target) {
 		`%admin.players.body.name ${name}`,
 		`%admin.players.body.role %role.${getRole(target)}`,
 		`%admin.players.body.lvl ${getScore(target, 'lvl')}`,
-		`%admin.players.body.money ${getScore(target, 'money')}`,
+		`%admin.players.body.money ${getScore(target, 'money')} ${COIN_GLYPH}`,
 		`%admin.players.body.warns ${getWarns(target)}/3`
 	].join('\n');
 	showMenu(player, '%admin.players.title', body, items, () => playersMenu(player));
@@ -272,7 +322,7 @@ function playerColor(player, target) {
 function playerMoney(player, target) {
 	const actions = ['add', 'take', 'set'];
 	const form = modal('%admin.players.money.title')
-		.dropdown(`%admin.players.body.money ${getScore(target, 'money')}\n\n%admin.players.money.action`, actions.map(a => `%admin.players.money.${a}`), 0)
+		.dropdown(`%admin.players.body.money ${getScore(target, 'money')} ${COIN_GLYPH}\n\n%admin.players.money.action`, actions.map(a => `%admin.players.money.${a}`), 0)
 		.textField('%admin.players.money.amount', '%menu.bank.amount_placeholder');
 	showModal(player, form, (values) => {
 		// Игрок мог выйти, пока окно было открыто
@@ -283,10 +333,10 @@ function playerMoney(player, target) {
 }
 
 // Мут: длительность из списка (команда принимает 1–1440 минут)
-const MUTE_MINUTES = [5, 15, 30, 60, 180, 720, 1440];
+const MUTE_MINUTES = [5, 15, 30, 60, 180, 720, 1440, 'permanent'];
 function playerMute(player, target) {
 	const form = modal('%admin.players.mute.title')
-		.dropdown('%admin.players.mute.minutes', MUTE_MINUTES.map(m => `${m} %admin.common.min`), 0)
+		.dropdown('%admin.players.mute.minutes', MUTE_MINUTES.map(m => m === 'permanent' ? '%chat.term.permanent' : `${m} %admin.common.min`), 0)
 		.textField('%admin.players.reason_optional', '%admin.players.reason_placeholder');
 	showModal(player, form, (values) => {
 		const reason = String(values[1] ?? '').trim();
@@ -331,6 +381,9 @@ function boostsMenu(player) {
 		{ text: '%admin.boosts.button.magnet', icon: 'textures/items/ender_pearl', run: () => magnetForm(player) },
 		...EVENTS.map(ev => ({ text: `%admin.boosts.button.event %chat.cmd.event.name.${ev}`, icon: 'textures/ui/icon_timer', run: () => runChatCommand(player, 'event', [ev]) })),
 		{ text: '%admin.boosts.button.auto', icon: 'textures/ui/icon_setting', run: () => autoEventsForm(player, () => boostsMenu(player)) },
+		// Выданные из этого меню или командой бусты и магниты — по ошибке; купленные игроками не трогаются
+		{ text: '%admin.boosts.button.stop', icon: 'textures/ui/cancel', run: () => wipeConfirm(player, '%admin.boosts.stop.body',
+			() => runChatCommand(player, 'boost', ['stop']), () => boostsMenu(player)) },
 		back(() => admin_menu(player))
 	], () => admin_menu(player));
 }
@@ -432,7 +485,8 @@ export function botMenu(player) {
 			{ text: '%admin.bot.button.tp_here', icon: 'textures/items/ender_pearl', run: () => run(player, `tp "${bot.name}" @s`) },
 			{ text: '%admin.bot.button.tp_to', icon: 'textures/items/ender_pearl', run: () => run(player, `tp @s "${bot.name}"`) },
 			{ text: '%admin.bot.button.say', icon: 'textures/ui/comment', run: () => botSay(player) },
-			{ text: '%admin.bot.button.effects', icon: 'textures/items/potion_bottle_splash_heal', run: () => botEffects(player) },
+			{ text: '%admin.bot.button.slots', icon: 'textures/items/iron_chestplate', run: () => botSlots(player) },
+			{ text: '%admin.main.button.effects', icon: 'textures/items/potion_bottle_splash_heal', run: () => botEffects(player) },
 			{ text: '%admin.bot.button.clear_effects', icon: 'textures/items/bucket_milk', run: () => {
 				run(bot, 'effect @s clear');
 				tell(player, 'chat.admin.bot.effect.cleared', bot.name);
@@ -480,7 +534,7 @@ function botEffects(player) {
 	const form = modal('%admin.bot.effects.title')
 		.dropdown('%admin.bot.effects.effect', BOT_EFFECTS.map(id => `%effect.${id}.name`), 0)
 		.slider('%admin.bot.effects.level', 0, 255, 1, 0)
-		.dropdown('%admin.bot.effects.time', EFFECT_SECONDS.map(secondsLabel), 1)
+		.dropdown('%admin.boosts.boost.minutes', EFFECT_SECONDS.map(secondsLabel), 1)
 		.toggle('%admin.bot.effects.hide', false);
 	showModal(player, form, ([effect, level, time, hide]) => {
 		const bot = getBot();
@@ -489,6 +543,48 @@ function botEffects(player) {
 		run(bot, `effect @s ${id} ${seconds} ${Math.round(level)} ${hide ? 'true' : 'false'}`);
 		tell(player, 'chat.admin.bot.effect.added', bot.name, { translate: `effect.${id}.name` }, String(level + 1),
 			seconds >= 1000000 ? { translate: 'admin.bot.effects.infinite' } : { rawtext: [{ text: String(seconds < 60 ? seconds : seconds / 60) + ' ' }, { translate: seconds < 60 ? 'admin.bot.effects.sec' : 'admin.bot.effects.min' }] });
+	}, () => botMenu(player));
+}
+
+// Слоты бота: хотбар 1–9, вторая рука, броня. Пустой ID — очистить слот. Для хотбара можно сразу выбрать слот в руку
+export const BOT_SLOTS = [
+	...Array.from({ length: 9 }, (_, i) => ({ id: `hotbar${i + 1}`, slot: `slot.hotbar ${i}`, label: `%admin.bot.slots.hotbar ${i + 1}`, hotbar: i })),
+	{ id: 'offhand', slot: 'slot.weapon.offhand 0', label: '%admin.bot.slots.offhand' },
+	{ id: 'head', slot: 'slot.armor.head 0', label: '%admin.bot.slots.head' },
+	{ id: 'chest', slot: 'slot.armor.chest 0', label: '%admin.bot.slots.chest' },
+	{ id: 'legs', slot: 'slot.armor.legs 0', label: '%admin.bot.slots.legs' },
+	{ id: 'feet', slot: 'slot.armor.feet 0', label: '%admin.bot.slots.feet' }
+];
+/** Название слота для сообщения в чат: «Хотбар 3», «Голова»… */
+const slotName = (slot) => {
+	const [key, num] = slot.label.slice(1).split(' ');
+	return { rawtext: [{ translate: key }, { text: num ? ` ${num}` : '' }] };
+};
+function botSlots(player) {
+	const form = modal('%admin.bot.slots.title')
+		.dropdown('%admin.bot.slots.slot', BOT_SLOTS.map(s => s.label), 0)
+		.textField('%admin.bot.slots.id', 'minecraft:diamond_sword')
+		.textField('%admin.item.count', '1', '1')
+		.textField('%admin.item.data', '0', '0')
+		.toggle('%admin.bot.slots.select', true);
+	showModal(player, form, ([slotIndex, id, count, data, select]) => {
+		const bot = getBot();
+		if (!bot) return tell(player, 'chat.admin.bot.error.absent');
+		const slot = BOT_SLOTS[slotIndex];
+		const target = `replaceitem entity "${bot.name}" ${slot.slot}`;
+		if (select && slot.hotbar !== undefined) {
+			try { bot.selectedSlot = slot.hotbar; } catch { /* у бота нет выбора слота */ }
+		}
+		if (!String(id ?? '').trim()) {
+			run(player, `${target} air`);
+			return tell(player, 'chat.admin.bot.slots.cleared', bot.name, slotName(slot));
+		}
+		const parsed = parseItemFields(id, count, data, 64);
+		if (parsed.error) return tell(player, parsed.error, ...(parsed.args ?? []));
+		run(player, `${target} ${parsed.id} ${parsed.count} ${parsed.data}`).then(r => {
+			if (r === undefined) tell(player, 'chat.admin.item.error.unknown', parsed.id);
+			else tell(player, 'chat.admin.bot.slots.set', bot.name, parsed.id);
+		});
 	}, () => botMenu(player));
 }
 

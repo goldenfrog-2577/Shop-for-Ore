@@ -2,6 +2,7 @@
 // список команд чата, точки !warp, эмодзи ---
 
 import { world, system } from '@minecraft/server';
+import { ERROR_KEYS } from './system/error_keys.js';
 
 /**
  * Получить значение очков игрока по определённому objective.
@@ -71,11 +72,21 @@ export function tellText(player, message, args = {}) {
 	return run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
 };
 
-// Сколько сообщений (tellraw @s — через tell, tellText и run) получил игрок: menu/forms.js по нему
-// закрывает всю цепочку меню, если после нажатия в чат пришло сообщение (ошибка, покупка и т. п.)
+// Сколько сообщений (tellraw @s — через tell, tellText и run) получил игрок и сколько из них — ошибки
+// (ключ из system/error_keys.js). menu/forms.js по ним решает, что делать с окнами после нажатия:
+// ошибка — закрыть всю цепочку, успех — оставить открытым последнее окно.
 const told = new Map();
+const toldErrors = new Map();
 /** @param {Entity} entity */
 export const toldCount = (entity) => told.get(entity.name) ?? 0;
+/** @param {Entity} entity */
+export const toldErrorCount = (entity) => toldErrors.get(entity.name) ?? 0;
+const TRANSLATE = /"translate":"([^"]+)"/g;
+/** В сообщении tellraw есть ключ ошибки. */
+export function isErrorMessage(command) {
+	for (const m of command.matchAll(TRANSLATE)) if (ERROR_KEYS.has(m[1])) return true;
+	return false;
+}
 
 /**
  * Выполнить команду и не ронять ошибку в ContentLog, если она не сработала
@@ -84,7 +95,10 @@ export const toldCount = (entity) => told.get(entity.name) ?? 0;
  * @param {string} command
  */
 export function run(entity, command) {
-	if (command.startsWith('tellraw @s ')) told.set(entity.name, toldCount(entity) + 1);
+	if (command.startsWith('tellraw @s ')) {
+		told.set(entity.name, toldCount(entity) + 1);
+		if (isErrorMessage(command)) toldErrors.set(entity.name, toldErrorCount(entity) + 1);
+	}
 	return entity.runCommandAsync(command).then((r) => r ?? {}, () => undefined);
 };
 
@@ -144,11 +158,11 @@ export function transferMoney(player, targetName, rawAmount) {
 	const amount = Number(raw);
 	// Целое положительное в пределах табло (дробная или огромная сумма «уходила» только в сообщении)
 	if (!/^\d+$/.test(raw) || !Number.isSafeInteger(amount) || amount <= 0 || amount > 2147483647) {
-		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.amount"}]}');
+		tell(player, 'chat.cmd.error.number', raw || '—', 1, 2147483647);
 		return false;
 	}
 	if (String(targetName).toLowerCase() === player.name.toLowerCase()) {
-		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.self"}]}');
+		tell(player, 'chat.cmd.error.self');
 		return false;
 	}
 	// Получатель должен быть в сети: иначе деньги ушли бы «фейковому игроку» с его ником
@@ -158,7 +172,7 @@ export function transferMoney(player, targetName, rawAmount) {
 		return false;
 	}
 	if (getScore(player, 'money') < amount) {
-		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.no_money"}]}');
+		tell(player, 'chat.error.no_money');
 		return false;
 	}
 	run(player, `scoreboard players remove @s money ${amount}`).then((res) => {
@@ -172,19 +186,40 @@ export function transferMoney(player, targetName, rawAmount) {
 	return true;
 };
 
-// --- Наказания: мут, предупреждения, заморозка (хранятся тегами — переживают перезаход) ---
-// state:mute:<время окончания в мс>, state:warn:<1|2>, state:frozen
+// --- Наказания: мут, предупреждения, заморозка, тюрьма (хранятся тегами — переживают перезаход) ---
+// state:mute:<время окончания в мс | permanent>, state:warn:<1|2>, state:frozen, state:jail:<… | permanent> (system/jail.js)
+
+// Самый длинный срок числом — 30 дней (мут, тюрьма, бан); дольше — permanent
+export const MAX_TERM_MINUTES = 30 * 24 * 60;
+/**
+ * Срок наказания из аргумента команды: «30» или «30m» — минуты, «2h» — часы, «1d» — дни; «permanent» — навсегда.
+ * @param {string} arg
+ * @returns {number|undefined} минуты, Infinity — навсегда, undefined — не срок
+ */
+export function parseTerm(arg) {
+	const a = String(arg ?? '').toLowerCase();
+	if (a === 'permanent' || a === 'perm') return Infinity;
+	const m = /^(\d+)([mhd]?)$/.exec(a);
+	if (!m) return undefined;
+	const minutes = Number(m[1]) * ({ '': 1, m: 1, h: 60, d: 1440 })[m[2]];
+	return minutes >= 1 && minutes <= MAX_TERM_MINUTES ? minutes : undefined;
+}
+/** Срок для сообщения: «90 мин» или «навсегда» — часть rawtext. */
+export const termText = (minutes) => minutes === Infinity ? { translate: 'chat.term.permanent' }
+	: { rawtext: [{ text: `${minutes} ` }, { translate: 'chat.term.minutes' }] };
 const MUTE_TAG = 'state:mute:';
 const WARN_TAG = 'state:warn:';
 
 /**
- * Сколько ещё минут игрок в муте (0 — не в муте). Истёкший мут снимается.
+ * Сколько ещё минут игрок в муте (0 — не в муте, Infinity — навсегда). Истёкший мут снимается.
  * @param {Player} player
  * @returns {number}
  */
 export function muteMinutesLeft(player) {
 	const tag = player.getTags().find(t => t.startsWith(MUTE_TAG));
 	if (!tag) return 0;
+	// Мут навсегда — до !unmute
+	if (tag === MUTE_TAG + 'permanent') return Infinity;
 	const left = Number(tag.slice(MUTE_TAG.length)) - Date.now();
 	if (!(left > 0)) {
 		// Мут истёк сам — тег снимается здесь (проверка в чате и раз в секунду в chat/chat.js) и игроку пишем
@@ -207,7 +242,7 @@ export function getWarns(player) {
 };
 
 // --- Роли: уровни доступа к командам и меню ---
-// Владелец — хост мира (тег role:owner, до 0.3.0 — host), он один. Хелпера (только наблюдение: !tp, !invis,
+// Владелец — хост мира (тег role:owner, до 0.3.0 — host), он один. Хелпера (наблюдение и тюрьма: !tp, !invis, !jail,
 // !gm6, !cps, !ac, жалобы, предупреждения CPS и сигналы античита), модератора и администратора назначает
 // владелец командой !role, роль хранится тегом role:<id>. Префикс в чате (тег rank:,
 // команда !prefix) — отдельное украшение и прав не даёт.
@@ -385,12 +420,13 @@ export const emotes = {
 
 // --- Точки телепортации для !warp ---
 // role — с какой роли точка доступна себе; отправить другого игрока — модератор и выше
-// (и не ниже роли точки). mine — шахта по уровню игрока, как кнопка «Спавн» в меню телепортаций.
+// (и не ниже роли точки). Меню сервера → Телепортации показывает все точки роли «игрок».
+// Спавн — всегда 0 5 0; шахта — по уровню: 1–15 — основная (у спавна), 16–25 — адская, 26–40 — третья
 export const WARPS = [
-	{ id: 'spawn', role: 'player', pos: [0, 2, 0] },
+	{ id: 'spawn', role: 'player', pos: [0, 5, 0] },
 	{ id: 'mine', role: 'player', pos: (p) => {
 		const lvl = getScore(p, 'lvl');
-		if (lvl >= 26) return [-60, 5, -60];
+		if (lvl >= 26) return [0, 5, -69];
 		if (lvl >= 16) return [0, 5, -33];
 		return [0, 5, 0];
 	} },
@@ -398,6 +434,9 @@ export const WARPS = [
 	// Арена: случайная точка площадки (system/pvp.js), чтобы игроки не появлялись друг у друга
 	{ id: 'pvp', role: 'player', arena: true },
 	{ id: 'spleef', role: 'player', pos: [500, 3, 500] },
+	{ id: 'tir', role: 'player', pos: [435, -45, 338] },
+	// Локация босса: пока босса нет — только персоналу
+	{ id: 'boss', role: 'admin', pos: [184, 11, 287] },
 	{ id: 'vip', role: 'admin', pos: [-60, 5, -60] },
 	{ id: 'cmd', role: 'admin', pos: [50, 5, 50] }
 ];
@@ -498,7 +537,17 @@ export const commandsList = [
 		role: 'helper'
 	},
 	{
-		command: '!tp §7<§fplayer§7>',
+		command: '!jail §7<§fplayer§7> <§ftime§8/§fpermanent§7> [§freason§7]',
+		description: '%chat.help.jail',
+		role: 'helper'
+	},
+	{
+		command: '!unjail §7<§fplayer§7>',
+		description: '%chat.help.unjail',
+		role: 'helper'
+	},
+	{
+		command: '!tp §7<§fplayer§8/§fx y z§7>',
 		description: '%chat.help.tp',
 		role: 'helper'
 	},
@@ -520,7 +569,7 @@ export const commandsList = [
 		role: 'moder'
 	},
 	{
-		command: '!mute §7<§fplayer§7> <§fminutes§7> [§freason§7]',
+		command: '!mute §7<§fplayer§7> <§ftime§8/§fpermanent§7> [§freason§7]',
 		description: '%chat.help.mute',
 		role: 'moder'
 	},
@@ -586,7 +635,7 @@ export const commandsList = [
 		role: 'admin'
 	},
 	{
-		command: '!boost §7<§fx2§8/§fx4§7> [§fminutes§7] §8| §fmagnet §7[§fplayer§7] [§fminutes§7]',
+		command: '!boost §7<§fx2§8/§fx4§7> [§fminutes§7] §8| §fmagnet §7[§fplayer§7] [§fminutes§7] §8| §fstop',
 		description: '%chat.help.boost',
 		role: 'admin'
 	},
@@ -596,7 +645,7 @@ export const commandsList = [
 		role: 'admin'
 	},
 	{
-		command: '!ban §7<§fplayer§7> [§freason§7]',
+		command: '!ban §7<§fplayer§7> [§ftime§8/§fpermanent§7] [§freason§7]',
 		description: '%chat.help.ban',
 		role: 'admin'
 	},
