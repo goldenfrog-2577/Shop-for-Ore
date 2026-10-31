@@ -36,6 +36,7 @@ import './system/spleef.js';      // Мини-игра «Сплиф»
 import './system/cps.js';         // Проверка CPS против автокликеров
 import './system/boosts.js';      // Бусты, выданные администратором: запись и отключение
 import './system/jail.js';        // Тюрьма (!jail): камера у спавна, срок или навсегда
+import './system/tir.js';         // Тир: стрельба по мишеням за монеты, кирка убирается на время
 import './system/music.js';       // Выключатель музыки (Настройки)
 import './system/wipe.js';        // Вайп: номер вайпа, сброс игроков не в сети при входе
 import './system/offline_reset.js'; // !resetoffline: всё сбросить игрокам не в сети
