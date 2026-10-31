@@ -3,15 +3,14 @@
 // Прокачка, Достижения, Мини-игры. Формы строит menu/forms.js: крестик — на уровень вверх.
 
 import { world } from '@minecraft/server';
-import { isPending, rawTranslate, tellText, tell, run } from '../DataBase.js';
+import { isPending, rawTranslate, tellText, tell, run, WARPS } from '../DataBase.js';
 import { showMenu, showModal, modal, backButton, toggleMenu } from './forms.js';
 import { bank } from './bank_menu.js';
 import { enchantsMenu } from './enchant_shop.js';
 import { cosmeticsMenu } from './cosmetics_shop.js';
 import { achievementsMenu } from './achievements_menu.js';
 import { minigamesMenu } from './minigames_menu.js';
-import { combatSecondsLeft } from '../system/pvp.js';
-import { canTeleport } from '../system/minigames.js';
+import { runChatCommand } from '../chat/commands.js';
 import { MUSIC_OFF } from '../system/music.js';
 import { ChangePasswordUI } from '../register/change.js';
 
@@ -215,18 +214,13 @@ function redeemPromo(player, code) {
 	}, () => tellText(player, '%chat.promo.error.used'));
 }
 
+// Телепортации: те же точки, что у !warp (WARPS в DataBase.js), кроме точек персонала.
+// Телепорт — командой !warp: те же проверки (заморозка, режим боя, мини-игры) и сообщения
 function warps(player) {
 	const back = () => menu(player);
-	// Режим боя на PvP-арене: телепорт из меню тоже недоступен
-	const go = (...commands) => () => {
-		if (combatSecondsLeft(player) > 0) return tell(player, 'chat.pvp.combat', combatSecondsLeft(player));
-		if (!canTeleport(player)) return;
-		for (const c of commands) run(player, c);
-	};
+	const list = WARPS.filter(w => w.role === 'player');
 	showMenu(player, '%menu.warps.title', '%menu.warps.body', [
-		// Спавн своей шахты по уровню
-		{ text: ' %menu.warps.button.spawn', run: go('tp @s[scores={lvl=1..15}] 0 5 0', 'tp @s[scores={lvl=16..25}] 0 5 -33', 'tp @s[scores={lvl=26..26}] -60 5 -60') },
-		{ text: ' %menu.warps.button.minigames', run: go('tp @s -109 5 -60') },
+		...list.map(w => ({ text: `\ue179 %menu.warps.button.${w.id}`, run: () => runChatCommand(player, 'warp', [w.id]) })),
 		backButton(back)
 	], back);
 }
