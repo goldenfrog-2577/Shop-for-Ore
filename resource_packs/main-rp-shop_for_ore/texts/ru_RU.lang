@@ -1,24 +1,25 @@
 ## =============================
 ##  Shop for Ore: РУССКАЯ ЛОКАЛИЗАЦИЯ
 ##  Автор: GoldenFrog & Claude
-##  Последнее обновление: 2026-10-26
+##  Последнее обновление: 2026-10-31
 ##  В этом файле все игровые тексты для карты Shop for Ore на русском языке.
 ##  Пожалуйста, сохраняйте секции и комментарии для удобной навигации!
+##  Блоки — по функциям; строка под заголовком — префиксы ключей блока. Новый ключ пиши где угодно и запусти: python3 tools/lang.py sort
 ## =============================
 
 ## --- ИНФОРМАЦИЯ О ПАКЕ ---
+##   pack.*
 pack.name=Ресурс-пак для карты §lShop for Ore§r
 pack.description=Содержит в себе небольшие улучшения для комфортной игры. §cНе рекомендуется отключать! §fВерсия: §7[0.3.0_20261025_resources]
 
-## --- КИРКИ ---
+## --- ПРЕДМЕТЫ И БЛОКИ ---
+##   item.*, tile.*, entity.*
 item.stick.name=§lКирка §a1§b уровня
 item.wooden_pickaxe.name=§lКирка §a2§b уровня
 item.stone_pickaxe.name=§lКирка §a3§b уровня
 item.iron_pickaxe.name=§lКирка §a8§b уровня
 item.diamond_pickaxe.name=§lКирка §a13§b уровня
 item.netherite_pickaxe.name=§lКирка §a15§b уровня
-
-## --- ПРЕДМЕТЫ И БЛОКИ ---
 tile.dirt.name=Земля
 tile.cobblestone.name=Булыжник
 item.coal.name=Уголь
@@ -40,22 +41,21 @@ tile.crying_obsidian.name=Плачущий обсидиан
 item.amethyst_shard.name=Осколок аметиста
 item.gold_ingot.name=§eМонета§r
 tile.emerald_block.name=§2Подарок§r
-
-## --- СЕРВЕРНЫЕ ПРЕДМЕТЫ ---
 item.server:menu=§eМеню сервера §7[Нажми, чтобы открыть§7]§r
 item.server:admin_menu=§eМеню админа §7[Нажми, чтобы открыть§7]§r
 item.server:admin_stick=§cПалочка админа§r
 item.server:portable_ender_crystal.name=§eПортативный кристалл Энда
 item.spawn_egg.entity.server:floating_text.name=Яйцо призыва голограммы
+entity.server:floating_text.name=Голограмма
 
-## --- СИСТЕМА И ИНТЕРФЕЙС ---
+## --- ТЕКСТЫ ИГРЫ (ЗАМЕНА ВАНИЛЬНЫХ) ---
+##   accessibility.*, advMode.*, button.*, chat.title.*, command_block.*, commands.*, death.*, disconnect*, map.*, multiplayer.*, progressScreen.*
 accessibility.chat.tts.autocomplete=Автозаполнение
 accessibility.chat.tts.autocompleteBack=Обратное автозаполнение
 accessibility.chat.tts.nextMessage=Следующее сообщение
 accessibility.chat.tts.previousMessage=Предыдущее сообщение
 advMode.setCommand.success=§r
 button.deleteText=Удалить текст
-admin.kick.button=Выгнать игрока
 chat.title=Чат
 chat.title.cheats=Чат и команды
 command_block.placeholder=Введи команду сюда...
@@ -70,7 +70,6 @@ disconnect.kicked=Вы были кикнуты с сервера
 disconnect.kicked.reason=Вы были кикнуты с сервера по причине:
 disconnectionScreen.disconnected=Потеряно соединение, возможно хост выключил сервер
 disconnectionScreen.unexpectedPacket=§lВас исключил§c администратор
-entity.server:floating_text.name=Голограмма
 map.position=Координаты: %s %s %s
 multiplayer.player.changeToPersona=§b%s §r§bпоменял свой скин
 multiplayer.player.changeToSkin=§b%s §r§bпоменял свой скин
@@ -78,25 +77,164 @@ multiplayer.player.joined.realms=§r§r %s §r§7присоединился
 multiplayer.player.joined=§r§r %s §r§7присоединился
 multiplayer.player.left.realms=§r§r %s §r§7вышел
 multiplayer.player.left=§r§r %s §r§7вышел
-
-## --- СООБЩЕНИЯ ПРИ ПОДКЛЮЧЕНИИ ---
 progressScreen.message.building=Используйте меню в 9 слоте инвентаря, чтобы открыть больше функций
 progressScreen.message.locating=Прежде чем задавать много вопросов, прочитайте голограммы на спавне
 progressScreen.message.resourceLoading=Telegram хоста: @goldenfrog_2577
 
-## --- ПЕРЕВОД И КНОПКИ ИНТЕРФЕЙСА ---
-admin.common.back=§8Назад
-admin.common.min=мин
-admin.common.hours=ч
-admin.common.days=дн.
-admin.common.minutes=минут
+## --- ОБЩЕЕ: РОЛИ, ЦВЕТА, СРОКИ, ОШИБКИ ---
+##   common.*, menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
 menu.common.tap_to_open=§8[§7Нажми, чтобы открыть§8]
 menu.common.back=§8 Назад
 common.vip_only=§8[§cТолько для VIP§8]
 menu.common.yes=§2Да
 menu.common.no=§4Нет
+chat.server.wiped=§r §cСервер §8» §7Статистика всех игроков сброшена. Кто не в сети — будет сброшен при входе
+chat.server.wiped.offline=§r §cСервер §8» §7Пока тебя не было, сервер начал всё заново (вайп): прогресс, достижения и косметика сброшены. Роль, пароль и настройки на месте
+chat.server.reset_offline=§r §cСервер §8» §7Пока тебя не было, владелец сбросил данные игроков не в сети: прогресс, роль и пароль. Зарегистрируйся заново
+chat.server.kicked=§r §cСервер §8» §f%1$s§r§7 исключён(а) администратором
+chat.error.no_money=§r⩕ §l§cERROR!§r §8» §7Недостаточно 
+chat.cmd.error.no_permission=§r⩕ §l§cERROR!§r §8» §7У тебя нет прав на эту команду
+chat.cmd.error.unknown=§r⩕ §l§cERROR!§r §8» §7Неизвестная команда: §e%1$s§7. Напиши §e!help§7, чтобы узнать список команд
+chat.cmd.error.offline=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 не в сети
+chat.cmd.error.target_role=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 не может это получить: нужна роль не ниже %2$s
+chat.cmd.error.role=§r⩕ §l§cERROR!§r §8» §7Нельзя применить к §f%1$s§r§7: его роль не ниже твоей
+chat.cmd.error.issuer=§r⩕ §l§cERROR!§r §8» §7Это ограничение выдал %1$s§r§7 — снять его может только роль не ниже
+chat.cmd.error.self=§r⩕ §l§cERROR!§r §8» §7Нельзя выбрать самого себя
+chat.cmd.error.number=§r⩕ §l§cERROR!§r §8» §7§e%1$s§7 — не подходит: нужно целое число от §e%2$s§7 до §e%3$s
+chat.cmd.error.confirm_expired=§r⩕ §l§cERROR!§r §8» §7Подтверждение не найдено или истекло — сначала напиши §e%1$s
+chat.cmd.error.not_found=§r⩕ §l§cERROR!§r §8» §7§e%1$s§7 — не найдено. Список — §e%2$s
+chat.term.permanent=навсегда
+chat.term.minutes=мин
+color.minecoin_gold=Золото монет
+role.player=§7Игрок
+role.helper=§3Хелпер
+role.moder=§9Модератор
+role.admin=§cАдминистратор
+role.owner=§4Владелец
+role.tag.owner=§4Владелец
+role.tag.admin=§cАдмин
+role.tag.helper=§3Хелпер
+role.tag.moder=§9Модератор
+role.tag.bot=§7Бот
+chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Сообщение слишком длинное (больше §e200§7 символов)
+chat.error.spam=§r⩕ §l§cERROR!§r §8» §7Не спамь в чате!
+
+## --- ПАНЕЛЬ СЛЕВА И НАДПИСИ НА ЭКРАНЕ ---
+##   hud.*, scoreboards.*, screen.clear_items.*
+screen.clear_items.title=§l§eОчистка мусора
+screen.clear_items.subtitle=§l§eУдалено предметов: §a%1$s
+scoreboards.map=§l[] Магазин за руду§r
+hud.profile=§l[] §7Профиль§f: §r
+hud.money=§l[] §eБаланс§f: 
+hud.vip_coins=§l[] §gVIP-монеты§f: 
+hud.xp=[] §aОпыт§f: 
+hud.lvl=[] §2Уровень§f: 
+hud.lvl.max=§aМАКС.§f
+hud.rebirth=[] §dРебитх§f: 
+hud.online=[] §6Онлайн§f: 
+scoreboards.x2boost=§r §l§ax2 буст
+scoreboards.x4boost=§r §l§bx4 буст
+
+## --- ВХОД И АККАУНТ ---
+##   account.*, chat.account.*, chat.cmd.resetpass.*
+account.register.title=§l§8Регистрация аккаунта
+account.register.agree=Я соглашаюсь с правилами сервера и подтверждаю §cотсутствие§r читов
+chat.account.error.no_cheats=§r⩕ §l§cERROR!§r §8» §7Подтверди §eотсутствие читов§7, чтобы играть на сервере
+account.register.greeting=§7Приветствую, §b%1$s§7!
+account.register.welcome=§7Добро пожаловать на сервер! Приятной игры :)
+account.register.info=§7Информация об аккаунте:
+account.register.password=§7Пароль: §b%1$s
+account.register.remember=§7Запомни эти данные или сделай скриншот чтобы потом зайти в игру
+account.login.title=§l§8Вход в аккаунт
+account.login.intro=§7приветствую тебя на сервере §l[] Shop for Ore§r§7! Придумай и введи пароль для регистрации:
+account.login.hint=§7Введи пароль, который ты вводил(а) при регистрации:
+account.login.placeholder=§7Введи пароль...
+account.change.title=§l§8Смена пароля
+account.change.old=§7Текущий пароль:
+account.change.new=§7Новый пароль (от 5 до 32 символов):
+account.change.repeat=§7Повтори новый пароль:
+chat.account.logged_in=§r⩉ §9Аккаунт §8» §7Вход выполнен! Добро пожаловать!
+chat.account.error.wrong_password=§r⩕ §l§cERROR!§r §8» §7Неверный пароль, попробуй ещё раз
+chat.account.error.login_required=§r⩕ §l§cERROR!§r §8» §7Сначала войди в аккаунт или зарегистрируйся
+chat.account.legacy=§r⩉ §9Аккаунт §8» §7Аккаунт со старой платформы: придумай новый пароль, прогресс сохранится
+chat.account.error.password_length=§r⩕ §l§cERROR!§r §8» §7Пароль должен быть от §e5§7 до §e32§7 символов
+chat.account.changed=§r⩉ §9Аккаунт §8» §7Пароль изменён.
+chat.account.error.mismatch=§r⩕ §l§cERROR!§r §8» §7Новые пароли не совпадают
+chat.account.error.locked=§r⩕ §l§cERROR!§r §8» §7Слишком много неверных попыток. Попробуй снова через §e%1$s§7 сек.
+chat.account.change.close_chat=§r §7CMD §8» §7Закрой чат — откроется форма смены пароля
+chat.account.reset=§r⩉ §9Аккаунт §8» §7Владелец сбросил твой пароль. Придумай новый — сейчас откроется регистрация.
+chat.account.reset.staff=§r §7CMD §8» §7Владелец §f%1$s§r§7 сбросил пароль игроку §f%2$s
+chat.cmd.resetpass.use=§r §7CMD §8» §7Использование: §e!resetpass§7 <игрок> — только игроку в сети
+chat.cmd.resetpass.error.offline=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 не в сети. Пароль сбрасывается только игроку в сети — иначе аккаунт сможет занять кто угодно
+
+## --- ЧАТ: СПРАВКА, ЛИЧНЫЕ СООБЩЕНИЯ, ЭМОДЗИ ---
+##   chat.help.*, chat.cmd.help.*, chat.emotes.*, chat.cmd.msg.*, chat.cmd.reply.*, chat.cmd.clearchat.*
+chat.help.header=§8-----§f Список команд §8-----§f
+chat.help.help=§7Список команд твоей роли; с названием команды — подробно о ней
+chat.help.warp=§7Телепорт на точку (спавн, шахта, мини-игры, PvP-арена, сплиф); без аргументов — список точек
+chat.help.game=§7Мини-игры: без аргументов — список, §ejoin <игра>§7 — записаться, §eleave§7 — выйти
+chat.help.emotes=§7Список эмодзи: напиши код, например §e:smile:§7, — в чате он станет значком
+chat.help.msg=§7Личное сообщение игроку в сети — его увидите только вы двое
+chat.help.reply=§7Ответ тому, с кем ты последним переписывался в личных сообщениях
+chat.help.gm1=§7Творческий режим себе или игроку (другому — только тому, чья роль даёт эту команду)
+chat.help.gm2=§7Режим приключения — обычный режим карты; себе или игроку
+chat.help.gm6=§7Режим наблюдателя: летать сквозь блоки и смотреть со стороны; себе или игроку
+chat.help.fly=§7Полёт в режиме приключения: §eon§7/§eoff§7, себе или игроку
+chat.help.clearchat=§7Очищает чат тебе; §eall§7 — всем игрокам (модератор и выше)
+chat.help.balance=§7Сколько у тебя монет и VIP-коинов
+chat.help.pay=§7Перевод монет игроку в сети — как в Банке; сумма — целое число
+chat.help.top=§7Топ-5 игроков в сети: по монетам, уровню, ребитхам, VIP-коинам, K/D, победам в PvP или в сплифе. Без аргумента — подсказка
+chat.help.stats=§7Уровень, опыт, монеты, VIP-коины, ребитхи, роль и предупреждения игрока
+chat.help.online=§7Кто сейчас в сети: ник, роль и уровень, старшие роли сверху
+chat.help.report=§7Жалоба на игрока персоналу в сети (хелперам и выше), не чаще раза в минуту
+chat.help.rules=§7Правила сервера — за нарушения выдают предупреждения, мут или бан
+chat.help.password=§7Смена пароля: старый, новый и повтор; форма откроется, когда закроешь чат
+chat.help.bot=§7Призывает бота карты; §esettings§7 — окно управления ботом (имя, телепорт, сообщение)
+chat.help.stick=§7Выдаёт §cПалочку админа§7: нажми на игрока ПКМ (на ПК) или кнопку «Взаимодействовать» (на телефоне) — и он вылетит с сервера (кик)
+chat.help.event=§7Запускает ивент сразу, даже если по таймеру он выключен
+chat.help.boost=§7Бесплатный буст x2/x4 всем на 1–60 минут; §emagnet§7 — «Магнит руды» игроку; §estop§7 — отключить выданные (купленные не трогает)
+chat.help.say=§7Объявление от имени сервера всем игрокам, с эмодзи
+chat.help.invis=§7Невидимость себе: §eon§7/§eoff§7, без аргумента — переключить
+chat.help.timeset=§7Время суток: словом (§eday§7, §enight§7, §enoon§7…) или числом 0–24000
+chat.help.prefix=§7Префиксы перед ником в чате: выдать, снять, список или очистить
+chat.help.color=§7Цвет ника (в чате и над головой) или текста сообщений игрока; цвета ролей — только им
+chat.help.tag=§7Теги игрока: добавить, снять или список; роли и вход так не меняются
+chat.help.achievement=§7Достижения игрока: список, выдать (с наградой) или снять
+chat.help.debug=§7Отладка: роль, позиция, главные счета и все теги игрока по группам
+chat.help.scoreboard=§7Счета игрока в табло: изменить, узнать, список, сбросить; служебные — только владелец
+chat.help.kick=§7Выгоняет игрока с сервера; причину увидят все в чате
+chat.help.ban=§7Бан по нику: срок (2h, 7d — до 30 дней) или §epermanent§7 (по умолчанию — навсегда), с причиной
+chat.help.unban=§7Снимает бан по нику или по номеру из §e!banlist
+chat.help.banlist=§7Список банов: номер, ник, причина и кто забанил
+chat.help.mute=§7Запрет писать в чат и ЛС: срок (30, 30m, 2h, 1d — до 30 дней) или §epermanent§7 — до !unmute, с причиной
+chat.help.jail=§7Посадить в тюрьму у спавна: срок (30, 2h, 1d — до 30 дней) или §epermanent§7 — до !unjail, с причиной
+chat.help.unjail=§7Выпустить из тюрьмы раньше срока (если сажала роль не выше твоей)
+chat.help.unmute=§7Снимает мут (если выдавшая его роль не выше твоей)
+chat.help.warn=§7Предупреждение с причиной; третье — кик с сервера
+chat.help.unwarn=§7Снимает предупреждения: одно, несколько или все (§eall§7)
+chat.help.freeze=§7Замораживает игрока на месте, даже в воздухе: без меню и телепортов
+chat.help.unfreeze=§7Размораживает игрока (если заморозившая роль не выше твоей)
+chat.help.cps=§7Как часто игрок бьёт сейчас и максимум за 10 секунд — проверка на автокликер
+chat.help.ac=§7Античит: очки нарушений игрока, без ника — режим и подозрительные игроки
+chat.help.tp=§7Телепорт к игроку в сети или в точку по координатам
+chat.help.tphere=§7Телепорт игрока к тебе
+chat.help.wipe=§7Сбрасывает прогресс всех игроков, даже не в сети; сначала покажет, что сбросится
+chat.help.resetoffline=§7Сбрасывает §cвсе§7 теги и счета игрокам §cне в сети§7 (роль и пароль тоже — им придётся зарегистрироваться заново). Кто в сети — не трогается; сначала покажет сводку
+chat.help.role=§7Назначает роль: игрок, хелпер (только наблюдение), модератор или администратор
+chat.help.roles=§7Роли всех игроков в сети
+chat.help.resetpass=§7Сбрасывает забытый пароль игроку в сети — он сразу задаст новый
+chat.cmd.help.detail=§r §7CMD §8» §f%1$s§r§8 — §7%2$s§r§7. Доступно: %3$s§r§7 и выше
+chat.emotes.header=§8-----§f Список эмодзи §8-----§f
+chat.cmd.msg.use=§r §7CMD §8» §7Использование: §e!msg§7 <игрок> <сообщение>
+chat.cmd.msg.received=§7 %1$s:§r %2$s
+chat.cmd.msg.sent=§7 Ты  %1$s:§r %2$s
+chat.cmd.reply.use=§r §7CMD §8» §7Использование: §e!reply§7 <сообщение>
+chat.cmd.reply.none=§r⩕ §l§cERROR!§r §8» §7Тебе ещё никто не писал в ЛС
+chat.cmd.clearchat=§r §7CMD §8» §7Очистка чата...
+chat.cmd.clearchat.self=§r §7CMD §8» §7Чат очищен (только у тебя)
 
 ## --- ГЛАВНОЕ МЕНЮ ---
+##   menu.main.*
 menu.main.title=§l§8Меню сервера
 menu.main.body=§7Создатель меню: §fkapycta1231484
 menu.main.button.about=§8 О карте
@@ -110,15 +248,14 @@ menu.main.button.upgrades=§8 Прокачка
 menu.main.button.achievements=§8 Достижения
 menu.main.button.games=§8 Мини-игры
 
-## --- МЕНЮ О КАРТЕ ---
+## --- О КАРТЕ: УРОВНИ, КАК ИГРАТЬ, СОЗДАТЕЛИ, ВЕРСИЯ ---
+##   menu.about.*, menu.levels.*, menu.howtoplay.*, menu.creators.*, menu.version.*
 menu.about.title=§l§8Меню сервера »  О карте
 menu.about.body=§7Всё о карте: уровни и шахты, как играть, создатели и что нового в версии.
 menu.about.button.levels=§8 Уровни
 menu.about.button.howtoplay=§f⩆ §8Как играть?
 menu.about.button.creators=§f⩇ §8Создатели
 menu.about.button.version=§8 Версия карты
-
-## --- МЕНЮ УРОВНЕЙ ---
 menu.levels.title=§l§8Меню сервера »  Уровни
 menu.levels.line.1=1 уровень - Земля и Палка
 menu.levels.line.2=2 уровень - Камень и Деревянная кирка
@@ -160,8 +297,6 @@ menu.levels.line.37=37 уровень - Блок рудной меди и §5Н�
 menu.levels.line.38=38 уровень - (ничего)
 menu.levels.line.39=39 уровень - Блок аметиста
 menu.levels.line.40=40 уровень - Покупка VIP (§aМАКСИМАЛЬНЫЙ!!!§r)
-
-## --- ОБУЧЕНИЕ / КАК ИГРАТЬ ---
 menu.howtoplay.title=§l§8Меню сервера » §f⩆§8 Как играть?
 menu.howtoplay.line.1=§l§7Обучение
 menu.howtoplay.line.2=§r§7• Чтобы поднять уровень нужно продавать руду и блоки. С каждым уровнем будет открываться доступ к новым киркам и рудам. Подробнее в  Уровни
@@ -184,9 +319,7 @@ menu.howtoplay.line.18=§r§7 - твой Уровень и какой §r�
 menu.howtoplay.line.19=§r§7 - твой Опыт / XP и сколько §r§7 до следующего §r§7
 menu.howtoplay.line.20=§r§7 - твой Ребитх, особенность: спешка
 menu.howtoplay.line.21=§r§7 - текущий Онлайн сервера
-
 menu.creators.title=§l§8Меню сервера » §f⩇§8 Создатели
-
 menu.version.title=§l§8Меню сервера »  Версия карты
 menu.version.line.1=§l§7Тут написано про последнее обновление карты
 menu.version.label=§2Версия карты:
@@ -215,14 +348,69 @@ menu.version.line.23=• VIP теперь отдельный статус (с 40
 menu.version.line.24=• Тир: стрельба из лука по мишеням за монеты; лавка странствующего торговца на VIP-острове
 menu.version.line.25=• Тюрьма (!jail), жалобы (!report), бан и мут на срок
 
-## --- МЕНЮ МАГАЗИНА ---
+## --- УРОВНИ, VIP И РЕБИТХ ---
+##   chat.lvlup.*, menu.upgrades.*, chat.vip.*, chat.rebirth.*
+menu.upgrades.title=§l§8Меню сервера »  Прокачка
+menu.upgrades.body=§7VIP открывает свою шахту и VIP-коины, ребитх начинает всё заново, но навсегда дарит эффект Спешки.
+menu.upgrades.button.vip= §2VIP
+menu.upgrades.button.rebirth= §5Ребитх
+chat.lvlup.level.2=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e2§7 уровня, новая кирка: §eДеревянная кирка
+chat.lvlup.level.3=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e3§7 уровня, новая кирка: §eКаменная кирка
+chat.lvlup.level.4=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e4§7 уровня
+chat.lvlup.level.5=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e5§7 уровня
+chat.lvlup.level.6=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e6§7 уровня
+chat.lvlup.level.7=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e7§7 уровня
+chat.lvlup.level.8=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e8§7 уровня, новая кирка: §eЖелезная кирка
+chat.lvlup.level.9=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e9§7 уровня
+chat.lvlup.level.10=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e10§7 уровня
+chat.lvlup.level.11=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e11§7 уровня
+chat.lvlup.level.12=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e12§7 уровня
+chat.lvlup.level.13=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e13§7 уровня, новая кирка: §eАлмазная кирка
+chat.lvlup.level.14=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e14§7 уровня
+chat.lvlup.level.15=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e15§7 уровня, новая кирка: §eНезеритовая кирка
+chat.lvlup.level.16=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e16§7 уровня, открыта локация §eНезер
+chat.lvlup.level.17=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e17§7 уровня
+chat.lvlup.level.18=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e18§7 уровня
+chat.lvlup.level.19=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e19§7 уровня
+chat.lvlup.level.20=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e20§7 уровня
+chat.lvlup.level.21=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e21§7 уровня
+chat.lvlup.level.22=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e22§7 уровня
+chat.lvlup.level.23=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e23§7 уровня
+chat.lvlup.level.24=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e24§7 уровня
+chat.lvlup.level.25=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e25§7 уровня
+chat.lvlup.level.26=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e26§7 уровня, открыта локация §eПещера§7. В этой локации кирки придется качать заново
+chat.lvlup.level.27=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e27§7 уровня
+chat.lvlup.level.28=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e28§7 уровня
+chat.lvlup.level.29=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e29§7 уровня
+chat.lvlup.level.30=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e30§7 уровня
+chat.lvlup.level.31=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e31§7 уровня
+chat.lvlup.level.32=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e32§7 уровня
+chat.lvlup.level.33=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e33§7 уровня
+chat.lvlup.level.34=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e34§7 уровня
+chat.lvlup.level.35=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e35§7 уровня
+chat.lvlup.level.36=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e36§7 уровня
+chat.lvlup.level.37=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e37§7 уровня
+chat.lvlup.level.38=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e38§7 уровня
+chat.lvlup.level.39=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e39§7 уровня
+chat.lvlup.level.40=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e40§7 уровня — это §aМАКСИМУМ§7!
+chat.vip.error.requirements=§r⩕ §l§cERROR!§r §8» §7Для §eVIP§7 нужен §e40§7 уровень  и §e125 000§7 
+chat.rebirth.error.level=§r⩕ §l§cERROR!§r §8» §7Ребитх доступен с §e25§7 уровня 
+chat.vip.error.owned=§r⩕ §l§cERROR!§r §8» §7У тебя уже есть §eVIP
+chat.rebirth.first=§r §dРебитх §8» §f%1$s§r§7 сделал(а) свой первый §eребитх§7!
+chat.rebirth.level=§r §dРебитх §8» §7Твой уровень ребитха: §e%1$s
+chat.vip.bought=§r §aLvL UP §8» §f%1$s§r§7 купил(а) §eVIP§7!
+chat.vip.welcome=§r §aLvL UP §8» §7Поздравляем с §eVIP§7! Чтобы попасть на §eVIP-остров§7, открой §eМеню сервера §7» §eТелепортации
+chat.vip.migrated=§r §aLvL UP §8» §7VIP теперь отдельный статус, а уровни §e26–40§7 — Пещера. VIP у тебя остался, уровень — §e25§7: продолжай в Пещере!
+chat.rebirth.error.max=§r⩕ §l§cERROR!§r §8» §7У тебя уже §eмаксимальный ребитх§7 (§e5§7)
+
+## --- МАГАЗИН: ЗАЧАРОВАНИЯ И PVP-НАБОРЫ ---
+##   menu.shop.*, chat.shop.*
 menu.shop.title=§l§8Меню сервера »  Магазин
 menu.shop.body=§7Здесь ты можешь купить зачарования для кирки и снаряжения, наборы для PvP-арены, бусты и даже косметику!
 menu.shop.button.enchants=§8Зачарования
 menu.shop.button.kits=§8PvP Наборы
 menu.shop.button.boosts=§8Бусты
 menu.shop.button.cosmetics=§8Косметика
-
 menu.shop.enchants.title=§l§8 Магазин » Зачарования
 menu.shop.enchants.body=§7Что ты хочешь зачаровать? Каждая покупка — §e+1§7 уровень.
 menu.shop.enchants.body2=§7Меч, лук и броня берутся из инвентаря, надетую броню сначала сними.
@@ -235,13 +423,23 @@ menu.shop.item_enchants.current=§7Сейчас:§f
 menu.shop.item_enchants.none=нет зачарований
 menu.shop.item_enchants.body=§7Выбери зачарование — цена растёт с уровнем:
 menu.shop.item_enchants.max=§2Максимальный уровень
-
 menu.shop.kits.title=§l§8 Магазин » PvP Наборы
 menu.shop.kits.body=§7Покупая один из наборов, ты получишь броню и меч.
 menu.shop.kits.button.iron=§8Железный набор
 menu.shop.kits.button.diamond=§8Алмазный набор
 menu.shop.kits.button.netherite=§8Незеритовый набор
+chat.shop.enchant.efficiency=§r §eМагазин §8» §7Куплено: §eЭффективность§7 (§e+1§7)
+chat.shop.enchant.fortune=§r §eМагазин §8» §7Куплено: §eУдача§7 (§e+1§7)
+chat.shop.item_enchant.done=§r §eМагазин §8» §7Куплено: §e%1$s %2$s§7 за §e%3$s §f
+chat.shop.enchant.error.stick=§r §eМагазин §8» §7Сейчас у тебя §eпалка§7, а не кирка: зачаровывать нечего. Кирку (деревянную) дают на §e2 уровне§7 — тогда и приходи
+chat.shop.item_enchant.error.changed=§r⩕ §l§cERROR!§r §8» §7Предмет в этом слоте сменился — открой окно заново
+chat.shop.kit.iron=§r §eМагазин §8» §7Куплено: §eЖелезный набор
+chat.shop.kit.diamond=§r §eМагазин §8» §7Куплено: §eАлмазный набор
+chat.shop.kit.netherite=§r §eМагазин §8» §7Куплено: §eНезеритовый набор
+chat.shop.error.enchant_max=§r⩕ §l§cERROR!§r §8» §7У тебя уже §eмаксимальный§7 уровень этого зачарования
 
+## --- БУСТЫ И МАГНИТ РУДЫ ---
+##   menu.shop.boosts.*, chat.boost.*, chat.ore_magnet.*, chat.cmd.boost.*
 menu.shop.boosts.title=§l§8 Магазин » Бусты
 menu.shop.boosts.body=§7Бусты ускоряют прокачку. Общие бусты x2 и x4 не складываются: пока идёт один, другой купить нельзя.
 menu.shop.boosts.x2=§2x2§7 — в 2 раза больше опыта за продажу руды §eвсем игрокам в сети§7, §e5 минут§7.
@@ -250,6 +448,23 @@ menu.shop.boosts.magnet=§6Магнит руды§7 — только тебе: �
 menu.shop.boosts.button.x2=§2 x2 буст
 menu.shop.boosts.button.x4=§3 x4 буст
 menu.shop.boosts.button.ore_magnet=§6⩲ Магнит руды
+chat.boost.x2_end=§r §bБуст §8» §ex2 буст§7 закончился. Новый можно купить в §eМагазин → Бусты
+chat.boost.x4_end=§r §bБуст §8» §ex4 буст§7 закончился. Новый можно купить в §eМагазин → Бусты
+chat.boost.error.active=§r⩕ §l§cERROR!§r §8» §7Сейчас уже идёт буст. Дождись его окончания!
+chat.boost.x2=§r §bБуст §8» §f%1$s§r§7 купил(а) §ex2 буст§7 для всех на §e5 минут§7!
+chat.boost.x4=§r §bБуст §8» §f%1$s§r§7 купил(а) §ex4 буст§7 для всех на §e5 минут§7!
+chat.ore_magnet.bought=§r §eМагазин §8» §eМагнит руды§7 включён на §e5 минут§7: выпавшие рядом предметы летят к тебе
+chat.ore_magnet.error.active=§r⩕ §l§cERROR!§r §8» §eМагнит руды§7 уже работает. Осталось секунд: §e%1$s
+chat.ore_magnet.end=§r §eМагазин §8» §eМагнит руды§7 закончился. Новый можно купить в §eМагазин → Бусты
+chat.cmd.boost.use=§r §7CMD §8» §7Использование: §e!boost§7 <x2/x4> [минуты 1–60, по умолчанию 5], §e!boost magnet§7 [игрок] [минуты] или §e!boost stop§7 (отключить выданные бусты)
+chat.cmd.boost.stop.none=§r⩕ §l§cERROR!§r §8» §7Сейчас нет бустов, выданных администратором — купленные игроками не отключаются
+chat.cmd.boost.stop.done=§r §7CMD §8» §7Выданные бусты отключены: общий буст — §e%1$s§7, магнитов — §e%2$s
+chat.cmd.boost.started=§r §bБуст §8» §7§f%1$s§r§7 включил(а) §e%2$s буст§7 для всех на §e%3$s минут§7!
+chat.cmd.boost.magnet.received=§r §eМагазин §8» §7§f%1$s§r§7 включил(а) тебе §eМагнит руды§7 на §e%2$s минут§7: выпавшие рядом предметы летят к тебе
+chat.cmd.boost.magnet.done=§r §7CMD §8» §7§eМагнит руды§7 на §e%2$s минут§7 выдан игроку §f%1$s
+
+## --- КОСМЕТИКА ---
+##   menu.shop.cosmetics.*, chat.shop.cosmetics.*, cosmetics.*
 menu.shop.cosmetics.title=§l§8Магазин » Косметика
 menu.shop.cosmetics.body=§7Покупается за VIP-коины один раз — дальше выбирай и снимай бесплатно.
 menu.shop.cosmetics.balance=§7Баланс:
@@ -293,8 +508,23 @@ cosmetics.sell.endrod=§8Звёздная пыль
 cosmetics.sell.flame=§8Пламя
 cosmetics.sell.portal=§8Портал
 cosmetics.sell.lava=§8Лава
+chat.shop.cosmetics.error.no_coins=§r⩕ §l§cERROR!§r §8» §7Не хватает VIP-коинов — их дают за аметист в VIP-шахте
+chat.shop.cosmetics.error.vip=§r⩕ §l§cERROR!§r §8» §7Косметику покупают только VIP (с 40 уровня) — посмотреть можно всем
+chat.shop.cosmetics.error.vip_sell=§r⩕ §l§cERROR!§r §8» §7Частицы при продаже — только для VIP
+chat.shop.cosmetics.bought=§r §eМагазин §8» §7Куплено: %1$s §e%2$s§7 за §e%3$s
+chat.shop.cosmetics.reset.name=§r §eМагазин §8» §7Цвет ника снова как у роли
+chat.shop.cosmetics.reset.text=§r §eМагазин §8» §7Цвет текста снова белый
+chat.shop.cosmetics.selected.name=§r §eМагазин §8» §7Цвет ника: %1$s §7%2$s
+chat.shop.cosmetics.selected.text=§r §eМагазин §8» §7Цвет текста: %1$s §7%2$s
+chat.shop.cosmetics.off.trail=§r §eМагазин §8» §7Частицы вокруг тебя выключены
+chat.shop.cosmetics.off.death=§r §eМагазин §8» §7Частицы при смерти выключены
+chat.shop.cosmetics.off.sell=§r §eМагазин §8» §7Свои частицы при продаже выключены — снова стандартные
+chat.shop.cosmetics.selected.trail=§r §eМагазин §8» §7Частицы вокруг тебя: §e%1$s
+chat.shop.cosmetics.selected.death=§r §eМагазин §8» §7Частицы при смерти: §e%1$s
+chat.shop.cosmetics.selected.sell=§r §eМагазин §8» §7Частицы при продаже: §e%1$s
 
-## --- МЕНЮ НАСТРОЕК ---
+## --- НАСТРОЙКИ ---
+##   menu.settings.*, chat.settings.*
 menu.settings.title=§l§8Меню сервера »  Настройки
 menu.settings.body=§7Здесь меняется только то, что видишь и слышишь ты сам: панель, частицы, звуки, музыка и пароль.
 menu.settings.state=§7Текущее состояние:
@@ -306,21 +536,100 @@ menu.settings.button.particles=§8Частицы при продаже
 menu.settings.button.sounds=§8Звуки при продаже
 menu.settings.button.music=§8Музыка
 menu.settings.button.password=§8Сменить пароль
-
 menu.settings.board.title=§l§8 Настройки » Панель слева
 menu.settings.board.body=§7Панель слева на экране: профиль, монеты, опыт до следующего уровня, уровень, ребитхи и онлайн. «Только значки» оставляет значки и числа без подписей — панель становится уже.
-
 menu.settings.button.enable=§2Включить
 menu.settings.button.disable=§4Выключить
 menu.settings.button.icons_only=§gТолько значки
-
 menu.settings.particles.title=§l§8 Настройки » Частицы
 menu.settings.particles.body=§7Частицы над тобой, когда продаёшь руду на золотом блоке. У VIP вместо стандартного тотема — частицы, купленные в Магазин » Косметика.
-
 menu.settings.sounds.title=§l§8 Настройки » Звуки
 menu.settings.sounds.body=§7Короткий звук при каждой продаже руды на золотом блоке — слышно, что продажа идёт, даже не глядя на монеты.
 menu.settings.music.title=§l§8 Настройки » Музыка
 menu.settings.music.body=§7Фоновая музыка карты. Если выключить, она перестанет играть только у тебя. Громкость — ползунок «Музыка» в настройках самой игры.
+chat.settings.enabled=§r §3Настройки §8» §7Настройка изменена: §2Включено
+chat.settings.disabled=§r §3Настройки §8» §7Настройка изменена: §4Выключено
+chat.settings.icons_only=§r §3Настройки §8» §7Настройка изменена: §gТолько значки
+
+## --- БАНК И ДЕНЬГИ ---
+##   menu.bank.*, chat.bank.*, chat.cmd.pay.*, chat.cmd.balance*, chat.cmd.money.*
+menu.bank.title=§l§8Меню сервера »  Банк
+menu.bank.amount=§7Сумма, которую ты хочешь отправить:
+menu.bank.amount_placeholder=§7Введи сюда...
+chat.bank.sent=§r §2Банк §8» §7Перевод игроку §f%1$s§r§7: §e%2$s§7
+chat.bank.error.no_players=§r⩕ §l§cERROR!§r §8» §7Сейчас в сети нет игроков, которым можно перевести монеты
+chat.bank.received=§r §2Банк §8» §f%1$s§r§7 перевёл(а) тебе §e%2$s§7
+menu.bank.player=§rВыбери игрока:
+menu.bank.balance=§rБаланс:
+chat.cmd.money.done=§r §7CMD §8» §7Баланс игрока §f%1$s§r§7 теперь §e%2$s
+chat.cmd.money.received=§r §2Банк §8» §7Администратор изменил твой баланс: §e%1$s
+chat.cmd.balance=§r §2Банк §8» §7Монет на балансе: §e%1$s §f
+chat.cmd.balance.vip=§r §2Банк §8» §7VIP-монет: §e%1$s
+chat.cmd.pay.use=§r §7CMD §8» §7Использование: §e!pay§7 <игрок> <сумма>
+
+## --- ПРАВИЛА ---
+##   menu.rules.*
+menu.rules.title=§l§8Меню сервера »  Правила
+menu.rules.header=§l§7Правила сервера:
+menu.rules.footer=§7Прочитав правила, ты соглашаешься с наказанием за их нарушение; незнание правил не освобождает от него. Третье предупреждение — кик. Срок наказания персонал выбирает по ситуации в пределах указанного.
+menu.rules.line.1=§r§l1.§r§7 Не спамить и не флудить в чате: повторы, капс, бессмыслица §8• §cмут 5–15 мин, повторно — 30 мин
+menu.rules.line.2=§r§l2.§r§7 Не оскорблять игроков и персонал, не переходить на родных §8• §cмут 30–60 мин, повторно — предупреждение
+menu.rules.line.3=§r§l3.§r§7 Не обсуждать политику и религию, не разжигать вражду §8• §cмут 60 мин, повторно — тюрьма 30 мин
+menu.rules.line.4=§r§l4.§r§7 Не выдавать себя за персонал: чужие ники и префиксы ролей в сообщениях §8• §cпредупреждение, повторно — кик
+menu.rules.line.5=§r§l5.§r§7 Не просить ресурсы, права, креатив, команды и ресурспаки §8• §cпредупреждение, повторно — кик
+menu.rules.line.6=§r§l6.§r§7 Не рекламировать: ссылки, стримы, другие серверы и аккаунты §8• §cмут 60 мин, повторно — кик
+menu.rules.line.7=§r§l7.§r§7 Не мешать другим: преследование, провокации, загораживание шахт и порталов §8• §cтюрьма 15–30 мин
+menu.rules.line.8=§r§l8.§r§7 Не пользоваться багами карты — о найденном баге сообщи персоналу через !report §8• §cтюрьма 30–60 мин, повторно — бан
+menu.rules.line.9=§r§l9.§r§7 Не играть с читами, автокликерами и сторонними клиентами §8• §cбан
+menu.rules.line.10=§r§l10.§r§7 Не обходить наказание: второй аккаунт, смена ника §8• §cбан
+menu.rules.line.11=§r§l11.§r§7 Не спорить с решением персонала в чате — несогласие пиши через !report §8• §cмут 15 мин
+
+## --- ПРОМОКОДЫ ---
+##   menu.promo.*, chat.promo.*
+menu.promo.title=§l§8Меню сервера »  Промокоды
+menu.promo.body=§7Промокоды можно найти в любом месте. Они помечены на табличках §2таким§7 цветом.
+menu.promo.hint=§7Если ты нашел такой, введи его в поле ниже, соблюдая регистр, иначе промокод не сработает.
+menu.promo.placeholder=§7Введи промокод...
+chat.promo.reward.1=§r §aПромокод §8» §f%1$s§r§7 активировал(а) промокод и получил(а) §e500 
+chat.promo.reward.2=§r §aПромокод §8» §f%1$s§r§7 активировал(а) промокод и получил(а) §e500 
+chat.promo.reward.3=§r §aПромокод §8» §f%1$s§r§7 активировал(а) промокод и получил(а) §e25k 
+chat.promo.reward.4=§r §aПромокод §8» §f%1$s§r§7 активировал(а) промокод и получил(а) §e100 
+chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7Ты уже активировал(а) этот §eпромокод
+chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Неверный промокод
+
+## --- ТЕЛЕПОРТАЦИИ ---
+##   menu.warps.*, warp.*, chat.cmd.warp.*, chat.cmd.tp.*, chat.cmd.tphere.*
+menu.warps.title=§l§8Меню сервера »  Телепортации
+menu.warps.body=§7«Спавн» — центр карты, «Шахта» — шахта твоего уровня, остальное — локации и мини-игры.
+menu.warps.button.spawn=§8Спавн
+menu.warps.button.minigames=§8Мини-игры
+menu.warps.button.mine=§8Шахта (по уровню)
+menu.warps.button.pvp=§8PvP-арена
+menu.warps.button.spleef=§8Сплиф
+menu.warps.button.tir=§8Тир
+menu.warps.button.vip=§8VIP-остров
+chat.cmd.warp.header=§8-----§f Точки телепортации §8-----§f
+chat.cmd.warp.done=§r §cСервер §8» §7Ты телепортирован(а): §e%1$s
+chat.cmd.warp.other=§r §7CMD §8» §7Игрок §f%1$s§r§7 телепортирован: §e%2$s
+chat.cmd.warp.error.vip=§r⩕ §l§cERROR!§r §8» §7Эта точка — только для §eVIP
+chat.cmd.warp.error.vip_other=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 не VIP — на VIP-остров его не отправить
+warp.spawn=Спавн
+warp.mine=Шахта (по уровню)
+warp.minigames=Мини-игры
+warp.pvp=PvP-арена
+warp.spleef=Сплиф
+warp.tir=Тир
+warp.boss=Локация босса
+warp.vip=VIP-локация
+warp.cmd=CMD Zone
+chat.cmd.tp.use=§r §7CMD §8» §7Использование: §e!tp§7 <игрок> или §e!tp§7 <x> <y> <z> (можно ~ — относительно себя)
+chat.cmd.tphere.use=§r §7CMD §8» §7Использование: §e!tphere§7 <игрок>
+chat.cmd.tp.to=§r §7CMD §8» §7Ты телепортирован(а) к игроку §f%1$s
+chat.cmd.tp.coords=§r §7CMD §8» §7Ты телепортирован(а) в точку §e%1$s
+chat.cmd.tp.done=§r §7CMD §8» §7Игрок §f%1$s§r§7 телепортирован к тебе
+
+## --- ДОСТИЖЕНИЯ ---
+##   menu.achievements.*, ach.*, chat.ach.*, chat.cmd.achievement.*
 menu.achievements.title=§l§8Меню сервера » Достижения
 menu.achievements.body=§7Зелёными обозначены §2достижения§7, фиолетовыми §5испытания§7. Нажми, чтобы узнать условие и награду.
 menu.achievements.count=§7Получено:
@@ -384,6 +693,42 @@ ach.item.golden_apple=Золотое яблоко
 ach.item.enchanted_golden_apple=Зачарованное золотое яблоко
 ach.item.netherite_ingot=Незеритовый слиток
 ach.item.totem_of_undying=Тотем бессмертия
+chat.ach.task=§r §2 Достижения §8» §7§f%1$s§r§7 получил(а) достижение %2$s
+chat.ach.challenge=§r §5 Испытания §8» §7§f%1$s§r§7 выполнил(а) испытание %2$s
+chat.cmd.achievement.use=§r §7CMD §8» §7Использование: §e!achievement§7 <игрок> <list/grant/revoke> [id]
+chat.cmd.achievement.list=§8-----§f Достижения %1$s§r §8(%2$s/%3$s) -----§f
+chat.cmd.achievement.granted=§r §7CMD §8» §7Достижение §e%2$s§7 выдано игроку §f%1$s§r§7 (с наградой)
+chat.cmd.achievement.revoked=§r §7CMD §8» §7Достижение §e%2$s§7 снято у игрока §f%1$s§r§7. Если условие выполнено, через секунду оно выдастся снова — с наградой
+chat.cmd.achievement.error.has=§r⩕ §l§cERROR!§r §8» §7У игрока §f%1$s§r§7 уже есть §e%2$s
+chat.cmd.achievement.error.missing=§r⩕ §l§cERROR!§r §8» §7У игрока §f%1$s§r§7 нет §e%2$s
+
+## --- СТАТИСТИКА, ТОПЫ И ОНЛАЙН ---
+##   chat.cmd.stats.*, chat.cmd.top.*, chat.cmd.online.*
+chat.cmd.top.use=§r §7CMD §8» §7Использование: §e!top§7 <money/lvl/rebirth/vip_coins/kd/pvp/spleef> — топ-5 игроков в сети
+chat.cmd.top.header.money=§8-----§f Топ по монетам (в сети) §8-----§f
+chat.cmd.top.header.lvl=§8-----§f Топ по уровню (в сети) §8-----§f
+chat.cmd.top.header.rebirth=§8-----§f Топ по ребитхам (в сети) §8-----§f
+chat.cmd.top.header.vip_coins=§8-----§f Топ по VIP-коинам (в сети) §8-----§f
+chat.cmd.top.header.kd=§8-----§f Топ по K/D — убийства/смерти (в сети) §8-----§f
+chat.cmd.top.header.pvp=§8-----§f Топ по победам в «Последнем выжившем» (в сети) §8-----§f
+chat.cmd.top.header.spleef=§8-----§f Топ по победам в сплифе (в сети) §8-----§f
+chat.cmd.top.kd_value=§e%1$s§7/§e%2$s §8(%3$s)
+chat.cmd.top.line=§e%1$s.§r §f%2$s§r§8 — §e%3$s
+chat.cmd.stats.header=§8-----§f Статистика %1$s§r §8-----§f
+chat.cmd.stats.lvl=§7Уровень: §e%1$s §f
+chat.cmd.stats.vip=§aVIP §8• §f%1$s
+chat.cmd.stats.xp=§7Опыт: §e%1$s§7/§e%2$s §f
+chat.cmd.stats.xp.max=§7Опыт: §e%1$s §7(макс. уровень) §f
+chat.cmd.stats.money=§7Монеты: §e%1$s §f
+chat.cmd.stats.vip_coins=§7VIP-коины: §e%1$s §r
+chat.cmd.stats.rebirth=§7Ребитх: §e%1$s §f
+chat.cmd.stats.role=§7Роль: %1$s
+chat.cmd.stats.warns=§7Предупреждения: §e%1$s§7/3
+chat.cmd.online.header=§8-----§f Игроки в сети: %1$s §8-----§f
+chat.cmd.online.line=§f%1$s§r§8 - %2$s§r§8 - §e%3$s §r
+
+## --- МИНИ-ИГРЫ ---
+##   menu.games.*, minigame.*, chat.game.*, chat.cmd.game.*, title.game.*
 menu.games.title=§l§8Меню сервера » Мини-игры
 menu.games.body=§7Выбери игру, чтобы записаться. Она начнётся, когда наберётся достаточно игроков.
 menu.games.body.in_game=§7Ты записан(а) в игру. Нажми на неё ещё раз, чтобы выйти.
@@ -394,92 +739,245 @@ menu.games.phase.running=Игра уже идёт
 minigame.pvp_ffa.name= PvP: последний выживший
 minigame.spleef.name= Сплиф
 title.game.go=Вперёд!
+chat.game.joined=§r §6 Мини-игры §8» §7§f%1$s§r§7 в игре %2$s (§e%3$s/%4$s§7)
+chat.game.waiting=§r §6 Мини-игры §8» §7Ждём ещё игроков: §e%1$s
+chat.game.countdown=§r §6 Мини-игры §8» §7%1$s начнётся через §e%2$s§7 с
+chat.game.countdown_stopped=§r §6 Мини-игры §8» §7Не хватает игроков — отсчёт %1$s остановлен
+chat.game.started=§r §6 Мини-игры §8» §7%1$s началась! Игроков: §e%2$s
+chat.game.out=§r §6 Мини-игры §8» §7Ты выбыл(а) из игры %1$s
+chat.game.left=§r §6 Мини-игры §8» §7Ты вышел(ла) из игры %1$s
+chat.game.out_other=§r §6 Мини-игры §8» §7§f%1$s§r§7 выбыл(а). Осталось: §e%2$s
+chat.game.winner=§r §6 Мини-игры §8» §7§f%1$s§r§7 победил(а) в игре %2$s!
+chat.game.reward=§r §6 Мини-игры §8» §7Награда: %1$s
+chat.game.draw=§r §6 Мини-игры §8» §7%1$s закончилась без победителя
+chat.game.stopped=§r §6 Мини-игры §8» §7%1$s остановлена администратором
+chat.game.error.teleport=§r⩕ §l§cERROR!§r §8» §7Пока идёт %1$s§r§7, телепорт недоступен — дождись конца игры
+chat.game.error.teleport_other=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 сейчас в игре %2$s§r§7 — телепортировать его нельзя до её конца
+chat.game.spectate=§r §6 Мини-игры §8» §7Ты выбыл(а) — смотри %1$s§r§7 с крыши арены. Когда игра закончится, вернёшься в лобби
+chat.game.error.already=§r⩕ §l§cERROR!§r §8» §7Ты уже в игре %1$s. Выйти — §e!game leave
+chat.game.error.running=§r⩕ §l§cERROR!§r §8» §7%1$s уже идёт — дождись следующей
+chat.game.error.full=§r⩕ §l§cERROR!§r §8» §7В игре %1$s нет мест
+chat.game.error.not_in_game=§r⩕ §l§cERROR!§r §8» §7Ты не в мини-игре
+chat.cmd.game.header=§8-----§f Мини-игры §8-----§f
+chat.cmd.game.line=§e%1$s§8 — §f%2$s§8 · §7%3$s §8(%4$s/%5$s)
+chat.cmd.game.use=§r §7CMD §8» §7Использование: §e!game§7 [join <игра> / leave]; администратор: §e!game§7 start/stop <игра>
+chat.cmd.game.error.start=§r⩕ §l§cERROR!§r §8» §7Нельзя начать: игра уже идёт или в ней никого нет
+chat.cmd.game.error.empty=§r⩕ §l§cERROR!§r §8» §7В этой игре никого нет
 
-chat.settings.enabled=§r §3Настройки §8» §7Настройка изменена: §2Включено
-chat.settings.disabled=§r §3Настройки §8» §7Настройка изменена: §4Выключено
-chat.settings.icons_only=§r §3Настройки §8» §7Настройка изменена: §gТолько значки
+## --- PVP-АРЕНА И CPS ---
+##   chat.pvp.*, hud.cps*, chat.cps.*, chat.cmd.cps.*
+chat.pvp.combat=§r⩕ §l§cERROR!§r §8» §7Ты в бою на PvP-арене: телепорт будет доступен через §e%1$s§7 сек.
+chat.pvp.crystal_arena_only=§r⩕ §l§cERROR!§r §8» §7Портативный кристалл Энда можно бросать только на PvP-арене
+chat.cps.alert=§r §cAnti-Cheat §8» §7§f%1$s§r§7: §c%2$s CPS§7 %3$s с подряд (предел §e%4$s§7) — возможен автокликер
+hud.cps=§7CPS: %1$s §8• §f%2$s §7м/с
+hud.cps.hp=§7CPS: %1$s §8• §f%2$s §7м/с §8• §7HP: %3$s
+chat.cmd.cps.use=§r §7CMD §8» §7Использование: §e!cps§7 <игрок>
+chat.cmd.cps.info=§r §7CMD §8» §7CPS игрока §f%1$s§r§7: сейчас §e%2$s§7, максимум за 10 с — §e%3$s§7 (предел §e%4$s§7)
 
-## --- МЕНЮ БАНКА ---
-menu.bank.title=§l§8Меню сервера »  Банк
-menu.bank.amount=§7Сумма, которую ты хочешь отправить:
-menu.bank.amount_placeholder=§7Введи сюда...
-chat.bank.sent=§r §2Банк §8» §7Перевод игроку §f%1$s§r§7: §e%2$s§7
-chat.bank.error.no_players=§r⩕ §l§cERROR!§r §8» §7Сейчас в сети нет игроков, которым можно перевести монеты
-chat.bank.received=§r §2Банк §8» §f%1$s§r§7 перевёл(а) тебе §e%2$s§7
-menu.bank.player=§rВыбери игрока:
-menu.bank.balance=§rБаланс:
+## --- ТИР ---
+##   chat.tir.*, hud.tir.*
+hud.tir.hit=§6 §a+%1$s  §8• §7меткость §f%2$s §8• §f%3$s §7бл.
+hud.tir.close=§cБлиже %1$s блоков награды нет — отойди дальше
+chat.tir.enter=§r §6 Тир §8» §7Кирка убрана на время стрельбы и вернётся, когда выйдешь. Стреляй из своего лука по мишеням: чем ближе к центру и дальше от мишени — тем больше монет.
 
-## --- МЕНЮ ПРАВИЛ ---
-menu.rules.title=§l§8Меню сервера »  Правила
-menu.rules.header=§l§7Правила сервера:
-menu.rules.footer=§7Прочитав правила, ты соглашаешься с наказанием за их нарушение; незнание правил не освобождает от него. Третье предупреждение — кик. Срок наказания персонал выбирает по ситуации в пределах указанного.
-menu.rules.line.1=§r§l1.§r§7 Не спамить и не флудить в чате: повторы, капс, бессмыслица §8• §cмут 5–15 мин, повторно — 30 мин
-menu.rules.line.2=§r§l2.§r§7 Не оскорблять игроков и персонал, не переходить на родных §8• §cмут 30–60 мин, повторно — предупреждение
-menu.rules.line.3=§r§l3.§r§7 Не обсуждать политику и религию, не разжигать вражду §8• §cмут 60 мин, повторно — тюрьма 30 мин
-menu.rules.line.4=§r§l4.§r§7 Не выдавать себя за персонал: чужие ники и префиксы ролей в сообщениях §8• §cпредупреждение, повторно — кик
-menu.rules.line.5=§r§l5.§r§7 Не просить ресурсы, права, креатив, команды и ресурспаки §8• §cпредупреждение, повторно — кик
-menu.rules.line.6=§r§l6.§r§7 Не рекламировать: ссылки, стримы, другие серверы и аккаунты §8• §cмут 60 мин, повторно — кик
-menu.rules.line.7=§r§l7.§r§7 Не мешать другим: преследование, провокации, загораживание шахт и порталов §8• §cтюрьма 15–30 мин
-menu.rules.line.8=§r§l8.§r§7 Не пользоваться багами карты — о найденном баге сообщи персоналу через !report §8• §cтюрьма 30–60 мин, повторно — бан
-menu.rules.line.9=§r§l9.§r§7 Не играть с читами, автокликерами и сторонними клиентами §8• §cбан
-menu.rules.line.10=§r§l10.§r§7 Не обходить наказание: второй аккаунт, смена ника §8• §cбан
-menu.rules.line.11=§r§l11.§r§7 Не спорить с решением персонала в чате — несогласие пиши через !report §8• §cмут 15 мин
+## --- ЛАВКА СТРАНСТВУЮЩЕГО ТОРГОВЦА ---
+##   chat.trader.*, trader.*
+chat.trader.bought=§r §eМагазин §8» §7Куплено: §e%1$s§7 за §e%2$s 
+chat.trader.error.vip=§r⩕ §l§cERROR!§r §8» §7Лавка торговца — только для VIP
+chat.trader.error.full=§r⩕ §l§cERROR!§r §8» §7Нет места в инвентаре — освободи хотя бы один слот
+trader.item.wither_skull=Череп скелета-иссушителя
+trader.item.dragon_head=Голова дракона Края
+trader.item.creeper_head=Голова крипера
+trader.item.skeleton_skull=Череп скелета
+trader.item.zombie_head=Голова зомби
+trader.item.player_head=Голова игрока
+trader.item.pickaxe_1=Зачарованная кирка #1
+trader.item.pickaxe_2=Зачарованная кирка #2
+trader.item.pickaxe_3=Зачарованная кирка #3
+trader.item.haste=Спешка V на 30 минут
 
-## --- МЕНЮ ПРОМОКОДОВ ---
-menu.promo.title=§l§8Меню сервера »  Промокоды
-menu.promo.body=§7Промокоды можно найти в любом месте. Они помечены на табличках §2таким§7 цветом.
-menu.promo.hint=§7Если ты нашел такой, введи его в поле ниже, соблюдая регистр, иначе промокод не сработает.
-menu.promo.placeholder=§7Введи промокод...
+## --- ИВЕНТЫ ---
+##   chat.event.*, screen.event.*, chat.cmd.event.*
+chat.event.gift=§r §6Ивент §8» §7На карте §eпоявился подарок§7! Кто подберёт его §eпервым§7?
+chat.event.gift_end=§r §6Ивент §8» §f%1$s§r§7 подобрал(а) §eподарок§7!
+screen.event.haste=§gполучил(а) спешку на 10 сек
+chat.event.mythic_chest=§r §6Ивент §8» §7В центре PvP-арены появился §eмистик§7 — сундук с редким лутом. Кто первый, того и лут!
+chat.event.rain=§r §6Ивент §8» §7Начинается дождь из монет!
+chat.event.rain_end=§r §6Ивент §8» §7Дождь из монет закончился!
+chat.cmd.event.use=§r §7CMD §8» §7Использование: §e!event§7 <haste/rain/gift/mythic>
+chat.cmd.event.done=§r §6Ивент §8» §7Ивент «%1$s§r§7» запущен
+chat.cmd.event.error.no_players=§r⩕ §l§cERROR!§r §8» §7Для этого ивента нужен хотя бы один игрок, кроме хоста
+chat.cmd.event.error.no_chest=§r⩕ §l§cERROR!§r §8» §7Сундук мистика не найден: нужен сундук в центре PvP-арены (x 300, z 300)
+chat.cmd.event.name.haste=§eУскорение
+chat.cmd.event.name.rain=§eДождь из монет
+chat.cmd.event.name.gift=§eПодарок
+chat.cmd.event.name.mythic=§eМистик
 
-## --- МЕНЮ ТЕЛЕПОРТАЦИЙ ---
-menu.warps.title=§l§8Меню сервера »  Телепортации
-menu.warps.body=§7«Спавн» — центр карты, «Шахта» — шахта твоего уровня, остальное — локации и мини-игры.
-menu.warps.button.spawn=§8Спавн
-menu.warps.button.minigames=§8Мини-игры
-menu.warps.button.mine=§8Шахта (по уровню)
-menu.warps.button.pvp=§8PvP-арена
-menu.warps.button.spleef=§8Сплиф
-menu.warps.button.tir=§8Тир
-menu.warps.button.vip=§8VIP-остров
+## --- МОДЕРАЦИЯ: МУТ, ПРЕДУПРЕЖДЕНИЯ, ЗАМОРОЗКА, ТЮРЬМА, КИК, БАН, ЖАЛОБЫ ---
+##   chat.cmd.mute.*, chat.cmd.unmute.*, chat.cmd.warn.*, chat.cmd.unwarn.*, chat.cmd.freeze.*, chat.cmd.unfreeze.*, chat.cmd.jail.*, chat.cmd.unjail.*, chat.jail.*, chat.cmd.kick*, chat.cmd.ban*, chat.cmd.unban.*, chat.cmd.report.*, admin.kick.*
+admin.kick.button=Выгнать игрока
+chat.cmd.kick=§r §cСервер §8» §f%1$s§r§7 кикнут(а). Причина: §e%2$s
+chat.cmd.kick.no_reason=не указана
+chat.cmd.kick.use=§r §7CMD §8» §7Использование: §e!kick§7 <игрок> <причина (не обязательно)>
+chat.cmd.mute.use=§r §7CMD §8» §7Использование: §e!mute§7 <игрок> <срок: 30, 2h, 1d или permanent> [причина]
+chat.cmd.mute=§r §cСервер §8» §7§f%1$s§r§7 не может писать в чат: §e%2$s§7. Причина: §e%3$s
+chat.cmd.mute.active=§r⩕ §l§cERROR!§r §8» §7Ты не можешь писать в чат ещё §e%1$s§7 минут
+chat.cmd.mute.active.permanent=§r⩕ §l§cERROR!§r §8» §7Ты не можешь писать в чат — мут навсегда, пока его не снимут
+chat.cmd.jail.use=§r §7CMD §8» §7Использование: §e!jail§7 <игрок> <срок: 30, 2h, 1d или permanent> [причина]
+chat.cmd.unjail.use=§r §7CMD §8» §7Использование: §e!unjail§7 <игрок>
+chat.cmd.jail=§r §cСервер §8» §7§f%1$s§r§7 посажен(а) в тюрьму: §e%2$s§7. Причина: §e%3$s
+chat.cmd.unjail=§r §cСервер §8» §7§f%1$s§r§7 выпущен(а) из тюрьмы (§f%2$s§r§7)
+chat.cmd.unjail.error.not_jailed=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 не в тюрьме
+chat.jail.active=§r⩕ §l§cERROR!§r §8» §7Ты в тюрьме ещё §e%1$s§7 мин: меню, !warp и мини-игры недоступны
+chat.jail.active.permanent=§r⩕ §l§cERROR!§r §8» §7Ты в тюрьме навсегда, пока тебя не выпустят: меню, !warp и мини-игры недоступны
+chat.jail.released=§r §cСервер §8» §7Срок вышел — ты на свободе. Не нарушай правила!
+chat.jail.released.early=§r §cСервер §8» §7Тебя выпустили из тюрьмы раньше срока
+chat.cmd.unmute.use=§r §7CMD §8» §7Использование: §e!unmute§7 <игрок>
+chat.cmd.unmute.done=§r §7CMD §8» §7С игрока §f%1$s§r§7 снят запрет на чат
+chat.cmd.unmute.received=§r §cСервер §8» §7Тебе снова можно писать в чат
+chat.cmd.mute.expired=§r §cСервер §8» §7Время мута истекло — тебе снова можно писать в чат
+chat.cmd.unmute.error.not_muted=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 не в муте
+chat.cmd.warn.use=§r §7CMD §8» §7Использование: §e!warn§7 <игрок> <причина>
+chat.cmd.warn=§r §cСервер §8» §7§f%1$s§r§7 получил(а) предупреждение §e%2$s/3§7. Причина: §e%3$s
+chat.cmd.unwarn.use=§r §7CMD §8» §7Использование: §e!unwarn§7 <игрок> [число/all]
+chat.cmd.unwarn.done=§r §7CMD §8» §7С игрока §f%1$s§r§7 снято предупреждений: §e%2$s§7, осталось §e%3$s§7/3
+chat.cmd.unwarn.received=§r §7CMD §8» §7С тебя снято предупреждений: §e%1$s§7, осталось §e%2$s§7/3
+chat.cmd.unwarn.error.none=§r⩕ §l§cERROR!§r §8» §7У игрока §f%1$s§r§7 нет предупреждений
+chat.cmd.ban.use=§r §7CMD §8» §7Использование: §e!ban§7 <игрок> [срок: 2h, 7d или permanent] [причина]
+chat.cmd.ban.done=§r §cСервер §8» §7§f%1$s§r§7 забанен(а): §e%2$s§7. Причина: §e%3$s
+chat.cmd.ban.offline=§r §7CMD §8» §7Игрока §f%1$s§r§7 нет в сети: бан записан по нику (§e%2$s§7)
+chat.cmd.ban.error.full=§r⩕ §l§cERROR!§r §8» §7Список банов заполнен — сними старые баны (§e!banlist§7, §e!unban§7)
+chat.cmd.unban.use=§r §7CMD §8» §7Использование: §e!unban§7 <игрок/номер из !banlist>
+chat.cmd.unban.done=§r §7CMD §8» §7Бан снят: §f%1$s
+chat.cmd.banlist.header=§8------ §cБаны §8------
+chat.cmd.banlist.empty=§7Банов нет
+chat.cmd.banlist.by_nick=(по нику)
+chat.cmd.freeze.use=§r §7CMD §8» §7Использование: §e!freeze§7 <игрок>
+chat.cmd.freeze.error.already=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 уже заморожен — разморозить: §e!unfreeze
+chat.cmd.unfreeze.use=§r §7CMD §8» §7Использование: §e!unfreeze§7 <игрок>
+chat.cmd.unfreeze.error.not_frozen=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 не заморожен
+chat.cmd.freeze.on=§r §7CMD §8» §7Игрок §f%1$s§r§7 заморожен
+chat.cmd.freeze.off=§r §7CMD §8» §7Игрок §f%1$s§r§7 разморожен
+chat.cmd.freeze.received.on=§r §cСервер §8» §7Тебя заморозил модератор — подожди его решения
+chat.cmd.freeze.received.off=§r §cСервер §8» §7Ты разморожен(а)
+chat.cmd.freeze.active=§r⩕ §l§cERROR!§r §8» §7Ты заморожен(а): двигаться, меню, меню администратора и §e!warp§7 недоступны
+chat.cmd.report.use=§r §7CMD §8» §7Использование: §e!report§7 <игрок> <причина>
+chat.cmd.report.sent=§r §7CMD §8» §7Жалоба отправлена персоналу
+chat.cmd.report.staff=§r §cСервер §8» §7Жалоба от §f%1$s§r§7 на §f%2$s§r§7: §e%3$s
+chat.cmd.report.error.cooldown=§r⩕ §l§cERROR!§r §8» §7Жалобу можно отправлять не чаще раза в минуту
+chat.cmd.report.error.no_staff=§r⩕ §l§cERROR!§r §8» §7Сейчас в сети нет персонала — жалоба не отправлена
 
-## --- МЕНЮ ПРОКАЧКИ ---
-menu.upgrades.title=§l§8Меню сервера »  Прокачка
-menu.upgrades.body=§7VIP открывает свою шахту и VIP-коины, ребитх начинает всё заново, но навсегда дарит эффект Спешки.
-menu.upgrades.button.vip= §2VIP
-menu.upgrades.button.rebirth= §5Ребитх
+## --- АНТИЧИТ ---
+##   anticheat.*, chat.anticheat.*, chat.cmd.ac.*
+chat.anticheat.alert=§r §cAnti-Cheat §8» §f%1$s§r§7: §c%2$s§7 (VL §e%3$s§7) — %4$s
+chat.anticheat.kicked=§r §cAnti-Cheat §8» §7§f%1$s§r§7 кикнут(а): §c%2$s
+chat.anticheat.removed.item=§r §cAnti-Cheat §8» §7Запрещённый предмет §e%1$s§7 удалён
+chat.anticheat.removed.enchant=§r §cAnti-Cheat §8» §7Предмет §e%1$s§7 с невозможными чарами или количеством удалён
+anticheat.check.item=запрещённый предмет
+anticheat.check.enchant=невозможный предмет
+anticheat.check.reach=дальность удара
+anticheat.check.killaura=удар не глядя (киллаура)
+anticheat.check.speed=скорость
+anticheat.check.fly=полёт
+anticheat.check.noclip=сквозь блоки
+anticheat.check.fastbreak=быстрое копание
+anticheat.detail.item=§e%1$s
+anticheat.detail.enchant=§e%1$s
+anticheat.detail.reach=§e%1$s§7 бл.
+anticheat.detail.killaura=§e%1$s
+anticheat.detail.speed=§e%1$s§7 м/с
+anticheat.detail.fly=§e%1$s§7 с в воздухе
+anticheat.detail.noclip=внутри §e%1$s
+anticheat.detail.fastbreak=§e%1$s§7 блоков
+anticheat.mode.alerts=§eтолько сигналы
+anticheat.mode.rollback=§aсигнал + откат
+anticheat.mode.kick=§cоткат + кик
+chat.cmd.ac.use=§r §7CMD §8» §7Использование: §e!ac§7 [игрок] · §e!ac reset§7 <игрок> · §e!ac mode§7 <alerts/rollback/kick>
+chat.cmd.ac.mode_use=§r §7CMD §8» §7Использование: §e!ac mode§7 <alerts/rollback/kick>
+chat.cmd.ac.mode_set=§r §7CMD §8» §7Режим античита: %1$s
+chat.cmd.ac.reset=§r §7CMD §8» §7Очки нарушений §f%1$s§r§7 сброшены
+chat.cmd.ac.header=§7Античит, режим: %1$s
+chat.cmd.ac.flagged=§f%1$s§r§7 — §c%2$s§7 VL
+chat.cmd.ac.none=§7Нарушений нет
+chat.cmd.ac.player=§7Очки нарушений §f%1$s§r§7:
+chat.cmd.ac.line=§7%1$s: §c%2$s§7 (порог §e%3$s§7)
 
-## --- МЕНЮ РЕГИСТРАЦИИ ---
-account.register.title=§l§8Регистрация аккаунта
-account.register.agree=Я соглашаюсь с правилами сервера и подтверждаю §cотсутствие§r читов
-chat.account.error.no_cheats=§r⩕ §l§cERROR!§r §8» §7Подтверди §eотсутствие читов§7, чтобы играть на сервере
-account.register.greeting=§7Приветствую, §b%1$s§7!
-account.register.welcome=§7Добро пожаловать на сервер! Приятной игры :)
-account.register.info=§7Информация об аккаунте:
-account.register.password=§7Пароль: §b%1$s
-account.register.remember=§7Запомни эти данные или сделай скриншот чтобы потом зайти в игру
+## --- КОМАНДЫ ПЕРСОНАЛА: РЕЖИМЫ, ЦВЕТА, ПРЕФИКСЫ, ТЕГИ, ТАБЛО, РОЛИ, ВАЙП ---
+##   chat.cmd.*
+chat.cmd.gm1=§r §7CMD §8» §7Режим игры изменён на §eКреатив
+chat.cmd.gm2=§r §7CMD §8» §7Режим игры изменён на §eПриключение
+chat.cmd.gm6=§r §7CMD §8» §7Режим игры изменён на §eНаблюдение
+chat.cmd.gm.other=§r §7CMD §8» §7Игроку §f%1$s§r§7 установлен режим §e%2$s
+chat.cmd.mode.creative=Креатив
+chat.cmd.mode.adventure=Приключение
+chat.cmd.mode.spectator=Наблюдение
+chat.cmd.fly.on=§r §7CMD §8» §7Режим полёта §aвключён
+chat.cmd.fly.off=§r §7CMD §8» §7Режим полёта §cвыключен
+chat.cmd.fly.use=§r §7CMD §8» §7Использование: §e!fly§7 [on/off] [игрок] — без аргументов переключает
+chat.cmd.fly.other.on=§r §7CMD §8» §7Игроку §f%1$s§r§7 полёт §aвключён
+chat.cmd.fly.other.off=§r §7CMD §8» §7Игроку §f%1$s§r§7 полёт §cвыключен
+chat.cmd.stick=§r §7CMD §8» §7Ты получил(а) §eПалочку админа
+chat.cmd.stick.other=§r §7CMD §8» §7§eПалочка админа§7 выдана игроку §f%1$s
+chat.cmd.say.use=§r §7CMD §8» §7Использование: §e!say§7 <сообщение>
+chat.cmd.say=§r §cСервер §8» §f%1$s
+chat.cmd.invis.on=§r §7CMD §8» §7Ты стал(а) §aневидимым
+chat.cmd.invis.off=§r §7CMD §8» §7Ты больше §cне невидим(а)
+chat.cmd.invis.use=§r §7CMD §8» §7Использование: §e!invis§7 [on/off] — без аргументов переключает
+chat.cmd.timeset.use=§r §7CMD §8» §7Использование: §e!timeset§7 <sunrise; day; noon; sunset; night; midnight> или число §e0–24000
+chat.cmd.prefix.use=§r §7CMD §8» §7Использование: §e!prefix§7 <игрок> <set/take/list/clear> [префикс]
+chat.cmd.tag.use=§r §7CMD §8» §7Использование: §e!tag§7 <игрок> <add/remove/list> [тег]
+chat.cmd.tag.error.protected=§r⩕ §l§cERROR!§r §8» §7Служебные теги ролей и входа (role:…, auth:…) так не меняются — роль выдаёт владелец через §e!role
+chat.cmd.scoreboard.use=§r §7CMD §8» §7Использование: §e!scoreboard§7 <игрок> <add/remove/set/get/list/reset> [табло] [число] §8| §e!scoreboard objectives
+chat.cmd.timeset.done=§r §7CMD §8» §7Время изменено на §e%1$s
+chat.cmd.prefix.set=§r §7CMD §8» §7Префикс %1$s§r§7 выдан игроку §f%2$s
+chat.cmd.prefix.take=§r §7CMD §8» §7Префикс %1$s§r§7 снят у игрока §f%2$s
+chat.cmd.prefix.list=§r §7CMD §8» §7Префиксы игрока §f%1$s§r§7: %2$s
+chat.cmd.prefix.clear=§r §7CMD §8» §7Все префиксы сняты у игрока §f%1$s
+chat.cmd.tag.add=§r §7CMD §8» §7Тег §e%1$s§7 выдан игроку §f%2$s
+chat.cmd.tag.remove=§r §7CMD §8» §7Тег §e%1$s§7 снят у игрока §f%2$s
+chat.cmd.tag.list=§r §7CMD §8» §7Теги игрока §f%1$s§r§7: §e%2$s
+chat.cmd.scoreboard.add=§r §7CMD §8» §7Игроку §f%1$s§r§7 начислено §e%3$s§7 в §e%2$s§7 — теперь §e%4$s
+chat.cmd.scoreboard.remove=§r §7CMD §8» §7У игрока §f%1$s§r§7 списано §e%3$s§7 из §e%2$s§7 — теперь §e%4$s
+chat.cmd.scoreboard.set=§r §7CMD §8» §7Игроку §f%1$s§r§7 в §e%2$s§7 установлено §e%4$s
+chat.cmd.scoreboard.get=§r §7CMD §8» §7У игрока §f%1$s§r§7 в §e%2$s§7: §e%3$s
+chat.cmd.color.use=§r §7CMD §8» §7Использование: §e!color§7 <игрок> <name/text> <цвет/reset> — цвет словом (aqua, gold…) или кодом (b, 6…)
+chat.cmd.color.done.name=§r §7CMD §8» §7Ник игрока §f%1$s§r§7 теперь %2$s §7%3$s
+chat.cmd.color.done.text=§r §7CMD §8» §7Текст сообщений игрока §f%1$s§r§7 теперь %2$s §7%3$s
+chat.cmd.color.reset.name=§r §7CMD §8» §7Цвет ника игрока §f%1$s§r§7 снова как у роли
+chat.cmd.color.reset.text=§r §7CMD §8» §7Цвет текста сообщений игрока §f%1$s§r§7 снова белый
+chat.cmd.color.error.color=§r⩕ §l§cERROR!§r §8» §7Нет цвета §e%1$s§7 — подходят black, dark_blue, dark_green, dark_aqua, dark_red, dark_purple, gold, gray, dark_gray, blue, green, aqua, red, light_purple, yellow, white, minecoin_gold или коды 0–9, a–g
+chat.cmd.color.error.bot=§r⩕ §l§cERROR!§r §8» §7Цвет бота не меняется
+chat.cmd.scoreboard.error.protected=§r⩕ §l§cERROR!§r §8» §7Табло §e%1$s§7 служебное — менять его может только владелец
+chat.cmd.scoreboard.objectives=§r §7CMD §8» §7Табло мира:
+chat.cmd.scoreboard.list=§r §7CMD §8» §7Счета игрока §f%1$s§r§7:
+chat.cmd.scoreboard.reset=§r §7CMD §8» §7У игрока §f%1$s§r§7 сброшен счёт §e%2$s
+chat.cmd.scoreboard.reset.all=§r §7CMD §8» §7У игрока §f%1$s§r§7 сброшены все счета
+chat.cmd.wipe.confirm=§r §7CMD §8» §7§cЭто сотрёт прогресс ВСЕХ игроков.§7 Чтобы подтвердить, напиши §e!wipe confirm§7 в течение 30 секунд
+chat.cmd.wipe.summary=§r §7CMD §8» §7Сбросится: уровень, опыт, монеты, VIP-коины, ребитхи, зачарования, промокоды, бусты, достижения и косметика. Останутся: роли, пароли, баны, настройки. Игроков: §e%1$s§7 (в сети §e%2$s§7, остальных сбросит при входе)
+chat.cmd.resetoffline.summary=§r §7CMD §8» §7Игрокам §cне в сети§7 сбросится всё: теги (в том числе роль и пароль — придётся регистрироваться заново) и все счета. Игроки в сети §e(%2$s)§7 не затрагиваются. Не в сети: §e%1$s
+chat.cmd.resetoffline.confirm=§r §7CMD §8» §7Чтобы подтвердить, напиши §e!resetoffline confirm§7 в течение 30 секунд
+chat.cmd.resetoffline.done=§r §7CMD §8» §7Готово: счета игроков не в сети сброшены, теги снимутся при их входе
+chat.cmd.debug.header=§8-----§f Отладка: %1$s§r §8-----§f
+chat.cmd.debug.pos=§7Позиция: §f%1$s §8(%2$s)
+chat.cmd.debug.scores=§7Счета: %1$s
+chat.cmd.debug.tags=§7Теги (§f%1$s§7):
+chat.cmd.debug.other=прочие
+chat.cmd.reload.done=§r §7CMD §8» §aВсе скрипты загружены
+chat.cmd.role.use=§r §7CMD §8» §7Использование: §e!role§7 <игрок> <player/helper/moder/admin>
+chat.cmd.role.done=§r §7CMD §8» §7Игроку §f%1$s§r§7 назначена роль %2$s
+chat.cmd.role.received=§r §cСервер §8» §7Тебе назначена роль %1$s
+chat.cmd.role.error.owner=§r⩕ §l§cERROR!§r §8» §7Роль владельца командой не меняется
+chat.cmd.role.error.bot=§r⩕ §l§cERROR!§r §8» §7Боту роль не выдаётся: у него всегда префикс «Бот»
+chat.cmd.roles.header=§8-----§f Роли игроков §8-----§f
+chat.cmd.roles.line=§f%1$s§r§8 — %2$s
 
-## --- МЕНЮ ВХОДА ---
-account.login.title=§l§8Вход в аккаунт
-account.login.intro=§7приветствую тебя на сервере §l[] Shop for Ore§r§7! Придумай и введи пароль для регистрации:
-account.login.hint=§7Введи пароль, который ты вводил(а) при регистрации:
-account.login.placeholder=§7Введи пароль...
-account.change.title=§l§8Смена пароля
-account.change.old=§7Текущий пароль:
-account.change.new=§7Новый пароль (от 5 до 32 символов):
-account.change.repeat=§7Повтори новый пароль:
-chat.account.logged_in=§r⩉ §9Аккаунт §8» §7Вход выполнен! Добро пожаловать!
-chat.account.error.wrong_password=§r⩕ §l§cERROR!§r §8» §7Неверный пароль, попробуй ещё раз
-chat.account.error.login_required=§r⩕ §l§cERROR!§r §8» §7Сначала войди в аккаунт или зарегистрируйся
-chat.account.legacy=§r⩉ §9Аккаунт §8» §7Аккаунт со старой платформы: придумай новый пароль, прогресс сохранится
-chat.account.error.password_length=§r⩕ §l§cERROR!§r §8» §7Пароль должен быть от §e5§7 до §e32§7 символов
-chat.account.changed=§r⩉ §9Аккаунт §8» §7Пароль изменён.
-chat.account.error.mismatch=§r⩕ §l§cERROR!§r §8» §7Новые пароли не совпадают
-chat.account.error.locked=§r⩕ §l§cERROR!§r §8» §7Слишком много неверных попыток. Попробуй снова через §e%1$s§7 сек.
-chat.account.change.close_chat=§r §7CMD §8» §7Закрой чат — откроется форма смены пароля
-chat.account.reset=§r⩉ §9Аккаунт §8» §7Владелец сбросил твой пароль. Придумай новый — сейчас откроется регистрация.
-chat.account.reset.staff=§r §7CMD §8» §7Владелец §f%1$s§r§7 сбросил пароль игроку §f%2$s
-
-## --- МЕНЮ АДМИНА ---
+## --- МЕНЮ АДМИНИСТРАТОРА ---
+##   admin.*, chat.admin.*
+admin.common.back=§8Назад
+admin.common.min=мин
+admin.common.hours=ч
+admin.common.days=дн.
+admin.common.minutes=минут
 admin.main.title=§l§8Меню админа
 admin.main.button.gamemode=§8Режим игры
 admin.main.button.time=§8Установить время
@@ -492,8 +990,6 @@ admin.main.button.bot=§8Бот
 admin.main.button.players=§8Игроки
 admin.main.button.boosts=§8Бусты и ивенты
 admin.main.button.server=§8Сервер
-
-## --- АДМИН: РЕЖИМЫ ИГРЫ ---
 admin.gamemode.title=§l§8Меню админа » Режим игры
 admin.gamemode.body=§7Выбери режим игры:
 admin.gamemode.button.creative=§8Креатив
@@ -501,8 +997,6 @@ admin.gamemode.button.adventure=§8Приключение
 admin.gamemode.button.spectator=§8Наблюдатель
 admin.gamemode.button.fly_on=§8Включить полёт
 admin.gamemode.button.fly_off=§8Выключить полёт
-
-## --- АДМИН: УСТАНОВКА ВРЕМЕНИ ---
 admin.time.title=§l§8Меню админа » Установка времени
 admin.time.body=§7Выбери время суток:
 admin.time.button.sunrise=§8Рассвет
@@ -511,8 +1005,6 @@ admin.time.button.noon=§8Полдень
 admin.time.button.sunset=§8Закат
 admin.time.button.night=§8Ночь
 admin.time.button.midnight=§8Полночь
-
-## --- АДМИН: ТЕЛЕПОРТАЦИИ ---
 admin.warps.title=§l§8Меню админа » Телепортации
 admin.warps.body=§7Куда хочешь телепортироваться?
 admin.warps.button.mine=§8Шахта (1–15 ур.)
@@ -522,8 +1014,6 @@ admin.warps.button.vip=§8VIP локация
 admin.warps.button.cmd_zone=§8CMD Zone
 admin.warps.button.boss_zone=§8Локация босса
 admin.warps.button.random_player=§8/tp to @r
-
-## --- АДМИН: ЭФФЕКТЫ ---
 admin.effects.title=§l§8Меню админа » Эффекты
 admin.effects.body=§7Выбери эффект:
 admin.effects.button.invisibility=§8Невидимость
@@ -539,8 +1029,6 @@ admin.effects.button.fire_resistance=§8Огнестойкость
 admin.effects.button.water_breathing=§8Подводное дыхание
 admin.effects.button.slow_falling=§8Плавное падение
 admin.effects.button.clear=§8Очистить эффекты
-
-## --- АДМИН: ИНСТРУМЕНТЫ ---
 admin.tools.title=§l§8Меню админа » Инструменты
 admin.tools.body=§7Выбери инструмент:
 admin.tools.button.command_block=§5Командный блок
@@ -568,24 +1056,13 @@ chat.admin.item.error.unknown=§r⩕ §l§cERROR!§r §8» §7Предмета �
 chat.admin.item.given=§r §7CMD §8» §7Выдан предмет §e%1$s§7 ×§e%2$s
 admin.tools.button.clear_inventory=§8Очистить инвентарь
 admin.tools.clear.body=§7Весь твой инвентарь будет очищен. Ты уверен(а)?
-
-## --- АДМИН: ОБЪЯВЛЕНИЯ ---
 admin.announce.title=§l§8Меню админа » Объявления
 admin.announce.body=§7Напиши в строку ниже, все что хочешь сказать. Это отобразится всему серверу.
 admin.announce.placeholder=§7Введи текст...
-
-## --- АДМИН: ВАЙП ---
-admin.wipe.title=§l§8Предупреждение
-admin.wipe.body=§7Вайп сбросит прогресс §cвсех§7 игроков: уровень, опыт, монеты, VIP-коины, ребитхи, зачарования, промокоды, бусты, достижения и косметику. Останутся роли, пароли, баны и настройки. Игроков не в сети сбросит, когда они зайдут. Ты уверен(а)?
-admin.wipe.count=§7Затронет игроков:
-admin.wipe.online=§7в сети:
-admin.wipe.menu.title=§l§8Меню админа » Вайп
-admin.wipe.menu.body=§7Что сбросить? Перед каждым действием будет подтверждение.
-admin.wipe.button.full=§cПолный вайп
-admin.wipe.button.offline=§8Сброс статистики игроков вне сети
-admin.wipe.offline.body=§7Игрокам §cне в сети§7 сбросится всё: теги (в том числе роль и пароль — придётся зарегистрироваться заново) и все счета. Игроки в сети не затрагиваются. Ты уверен(а)?
-admin.wipe.offline.count=§7Не в сети:
 chat.admin.error.no_players=§r⩕ §l§cERROR!§r §8» §7Нет игроков без роли, к которым можно телепортироваться
+
+## --- МЕНЮ АДМИНИСТРАТОРА: ИГРОКИ ---
+##   admin.players.*, chat.admin.vip.*
 admin.players.title=§l§8Меню админа » Игроки
 admin.players.choose=§7Выбери игрока:
 admin.players.body.name=§7Игрок:§f
@@ -638,6 +1115,21 @@ admin.players.reason_optional=§7Причина (необязательно):
 admin.players.reason_placeholder=§7Введи причину...
 admin.players.role.title=§l§8Меню админа » Роль
 admin.players.role.choose=§7Новая роль:
+chat.admin.vip.given=§r §7CMD §8» §7Игроку §f%1$s§r§7 выдан §eVIP
+chat.admin.vip.taken=§r §7CMD §8» §7У игрока §f%1$s§r§7 снят §eVIP
+
+## --- МЕНЮ АДМИНИСТРАТОРА: СЕРВЕР, БУСТЫ, ВАЙП ---
+##   admin.server.*, admin.boosts.*, admin.wipe.*, chat.admin.auto_events.*
+admin.wipe.title=§l§8Предупреждение
+admin.wipe.body=§7Вайп сбросит прогресс §cвсех§7 игроков: уровень, опыт, монеты, VIP-коины, ребитхи, зачарования, промокоды, бусты, достижения и косметику. Останутся роли, пароли, баны и настройки. Игроков не в сети сбросит, когда они зайдут. Ты уверен(а)?
+admin.wipe.count=§7Затронет игроков:
+admin.wipe.online=§7в сети:
+admin.wipe.menu.title=§l§8Меню админа » Вайп
+admin.wipe.menu.body=§7Что сбросить? Перед каждым действием будет подтверждение.
+admin.wipe.button.full=§cПолный вайп
+admin.wipe.button.offline=§8Сброс статистики игроков вне сети
+admin.wipe.offline.body=§7Игрокам §cне в сети§7 сбросится всё: теги (в том числе роль и пароль — придётся зарегистрироваться заново) и все счета. Игроки в сети не затрагиваются. Ты уверен(а)?
+admin.wipe.offline.count=§7Не в сети:
 admin.boosts.title=§l§8Меню админа » Бусты и ивенты
 admin.boosts.body=§7Буст отсюда бесплатный и действует на всех игроков.
 admin.boosts.button.boost=§8Запустить буст
@@ -671,6 +1163,9 @@ admin.server.button.top_vip_coins=§8Топ по VIP-коинам
 admin.server.button.top_kd=§8Топ по K/D
 admin.server.button.top_pvp=§8Топ по победам в PvP
 admin.server.button.top_spleef=§8Топ по победам в сплифе
+
+## --- МЕНЮ АДМИНИСТРАТОРА: БОТ И ЭФФЕКТЫ ---
+##   admin.bot.*, chat.admin.bot.*, chat.cmd.bot.*, effect.*
 admin.bot.title=§l§8Меню админа » Бот
 admin.bot.name=§7Имя бота:
 admin.bot.present=§aБот в мире
@@ -744,491 +1239,3 @@ chat.admin.bot.error.name=§r⩕ §l§cERROR!§r §8» §7Имя бота: от 
 chat.admin.bot.error.absent=§r⩕ §l§cERROR!§r §8» §7Бота нет в мире
 chat.admin.bot.error.present=§r⩕ §l§cERROR!§r §8» §7Бот §f%1$s§r§7 уже в мире. Управление ботом — в меню админа
 chat.cmd.bot.settings=§r §7CMD §8» §7Закрой чат — откроется окно управления ботом
-chat.server.wiped=§r §cСервер §8» §7Статистика всех игроков сброшена. Кто не в сети — будет сброшен при входе
-chat.server.wiped.offline=§r §cСервер §8» §7Пока тебя не было, сервер начал всё заново (вайп): прогресс, достижения и косметика сброшены. Роль, пароль и настройки на месте
-chat.server.reset_offline=§r §cСервер §8» §7Пока тебя не было, владелец сбросил данные игроков не в сети: прогресс, роль и пароль. Зарегистрируйся заново
-
-## --- АДМИН-ПАЛОЧКА ---
-chat.server.kicked=§r §cСервер §8» §f%1$s§r§7 исключён(а) администратором
-
-## --- СИСТЕМНЫЕ И УРОВНЕВЫЕ СООБЩЕНИЯ ---
-chat.lvlup.level.2=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e2§7 уровня, новая кирка: §eДеревянная кирка
-chat.lvlup.level.3=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e3§7 уровня, новая кирка: §eКаменная кирка
-chat.lvlup.level.4=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e4§7 уровня
-chat.lvlup.level.5=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e5§7 уровня
-chat.lvlup.level.6=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e6§7 уровня
-chat.lvlup.level.7=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e7§7 уровня
-chat.lvlup.level.8=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e8§7 уровня, новая кирка: §eЖелезная кирка
-chat.lvlup.level.9=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e9§7 уровня
-chat.lvlup.level.10=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e10§7 уровня
-chat.lvlup.level.11=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e11§7 уровня
-chat.lvlup.level.12=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e12§7 уровня
-chat.lvlup.level.13=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e13§7 уровня, новая кирка: §eАлмазная кирка
-chat.lvlup.level.14=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e14§7 уровня
-chat.lvlup.level.15=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e15§7 уровня, новая кирка: §eНезеритовая кирка
-chat.lvlup.level.16=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e16§7 уровня, открыта локация §eНезер
-chat.lvlup.level.17=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e17§7 уровня
-chat.lvlup.level.18=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e18§7 уровня
-chat.lvlup.level.19=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e19§7 уровня
-chat.lvlup.level.20=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e20§7 уровня
-chat.lvlup.level.21=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e21§7 уровня
-chat.lvlup.level.22=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e22§7 уровня
-chat.lvlup.level.23=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e23§7 уровня
-chat.lvlup.level.24=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e24§7 уровня
-chat.lvlup.level.25=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e25§7 уровня
-chat.lvlup.level.26=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e26§7 уровня, открыта локация §eПещера§7. В этой локации кирки придется качать заново
-chat.lvlup.level.27=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e27§7 уровня
-chat.lvlup.level.28=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e28§7 уровня
-chat.lvlup.level.29=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e29§7 уровня
-chat.lvlup.level.30=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e30§7 уровня
-chat.lvlup.level.31=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e31§7 уровня
-chat.lvlup.level.32=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e32§7 уровня
-chat.lvlup.level.33=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e33§7 уровня
-chat.lvlup.level.34=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e34§7 уровня
-chat.lvlup.level.35=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e35§7 уровня
-chat.lvlup.level.36=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e36§7 уровня
-chat.lvlup.level.37=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e37§7 уровня
-chat.lvlup.level.38=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e38§7 уровня
-chat.lvlup.level.39=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e39§7 уровня
-chat.lvlup.level.40=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e40§7 уровня — это §aМАКСИМУМ§7!
-
-## --- НАГРАДЫ ЗА ПРОМОКОДЫ ---
-chat.promo.reward.1=§r §aПромокод §8» §f%1$s§r§7 активировал(а) промокод и получил(а) §e500 
-chat.promo.reward.2=§r §aПромокод §8» §f%1$s§r§7 активировал(а) промокод и получил(а) §e500 
-chat.promo.reward.3=§r §aПромокод §8» §f%1$s§r§7 активировал(а) промокод и получил(а) §e25k 
-chat.promo.reward.4=§r §aПромокод §8» §f%1$s§r§7 активировал(а) промокод и получил(а) §e100 
-chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7Ты уже активировал(а) этот §eпромокод
-chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Неверный промокод
-
-## --- НАГРАДЫ МАГАЗИНА ---
-chat.shop.enchant.efficiency=§r §eМагазин §8» §7Куплено: §eЭффективность§7 (§e+1§7)
-chat.shop.enchant.fortune=§r §eМагазин §8» §7Куплено: §eУдача§7 (§e+1§7)
-chat.shop.item_enchant.done=§r §eМагазин §8» §7Куплено: §e%1$s %2$s§7 за §e%3$s §f
-chat.shop.enchant.error.stick=§r §eМагазин §8» §7Сейчас у тебя §eпалка§7, а не кирка: зачаровывать нечего. Кирку (деревянную) дают на §e2 уровне§7 — тогда и приходи
-chat.shop.cosmetics.error.no_coins=§r⩕ §l§cERROR!§r §8» §7Не хватает VIP-коинов — их дают за аметист в VIP-шахте
-chat.shop.cosmetics.error.vip=§r⩕ §l§cERROR!§r §8» §7Косметику покупают только VIP (с 40 уровня) — посмотреть можно всем
-chat.shop.cosmetics.error.vip_sell=§r⩕ §l§cERROR!§r §8» §7Частицы при продаже — только для VIP
-chat.shop.cosmetics.bought=§r §eМагазин §8» §7Куплено: %1$s §e%2$s§7 за §e%3$s
-chat.trader.bought=§r §eМагазин §8» §7Куплено: §e%1$s§7 за §e%2$s 
-chat.trader.error.vip=§r⩕ §l§cERROR!§r §8» §7Лавка торговца — только для VIP
-chat.trader.error.full=§r⩕ §l§cERROR!§r §8» §7Нет места в инвентаре — освободи хотя бы один слот
-trader.item.wither_skull=Череп скелета-иссушителя
-trader.item.dragon_head=Голова дракона Края
-trader.item.creeper_head=Голова крипера
-trader.item.skeleton_skull=Череп скелета
-trader.item.zombie_head=Голова зомби
-trader.item.player_head=Голова игрока
-trader.item.pickaxe_1=Зачарованная кирка #1
-trader.item.pickaxe_2=Зачарованная кирка #2
-trader.item.pickaxe_3=Зачарованная кирка #3
-trader.item.haste=Спешка V на 30 минут
-chat.shop.cosmetics.reset.name=§r §eМагазин §8» §7Цвет ника снова как у роли
-chat.shop.cosmetics.reset.text=§r §eМагазин §8» §7Цвет текста снова белый
-chat.shop.cosmetics.selected.name=§r §eМагазин §8» §7Цвет ника: %1$s §7%2$s
-chat.shop.cosmetics.selected.text=§r §eМагазин §8» §7Цвет текста: %1$s §7%2$s
-chat.shop.cosmetics.off.trail=§r §eМагазин §8» §7Частицы вокруг тебя выключены
-chat.shop.cosmetics.off.death=§r §eМагазин §8» §7Частицы при смерти выключены
-chat.shop.cosmetics.off.sell=§r §eМагазин §8» §7Свои частицы при продаже выключены — снова стандартные
-chat.shop.cosmetics.selected.trail=§r §eМагазин §8» §7Частицы вокруг тебя: §e%1$s
-chat.shop.cosmetics.selected.death=§r §eМагазин §8» §7Частицы при смерти: §e%1$s
-chat.shop.cosmetics.selected.sell=§r §eМагазин §8» §7Частицы при продаже: §e%1$s
-chat.shop.item_enchant.error.changed=§r⩕ §l§cERROR!§r §8» §7Предмет в этом слоте сменился — открой окно заново
-chat.shop.kit.iron=§r §eМагазин §8» §7Куплено: §eЖелезный набор
-chat.shop.kit.diamond=§r §eМагазин §8» §7Куплено: §eАлмазный набор
-chat.shop.kit.netherite=§r §eМагазин §8» §7Куплено: §eНезеритовый набор
-
-## --- VIP И РЕБИТХ ---
-chat.error.no_money=§r⩕ §l§cERROR!§r §8» §7Недостаточно 
-chat.vip.error.requirements=§r⩕ §l§cERROR!§r §8» §7Для §eVIP§7 нужен §e40§7 уровень  и §e125 000§7 
-chat.rebirth.error.level=§r⩕ §l§cERROR!§r §8» §7Ребитх доступен с §e25§7 уровня 
-chat.vip.error.owned=§r⩕ §l§cERROR!§r §8» §7У тебя уже есть §eVIP
-chat.rebirth.first=§r §dРебитх §8» §f%1$s§r§7 сделал(а) свой первый §eребитх§7!
-chat.rebirth.level=§r §dРебитх §8» §7Твой уровень ребитха: §e%1$s
-chat.vip.bought=§r §aLvL UP §8» §f%1$s§r§7 купил(а) §eVIP§7!
-chat.vip.welcome=§r §aLvL UP §8» §7Поздравляем с §eVIP§7! Чтобы попасть на §eVIP-остров§7, открой §eМеню сервера §7» §eТелепортации
-chat.vip.migrated=§r §aLvL UP §8» §7VIP теперь отдельный статус, а уровни §e26–40§7 — Пещера. VIP у тебя остался, уровень — §e25§7: продолжай в Пещере!
-
-## --- БУСТЫ ---
-chat.boost.x2_end=§r §bБуст §8» §ex2 буст§7 закончился. Новый можно купить в §eМагазин → Бусты
-chat.boost.x4_end=§r §bБуст §8» §ex4 буст§7 закончился. Новый можно купить в §eМагазин → Бусты
-chat.boost.error.active=§r⩕ §l§cERROR!§r §8» §7Сейчас уже идёт буст. Дождись его окончания!
-chat.boost.x2=§r §bБуст §8» §f%1$s§r§7 купил(а) §ex2 буст§7 для всех на §e5 минут§7!
-chat.boost.x4=§r §bБуст §8» §f%1$s§r§7 купил(а) §ex4 буст§7 для всех на §e5 минут§7!
-chat.shop.error.enchant_max=§r⩕ §l§cERROR!§r §8» §7У тебя уже §eмаксимальный§7 уровень этого зачарования
-chat.rebirth.error.max=§r⩕ §l§cERROR!§r §8» §7У тебя уже §eмаксимальный ребитх§7 (§e5§7)
-chat.ore_magnet.bought=§r §eМагазин §8» §eМагнит руды§7 включён на §e5 минут§7: выпавшие рядом предметы летят к тебе
-chat.ore_magnet.error.active=§r⩕ §l§cERROR!§r §8» §eМагнит руды§7 уже работает. Осталось секунд: §e%1$s
-chat.ore_magnet.end=§r §eМагазин §8» §eМагнит руды§7 закончился. Новый можно купить в §eМагазин → Бусты
-
-## --- ОЧИСТКА ПРЕДМЕТОВ ---
-screen.clear_items.title=§l§eОчистка мусора
-chat.anticheat.alert=§r §cAnti-Cheat §8» §f%1$s§r§7: §c%2$s§7 (VL §e%3$s§7) — %4$s
-chat.anticheat.kicked=§r §cAnti-Cheat §8» §7§f%1$s§r§7 кикнут(а): §c%2$s
-chat.anticheat.removed.item=§r §cAnti-Cheat §8» §7Запрещённый предмет §e%1$s§7 удалён
-chat.anticheat.removed.enchant=§r §cAnti-Cheat §8» §7Предмет §e%1$s§7 с невозможными чарами или количеством удалён
-anticheat.check.item=запрещённый предмет
-anticheat.check.enchant=невозможный предмет
-anticheat.check.reach=дальность удара
-anticheat.check.killaura=удар не глядя (киллаура)
-anticheat.check.speed=скорость
-anticheat.check.fly=полёт
-anticheat.check.noclip=сквозь блоки
-anticheat.check.fastbreak=быстрое копание
-anticheat.detail.item=§e%1$s
-anticheat.detail.enchant=§e%1$s
-anticheat.detail.reach=§e%1$s§7 бл.
-anticheat.detail.killaura=§e%1$s
-anticheat.detail.speed=§e%1$s§7 м/с
-anticheat.detail.fly=§e%1$s§7 с в воздухе
-anticheat.detail.noclip=внутри §e%1$s
-anticheat.detail.fastbreak=§e%1$s§7 блоков
-anticheat.mode.alerts=§eтолько сигналы
-anticheat.mode.rollback=§aсигнал + откат
-anticheat.mode.kick=§cоткат + кик
-screen.clear_items.subtitle=§l§eУдалено предметов: §a%1$s
-
-## --- СОБЫТИЯ ---
-chat.event.gift=§r §6Ивент §8» §7На карте §eпоявился подарок§7! Кто подберёт его §eпервым§7?
-chat.event.gift_end=§r §6Ивент §8» §f%1$s§r§7 подобрал(а) §eподарок§7!
-screen.event.haste=§gполучил(а) спешку на 10 сек
-chat.event.mythic_chest=§r §6Ивент §8» §7В центре PvP-арены появился §eмистик§7 — сундук с редким лутом. Кто первый, того и лут!
-chat.event.rain=§r §6Ивент §8» §7Начинается дождь из монет!
-chat.event.rain_end=§r §6Ивент §8» §7Дождь из монет закончился!
-
-## --- КОМАНДЫ И ИСПОЛЬЗОВАНИЕ ---
-chat.help.header=§8-----§f Список команд §8-----§f
-chat.help.help=§7Список команд твоей роли; с названием команды — подробно о ней
-chat.help.warp=§7Телепорт на точку (спавн, шахта, мини-игры, PvP-арена, сплиф); без аргументов — список точек
-chat.help.game=§7Мини-игры: без аргументов — список, §ejoin <игра>§7 — записаться, §eleave§7 — выйти
-chat.help.emotes=§7Список эмодзи: напиши код, например §e:smile:§7, — в чате он станет значком
-chat.help.msg=§7Личное сообщение игроку в сети — его увидите только вы двое
-chat.help.reply=§7Ответ тому, с кем ты последним переписывался в личных сообщениях
-chat.help.gm1=§7Творческий режим себе или игроку (другому — только тому, чья роль даёт эту команду)
-chat.help.gm2=§7Режим приключения — обычный режим карты; себе или игроку
-chat.help.gm6=§7Режим наблюдателя: летать сквозь блоки и смотреть со стороны; себе или игроку
-chat.help.fly=§7Полёт в режиме приключения: §eon§7/§eoff§7, себе или игроку
-chat.help.clearchat=§7Очищает чат тебе; §eall§7 — всем игрокам (модератор и выше)
-chat.help.balance=§7Сколько у тебя монет и VIP-коинов
-chat.help.pay=§7Перевод монет игроку в сети — как в Банке; сумма — целое число
-chat.help.top=§7Топ-5 игроков в сети: по монетам, уровню, ребитхам, VIP-коинам, K/D, победам в PvP или в сплифе. Без аргумента — подсказка
-chat.help.stats=§7Уровень, опыт, монеты, VIP-коины, ребитхи, роль и предупреждения игрока
-chat.help.online=§7Кто сейчас в сети: ник, роль и уровень, старшие роли сверху
-chat.help.report=§7Жалоба на игрока персоналу в сети (хелперам и выше), не чаще раза в минуту
-chat.help.rules=§7Правила сервера — за нарушения выдают предупреждения, мут или бан
-chat.help.password=§7Смена пароля: старый, новый и повтор; форма откроется, когда закроешь чат
-chat.help.bot=§7Призывает бота карты; §esettings§7 — окно управления ботом (имя, телепорт, сообщение)
-chat.help.stick=§7Выдаёт §cПалочку админа§7: нажми на игрока ПКМ (на ПК) или кнопку «Взаимодействовать» (на телефоне) — и он вылетит с сервера (кик)
-chat.help.event=§7Запускает ивент сразу, даже если по таймеру он выключен
-chat.help.boost=§7Бесплатный буст x2/x4 всем на 1–60 минут; §emagnet§7 — «Магнит руды» игроку; §estop§7 — отключить выданные (купленные не трогает)
-chat.help.say=§7Объявление от имени сервера всем игрокам, с эмодзи
-chat.help.invis=§7Невидимость себе: §eon§7/§eoff§7, без аргумента — переключить
-chat.help.timeset=§7Время суток: словом (§eday§7, §enight§7, §enoon§7…) или числом 0–24000
-chat.help.prefix=§7Префиксы перед ником в чате: выдать, снять, список или очистить
-chat.help.color=§7Цвет ника (в чате и над головой) или текста сообщений игрока; цвета ролей — только им
-chat.help.tag=§7Теги игрока: добавить, снять или список; роли и вход так не меняются
-chat.help.achievement=§7Достижения игрока: список, выдать (с наградой) или снять
-chat.help.debug=§7Отладка: роль, позиция, главные счета и все теги игрока по группам
-chat.help.scoreboard=§7Счета игрока в табло: изменить, узнать, список, сбросить; служебные — только владелец
-chat.help.kick=§7Выгоняет игрока с сервера; причину увидят все в чате
-chat.help.ban=§7Бан по нику: срок (2h, 7d — до 30 дней) или §epermanent§7 (по умолчанию — навсегда), с причиной
-chat.help.unban=§7Снимает бан по нику или по номеру из §e!banlist
-chat.help.banlist=§7Список банов: номер, ник, причина и кто забанил
-chat.help.mute=§7Запрет писать в чат и ЛС: срок (30, 30m, 2h, 1d — до 30 дней) или §epermanent§7 — до !unmute, с причиной
-chat.help.jail=§7Посадить в тюрьму у спавна: срок (30, 2h, 1d — до 30 дней) или §epermanent§7 — до !unjail, с причиной
-chat.help.unjail=§7Выпустить из тюрьмы раньше срока (если сажала роль не выше твоей)
-chat.help.unmute=§7Снимает мут (если выдавшая его роль не выше твоей)
-chat.help.warn=§7Предупреждение с причиной; третье — кик с сервера
-chat.help.unwarn=§7Снимает предупреждения: одно, несколько или все (§eall§7)
-chat.help.freeze=§7Замораживает игрока на месте, даже в воздухе: без меню и телепортов
-chat.help.unfreeze=§7Размораживает игрока (если заморозившая роль не выше твоей)
-chat.help.cps=§7Как часто игрок бьёт сейчас и максимум за 10 секунд — проверка на автокликер
-chat.help.ac=§7Античит: очки нарушений игрока, без ника — режим и подозрительные игроки
-chat.help.tp=§7Телепорт к игроку в сети или в точку по координатам
-chat.help.tphere=§7Телепорт игрока к тебе
-chat.help.wipe=§7Сбрасывает прогресс всех игроков, даже не в сети; сначала покажет, что сбросится
-chat.help.resetoffline=§7Сбрасывает §cвсе§7 теги и счета игрокам §cне в сети§7 (роль и пароль тоже — им придётся зарегистрироваться заново). Кто в сети — не трогается; сначала покажет сводку
-chat.help.role=§7Назначает роль: игрок, хелпер (только наблюдение), модератор или администратор
-chat.help.roles=§7Роли всех игроков в сети
-chat.help.resetpass=§7Сбрасывает забытый пароль игроку в сети — он сразу задаст новый
-
-chat.cmd.error.no_permission=§r⩕ §l§cERROR!§r §8» §7У тебя нет прав на эту команду
-chat.cmd.error.unknown=§r⩕ §l§cERROR!§r §8» §7Неизвестная команда: §e%1$s§7. Напиши §e!help§7, чтобы узнать список команд
-chat.cmd.error.offline=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 не в сети
-chat.cmd.error.target_role=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 не может это получить: нужна роль не ниже %2$s
-chat.cmd.error.role=§r⩕ §l§cERROR!§r §8» §7Нельзя применить к §f%1$s§r§7: его роль не ниже твоей
-chat.cmd.error.issuer=§r⩕ §l§cERROR!§r §8» §7Это ограничение выдал %1$s§r§7 — снять его может только роль не ниже
-chat.cmd.error.self=§r⩕ §l§cERROR!§r §8» §7Нельзя выбрать самого себя
-chat.cmd.error.number=§r⩕ §l§cERROR!§r §8» §7§e%1$s§7 — не подходит: нужно целое число от §e%2$s§7 до §e%3$s
-chat.cmd.error.confirm_expired=§r⩕ §l§cERROR!§r §8» §7Подтверждение не найдено или истекло — сначала напиши §e%1$s
-chat.cmd.error.not_found=§r⩕ §l§cERROR!§r §8» §7§e%1$s§7 — не найдено. Список — §e%2$s
-chat.cmd.help.detail=§r §7CMD §8» §f%1$s§r§8 — §7%2$s§r§7. Доступно: %3$s§r§7 и выше
-
-chat.cmd.warp.header=§8-----§f Точки телепортации §8-----§f
-chat.cmd.warp.done=§r §cСервер §8» §7Ты телепортирован(а): §e%1$s
-chat.cmd.warp.other=§r §7CMD §8» §7Игрок §f%1$s§r§7 телепортирован: §e%2$s
-chat.cmd.warp.error.vip=§r⩕ §l§cERROR!§r §8» §7Эта точка — только для §eVIP
-chat.cmd.warp.error.vip_other=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 не VIP — на VIP-остров его не отправить
-chat.pvp.combat=§r⩕ §l§cERROR!§r §8» §7Ты в бою на PvP-арене: телепорт будет доступен через §e%1$s§7 сек.
-warp.spawn=Спавн
-warp.mine=Шахта (по уровню)
-warp.minigames=Мини-игры
-warp.pvp=PvP-арена
-warp.spleef=Сплиф
-warp.tir=Тир
-warp.boss=Локация босса
-warp.vip=VIP-локация
-warp.cmd=CMD Zone
-chat.emotes.header=§8-----§f Список эмодзи §8-----§f
-chat.cmd.msg.use=§r §7CMD §8» §7Использование: §e!msg§7 <игрок> <сообщение>
-chat.cmd.msg.received=§7 %1$s:§r %2$s
-chat.cmd.msg.sent=§7 Ты  %1$s:§r %2$s
-chat.cmd.reply.use=§r §7CMD §8» §7Использование: §e!reply§7 <сообщение>
-chat.cmd.reply.none=§r⩕ §l§cERROR!§r §8» §7Тебе ещё никто не писал в ЛС
-chat.cmd.gm1=§r §7CMD §8» §7Режим игры изменён на §eКреатив
-chat.cmd.gm2=§r §7CMD §8» §7Режим игры изменён на §eПриключение
-chat.cmd.gm6=§r §7CMD §8» §7Режим игры изменён на §eНаблюдение
-chat.cmd.gm.other=§r §7CMD §8» §7Игроку §f%1$s§r§7 установлен режим §e%2$s
-chat.cmd.mode.creative=Креатив
-chat.cmd.mode.adventure=Приключение
-chat.cmd.mode.spectator=Наблюдение
-chat.cmd.fly.on=§r §7CMD §8» §7Режим полёта §aвключён
-chat.cmd.fly.off=§r §7CMD §8» §7Режим полёта §cвыключен
-chat.cmd.fly.use=§r §7CMD §8» §7Использование: §e!fly§7 [on/off] [игрок] — без аргументов переключает
-chat.cmd.fly.other.on=§r §7CMD §8» §7Игроку §f%1$s§r§7 полёт §aвключён
-chat.cmd.fly.other.off=§r §7CMD §8» §7Игроку §f%1$s§r§7 полёт §cвыключен
-chat.cmd.clearchat=§r §7CMD §8» §7Очистка чата...
-chat.cmd.clearchat.self=§r §7CMD §8» §7Чат очищен (только у тебя)
-chat.cmd.stick=§r §7CMD §8» §7Ты получил(а) §eПалочку админа
-chat.cmd.stick.other=§r §7CMD §8» §7§eПалочка админа§7 выдана игроку §f%1$s
-chat.cmd.money.done=§r §7CMD §8» §7Баланс игрока §f%1$s§r§7 теперь §e%2$s
-chat.cmd.money.received=§r §2Банк §8» §7Администратор изменил твой баланс: §e%1$s
-chat.cmd.event.use=§r §7CMD §8» §7Использование: §e!event§7 <haste/rain/gift/mythic>
-chat.cmd.event.done=§r §6Ивент §8» §7Ивент «%1$s§r§7» запущен
-chat.cmd.event.error.no_players=§r⩕ §l§cERROR!§r §8» §7Для этого ивента нужен хотя бы один игрок, кроме хоста
-chat.cmd.event.error.no_chest=§r⩕ §l§cERROR!§r §8» §7Сундук мистика не найден: нужен сундук в центре PvP-арены (x 300, z 300)
-chat.cmd.event.name.haste=§eУскорение
-chat.cmd.event.name.rain=§eДождь из монет
-chat.cmd.event.name.gift=§eПодарок
-chat.cmd.event.name.mythic=§eМистик
-chat.cmd.boost.use=§r §7CMD §8» §7Использование: §e!boost§7 <x2/x4> [минуты 1–60, по умолчанию 5], §e!boost magnet§7 [игрок] [минуты] или §e!boost stop§7 (отключить выданные бусты)
-chat.cmd.boost.stop.none=§r⩕ §l§cERROR!§r §8» §7Сейчас нет бустов, выданных администратором — купленные игроками не отключаются
-chat.cmd.boost.stop.done=§r §7CMD §8» §7Выданные бусты отключены: общий буст — §e%1$s§7, магнитов — §e%2$s
-chat.cmd.boost.started=§r §bБуст §8» §7§f%1$s§r§7 включил(а) §e%2$s буст§7 для всех на §e%3$s минут§7!
-chat.cmd.boost.magnet.received=§r §eМагазин §8» §7§f%1$s§r§7 включил(а) тебе §eМагнит руды§7 на §e%2$s минут§7: выпавшие рядом предметы летят к тебе
-chat.cmd.boost.magnet.done=§r §7CMD §8» §7§eМагнит руды§7 на §e%2$s минут§7 выдан игроку §f%1$s
-chat.cmd.say.use=§r §7CMD §8» §7Использование: §e!say§7 <сообщение>
-chat.cmd.say=§r §cСервер §8» §f%1$s
-chat.cmd.invis.on=§r §7CMD §8» §7Ты стал(а) §aневидимым
-chat.cmd.invis.off=§r §7CMD §8» §7Ты больше §cне невидим(а)
-chat.cmd.invis.use=§r §7CMD §8» §7Использование: §e!invis§7 [on/off] — без аргументов переключает
-chat.cmd.timeset.use=§r §7CMD §8» §7Использование: §e!timeset§7 <sunrise; day; noon; sunset; night; midnight> или число §e0–24000
-chat.cmd.prefix.use=§r §7CMD §8» §7Использование: §e!prefix§7 <игрок> <set/take/list/clear> [префикс]
-chat.cmd.tag.use=§r §7CMD §8» §7Использование: §e!tag§7 <игрок> <add/remove/list> [тег]
-chat.cmd.tag.error.protected=§r⩕ §l§cERROR!§r §8» §7Служебные теги ролей и входа (role:…, auth:…) так не меняются — роль выдаёт владелец через §e!role
-chat.cmd.scoreboard.use=§r §7CMD §8» §7Использование: §e!scoreboard§7 <игрок> <add/remove/set/get/list/reset> [табло] [число] §8| §e!scoreboard objectives
-chat.cmd.kick=§r §cСервер §8» §f%1$s§r§7 кикнут(а). Причина: §e%2$s
-chat.cmd.kick.no_reason=не указана
-chat.cmd.kick.use=§r §7CMD §8» §7Использование: §e!kick§7 <игрок> <причина (не обязательно)>
-chat.cmd.mute.use=§r §7CMD §8» §7Использование: §e!mute§7 <игрок> <срок: 30, 2h, 1d или permanent> [причина]
-chat.cmd.mute=§r §cСервер §8» §7§f%1$s§r§7 не может писать в чат: §e%2$s§7. Причина: §e%3$s
-chat.cmd.mute.active=§r⩕ §l§cERROR!§r §8» §7Ты не можешь писать в чат ещё §e%1$s§7 минут
-chat.cmd.mute.active.permanent=§r⩕ §l§cERROR!§r §8» §7Ты не можешь писать в чат — мут навсегда, пока его не снимут
-chat.cmd.jail.use=§r §7CMD §8» §7Использование: §e!jail§7 <игрок> <срок: 30, 2h, 1d или permanent> [причина]
-chat.cmd.unjail.use=§r §7CMD §8» §7Использование: §e!unjail§7 <игрок>
-chat.cmd.jail=§r §cСервер §8» §7§f%1$s§r§7 посажен(а) в тюрьму: §e%2$s§7. Причина: §e%3$s
-chat.cmd.unjail=§r §cСервер §8» §7§f%1$s§r§7 выпущен(а) из тюрьмы (§f%2$s§r§7)
-chat.cmd.unjail.error.not_jailed=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 не в тюрьме
-chat.jail.active=§r⩕ §l§cERROR!§r §8» §7Ты в тюрьме ещё §e%1$s§7 мин: меню, !warp и мини-игры недоступны
-chat.jail.active.permanent=§r⩕ §l§cERROR!§r §8» §7Ты в тюрьме навсегда, пока тебя не выпустят: меню, !warp и мини-игры недоступны
-chat.jail.released=§r §cСервер §8» §7Срок вышел — ты на свободе. Не нарушай правила!
-chat.jail.released.early=§r §cСервер §8» §7Тебя выпустили из тюрьмы раньше срока
-chat.term.permanent=навсегда
-chat.term.minutes=мин
-chat.cmd.unmute.use=§r §7CMD §8» §7Использование: §e!unmute§7 <игрок>
-chat.cmd.unmute.done=§r §7CMD §8» §7С игрока §f%1$s§r§7 снят запрет на чат
-chat.cmd.unmute.received=§r §cСервер §8» §7Тебе снова можно писать в чат
-chat.cmd.mute.expired=§r §cСервер §8» §7Время мута истекло — тебе снова можно писать в чат
-chat.cmd.unmute.error.not_muted=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 не в муте
-chat.cmd.warn.use=§r §7CMD §8» §7Использование: §e!warn§7 <игрок> <причина>
-chat.cmd.warn=§r §cСервер §8» §7§f%1$s§r§7 получил(а) предупреждение §e%2$s/3§7. Причина: §e%3$s
-chat.cmd.unwarn.use=§r §7CMD §8» §7Использование: §e!unwarn§7 <игрок> [число/all]
-chat.cmd.unwarn.done=§r §7CMD §8» §7С игрока §f%1$s§r§7 снято предупреждений: §e%2$s§7, осталось §e%3$s§7/3
-chat.cmd.unwarn.received=§r §7CMD §8» §7С тебя снято предупреждений: §e%1$s§7, осталось §e%2$s§7/3
-chat.cmd.unwarn.error.none=§r⩕ §l§cERROR!§r §8» §7У игрока §f%1$s§r§7 нет предупреждений
-chat.cmd.ban.use=§r §7CMD §8» §7Использование: §e!ban§7 <игрок> [срок: 2h, 7d или permanent] [причина]
-chat.cmd.ban.done=§r §cСервер §8» §7§f%1$s§r§7 забанен(а): §e%2$s§7. Причина: §e%3$s
-chat.cmd.ban.offline=§r §7CMD §8» §7Игрока §f%1$s§r§7 нет в сети: бан записан по нику (§e%2$s§7)
-chat.cmd.ban.error.full=§r⩕ §l§cERROR!§r §8» §7Список банов заполнен — сними старые баны (§e!banlist§7, §e!unban§7)
-chat.cmd.unban.use=§r §7CMD §8» §7Использование: §e!unban§7 <игрок/номер из !banlist>
-chat.cmd.unban.done=§r §7CMD §8» §7Бан снят: §f%1$s
-chat.cmd.banlist.header=§8------ §cБаны §8------
-chat.cmd.banlist.empty=§7Банов нет
-chat.cmd.banlist.by_nick=(по нику)
-chat.cmd.freeze.use=§r §7CMD §8» §7Использование: §e!freeze§7 <игрок>
-chat.cmd.freeze.error.already=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 уже заморожен — разморозить: §e!unfreeze
-chat.cmd.unfreeze.use=§r §7CMD §8» §7Использование: §e!unfreeze§7 <игрок>
-chat.cmd.unfreeze.error.not_frozen=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 не заморожен
-chat.cmd.freeze.on=§r §7CMD §8» §7Игрок §f%1$s§r§7 заморожен
-chat.cmd.freeze.off=§r §7CMD §8» §7Игрок §f%1$s§r§7 разморожен
-chat.cmd.freeze.received.on=§r §cСервер §8» §7Тебя заморозил модератор — подожди его решения
-chat.cmd.freeze.received.off=§r §cСервер §8» §7Ты разморожен(а)
-chat.cmd.freeze.active=§r⩕ §l§cERROR!§r §8» §7Ты заморожен(а): двигаться, меню, меню администратора и §e!warp§7 недоступны
-chat.cmd.tp.use=§r §7CMD §8» §7Использование: §e!tp§7 <игрок> или §e!tp§7 <x> <y> <z> (можно ~ — относительно себя)
-chat.cmd.tphere.use=§r §7CMD §8» §7Использование: §e!tphere§7 <игрок>
-chat.cmd.tp.to=§r §7CMD §8» §7Ты телепортирован(а) к игроку §f%1$s
-chat.cmd.tp.coords=§r §7CMD §8» §7Ты телепортирован(а) в точку §e%1$s
-chat.cmd.timeset.done=§r §7CMD §8» §7Время изменено на §e%1$s
-chat.cmd.prefix.set=§r §7CMD §8» §7Префикс %1$s§r§7 выдан игроку §f%2$s
-chat.cmd.prefix.take=§r §7CMD §8» §7Префикс %1$s§r§7 снят у игрока §f%2$s
-chat.cmd.prefix.list=§r §7CMD §8» §7Префиксы игрока §f%1$s§r§7: %2$s
-chat.cmd.prefix.clear=§r §7CMD §8» §7Все префиксы сняты у игрока §f%1$s
-chat.cmd.tag.add=§r §7CMD §8» §7Тег §e%1$s§7 выдан игроку §f%2$s
-chat.cmd.tag.remove=§r §7CMD §8» §7Тег §e%1$s§7 снят у игрока §f%2$s
-chat.cmd.tag.list=§r §7CMD §8» §7Теги игрока §f%1$s§r§7: §e%2$s
-chat.cmd.scoreboard.add=§r §7CMD §8» §7Игроку §f%1$s§r§7 начислено §e%3$s§7 в §e%2$s§7 — теперь §e%4$s
-chat.cmd.scoreboard.remove=§r §7CMD §8» §7У игрока §f%1$s§r§7 списано §e%3$s§7 из §e%2$s§7 — теперь §e%4$s
-chat.cmd.scoreboard.set=§r §7CMD §8» §7Игроку §f%1$s§r§7 в §e%2$s§7 установлено §e%4$s
-chat.cmd.scoreboard.get=§r §7CMD §8» §7У игрока §f%1$s§r§7 в §e%2$s§7: §e%3$s
-chat.cmd.color.use=§r §7CMD §8» §7Использование: §e!color§7 <игрок> <name/text> <цвет/reset> — цвет словом (aqua, gold…) или кодом (b, 6…)
-chat.cmd.color.done.name=§r §7CMD §8» §7Ник игрока §f%1$s§r§7 теперь %2$s §7%3$s
-chat.cmd.color.done.text=§r §7CMD §8» §7Текст сообщений игрока §f%1$s§r§7 теперь %2$s §7%3$s
-chat.cmd.color.reset.name=§r §7CMD §8» §7Цвет ника игрока §f%1$s§r§7 снова как у роли
-chat.cmd.color.reset.text=§r §7CMD §8» §7Цвет текста сообщений игрока §f%1$s§r§7 снова белый
-chat.cmd.color.error.color=§r⩕ §l§cERROR!§r §8» §7Нет цвета §e%1$s§7 — подходят black, dark_blue, dark_green, dark_aqua, dark_red, dark_purple, gold, gray, dark_gray, blue, green, aqua, red, light_purple, yellow, white, minecoin_gold или коды 0–9, a–g
-chat.cmd.color.error.bot=§r⩕ §l§cERROR!§r §8» §7Цвет бота не меняется
-color.minecoin_gold=Золото монет
-chat.cmd.scoreboard.error.protected=§r⩕ §l§cERROR!§r §8» §7Табло §e%1$s§7 служебное — менять его может только владелец
-chat.cmd.scoreboard.objectives=§r §7CMD §8» §7Табло мира:
-chat.cmd.scoreboard.list=§r §7CMD §8» §7Счета игрока §f%1$s§r§7:
-chat.cmd.scoreboard.reset=§r §7CMD §8» §7У игрока §f%1$s§r§7 сброшен счёт §e%2$s
-chat.cmd.scoreboard.reset.all=§r §7CMD §8» §7У игрока §f%1$s§r§7 сброшены все счета
-chat.cmd.tp.done=§r §7CMD §8» §7Игрок §f%1$s§r§7 телепортирован к тебе
-chat.cmd.wipe.confirm=§r §7CMD §8» §7§cЭто сотрёт прогресс ВСЕХ игроков.§7 Чтобы подтвердить, напиши §e!wipe confirm§7 в течение 30 секунд
-chat.cmd.wipe.summary=§r §7CMD §8» §7Сбросится: уровень, опыт, монеты, VIP-коины, ребитхи, зачарования, промокоды, бусты, достижения и косметика. Останутся: роли, пароли, баны, настройки. Игроков: §e%1$s§7 (в сети §e%2$s§7, остальных сбросит при входе)
-chat.cmd.resetoffline.summary=§r §7CMD §8» §7Игрокам §cне в сети§7 сбросится всё: теги (в том числе роль и пароль — придётся регистрироваться заново) и все счета. Игроки в сети §e(%2$s)§7 не затрагиваются. Не в сети: §e%1$s
-chat.cmd.resetoffline.confirm=§r §7CMD §8» §7Чтобы подтвердить, напиши §e!resetoffline confirm§7 в течение 30 секунд
-chat.cmd.resetoffline.done=§r §7CMD §8» §7Готово: счета игроков не в сети сброшены, теги снимутся при их входе
-chat.cmd.balance=§r §2Банк §8» §7Монет на балансе: §e%1$s §f
-chat.cmd.balance.vip=§r §2Банк §8» §7VIP-монет: §e%1$s
-chat.cmd.pay.use=§r §7CMD §8» §7Использование: §e!pay§7 <игрок> <сумма>
-chat.cmd.top.use=§r §7CMD §8» §7Использование: §e!top§7 <money/lvl/rebirth/vip_coins/kd/pvp/spleef> — топ-5 игроков в сети
-chat.cmd.top.header.money=§8-----§f Топ по монетам (в сети) §8-----§f
-chat.cmd.top.header.lvl=§8-----§f Топ по уровню (в сети) §8-----§f
-chat.cmd.top.header.rebirth=§8-----§f Топ по ребитхам (в сети) §8-----§f
-chat.cmd.top.header.vip_coins=§8-----§f Топ по VIP-коинам (в сети) §8-----§f
-chat.cmd.top.header.kd=§8-----§f Топ по K/D — убийства/смерти (в сети) §8-----§f
-chat.cmd.top.header.pvp=§8-----§f Топ по победам в «Последнем выжившем» (в сети) §8-----§f
-chat.cmd.top.header.spleef=§8-----§f Топ по победам в сплифе (в сети) §8-----§f
-chat.cmd.top.kd_value=§e%1$s§7/§e%2$s §8(%3$s)
-chat.cmd.top.line=§e%1$s.§r §f%2$s§r§8 — §e%3$s
-chat.cmd.stats.header=§8-----§f Статистика %1$s§r §8-----§f
-chat.ach.task=§r §2 Достижения §8» §7§f%1$s§r§7 получил(а) достижение %2$s
-chat.ach.challenge=§r §5 Испытания §8» §7§f%1$s§r§7 выполнил(а) испытание %2$s
-chat.game.joined=§r §6 Мини-игры §8» §7§f%1$s§r§7 в игре %2$s (§e%3$s/%4$s§7)
-chat.game.waiting=§r §6 Мини-игры §8» §7Ждём ещё игроков: §e%1$s
-chat.game.countdown=§r §6 Мини-игры §8» §7%1$s начнётся через §e%2$s§7 с
-chat.game.countdown_stopped=§r §6 Мини-игры §8» §7Не хватает игроков — отсчёт %1$s остановлен
-chat.game.started=§r §6 Мини-игры §8» §7%1$s началась! Игроков: §e%2$s
-chat.game.out=§r §6 Мини-игры §8» §7Ты выбыл(а) из игры %1$s
-chat.game.left=§r §6 Мини-игры §8» §7Ты вышел(ла) из игры %1$s
-chat.game.out_other=§r §6 Мини-игры §8» §7§f%1$s§r§7 выбыл(а). Осталось: §e%2$s
-chat.game.winner=§r §6 Мини-игры §8» §7§f%1$s§r§7 победил(а) в игре %2$s!
-chat.game.reward=§r §6 Мини-игры §8» §7Награда: %1$s
-chat.game.draw=§r §6 Мини-игры §8» §7%1$s закончилась без победителя
-chat.game.stopped=§r §6 Мини-игры §8» §7%1$s остановлена администратором
-chat.game.error.teleport=§r⩕ §l§cERROR!§r §8» §7Пока идёт %1$s§r§7, телепорт недоступен — дождись конца игры
-chat.game.error.teleport_other=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 сейчас в игре %2$s§r§7 — телепортировать его нельзя до её конца
-chat.pvp.crystal_arena_only=§r⩕ §l§cERROR!§r §8» §7Портативный кристалл Энда можно бросать только на PvP-арене
-chat.game.spectate=§r §6 Мини-игры §8» §7Ты выбыл(а) — смотри %1$s§r§7 с крыши арены. Когда игра закончится, вернёшься в лобби
-chat.game.error.already=§r⩕ §l§cERROR!§r §8» §7Ты уже в игре %1$s. Выйти — §e!game leave
-chat.game.error.running=§r⩕ §l§cERROR!§r §8» §7%1$s уже идёт — дождись следующей
-chat.game.error.full=§r⩕ §l§cERROR!§r §8» §7В игре %1$s нет мест
-chat.game.error.not_in_game=§r⩕ §l§cERROR!§r §8» §7Ты не в мини-игре
-chat.cmd.game.header=§8-----§f Мини-игры §8-----§f
-chat.cmd.game.line=§e%1$s§8 — §f%2$s§8 · §7%3$s §8(%4$s/%5$s)
-chat.cmd.game.use=§r §7CMD §8» §7Использование: §e!game§7 [join <игра> / leave]; администратор: §e!game§7 start/stop <игра>
-chat.cmd.game.error.start=§r⩕ §l§cERROR!§r §8» §7Нельзя начать: игра уже идёт или в ней никого нет
-chat.cmd.game.error.empty=§r⩕ §l§cERROR!§r §8» §7В этой игре никого нет
-chat.cps.alert=§r §cAnti-Cheat §8» §7§f%1$s§r§7: §c%2$s CPS§7 %3$s с подряд (предел §e%4$s§7) — возможен автокликер
-hud.cps=§7CPS: %1$s §8• §f%2$s §7м/с
-hud.cps.hp=§7CPS: %1$s §8• §f%2$s §7м/с §8• §7HP: %3$s
-hud.tir.hit=§6 §a+%1$s  §8• §7меткость §f%2$s §8• §f%3$s §7бл.
-hud.tir.close=§cБлиже %1$s блоков награды нет — отойди дальше
-chat.tir.enter=§r §6 Тир §8» §7Кирка убрана на время стрельбы и вернётся, когда выйдешь. Стреляй из своего лука по мишеням: чем ближе к центру и дальше от мишени — тем больше монет.
-chat.cmd.cps.use=§r §7CMD §8» §7Использование: §e!cps§7 <игрок>
-chat.cmd.cps.info=§r §7CMD §8» §7CPS игрока §f%1$s§r§7: сейчас §e%2$s§7, максимум за 10 с — §e%3$s§7 (предел §e%4$s§7)
-chat.cmd.ac.use=§r §7CMD §8» §7Использование: §e!ac§7 [игрок] · §e!ac reset§7 <игрок> · §e!ac mode§7 <alerts/rollback/kick>
-chat.cmd.ac.mode_use=§r §7CMD §8» §7Использование: §e!ac mode§7 <alerts/rollback/kick>
-chat.cmd.ac.mode_set=§r §7CMD §8» §7Режим античита: %1$s
-chat.cmd.ac.reset=§r §7CMD §8» §7Очки нарушений §f%1$s§r§7 сброшены
-chat.cmd.ac.header=§7Античит, режим: %1$s
-chat.cmd.ac.flagged=§f%1$s§r§7 — §c%2$s§7 VL
-chat.cmd.ac.none=§7Нарушений нет
-chat.cmd.ac.player=§7Очки нарушений §f%1$s§r§7:
-chat.cmd.ac.line=§7%1$s: §c%2$s§7 (порог §e%3$s§7)
-chat.cmd.achievement.use=§r §7CMD §8» §7Использование: §e!achievement§7 <игрок> <list/grant/revoke> [id]
-chat.cmd.achievement.list=§8-----§f Достижения %1$s§r §8(%2$s/%3$s) -----§f
-chat.cmd.achievement.granted=§r §7CMD §8» §7Достижение §e%2$s§7 выдано игроку §f%1$s§r§7 (с наградой)
-chat.cmd.achievement.revoked=§r §7CMD §8» §7Достижение §e%2$s§7 снято у игрока §f%1$s§r§7. Если условие выполнено, через секунду оно выдастся снова — с наградой
-chat.cmd.achievement.error.has=§r⩕ §l§cERROR!§r §8» §7У игрока §f%1$s§r§7 уже есть §e%2$s
-chat.cmd.achievement.error.missing=§r⩕ §l§cERROR!§r §8» §7У игрока §f%1$s§r§7 нет §e%2$s
-chat.cmd.debug.header=§8-----§f Отладка: %1$s§r §8-----§f
-chat.cmd.debug.pos=§7Позиция: §f%1$s §8(%2$s)
-chat.cmd.debug.scores=§7Счета: %1$s
-chat.cmd.debug.tags=§7Теги (§f%1$s§7):
-chat.cmd.debug.other=прочие
-chat.cmd.reload.done=§r §7CMD §8» §aВсе скрипты загружены
-chat.cmd.stats.lvl=§7Уровень: §e%1$s §f
-chat.cmd.stats.vip=§aVIP §8• §f%1$s
-chat.cmd.stats.xp=§7Опыт: §e%1$s§7/§e%2$s §f
-chat.cmd.stats.xp.max=§7Опыт: §e%1$s §7(макс. уровень) §f
-chat.cmd.stats.money=§7Монеты: §e%1$s §f
-chat.cmd.stats.vip_coins=§7VIP-коины: §e%1$s §r
-chat.cmd.stats.rebirth=§7Ребитх: §e%1$s §f
-chat.cmd.stats.role=§7Роль: %1$s
-chat.cmd.stats.warns=§7Предупреждения: §e%1$s§7/3
-chat.cmd.online.header=§8-----§f Игроки в сети: %1$s §8-----§f
-chat.cmd.online.line=§f%1$s§r§8 - %2$s§r§8 - §e%3$s §r
-chat.cmd.report.use=§r §7CMD §8» §7Использование: §e!report§7 <игрок> <причина>
-chat.cmd.report.sent=§r §7CMD §8» §7Жалоба отправлена персоналу
-chat.cmd.report.staff=§r §cСервер §8» §7Жалоба от §f%1$s§r§7 на §f%2$s§r§7: §e%3$s
-chat.cmd.report.error.cooldown=§r⩕ §l§cERROR!§r §8» §7Жалобу можно отправлять не чаще раза в минуту
-chat.cmd.report.error.no_staff=§r⩕ §l§cERROR!§r §8» §7Сейчас в сети нет персонала — жалоба не отправлена
-chat.cmd.role.use=§r §7CMD §8» §7Использование: §e!role§7 <игрок> <player/helper/moder/admin>
-chat.cmd.role.done=§r §7CMD §8» §7Игроку §f%1$s§r§7 назначена роль %2$s
-chat.admin.vip.given=§r §7CMD §8» §7Игроку §f%1$s§r§7 выдан §eVIP
-chat.admin.vip.taken=§r §7CMD §8» §7У игрока §f%1$s§r§7 снят §eVIP
-chat.cmd.role.received=§r §cСервер §8» §7Тебе назначена роль %1$s
-chat.cmd.role.error.owner=§r⩕ §l§cERROR!§r §8» §7Роль владельца командой не меняется
-chat.cmd.role.error.bot=§r⩕ §l§cERROR!§r §8» §7Боту роль не выдаётся: у него всегда префикс «Бот»
-chat.cmd.resetpass.use=§r §7CMD §8» §7Использование: §e!resetpass§7 <игрок> — только игроку в сети
-chat.cmd.resetpass.error.offline=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 не в сети. Пароль сбрасывается только игроку в сети — иначе аккаунт сможет занять кто угодно
-chat.cmd.roles.header=§8-----§f Роли игроков §8-----§f
-chat.cmd.roles.line=§f%1$s§r§8 — %2$s
-role.player=§7Игрок
-role.helper=§3Хелпер
-role.moder=§9Модератор
-role.admin=§cАдминистратор
-role.owner=§4Владелец
-role.tag.owner=§4Владелец
-role.tag.admin=§cАдмин
-role.tag.helper=§3Хелпер
-role.tag.moder=§9Модератор
-role.tag.bot=§7Бот
-
-## --- СКОРБОРД ---
-scoreboards.map=§l[] Магазин за руду§r
-hud.profile=§l[] §7Профиль§f: §r
-hud.money=§l[] §eБаланс§f: 
-hud.vip_coins=§l[] §gVIP-монеты§f: 
-hud.xp=[] §aОпыт§f: 
-hud.lvl=[] §2Уровень§f: 
-hud.lvl.max=§aМАКС.§f
-hud.rebirth=[] §dРебитх§f: 
-hud.online=[] §6Онлайн§f: 
-scoreboards.x2boost=§r §l§ax2 буст
-scoreboards.x4boost=§r §l§bx4 буст
-
-## --- ОШИБКИ ЧАТА ---
-chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Сообщение слишком длинное (больше §e200§7 символов)
-chat.error.spam=§r⩕ §l§cERROR!§r §8» §7Не спамь в чате!
