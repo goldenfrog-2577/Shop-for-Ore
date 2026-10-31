@@ -6,7 +6,7 @@
 // (сразу после ключа не ставим ни скобок, ни §-кодов).
 
 import { world } from '@minecraft/server';
-import { isJailed, tellJailed } from '../system/jail.js';
+import { isJailed, tellJailed, jailMinutesLeft } from '../system/jail.js';
 import { isPending, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS } from '../DataBase.js';
 import { showMenu, showModal, modal, backButton, confirm, wipeConfirm, WARN_TITLE } from './forms.js';
 import { runChatCommand, setMoney } from '../chat/commands.js';
@@ -271,12 +271,16 @@ function playerActions(player, target) {
 			{ text: target.hasTag('state:frozen') ? '%admin.players.button.unfreeze' : '%admin.players.button.freeze', icon: 'textures/ui/freeze_heart', run: cmd(target.hasTag('state:frozen') ? 'unfreeze' : 'freeze') },
 			muted
 				? { text: '%admin.players.button.unmute', icon: 'textures/ui/mute_off', run: cmd('unmute') }
-				: { text: '%admin.players.button.mute', icon: 'textures/ui/mute_on', run: () => playerMute(player, target) },
+				: { text: '%admin.players.button.mute', icon: 'textures/ui/mute_on', run: () => playerTerm(player, target, 'mute', '%admin.players.mute.title', TERMS_SHORT) },
+			// Тюрьма (!jail / !unjail): срок списком и причина
+			isJailed(target)
+				? { text: '%admin.players.button.unjail', icon: 'textures/blocks/iron_bars', run: cmd('unjail') }
+				: { text: '%admin.players.button.jail', icon: 'textures/blocks/iron_bars', run: () => playerTerm(player, target, 'jail', '%admin.players.jail.title', TERMS_SHORT) },
 			{ text: '%admin.players.button.warn', icon: 'textures/ui/WarningGlyph', run: () => playerReason(player, target, 'warn', '%admin.players.warn.title', '%admin.players.reason') },
 			// Снять одно предупреждение (если есть)
 			...(getWarns(target) > 0 ? [{ text: '%admin.players.button.unwarn', icon: 'textures/ui/check', run: cmd('unwarn') }] : []),
 			{ text: '%admin.players.button.kick', icon: 'textures/ui/cancel', run: () => playerReason(player, target, 'kick', '%admin.players.kick.title', '%admin.players.reason_optional') },
-			{ text: '%admin.players.button.ban', icon: 'textures/ui/ErrorGlyph', run: () => playerReason(player, target, 'ban', '%admin.players.ban.title', '%admin.players.reason_optional') }
+			{ text: '%admin.players.button.ban', icon: 'textures/ui/ErrorGlyph', run: () => playerTerm(player, target, 'ban', '%admin.players.ban.title', TERMS_LONG) }
 		);
 		// Роль меняет только владелец, и не самому себе
 		if (hasRole(player, 'owner') && !target.hasTag('role:owner') && !target.hasTag('role:bot')) {
@@ -291,7 +295,9 @@ function playerActions(player, target) {
 		`%admin.players.body.role %role.${getRole(target)}`,
 		`%admin.players.body.lvl ${getScore(target, 'lvl')}`,
 		`%admin.players.body.money ${getScore(target, 'money')} ${COIN_GLYPH}`,
-		`%admin.players.body.warns ${getWarns(target)}/3`
+		`%admin.players.body.warns ${getWarns(target)}/3`,
+		// В тюрьме — сколько осталось
+		...(isJailed(target) ? [`%admin.players.body.jail ${jailMinutesLeft(target) === Infinity ? '%chat.term.permanent' : `${jailMinutesLeft(target)} %admin.common.min`}`] : [])
 	].join('\n');
 	showMenu(player, '%admin.players.title', body, items, () => playersMenu(player));
 }
@@ -332,15 +338,19 @@ function playerMoney(player, target) {
 	}, () => playerActions(player, target));
 }
 
-// Мут: длительность из списка (команда принимает 1–1440 минут)
-const MUTE_MINUTES = [5, 15, 30, 60, 180, 720, 1440, 'permanent'];
-function playerMute(player, target) {
-	const form = modal('%admin.players.mute.title')
-		.dropdown('%admin.players.mute.minutes', MUTE_MINUTES.map(m => m === 'permanent' ? '%chat.term.permanent' : `${m} %admin.common.min`), 0)
+// Мут, тюрьма, бан: срок из списка (как у команд: минуты, 'permanent') и причина по желанию
+const TERMS_SHORT = [5, 15, 30, 60, 180, 720, 1440, 'permanent'];
+const TERMS_LONG = ['permanent', 60, 1440, 4320, 10080, 43200];
+/** Подпись срока в списке: минуты, часы, дни или «навсегда». */
+export const termLabel = (m) => m === 'permanent' ? '%chat.term.permanent'
+	: m % 1440 === 0 ? `${m / 1440} %admin.common.days` : m % 60 === 0 && m >= 60 ? `${m / 60} %admin.common.hours` : `${m} %admin.common.min`;
+function playerTerm(player, target, command, title, terms) {
+	const form = modal(title)
+		.dropdown('%admin.players.term', terms.map(termLabel), 0)
 		.textField('%admin.players.reason_optional', '%admin.players.reason_placeholder');
 	showModal(player, form, (values) => {
 		const reason = String(values[1] ?? '').trim();
-		runChatCommand(player, 'mute', [target.name, String(MUTE_MINUTES[values[0]]), ...(reason ? [reason] : [])]);
+		runChatCommand(player, command, [target.name, String(terms[values[0]]), ...(reason ? [reason] : [])]);
 	}, () => playerActions(player, target));
 }
 
