@@ -665,7 +665,7 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case 'prefix': {
-			// Префиксы в чате (теги rank:). Уровень игрока тоже хранится тегом rank:§rN — его не показываем и не трогаем
+			// Префиксы в чате (теги rank:). Уровень игрока тоже хранится тегом rank:§rN + значок уровня — его не показываем и не трогаем
 			const prefixPlayer = args[0];
 			const prefixAction = (args[1] || '').toLowerCase();
 			const prefixName = args.slice(2).join(' ');
@@ -675,7 +675,7 @@ export function runChatCommand(player, command, args) {
 					tell(player, 'chat.cmd.error.offline', prefixPlayer);
 					break;
 				}
-				const prefixes = target.getTags().filter(t => t.startsWith('rank:') && !/^rank:§r\d+$/.test(t));
+				const prefixes = target.getTags().filter(t => t.startsWith('rank:') && !/^rank:§r\d+\ue153?$/.test(t));
 				if (prefixAction === 'list') {
 					tell(player, 'chat.cmd.prefix.list', target.name, prefixes.length ? prefixes.map(t => t.slice(5)).join('§r§7, ') : '—');
 				} else {
