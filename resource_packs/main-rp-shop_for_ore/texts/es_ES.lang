@@ -48,6 +48,42 @@ item.server:admin_stick=§cVara de admin§r
 item.server:portable_ender_crystal.name=§eCristal del End portátil
 item.spawn_egg.entity.server:floating_text.name=Huevo de holograma
 
+## --- SISTEMA Y UI ---
+accessibility.chat.tts.autocomplete=Autocompletar
+accessibility.chat.tts.autocompleteBack=Autocompletar inverso
+accessibility.chat.tts.nextMessage=Siguiente mensaje
+accessibility.chat.tts.previousMessage=Mensaje anterior
+advMode.setCommand.success=§r
+button.deleteText=Eliminar texto
+admin.kick.button=Expulsar jugador
+chat.title=Chat
+chat.title.cheats=Chat y comandos
+command_block.placeholder=Introduce el comando aquí...
+commands.scoreboard.players.offlinePlayerName=§r §cDesconectado
+death.attack.explosion=§r %1$s §r§cexplotó
+death.attack.flyIntoWall=§r %1$s §r§cse estrelló con el élytra
+death.attack.generic=§r %1$s §r§cmurió misteriosamente
+death.attack.outOfWorld=§r %1$s §r§ccayó al vacío
+death.attack.player=§r %1$s §r§cfue asesinado por  jugador§r %2$s
+death.attack.player.item=§r %1$s §r§cfue asesinado por  jugador§r %2$s §r§cusando§r %3$s
+disconnect.kicked=Fuiste expulsado del servidor
+disconnect.kicked.reason=Fuiste expulsado por:
+disconnectionScreen.disconnected=Conexión perdida, tal vez el host apagó el servidor
+disconnectionScreen.unexpectedPacket=§lFuiste expulsado por§c un admin
+entity.server:floating_text.name=Holograma
+map.position=Coordenadas: %s %s %s
+multiplayer.player.changeToPersona=§b%s §r§bcambió su personaje
+multiplayer.player.changeToSkin=§b%s §r§bcambió su skin
+multiplayer.player.joined.realms=§r§r %s §r§7se unió
+multiplayer.player.joined=§r§r %s §r§7se unió
+multiplayer.player.left.realms=§r§r %s §r§7salió
+multiplayer.player.left=§r§r %s §r§7salió
+
+## --- MENSAJES DE CONEXIÓN ---
+progressScreen.message.building=Usa el menú en la ranura 9 de tu barra para desbloquear más funciones
+progressScreen.message.locating=Antes de hacer muchas preguntas, lee los carteles en el spawn
+progressScreen.message.resourceLoading=Host Telegram: @goldenfrog_2577
+
 ## --- TRADUCCIÓN Y BOTONES DE UI ---
 admin.common.back=§8Atrás
 admin.common.min=min
@@ -1091,39 +1127,3 @@ scoreboards.x4boost=§r §l§bx4 potenciador
 ## --- ERRORES DE CHAT ---
 chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Tu mensaje es demasiado largo (más de §e200§7 caracteres)
 chat.error.spam=§r⩕ §l§cERROR!§r §8» §7¡No hagas spam en el chat!
-
-## --- MENSAJES DE CONEXIÓN ---
-progressScreen.message.building=Usa el menú en la ranura 9 de tu barra para desbloquear más funciones
-progressScreen.message.locating=Antes de hacer muchas preguntas, lee los carteles en el spawn
-progressScreen.message.resourceLoading=Host Telegram: @goldenfrog_2577
-
-## --- SISTEMA Y UI ---
-accessibility.chat.tts.autocomplete=Autocompletar
-accessibility.chat.tts.autocompleteBack=Autocompletar inverso
-accessibility.chat.tts.nextMessage=Siguiente mensaje
-accessibility.chat.tts.previousMessage=Mensaje anterior
-advMode.setCommand.success=§r
-button.deleteText=Eliminar texto
-admin.kick.button=Expulsar jugador
-chat.title=Chat
-chat.title.cheats=Chat y comandos
-command_block.placeholder=Introduce el comando aquí...
-commands.scoreboard.players.offlinePlayerName=§r §cDesconectado
-death.attack.explosion=§r %1$s §r§cexplotó
-death.attack.flyIntoWall=§r %1$s §r§cse estrelló con el élytra
-death.attack.generic=§r %1$s §r§cmurió misteriosamente
-death.attack.outOfWorld=§r %1$s §r§ccayó al vacío
-death.attack.player=§r %1$s §r§cfue asesinado por  jugador§r %2$s
-death.attack.player.item=§r %1$s §r§cfue asesinado por  jugador§r %2$s §r§cusando§r %3$s
-disconnect.kicked=Fuiste expulsado del servidor
-disconnect.kicked.reason=Fuiste expulsado por:
-disconnectionScreen.disconnected=Conexión perdida, tal vez el host apagó el servidor
-disconnectionScreen.unexpectedPacket=§lFuiste expulsado por§c un admin
-entity.server:floating_text.name=Holograma
-map.position=Coordenadas: %s %s %s
-multiplayer.player.changeToPersona=§b%s §r§bcambió su personaje
-multiplayer.player.changeToSkin=§b%s §r§bcambió su skin
-multiplayer.player.joined.realms=§r§r %s §r§7se unió
-multiplayer.player.joined=§r§r %s §r§7se unió
-multiplayer.player.left.realms=§r§r %s §r§7salió
-multiplayer.player.left=§r§r %s §r§7salió

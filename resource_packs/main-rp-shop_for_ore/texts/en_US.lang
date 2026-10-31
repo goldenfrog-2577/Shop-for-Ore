@@ -48,6 +48,42 @@ item.server:admin_stick=§cAdmin Stick§r
 item.server:portable_ender_crystal.name=§ePortable End Crystal
 item.spawn_egg.entity.server:floating_text.name=Hologram Spawn Egg
 
+## --- SYSTEM & UI ---
+accessibility.chat.tts.autocomplete=Autocomplete
+accessibility.chat.tts.autocompleteBack=Reverse Autocomplete
+accessibility.chat.tts.nextMessage=Next Message
+accessibility.chat.tts.previousMessage=Previous Message
+advMode.setCommand.success=§r
+button.deleteText=Delete Text
+admin.kick.button=Kick Player
+chat.title=Chat
+chat.title.cheats=Chat & Commands
+command_block.placeholder=Enter command here...
+commands.scoreboard.players.offlinePlayerName=§r §cOffline
+death.attack.explosion=§r %1$s §r§cblew up
+death.attack.flyIntoWall=§r %1$s §r§ccrashed with elytra
+death.attack.generic=§r %1$s §r§cmysteriously died
+death.attack.outOfWorld=§r %1$s §r§cfell into the void
+death.attack.player=§r %1$s §r§cwas slain by  player§r %2$s
+death.attack.player.item=§r %1$s §r§cwas slain by  player§r %2$s §r§cusing§r %3$s
+disconnect.kicked=You were kicked from the server
+disconnect.kicked.reason=You were kicked for:
+disconnectionScreen.disconnected=Connection lost, maybe the host shut down the server
+disconnectionScreen.unexpectedPacket=§lYou were kicked by§c an admin
+entity.server:floating_text.name=Hologram
+map.position=Coordinates: %s %s %s
+multiplayer.player.changeToPersona=§b%s §r§bchanged their persona
+multiplayer.player.changeToSkin=§b%s §r§bchanged their skin
+multiplayer.player.joined.realms=§r§r %s §r§7joined
+multiplayer.player.joined=§r§r %s §r§7joined
+multiplayer.player.left.realms=§r§r %s §r§7left
+multiplayer.player.left=§r§r %s §r§7left
+
+## --- GAME CONNECTION MESSAGES ---
+progressScreen.message.building=Use the menu in slot 9 of your hotbar to unlock more features
+progressScreen.message.locating=Before asking too many questions, read the signs at spawn
+progressScreen.message.resourceLoading=Host Telegram: @goldenfrog_2577
+
 ## --- TRANSLATION & UI BUTTONS ---
 admin.common.back=§8Back
 admin.common.min=min
@@ -1091,39 +1127,3 @@ scoreboards.x4boost=§r §l§bx4 Boost
 ## --- CHAT ERRORS ---
 chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Your message is too long (over §e200§7 characters)
 chat.error.spam=§r⩕ §l§cERROR!§r §8» §7Don't spam the chat!
-
-## --- GAME CONNECTION MESSAGES ---
-progressScreen.message.building=Use the menu in slot 9 of your hotbar to unlock more features
-progressScreen.message.locating=Before asking too many questions, read the signs at spawn
-progressScreen.message.resourceLoading=Host Telegram: @goldenfrog_2577
-
-## --- SYSTEM & UI ---
-accessibility.chat.tts.autocomplete=Autocomplete
-accessibility.chat.tts.autocompleteBack=Reverse Autocomplete
-accessibility.chat.tts.nextMessage=Next Message
-accessibility.chat.tts.previousMessage=Previous Message
-advMode.setCommand.success=§r
-button.deleteText=Delete Text
-admin.kick.button=Kick Player
-chat.title=Chat
-chat.title.cheats=Chat & Commands
-command_block.placeholder=Enter command here...
-commands.scoreboard.players.offlinePlayerName=§r §cOffline
-death.attack.explosion=§r %1$s §r§cblew up
-death.attack.flyIntoWall=§r %1$s §r§ccrashed with elytra
-death.attack.generic=§r %1$s §r§cmysteriously died
-death.attack.outOfWorld=§r %1$s §r§cfell into the void
-death.attack.player=§r %1$s §r§cwas slain by  player§r %2$s
-death.attack.player.item=§r %1$s §r§cwas slain by  player§r %2$s §r§cusing§r %3$s
-disconnect.kicked=You were kicked from the server
-disconnect.kicked.reason=You were kicked for:
-disconnectionScreen.disconnected=Connection lost, maybe the host shut down the server
-disconnectionScreen.unexpectedPacket=§lYou were kicked by§c an admin
-entity.server:floating_text.name=Hologram
-map.position=Coordinates: %s %s %s
-multiplayer.player.changeToPersona=§b%s §r§bchanged their persona
-multiplayer.player.changeToSkin=§b%s §r§bchanged their skin
-multiplayer.player.joined.realms=§r§r %s §r§7joined
-multiplayer.player.joined=§r§r %s §r§7joined
-multiplayer.player.left.realms=§r§r %s §r§7left
-multiplayer.player.left=§r§r %s §r§7left

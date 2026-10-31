@@ -48,6 +48,42 @@ item.server:admin_stick=§cПалочка адміна§r
 item.server:portable_ender_crystal.name=§eПортативний кристал Енду
 item.spawn_egg.entity.server:floating_text.name=Яйце призову голограми
 
+## --- СИСТЕМА ТА ІНТЕРФЕЙС ---
+accessibility.chat.tts.autocomplete=Автозаповнення
+accessibility.chat.tts.autocompleteBack=Зворотне автозаповнення
+accessibility.chat.tts.nextMessage=Наступне повідомлення
+accessibility.chat.tts.previousMessage=Попереднє повідомлення
+advMode.setCommand.success=§r
+button.deleteText=Видалити текст
+admin.kick.button=Вигнати гравця
+chat.title=Чат
+chat.title.cheats=Чат і команди
+command_block.placeholder=Введіть команду сюди...
+commands.scoreboard.players.offlinePlayerName=§r §cOffline
+death.attack.explosion=§r %1$s §r§cвибухнув
+death.attack.flyIntoWall=§r %1$s §r§cрозбився на елітрах
+death.attack.generic=§r %1$s §r§cзагадково помер
+death.attack.outOfWorld=§r %1$s §r§cпотрапив у порожнечу
+death.attack.player=§r %1$s §r§cбув убитий  гравцем§r %2$s
+death.attack.player.item=§r %1$s §r§cбув убитий  гравцем§r %2$s §r§cза допомогою§r %3$s
+disconnect.kicked=Вас було кікнуто з сервера
+disconnect.kicked.reason=Вас було кікнуто з сервера з причини:
+disconnectionScreen.disconnected=Втрачено з'єднання, можливо хост вимкнув сервер
+disconnectionScreen.unexpectedPacket=§lВас виключив§c адміністратор
+entity.server:floating_text.name=Голограма
+map.position=Координати: %s %s %s
+multiplayer.player.changeToPersona=§b%s §r§bзмінив свій скін
+multiplayer.player.changeToSkin=§b%s §r§bзмінив свій скін
+multiplayer.player.joined.realms=§r§r %s §r§7приєднався
+multiplayer.player.joined=§r§r %s §r§7приєднався
+multiplayer.player.left.realms=§r§r %s §r§7вийшов
+multiplayer.player.left=§r§r %s §r§7вийшов
+
+## --- ПОВІДОМЛЕННЯ ПРИ ПІДКЛЮЧЕННІ ---
+progressScreen.message.building=Використовуйте меню в 9 слоті інвентаря, щоб відкрити більше функцій
+progressScreen.message.locating=Перш ніж ставити багато питань, прочитайте таблички на спавні
+progressScreen.message.resourceLoading=Telegram хоста: @goldenfrog_2577
+
 ## --- ПЕРЕКЛАД ТА КНОПКИ ІНТЕРФЕЙСУ ---
 admin.common.back=§8Назад
 admin.common.min=хв
@@ -1091,39 +1127,3 @@ scoreboards.x4boost=§r §l§bx4 бустер
 ## --- ПОМИЛКИ ЧАТУ ---
 chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Повідомлення занадто довге (понад §e200§7 символів)
 chat.error.spam=§r⩕ §l§cERROR!§r §8» §7Не спам у чаті!
-
-## --- ПОВІДОМЛЕННЯ ПРИ ПІДКЛЮЧЕННІ ---
-progressScreen.message.building=Використовуйте меню в 9 слоті інвентаря, щоб відкрити більше функцій
-progressScreen.message.locating=Перш ніж ставити багато питань, прочитайте таблички на спавні
-progressScreen.message.resourceLoading=Telegram хоста: @goldenfrog_2577
-
-## --- СИСТЕМА ТА ІНТЕРФЕЙС ---
-accessibility.chat.tts.autocomplete=Автозаповнення
-accessibility.chat.tts.autocompleteBack=Зворотне автозаповнення
-accessibility.chat.tts.nextMessage=Наступне повідомлення
-accessibility.chat.tts.previousMessage=Попереднє повідомлення
-advMode.setCommand.success=§r
-button.deleteText=Видалити текст
-admin.kick.button=Вигнати гравця
-chat.title=Чат
-chat.title.cheats=Чат і команди
-command_block.placeholder=Введіть команду сюди...
-commands.scoreboard.players.offlinePlayerName=§r §cOffline
-death.attack.explosion=§r %1$s §r§cвибухнув
-death.attack.flyIntoWall=§r %1$s §r§cрозбився на елітрах
-death.attack.generic=§r %1$s §r§cзагадково помер
-death.attack.outOfWorld=§r %1$s §r§cпотрапив у порожнечу
-death.attack.player=§r %1$s §r§cбув убитий  гравцем§r %2$s
-death.attack.player.item=§r %1$s §r§cбув убитий  гравцем§r %2$s §r§cза допомогою§r %3$s
-disconnect.kicked=Вас було кікнуто з сервера
-disconnect.kicked.reason=Вас було кікнуто з сервера з причини:
-disconnectionScreen.disconnected=Втрачено з'єднання, можливо хост вимкнув сервер
-disconnectionScreen.unexpectedPacket=§lВас виключив§c адміністратор
-entity.server:floating_text.name=Голограма
-map.position=Координати: %s %s %s
-multiplayer.player.changeToPersona=§b%s §r§bзмінив свій скін
-multiplayer.player.changeToSkin=§b%s §r§bзмінив свій скін
-multiplayer.player.joined.realms=§r§r %s §r§7приєднався
-multiplayer.player.joined=§r§r %s §r§7приєднався
-multiplayer.player.left.realms=§r§r %s §r§7вийшов
-multiplayer.player.left=§r§r %s §r§7вийшов
