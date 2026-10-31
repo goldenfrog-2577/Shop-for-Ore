@@ -776,7 +776,7 @@ chat.lvlup.level.22=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e22
 chat.lvlup.level.23=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e23
 chat.lvlup.level.24=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e24
 chat.lvlup.level.25=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e25
-chat.lvlup.level.26=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e26
+chat.lvlup.level.26=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e26§7, se abre la zona §eCueva§7. En esta zona tendrás que mejorar los picos de nuevo
 chat.lvlup.level.27=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e27
 chat.lvlup.level.28=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e28
 chat.lvlup.level.29=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e29
@@ -790,7 +790,7 @@ chat.lvlup.level.36=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e36
 chat.lvlup.level.37=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e37
 chat.lvlup.level.38=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e38
 chat.lvlup.level.39=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e39
-chat.lvlup.level.40=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e40§7: ¡el nivel máximo!
+chat.lvlup.level.40=§r §aLvL UP §8» §f%1$s§r§7 alcanzó el nivel §e40§7: ¡el §aNIVEL MÁXIMO§7!
 
 ## --- PREMIOS PROMOCIONALES ---
 chat.promo.reward.1=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo §e500 

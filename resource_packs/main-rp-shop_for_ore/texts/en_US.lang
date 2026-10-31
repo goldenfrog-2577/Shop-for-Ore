@@ -776,7 +776,7 @@ chat.lvlup.level.22=§r §aLvL UP §8» §f%1$s§r§7 reached level §e22
 chat.lvlup.level.23=§r §aLvL UP §8» §f%1$s§r§7 reached level §e23
 chat.lvlup.level.24=§r §aLvL UP §8» §f%1$s§r§7 reached level §e24
 chat.lvlup.level.25=§r §aLvL UP §8» §f%1$s§r§7 reached level §e25
-chat.lvlup.level.26=§r §aLvL UP §8» §f%1$s§r§7 reached level §e26
+chat.lvlup.level.26=§r §aLvL UP §8» §f%1$s§r§7 reached level §e26§7, the §eCave§7 is open. In this location you level up your pickaxes again
 chat.lvlup.level.27=§r §aLvL UP §8» §f%1$s§r§7 reached level §e27
 chat.lvlup.level.28=§r §aLvL UP §8» §f%1$s§r§7 reached level §e28
 chat.lvlup.level.29=§r §aLvL UP §8» §f%1$s§r§7 reached level §e29
@@ -790,7 +790,7 @@ chat.lvlup.level.36=§r §aLvL UP §8» §f%1$s§r§7 reached level §e36
 chat.lvlup.level.37=§r §aLvL UP §8» §f%1$s§r§7 reached level §e37
 chat.lvlup.level.38=§r §aLvL UP §8» §f%1$s§r§7 reached level §e38
 chat.lvlup.level.39=§r §aLvL UP §8» §f%1$s§r§7 reached level §e39
-chat.lvlup.level.40=§r §aLvL UP §8» §f%1$s§r§7 reached level §e40§7 — the max level!
+chat.lvlup.level.40=§r §aLvL UP §8» §f%1$s§r§7 reached level §e40§7 — the §aMAX LEVEL§7!
 
 ## --- PROMO REWARDS ---
 chat.promo.reward.1=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e500 

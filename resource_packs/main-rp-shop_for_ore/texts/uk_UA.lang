@@ -776,7 +776,7 @@ chat.lvlup.level.22=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e22�
 chat.lvlup.level.23=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e23§7 рівня
 chat.lvlup.level.24=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e24§7 рівня
 chat.lvlup.level.25=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e25§7 рівня
-chat.lvlup.level.26=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e26§7 рівня
+chat.lvlup.level.26=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e26§7 рівня, відкрито локацію §eПечера§7. У цій локації кирки доведеться прокачувати заново
 chat.lvlup.level.27=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e27§7 рівня
 chat.lvlup.level.28=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e28§7 рівня
 chat.lvlup.level.29=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e29§7 рівня
@@ -790,7 +790,7 @@ chat.lvlup.level.36=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e36�
 chat.lvlup.level.37=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e37§7 рівня
 chat.lvlup.level.38=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e38§7 рівня
 chat.lvlup.level.39=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e39§7 рівня
-chat.lvlup.level.40=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e40§7 рівня — це максимум!
+chat.lvlup.level.40=§r §aLvL UP §8» §f%1$s§r§7 досяг(ла) §e40§7 рівня — це §aМАКСИМУМ§7!
 
 ## --- НАГОРОДИ ЗА ПРОМОКОДИ ---
 chat.promo.reward.1=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e500 
