@@ -4,7 +4,7 @@
 
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed } from '../system/jail.js';
-import { isPending, rawTranslate, tellText, tell, run, WARPS, MAX_LEVEL } from '../DataBase.js';
+import { isPending, rawTranslate, tellText, tell, run, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed } from '../DataBase.js';
 import { showMenu, showModal, modal, backButton, toggleMenu } from './forms.js';
 import { bank } from './bank_menu.js';
 import { enchantsMenu } from './enchant_shop.js';
@@ -81,7 +81,9 @@ function mapInfo(player) {
 // Значки разделов — escape-последовательностями: так их не потеряет ни один редактор
 const HOWTOPLAY = ['\ue101 ' + lines('menu.howtoplay.line', 5), '\ue152 ' + lines('menu.howtoplay.line', 9, 6), '\ue151 ' + lines('menu.howtoplay.line', 13, 10),
 	...Array.from({ length: 8 }, (_, i) => `%menu.howtoplay.line.${14 + i}`)].join('\n\n');
-const VERSION = `%menu.version.line.1\n\n§r%menu.version.label §a${BUILD}§r\n%menu.version.line.2\n\n${lines('menu.version.line', 21, 3)}`;
+// Строк «что нового» в .lang: menu.version.line.3…VERSION_LINES
+const VERSION_LINES = 25;
+const VERSION = `%menu.version.line.1\n\n§r%menu.version.label §a${BUILD}§r\n%menu.version.line.2\n\n${lines('menu.version.line', VERSION_LINES, 3)}`;
 
 /** Страница текста с одной кнопкой «Назад». */
 function textPage(player, title, body, back) {
@@ -92,13 +94,13 @@ function textPage(player, title, body, back) {
 function creators(player) {
 	const back = () => mapInfo(player);
 	showMenu(player, '%menu.creators.title', '', [
-		['§8Сreator\n§8kapycta1231484', 'textures/server_icons/steve'],
+		['§8Creator\n§8kapycta1231484', 'textures/server_icons/steve'],
 		// Соавтор карты: иконки шрифта (glyph_E1) подписаны «BY'NASTYA»
-		['§5Сo-creator\n§8NastyaXs00', 'textures/server_icons/alex'],
-		['§6Оmlet Arcade\n§8@waxenjaguar2209', 'textures/server_icons/omlet'],
-		['§9Discоrd\n§8GoldenFrog#2577', 'textures/server_icons/discord'],
-		['§3Тelegram\n§8@goldenfrog_2577', 'textures/server_icons/telegram'],
-		['§2Хbox\n§8kapycta123#1484', 'textures/server_icons/xbox']
+		['§5Co-creator\n§8NastyaXs00', 'textures/server_icons/alex'],
+		['§6Omlet Arcade\n§8@waxenjaguar2209', 'textures/server_icons/omlet'],
+		['§9Discord\n§8GoldenFrog#2577', 'textures/server_icons/discord'],
+		['§3Telegram\n§8@goldenfrog_2577', 'textures/server_icons/telegram'],
+		['§2Xbox\n§8kapycta123#1484', 'textures/server_icons/xbox']
 	].map(([text, icon]) => ({ text, icon, run: back })), back);
 }
 
@@ -191,8 +193,8 @@ function boardSetting(player, back) {
 
 // ===== Правила, промокоды, телепортации, прокачка =====
 
-// Пункты правил: menu.rules.line.1…N в .lang (нарушение • наказание и срок)
-export const RULES_COUNT = 11;
+// Пункты правил: menu.rules.line.1…RULES_COUNT в .lang (число — в DataBase.js, его же берёт !rules)
+export { RULES_COUNT };
 function rules(player) {
 	textPage(player, '%menu.rules.title', `%menu.rules.header\n\n${lines('menu.rules.line', RULES_COUNT)}\n\n%menu.rules.footer`, () => menu(player));
 }
@@ -223,11 +225,11 @@ function redeemPromo(player, code) {
 	}, () => tellText(player, '%chat.promo.error.used'));
 }
 
-// Телепортации: те же точки, что у !warp (WARPS в DataBase.js), кроме точек персонала.
+// Телепортации: те же точки, что у !warp (WARPS в DataBase.js), кроме точек персонала; VIP-остров — только VIP.
 // Телепорт — командой !warp: те же проверки (заморозка, режим боя, мини-игры) и сообщения
 function warps(player) {
 	const back = () => menu(player);
-	const list = WARPS.filter(w => w.role === 'player');
+	const list = WARPS.filter(w => w.role === 'player' && warpAllowed(player, w));
 	showMenu(player, '%menu.warps.title', '%menu.warps.body', [
 		...list.map(w => ({ text: `\ue179 %menu.warps.button.${w.id}`, run: () => runChatCommand(player, 'warp', [w.id]) })),
 		backButton(back)

@@ -4,18 +4,21 @@
 import { world, system } from '@minecraft/server';
 import { ERROR_KEYS } from './system/error_keys.js';
 
-/**
- * Получить значение очков игрока по определённому objective.
- * @param {Entity} entity - Игрок или сущность.
- * @param {string} objective - Название цели (objective) в scoreboard.
- * @returns {number} - Значение очков или 0, если не найдено/ошибка.
- */
 // VIP — тег player:vip (покупка с MAX_LEVEL уровня, functions/upgrade/upgrade_vip). До Пещеры (третьей локации) VIP был уровнем 26
 export const VIP_TAG = 'player:vip';
 export const MAX_LEVEL = 40;
 /** Игрок — VIP. */
 export const isVip = (player) => player.hasTag(VIP_TAG);
 
+// Пункты правил: menu.rules.line.1…N в .lang (нарушение • наказание и срок) — меню «Правила» и !rules
+export const RULES_COUNT = 11;
+
+/**
+ * Получить значение очков игрока по определённому objective.
+ * @param {Entity} entity - Игрок или сущность.
+ * @param {string} objective - Название цели (objective) в scoreboard.
+ * @returns {number} - Значение очков или 0, если не найдено/ошибка.
+ */
 export function getScore(entity, objective) {
 	try {
 		return world.scoreboard.getObjective(objective).getScore(entity.scoreboard);
@@ -427,7 +430,8 @@ export const emotes = {
 // --- Точки телепортации для !warp ---
 // role — с какой роли точка доступна себе; отправить другого игрока — модератор и выше
 // (и не ниже роли точки). Меню сервера → Телепортации показывает все точки роли «игрок».
-// Спавн — всегда 0 5 0; шахта — по уровню: 1–15 — основная (у спавна), 16–25 — адская, 26–40 — третья
+// Спавн — всегда 0 5 0; шахта — по уровню: 1–15 — основная (у спавна), 16–25 — адская, 26–40 — Пещера.
+// vip: true — точка только для VIP (и персонала): VIP-остров с VIP-шахтой и лавкой торговца
 export const WARPS = [
 	{ id: 'spawn', role: 'player', pos: [0, 5, 0] },
 	{ id: 'mine', role: 'player', pos: (p) => {
@@ -443,9 +447,12 @@ export const WARPS = [
 	{ id: 'tir', role: 'player', pos: [435, -45, 338] },
 	// Локация босса: пока босса нет — только персоналу
 	{ id: 'boss', role: 'admin', pos: [184, 11, 287] },
-	{ id: 'vip', role: 'admin', pos: [-60, 5, -60] },
+	{ id: 'vip', role: 'player', vip: true, pos: [-60, 5, -60] },
 	{ id: 'cmd', role: 'admin', pos: [50, 5, 50] }
 ];
+
+/** Может ли игрок пользоваться точкой: роль не ниже точки, точка VIP — только VIP и персоналу. */
+export const warpAllowed = (player, warp) => hasRole(player, warp.role) && (!warp.vip || isVip(player) || hasRole(player, 'helper'));
 
 // Список команд: описание для !help и минимальная роль (см. ROLES).
 // Порядок = порядок в !help: по ролям (игрок → владелец), внутри роли — по смыслу

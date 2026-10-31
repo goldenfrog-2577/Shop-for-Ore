@@ -7,8 +7,8 @@
 ## =============================
 
 ## --- ІНФОРМАЦІЯ ПРО ПАК ---
-pack.name=Дата-пак для карти §lShop for Ore§r
-pack.description=Містить невеликі покращення для комфортної гри. §cНе рекомендується вимикати! §fВерсiя: §7[0.3.0_20261025_resources]
+pack.name=Ресурс-пак для карти §lShop for Ore§r
+pack.description=Містить невеликі покращення для комфортної гри. §cНе рекомендується вимикати! §fВерсія: §7[0.3.0_20261025_resources]
 
 ## --- КІРКИ ---
 item.stick.name=§lКирка §a1§b рівня
@@ -170,11 +170,11 @@ menu.howtoplay.line.4=• Щоб продати руду або блоки, ст
 menu.howtoplay.line.5=§l§cПримітка:§r§7 Якщо ти вкрав руду, яку не можеш копати, ти не зможеш її продати
 menu.howtoplay.line.6=§l§7Покупка VIP
 menu.howtoplay.line.7=§r§7VIP — це привілей з перевагами у вигляді нової руди і VIP магазину
-menu.howtoplay.line.8=Вартість VIP — 125K
+menu.howtoplay.line.8=Вартість VIP — 125K (з 40 )
 menu.howtoplay.line.9=Купується у Меню »  Прокачка
 menu.howtoplay.line.10=§l§7Ребітх
 menu.howtoplay.line.11=§r§7Ребітх — це перепроходження карти з довічним ефектом поспіху
-menu.howtoplay.line.12=Відкривається ребітх після 16 
+menu.howtoplay.line.12=Відкривається ребітх після 25 
 menu.howtoplay.line.13=Прокачується у Меню »  Прокачка
 menu.howtoplay.line.14=§r§l§7 Що означають смайлики зліва збоку?
 menu.howtoplay.line.15=§r§7 — твій Нікнейм (ім'я у грі)
@@ -210,6 +210,10 @@ menu.version.line.18=• На PvP-арену більше не телепорт�
 menu.version.line.19=• Досягнення й випробування з нагородами — Меню сервера » Досягнення
 menu.version.line.20=• Міні-ігри (PvP: останній, хто вижив), вимикач музики в Налаштуваннях, перевірка CPS
 menu.version.line.21=• Вайп зі зведенням, CPS над хотбаром на арені, налаштування з поточним станом
+menu.version.line.22=• Печера — третя локація (рівні 26–40): 10 ям літерою «П», кирки знову від дерев'яної, купол
+menu.version.line.23=• VIP тепер окремий статус (з 40 рівня), ребітх — з 25 рівня; VIP-коїни ребітх не скидає
+menu.version.line.24=• Тир: стрільба з лука по мішенях за монети; лавка мандрівного торговця на VIP-острові
+menu.version.line.25=• В'язниця (!jail), скарги (!report), бан і мут на строк
 
 ## --- МЕНЮ МАГАЗИНУ ---
 menu.shop.title=§l§8Меню сервера »  Магазин
@@ -400,6 +404,7 @@ menu.bank.title=§l§8Меню сервера »  Банк
 menu.bank.amount=§7Сума, яку ти хочеш відправити:
 menu.bank.amount_placeholder=§7Введи сюди...
 chat.bank.sent=§r §2Банк §8» §7Переказ гравцю §f%1$s§r§7: §e%2$s§7
+chat.bank.error.no_players=§r⩕ §l§cERROR!§r §8» §7Зараз у мережі немає гравців, яким можна переказати монети
 chat.bank.received=§r §2Банк §8» §f%1$s§r§7 переказав(ла) тобі §e%2$s§7
 menu.bank.player=§rВибери гравця:
 menu.bank.balance=§rБаланс:
@@ -435,6 +440,7 @@ menu.warps.button.mine=§8Шахта (за рівнем)
 menu.warps.button.pvp=§8PvP-арена
 menu.warps.button.spleef=§8Сплеф
 menu.warps.button.tir=§8Тир
+menu.warps.button.vip=§8VIP-острів
 
 ## --- МЕНЮ ПРОКАЧКИ ---
 menu.upgrades.title=§l§8Меню сервера »  Прокачка
@@ -605,6 +611,8 @@ admin.players.button.unwarn=§8Зняти попередження
 admin.players.button.kick=§8Вигнати
 admin.players.button.ban=§8Забанити
 admin.players.button.role=§8Роль
+admin.players.button.vip_give=§8Видати VIP
+admin.players.button.vip_take=§8Зняти VIP
 admin.players.button.resetpass=§8Скинути пароль
 admin.players.resetpass.body=§7Пароль гравця буде стерто, і йому одразу відкриється реєстрація нового. Прогрес не постраждає. Продовжити?
 admin.players.money.title=§l§8Меню адміна » Монети
@@ -837,7 +845,7 @@ chat.vip.error.owned=§r⩕ §l§cERROR!§r §8» §7У тебе вже є §eVI
 chat.rebirth.first=§r §dРебітх §8» §f%1$s§r§7 зробив(ла) свій перший §eребітх§7!
 chat.rebirth.level=§r §dРебітх §8» §7Твій рівень ребітху: §e%1$s
 chat.vip.bought=§r §aLvL UP §8» §f%1$s§r§7 купив(ла) §eVIP§7!
-chat.vip.welcome=§r §aLvL UP §8» §7Вітаємо з §eVIP§7! Щоб потрапити на §eVIP-острів§7, відкрий §eМеню сервера
+chat.vip.welcome=§r §aLvL UP §8» §7Вітаємо з §eVIP§7! Щоб потрапити на §eVIP-острів§7, відкрий §eМеню сервера §7» §eТелепортації
 chat.vip.migrated=§r §aLvL UP §8» §7VIP тепер окремий статус, а рівні §e26–40§7 — Печера. VIP у тебе залишився, рівень — §e25§7: продовжуй у Печері!
 
 ## --- БУСТИ ---
@@ -958,6 +966,8 @@ chat.cmd.help.detail=§r §7CMD §8» §f%1$s§r§8 — §7%2$s§r§7. Дос
 chat.cmd.warp.header=§8-----§f Точки телепортації §8-----§f
 chat.cmd.warp.done=§r §cСервер §8» §7Тебе телепортовано: §e%1$s
 chat.cmd.warp.other=§r §7CMD §8» §7Гравця §f%1$s§r§7 телепортовано: §e%2$s
+chat.cmd.warp.error.vip=§r⩕ §l§cERROR!§r §8» §7Ця точка — лише для §eVIP
+chat.cmd.warp.error.vip_other=§r⩕ §l§cERROR!§r §8» §7Гравець §f%1$s§r§7 не VIP — на VIP-острів його не відправити
 chat.pvp.combat=§r⩕ §l§cERROR!§r §8» §7Ти в бою на PvP-арені: телепорт буде доступний через §e%1$s§7 с
 warp.spawn=Спавн
 warp.mine=Шахта (за рівнем)
@@ -1053,6 +1063,7 @@ chat.cmd.unban.use=§r §7CMD §8» §7Використання: §e!unban§7
 chat.cmd.unban.done=§r §7CMD §8» §7Бан знято: §f%1$s
 chat.cmd.banlist.header=§8------ §cБани §8------
 chat.cmd.banlist.empty=§7Банів немає
+chat.cmd.banlist.by_nick=(за ніком)
 chat.cmd.freeze.use=§r §7CMD §8» §7Використання: §e!freeze§7 <гравець>
 chat.cmd.freeze.error.already=§r⩕ §l§cERROR!§r §8» §7Гравець §f%1$s§r§7 уже заморожений — розморозити: §e!unfreeze
 chat.cmd.unfreeze.use=§r §7CMD §8» §7Використання: §e!unfreeze§7 <гравець>
@@ -1170,6 +1181,7 @@ chat.cmd.reload.done=§r §7CMD §8» §aСкрипти завантажен�
 chat.cmd.stats.lvl=§7Рівень: §e%1$s §f
 chat.cmd.stats.vip=§aVIP §8• §f%1$s
 chat.cmd.stats.xp=§7Досвід: §e%1$s§7/§e%2$s §f
+chat.cmd.stats.xp.max=§7Досвід: §e%1$s §7(макс. рівень) §f
 chat.cmd.stats.money=§7Монети: §e%1$s §f
 chat.cmd.stats.vip_coins=§7VIP-коїни: §e%1$s §r
 chat.cmd.stats.rebirth=§7Ребітх: §e%1$s §f
@@ -1184,6 +1196,8 @@ chat.cmd.report.error.cooldown=§r⩕ §l§cERROR!§r §8» §7Скаргу мо
 chat.cmd.report.error.no_staff=§r⩕ §l§cERROR!§r §8» §7Зараз у мережі немає персоналу — скаргу не надіслано
 chat.cmd.role.use=§r §7CMD §8» §7Використання: §e!role§7 <гравець> <player/helper/moder/admin>
 chat.cmd.role.done=§r §7CMD §8» §7Гравцю §f%1$s§r§7 призначено роль %2$s
+chat.admin.vip.given=§r §7CMD §8» §7Гравцю §f%1$s§r§7 видано §eVIP
+chat.admin.vip.taken=§r §7CMD §8» §7У гравця §f%1$s§r§7 знято §eVIP
 chat.cmd.role.received=§r §cСервер §8» §7Тобі призначено роль %1$s
 chat.cmd.role.error.owner=§r⩕ §l§cERROR!§r §8» §7Роль власника командою не змінюється
 chat.cmd.role.error.bot=§r⩕ §l§cERROR!§r §8» §7Боту роль не видається: у нього завжди префікс «Бот»

@@ -7,7 +7,7 @@
 
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed, jailMinutesLeft } from '../system/jail.js';
-import { isPending, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS } from '../DataBase.js';
+import { isPending, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS, isVip, VIP_TAG } from '../DataBase.js';
 import { showMenu, showModal, modal, backButton, confirm, wipeConfirm, WARN_TITLE } from './forms.js';
 import { runChatCommand, setMoney } from '../chat/commands.js';
 import { sendChatMessage } from '../chat/chat.js';
@@ -285,6 +285,10 @@ function playerActions(player, target) {
 		// Роль меняет только владелец, и не самому себе
 		if (hasRole(player, 'owner') && !target.hasTag('role:owner') && !target.hasTag('role:bot')) {
 			items.push({ text: '%admin.players.button.role', icon: 'textures/ui/permissions_op_crown', run: () => playerRole(player, target) });
+			// VIP — тег player:vip: выдать (например, в подарок) или снять — только владелец
+			items.push(isVip(target)
+				? { text: '%admin.players.button.vip_take', icon: 'textures/items/amethyst_shard', run: () => setVip(player, target, false) }
+				: { text: '%admin.players.button.vip_give', icon: 'textures/items/amethyst_shard', run: () => setVip(player, target, true) });
 			// Сброс забытого пароля — с подтверждением (команда !resetpass)
 			items.push({ text: '%admin.players.button.resetpass', icon: 'textures/ui/icon_lock', run: () => confirm(player, WARN_TITLE, '%admin.players.resetpass.body', () => runChatCommand(player, 'resetpass', [target.name]), () => playerActions(player, target)) });
 		}
@@ -300,6 +304,17 @@ function playerActions(player, target) {
 		...(isJailed(target) ? [`%admin.players.body.jail ${jailMinutesLeft(target) === Infinity ? '%chat.term.permanent' : `${jailMinutesLeft(target)} %admin.common.min`}`] : [])
 	].join('\n');
 	showMenu(player, '%admin.players.title', body, items, () => playersMenu(player));
+}
+
+/** Выдать или снять VIP (тег player:vip). Игрок мог выйти, пока окно было открыто. */
+function setVip(player, target, on) {
+	const online = findPlayer(target.name);
+	if (!online) return tell(player, 'chat.cmd.error.offline', target.name);
+	if (on) {
+		online.addTag(VIP_TAG);
+		tell(online, 'chat.vip.welcome');
+	} else online.removeTag(VIP_TAG);
+	tell(player, on ? 'chat.admin.vip.given' : 'chat.admin.vip.taken', online.name);
 }
 
 function playerGamemode(player, target) {

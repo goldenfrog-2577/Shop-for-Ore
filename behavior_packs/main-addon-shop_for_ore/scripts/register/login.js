@@ -1,10 +1,22 @@
 // --- UI авторизации игрока при входе ---
 // Форму вызывает register/system.js (раньше — отдельная проверка тега 'onLogin' каждый тик)
 
-import { tellText, run } from '../DataBase.js';
+import { tellText, run, tell } from '../DataBase.js';
 import { modal } from '../menu/forms.js';
 import { checkPassword } from './password.js';
 import { unlockPlayer } from './system.js';
+
+// Защита от подбора пароля: после MAX_WRONG неверных паролей подряд форма входа не показывается LOCK_MS.
+// Счётчик — по нику и в памяти: перезаход паузу не снимает, перезагрузка скриптов — снимает
+export const MAX_WRONG = 5;
+export const LOCK_MS = 60 * 1000;
+const wrong = new Map();   // ник → { count, until }
+
+/** Сколько секунд ещё нельзя вводить пароль (0 — можно). */
+export function loginLockSeconds(player, now = Date.now()) {
+	const w = wrong.get(player.name);
+	return w && w.until > now ? Math.ceil((w.until - now) / 1000) : 0;
+}
 
 /**
  * Показывает форму логина игроку.
@@ -22,13 +34,21 @@ export function LoginUI(player) {
 		// Теги меняем синхронно (addTag/removeTag), а не командой tag — иначе тег снимался
 		// с задержкой и форма открывалась повторно
 		if (password && checkPassword(player, password)) {
+			wrong.delete(player.name);
 			player.removeTag('auth:login');
 			unlockPlayer(player);
 			tellText(player, '\n%chat.account.logged_in\n ');
 			run(player, 'playsound random.levelup @s');
 		} else {
-			tellText(player, '\n%chat.account.error.wrong_password\n ');
+			const w = wrong.get(player.name) ?? { count: 0, until: 0 };
+			w.count++;
 			run(player, 'playsound note.bass @s');
+			if (w.count >= MAX_WRONG) {
+				w.count = 0;
+				w.until = Date.now() + LOCK_MS;
+				tell(player, 'chat.account.error.locked', Math.ceil(LOCK_MS / 1000));
+			} else tellText(player, '\n%chat.account.error.wrong_password\n ');
+			wrong.set(player.name, w);
 		}
 	});
 }

@@ -49,11 +49,17 @@ export function addBan({ id, name }, by, reason, minutes = Infinity, now = Date.
 	return saveBans(bans);
 }
 
-/** Разбан по нику или номеру в списке (1…). @returns {object|undefined} снятый бан */
-export function removeBan(nameOrIndex) {
+/**
+ * Разбан по нику или номеру в !banlist (1…). Номер считается среди действующих банов — как их показывает
+ * !banlist (раньше — по всему списку вместе с истёкшими, и номер мог указать на другой бан).
+ * @returns {object|undefined} снятый бан
+ */
+export function removeBan(nameOrIndex, now = Date.now()) {
 	const bans = getBans();
-	let i = /^\d+$/.test(nameOrIndex) ? Number(nameOrIndex) - 1 : -1;
-	if (i < 0 || i >= bans.length) i = bans.findIndex(b => b.names.some(n => n.toLowerCase() === nameOrIndex.toLowerCase()));
+	const active = bans.filter(b => banActive(b, now));
+	const num = /^\d+$/.test(nameOrIndex) ? Number(nameOrIndex) - 1 : -1;
+	let i = num >= 0 && num < active.length ? bans.indexOf(active[num]) : -1;
+	if (i < 0) i = bans.findIndex(b => b.names.some(n => n.toLowerCase() === nameOrIndex.toLowerCase()));
 	if (i < 0) return undefined;
 	const [removed] = bans.splice(i, 1);
 	saveBans(bans);

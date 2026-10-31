@@ -15,6 +15,6 @@ execute as @s[tag=!player:vip,scores={lvl=40..,money=125000..}] run tag @s add s
 scoreboard players remove @s[tag=sys:buy_ok] money 125000
 tag @s[tag=sys:buy_ok] add player:vip
 execute as @s[tag=sys:buy_ok] run tellraw @a {"rawtext":[{"translate":"chat.vip.bought","with":{"rawtext":[{"selector":"@s"}]}}]}
-execute as @s[tag=sys:buy_ok] positioned as @a run playsound minecraft.challenge.complete @a
+execute as @s[tag=sys:buy_ok] as @a at @s run playsound minecraft.challenge.complete @s
 execute as @s[tag=sys:buy_ok] run tellraw @s {"rawtext":[{"translate":"chat.vip.welcome"}]}
 tag @s remove sys:buy_ok

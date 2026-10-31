@@ -7,7 +7,7 @@
 ## =============================
 
 ## --- INFORMACIÓN DEL PACK ---
-pack.name=Datapack para el mapa §lShop for Ore§r
+pack.name=Paquete de recursos para el mapa §lShop for Ore§r
 pack.description=Incluye pequeñas mejoras para una experiencia más cómoda. §c¡No se recomienda desactivar! §fVersión: §7[0.3.0_20261025_resources]
 
 ## --- PICOLES ---
@@ -170,11 +170,11 @@ menu.howtoplay.line.4=• Para vender minerales o bloques, párate sobre un bloq
 menu.howtoplay.line.5=§l§cNota:§r§7 Si robaste un mineral que no puedes picar, no podrás venderlo
 menu.howtoplay.line.6=§l§7Comprar VIP
 menu.howtoplay.line.7=§r§7VIP es un privilegio con nuevos minerales y tienda VIP
-menu.howtoplay.line.8=VIP cuesta 125K
+menu.howtoplay.line.8=VIP cuesta 125K (desde 40 )
 menu.howtoplay.line.9=Se compra en Menú »  Mejoras
 menu.howtoplay.line.10=§l§7Reinicio
 menu.howtoplay.line.11=§r§7Reinicio es volver a jugar el mapa con un efecto de prisa permanente
-menu.howtoplay.line.12=El reinicio se desbloquea después de 16 
+menu.howtoplay.line.12=El reinicio se desbloquea después de 25 
 menu.howtoplay.line.13=Se mejora en Menú »  Mejoras
 menu.howtoplay.line.14=§r§l§7 ¿Qué significan los iconos a la izquierda?
 menu.howtoplay.line.15=§r§7 - tu Apodo (nombre en el juego)
@@ -210,6 +210,10 @@ menu.version.line.18=• La arena PvP ya no te teletransporta sobre las hojas de
 menu.version.line.19=• Logros y desafíos con recompensas: Menú del servidor » Logros
 menu.version.line.20=• Minijuegos (PvP: el último en pie), interruptor de música en Ajustes, control de CPS
 menu.version.line.21=• Reinicio con resumen, CPS sobre la barra rápida en la arena, ajustes con su estado actual
+menu.version.line.22=• La Cueva — la tercera zona (niveles 26–40): 10 pozos en forma de U, los picos empiezan de nuevo desde madera, una cúpula
+menu.version.line.23=• VIP ahora es un estatus aparte (desde el nivel 40), reinicio desde el nivel 25; el reinicio conserva las monedas VIP
+menu.version.line.24=• Galería de tiro: dispara con arco a las dianas por monedas; la tienda del comerciante errante en la isla VIP
+menu.version.line.25=• Cárcel (!jail), denuncias (!report), baneos y silencios temporales
 
 ## --- MENÚ TIENDA ---
 menu.shop.title=§l§8Menú del servidor »  Tienda
@@ -400,6 +404,7 @@ menu.bank.title=§l§8Menú del servidor »  Banco
 menu.bank.amount=§7Cantidad que quieres enviar:
 menu.bank.amount_placeholder=§7Escribe aquí...
 chat.bank.sent=§r §2Banco §8» §7Enviado a §f%1$s§r§7: §e%2$s§7
+chat.bank.error.no_players=§r⩕ §l§cERROR!§r §8» §7Ahora no hay jugadores conectados a los que enviar monedas
 chat.bank.received=§r §2Banco §8» §f%1$s§r§7 te envió §e%2$s§7
 menu.bank.player=§rElige un jugador:
 menu.bank.balance=§rSaldo:
@@ -435,6 +440,7 @@ menu.warps.button.mine=§8Mina (por nivel)
 menu.warps.button.pvp=§8Arena PvP
 menu.warps.button.spleef=§8Spleef
 menu.warps.button.tir=§8Galería de tiro
+menu.warps.button.vip=§8Isla VIP
 
 ## --- MENÚ MEJORAS ---
 menu.upgrades.title=§l§8Menú del servidor »  Mejoras
@@ -605,6 +611,8 @@ admin.players.button.unwarn=§8Quitar advertencia
 admin.players.button.kick=§8Expulsar
 admin.players.button.ban=§8Banear
 admin.players.button.role=§8Rol
+admin.players.button.vip_give=§8Dar VIP
+admin.players.button.vip_take=§8Quitar VIP
 admin.players.button.resetpass=§8Restablecer contraseña
 admin.players.resetpass.body=§7La contraseña del jugador se borrará y se le abrirá de inmediato el registro de una nueva. El progreso no se ve afectado. ¿Continuar?
 admin.players.money.title=§l§8Admin » Monedas
@@ -837,7 +845,7 @@ chat.vip.error.owned=§r⩕ §l§cERROR!§r §8» §7Ya tienes §eVIP
 chat.rebirth.first=§r §dReinicio §8» §7¡§f%1$s§r§7 hizo su primer §eReinicio§7!
 chat.rebirth.level=§r §dReinicio §8» §7Tu nivel de Reinicio: §e%1$s
 chat.vip.bought=§r §aLvL UP §8» §7¡§f%1$s§r§7 compró §eVIP§7!
-chat.vip.welcome=§r §aLvL UP §8» §7¡Felicidades por el §eVIP§7! Para ir a la §eisla VIP§7, abre el §eMenú del servidor
+chat.vip.welcome=§r §aLvL UP §8» §7¡Felicidades por el §eVIP§7! Para ir a la §eisla VIP§7, abre el §eMenú del servidor §7» §eTeletransportes
 chat.vip.migrated=§r §aLvL UP §8» §7El VIP ahora es un estado aparte y los niveles §e26–40§7 son la Cueva. Conservas el VIP y tu nivel es §e25§7: ¡sigue en la Cueva!
 
 ## --- POTENCIADORES ---
@@ -958,6 +966,8 @@ chat.cmd.help.detail=§r §7CMD §8» §f%1$s§r§8 — §7%2$s§r§7. Dispon
 chat.cmd.warp.header=§8-----§f Puntos de teletransporte §8-----§f
 chat.cmd.warp.done=§r §cServidor §8» §7Te has teletransportado: §e%1$s
 chat.cmd.warp.other=§r §7CMD §8» §7§f%1$s§r§7 fue teletransportado: §e%2$s
+chat.cmd.warp.error.vip=§r⩕ §l§cERROR!§r §8» §7Este punto es solo para §eVIP
+chat.cmd.warp.error.vip_other=§r⩕ §l§cERROR!§r §8» §7El jugador §f%1$s§r§7 no es VIP: no se le puede enviar a la isla VIP
 chat.pvp.combat=§r⩕ §l§cERROR!§r §8» §7Estás en combate en la arena PvP: podrás teletransportarte en §e%1$s§7 s
 warp.spawn=Spawn
 warp.mine=Mina (según nivel)
@@ -1053,6 +1063,7 @@ chat.cmd.unban.use=§r §7CMD §8» §7Uso: §e!unban§7 <jugador/número de 
 chat.cmd.unban.done=§r §7CMD §8» §7Baneo quitado: §f%1$s
 chat.cmd.banlist.header=§8------ §cBaneos §8------
 chat.cmd.banlist.empty=§7No hay baneos
+chat.cmd.banlist.by_nick=(por nick)
 chat.cmd.freeze.use=§r §7CMD §8» §7Uso: §e!freeze§7 <jugador>
 chat.cmd.freeze.error.already=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 ya está congelado — para descongelar: §e!unfreeze
 chat.cmd.unfreeze.use=§r §7CMD §8» §7Uso: §e!unfreeze§7 <jugador>
@@ -1170,6 +1181,7 @@ chat.cmd.reload.done=§r §7CMD §8» §aScripts cargados
 chat.cmd.stats.lvl=§7Nivel: §e%1$s §f
 chat.cmd.stats.vip=§aVIP §8• §f%1$s
 chat.cmd.stats.xp=§7Experiencia: §e%1$s§7/§e%2$s §f
+chat.cmd.stats.xp.max=§7Experiencia: §e%1$s §7(nivel máx.) §f
 chat.cmd.stats.money=§7Monedas: §e%1$s §f
 chat.cmd.stats.vip_coins=§7Monedas VIP: §e%1$s §r
 chat.cmd.stats.rebirth=§7Renacimiento: §e%1$s §f
@@ -1184,6 +1196,8 @@ chat.cmd.report.error.cooldown=§r⩕ §l§cERROR!§r §8» §7Puedes enviar una
 chat.cmd.report.error.no_staff=§r⩕ §l§cERROR!§r §8» §7Ahora no hay personal conectado — la denuncia no se envió
 chat.cmd.role.use=§r §7CMD §8» §7Uso: §e!role§7 <jugador> <player/helper/moder/admin>
 chat.cmd.role.done=§r §7CMD §8» §7§f%1$s§r§7 ahora tiene el rol %2$s
+chat.admin.vip.given=§r §7CMD §8» §7Al jugador §f%1$s§r§7 se le dio §eVIP
+chat.admin.vip.taken=§r §7CMD §8» §7Al jugador §f%1$s§r§7 se le quitó el §eVIP
 chat.cmd.role.received=§r §cServidor §8» §7Se te ha asignado el rol %1$s
 chat.cmd.role.error.owner=§r⩕ §l§cERROR!§r §8» §7El rol del propietario no se puede cambiar con un comando
 chat.cmd.role.error.bot=§r⩕ §l§cERROR!§r §8» §7El bot no puede recibir un rol: siempre tiene el prefijo «Bot»

@@ -2,7 +2,7 @@
 // Список команд и роли — commandsList в DataBase.js; runChatCommand вызывают и чат, и меню администратора.
 
 import { world } from '@minecraft/server';
-import { CHAT_COLORS, setChatColor, colorAllowed, impersonatedRole, commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS, setIssuer, clearIssuer, canLift, tell, parseTerm, termText, isVip } from '../DataBase.js';
+import { CHAT_COLORS, setChatColor, colorAllowed, impersonatedRole, commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS, setIssuer, clearIssuer, canLift, tell, parseTerm, termText, isVip, warpAllowed, RULES_COUNT } from '../DataBase.js';
 import { getBot, getBotName, spawnBot } from '../system/spawnbot.js';
 import { teleportToArena, combatSecondsLeft } from '../system/pvp.js';
 import { startMythic } from '../system/mythic.js';
@@ -60,15 +60,6 @@ const TOP = {
 	spleef: score('stat_win_spleef')
 };
 
-// Сколько строк правил в .lang (menu.rules.line.1…N) — те же, что в меню «Правила»
-const RULES_LINES = 6;
-
-/**
- * Отправить игроку несколько строк одним tellraw: заголовок, строки, разделитель.
- * @param {Player} player
- * @param {object} header — элемент rawtext заголовка
- * @param {object[]} lines — элементы rawtext строк
- */
 // Сколько эмодзи в строке у !emotes (на телефоне 4 уже переносятся)
 const EMOTES_PER_ROW = 3;
 
@@ -140,6 +131,12 @@ export function debugLines(target) {
 	return lines;
 }
 
+/**
+ * Отправить игроку несколько строк одним tellraw: заголовок, строки, разделитель.
+ * @param {Player} player
+ * @param {object} header — элемент rawtext заголовка
+ * @param {object[]} lines — элементы rawtext строк
+ */
 function tellList(player, header, lines) {
 	const rawtext = [header];
 	for (const line of lines) rawtext.push({ text: '\n' }, line);
@@ -326,7 +323,8 @@ export function runChatCommand(player, command, args) {
 		case 'warp': {
 			// !warp — список точек; !warp <точка> — себя; !warp <точка> <ник> — другого (модератор и выше).
 			// Заменяет !spawn: спавн — это !warp spawn
-			const available = WARPS.filter(w => hasRole(player, w.role));
+			// Точки своей роли; VIP-остров — только VIP и персоналу (warpAllowed)
+			const available = WARPS.filter(w => warpAllowed(player, w));
 			if (!args[0]) {
 				const rawtext = [{ translate: 'chat.cmd.warp.header' }];
 				for (const w of available) rawtext.push({ text: `\n§f!warp ${w.id} §8- ` }, { translate: `warp.${w.id}` });
@@ -334,7 +332,13 @@ export function runChatCommand(player, command, args) {
 				run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
 				break;
 			}
-			const warp = available.find(w => w.id === args[0].toLowerCase());
+			const id = args[0].toLowerCase();
+			// Точка VIP, а игрок не VIP — понятная ошибка вместо «не найдено»
+			if (WARPS.some(w => w.id === id && w.vip && hasRole(player, w.role) && !warpAllowed(player, w))) {
+				tell(player, 'chat.cmd.warp.error.vip');
+				break;
+			}
+			const warp = available.find(w => w.id === id);
 			if (!warp) {
 				tell(player, 'chat.cmd.error.not_found', args[0], '!warp');
 				break;
@@ -355,6 +359,11 @@ export function runChatCommand(player, command, args) {
 			}
 			const target = resolveTarget(player, args.slice(1).join(' ') || undefined, 'moder');
 			if (!target) break;
+			// Не-VIP на VIP-остров не отправить: system/system сразу вернёт его на спавн
+			if (!warpAllowed(target, warp)) {
+				tell(player, 'chat.cmd.warp.error.vip_other', target.name);
+				break;
+			}
 			// Сплиф: участникам и зрителям телепорт закрыт до конца игры (кроме владельца)
 			if (!canTeleport(target, player)) break;
 			if (warp.arena) {
@@ -448,7 +457,10 @@ export function runChatCommand(player, command, args) {
 			const lvl = getScore(target, 'lvl');
 			const lines = [
 				{ translate: 'chat.cmd.stats.lvl', with: { rawtext: [isVip(target) ? { translate: 'chat.cmd.stats.vip', with: [String(lvl)] } : { text: String(lvl) }] } },
-				{ translate: 'chat.cmd.stats.xp', with: [String(getScore(target, 'xp')), String(getScore(target, 'xp_need'))] },
+				// Последний уровень (xp_need 0) — без «/ 0»
+				getScore(target, 'xp_need') > 0
+					? { translate: 'chat.cmd.stats.xp', with: [String(getScore(target, 'xp')), String(getScore(target, 'xp_need'))] }
+					: { translate: 'chat.cmd.stats.xp.max', with: [String(getScore(target, 'xp'))] },
 				{ translate: 'chat.cmd.stats.money', with: [String(getScore(target, 'money'))] },
 				{ translate: 'chat.cmd.stats.vip_coins', with: [String(getScore(target, 'vip_coins'))] },
 				{ translate: 'chat.cmd.stats.rebirth', with: [String(getScore(target, 'rebirth'))] },
@@ -470,7 +482,7 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case 'report': {
-			// Жалоба на игрока — уходит модераторам и выше, кто в сети
+			// Жалоба на игрока — уходит хелперам и выше, кто в сети
 			const reportName = args[0];
 			const reason = args.slice(1).join(' ');
 			if (!reportName || !reason) {
@@ -508,7 +520,7 @@ export function runChatCommand(player, command, args) {
 		case 'rules': {
 			// Правила сервера — те же строки, что в меню «Правила»
 			const lines = [];
-			for (let i = 1; i <= RULES_LINES; i++) lines.push({ translate: `menu.rules.line.${i}` });
+			for (let i = 1; i <= RULES_COUNT; i++) lines.push({ translate: `menu.rules.line.${i}` });
 			lines.push({ translate: 'menu.rules.footer' });
 			tellList(player, { translate: 'menu.rules.header' }, lines);
 			break;
@@ -521,7 +533,7 @@ export function runChatCommand(player, command, args) {
 			// Обычному игроку system.mcfunction каждый тик возвращает приключение — режим у него не удержится
 			const mode = { gm1: 'creative', gm2: 'adventure', gm6: 'spectator' }[command];
 			// Приключение (обычный режим) — любому; креатив и наблюдатель — только роли, которой положена эта команда
-			const target = resolveTarget(player, args[0], 'admin', { gm1: 'admin', gm6: 'moder' }[command]);
+			const target = resolveTarget(player, args[0], 'admin', { gm1: 'admin', gm6: 'helper' }[command]);
 			if (!target) break;
 			run(target, `gamemode ${mode} @s`);
 			tell(target, `chat.cmd.${command}`);
@@ -665,7 +677,7 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case 'prefix': {
-			// Префиксы в чате (теги rank:). Уровень игрока тоже хранится тегом rank:§rN — его не показываем и не трогаем
+			// Префиксы в чате (теги rank:). Уровень и VIP тоже хранятся тегами rank:§rN / rank:§aVIP — их не показываем и не трогаем
 			const prefixPlayer = args[0];
 			const prefixAction = (args[1] || '').toLowerCase();
 			const prefixName = args.slice(2).join(' ');
@@ -675,7 +687,8 @@ export function runChatCommand(player, command, args) {
 					tell(player, 'chat.cmd.error.offline', prefixPlayer);
 					break;
 				}
-				const prefixes = target.getTags().filter(t => t.startsWith('rank:') && !/^rank:§r\d+$/.test(t));
+				// Служебные префиксы — уровень (rank:§rN) и VIP (rank:§aVIP, ranks/rank_lvl_*) — не показываем и не снимаем
+				const prefixes = target.getTags().filter(t => t.startsWith('rank:') && !/^rank:(§r\d+|§aVIP)$/.test(t));
 				if (prefixAction === 'list') {
 					tell(player, 'chat.cmd.prefix.list', target.name, prefixes.length ? prefixes.map(t => t.slice(5)).join('§r§7, ') : '—');
 				} else {
@@ -864,7 +877,7 @@ export function runChatCommand(player, command, args) {
 				tell(player, 'chat.cmd.event.use');
 				break;
 			}
-			// «Ускорение» и «Подарок» выбирают игрока без тега host — без других игроков ничего не произойдёт
+			// «Ускорение» и «Подарок» выбирают игрока без роли владельца (role:owner) — без других игроков ничего не произойдёт
 			if (ev !== 'rain' && ![...world.getPlayers()].some(p => !p.hasTag('role:owner'))) {
 				tell(player, 'chat.cmd.event.error.no_players');
 				break;
@@ -920,7 +933,7 @@ export function runChatCommand(player, command, args) {
 			run(player, `tag @a add boost:${type}`);
 			markAdminBoost(type, minutes);
 			run(player, `tellraw @a ${rawTranslate('chat.cmd.boost.started', player.name, type, String(minutes))}`);
-			run(player, 'execute positioned as @a run playsound note.bell @a');
+			run(player, 'execute as @a at @s run playsound note.bell @s');
 			break;
 		}
 
@@ -1443,11 +1456,15 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case 'banlist': {
-			const bans = getBans();
+			// Только действующие баны; номер — тот же, что принимает !unban <номер> (system/ban.js, removeBan)
+			const bans = getBans().filter(b => banActive(b));
 			const rawtext = [{ translate: 'chat.cmd.banlist.header' }];
 			if (!bans.length) rawtext.push({ text: '\n' }, { translate: 'chat.cmd.banlist.empty' });
-			bans.filter(b => banActive(b)).forEach((b, i) => {
-				rawtext.push({ text: `\n§e${i + 1}. §f${b.names.join('§7, §f')} §8— §7${b.by}${b.reason ? ' §8— §7' + b.reason : ''}${b.id ? '' : ' §8(ник)'} §8— §c` }, termText(banMinutesLeft(b)));
+			bans.forEach((b, i) => {
+				rawtext.push({ text: `\n§e${i + 1}. §f${b.names.join('§7, §f')} §8— §7${b.by}${b.reason ? ' §8— §7' + b.reason : ''}` });
+				// Бан только по нику (игрок не заходил после бана) — пометка на языке игрока
+				if (!b.id) rawtext.push({ text: ' §8' }, { translate: 'chat.cmd.banlist.by_nick' });
+				rawtext.push({ text: ' §8— §c' }, termText(banMinutesLeft(b)));
 			});
 			rawtext.push({ text: '\n§8------------------------' });
 			run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);

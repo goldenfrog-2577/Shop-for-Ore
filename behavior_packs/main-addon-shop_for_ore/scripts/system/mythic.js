@@ -25,7 +25,8 @@ export const MYTHIC_LOOT = [
 	{ w: 8, item: 'golden_apple', count: [3, 6] },
 	{ w: 6, item: 'ender_pearl', count: [4, 8] },
 	{ w: 6, item: 'diamond', count: [4, 10] },
-	{ w: 4, item: 'emerald_block', count: [2, 4] },
+	// Изумруды, а не изумрудные блоки: блок — предмет ивента «Подарок» (autosale продаёт его сразу и объявляет нашедшего)
+	{ w: 4, item: 'emerald', count: [6, 12] },
 	{ w: 5, item: 'experience_bottle', count: [16, 32] },
 	{ w: 6, item: 'splash_potion', count: [2, 3], data: 22 },
 	{ w: 4, item: 'splash_potion', count: [1, 1], data: 30 },

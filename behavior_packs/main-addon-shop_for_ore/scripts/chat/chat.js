@@ -69,8 +69,9 @@ const nameColorOf = (player) => getChatColor(player, 'name') ?? ROLE_COLORS[getR
 const textColorOf = (player) => getChatColor(player, 'text') ?? '§f';
 
 // --- Замена эмодзи в сообщении на символы ---
-function replaceEmotes(message) {
-	return message.replace(/:([a-zA-Z0-9_]+):/g,
+// Имя эмодзи начинается с буквы: «счёт 1:2:3» и время «12:30:» — не эмодзи (раньше «:2:» становилось значком)
+export function replaceEmotes(message) {
+	return message.replace(/:([a-zA-Z_][a-zA-Z0-9_]*):/g,
 		(match) => {
 			return emotes[match] || '\ue128';
 		});
@@ -166,8 +167,11 @@ world.events.tick.subscribe(() => {
 			continue;
 		}
 		const role = getRole(player);
+		// Опыт: «350/72.0K»; на последнем уровне (xp_need 0) — только опыт, без «/0»
+		const need = getScore(player, 'xp_need');
+		const xp = `${metricNumbers(getScore(player, 'xp'))}${need > 0 ? `/${metricNumbers(need)}` : ''}`;
 		// Ник над головой: цвет из !color, иначе у игрока серый, у персонала — цвет роли. У VIP вместо монет — VIP-коины
-		const nameTag = `${getChatColor(player, 'name') ?? (role === 'player' ? '§7' : ROLE_COLORS[role])}${player.name}\n§f - ${metricNumbers(getScore(player,'lvl'))}\n§f - ${metricNumbers(getScore(player,'xp'))}/${metricNumbers(getScore(player,'xp_need'))}\n${isVip(player) ? `§f - ${metricNumbers(getScore(player, 'vip_coins'))}` : `§f - ${metricNumbers(getScore(player, 'money'))}`}\n§f - ${metricNumbers(getScore(player,'rebirth'))}`;
+		const nameTag = `${getChatColor(player, 'name') ?? (role === 'player' ? '§7' : ROLE_COLORS[role])}${player.name}\n§f - ${metricNumbers(getScore(player,'lvl'))}\n§f - ${xp}\n${isVip(player) ? `§f - ${metricNumbers(getScore(player, 'vip_coins'))}` : `§f - ${metricNumbers(getScore(player, 'money'))}`}\n§f - ${metricNumbers(getScore(player,'rebirth'))}`;
 		if (player.nameTag !== nameTag) player.nameTag = nameTag;
 	}
 });

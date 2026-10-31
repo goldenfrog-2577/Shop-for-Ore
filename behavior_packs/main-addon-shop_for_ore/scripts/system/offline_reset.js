@@ -1,8 +1,8 @@
 // --- Сброс игроков не в сети (!resetoffline, только владелец) ---
 // Игрокам не в сети сбрасывается всё: все теги (роль и пароль тоже — им придётся зарегистрироваться
 // заново) и все счета во всех табло. Игроки в сети не затрагиваются.
-// Счета: «scoreboard players reset *» в каждом табло, затем счета игроков в сети и служебные записи
-// (settings, timer, system…) возвращаются как были. Теги у игрока не в сети командой не снять,
+// Счета: «scoreboard players reset *» в каждом табло, затем счета игроков в сети, сущностей (стойки бустов,
+// rainEvent) и служебные записи (settings, timer, system…) возвращаются как были. Теги у игрока не в сети командой не снять,
 // поэтому у сброса есть номер (свойство мира shop:offline_reset_id): игрок с отметкой
 // sys:offline_reset:<номер> уже в порядке, у остальных теги снимаются при входе — раньше проверки
 // пароля (register/system.js вызывает applyOfflineReset первым делом).
@@ -50,7 +50,7 @@ export function resetOffline(by) {
 	for (const p of online) mark(p, id);
 	const dim = world.getDimension('overworld');
 	for (const objective of world.scoreboard.getObjectives()) {
-		// Что вернуть после reset *: счета игроков в сети и служебные записи (не игроки)
+		// Что вернуть после reset *: счета игроков в сети, сущностей и служебные записи (не игроки)
 		const keep = [];
 		for (const p of online) {
 			try { keep.push([p, objective.getScore(p.scoreboard)]); } catch { /* у игрока нет счёта в этом табло */ }
@@ -58,7 +58,12 @@ export function resetOffline(by) {
 		const fake = [];
 		try {
 			for (const s of objective.getScores()) {
-				if (s.participant.type === 'fakePlayer' || s.participant.type === 'FakePlayer') fake.push([s.participant.displayName, s.score]);
+				const type = String(s.participant.type).toLowerCase();
+				if (type === 'fakeplayer') fake.push([s.participant.displayName, s.score]);
+				// Сущности — стойки X2Boost/X4Boost, rainEvent и т. п. (таймеры в табло system): раньше их счета терялись
+				else if (type === 'entity') {
+					try { const e = s.participant.getEntity(); if (e) keep.push([e, s.score]); } catch { /* сущность не прогружена */ }
+				}
 			}
 		} catch { /* пустое табло */ }
 		run(dim, `scoreboard players reset * ${objective.id}`);

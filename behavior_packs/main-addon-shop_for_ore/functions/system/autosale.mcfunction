@@ -12,7 +12,7 @@ execute at @a[scores={lvl=1..25},hasitem={item=dirt}] run execute if block ~~-1~
 # Продажа булыжника: деньги, опыт, эффекты
 execute at @a[scores={lvl=2..25},hasitem={item=cobblestone}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 2
 execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=2..25},hasitem={item=cobblestone}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 1
-execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=2..25},hasitem={item=cobblestone}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 3
+execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=2..25},hasitem={item=cobblestone}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 2
 execute at @a[tag=boost:x4,tag=!boost:x2,scores={lvl=2..25},hasitem={item=cobblestone}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 4
 execute at @a[scores={lvl=2..25},hasitem={item=cobblestone},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
 execute at @a[scores={lvl=2..25},hasitem={item=cobblestone},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
@@ -28,7 +28,7 @@ execute at @a[scores={lvl=3..25},hasitem={item=coal},tag=player:particle,tag=!fx
 execute at @a[scores={lvl=3..25},hasitem={item=coal},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=3..25},hasitem={item=coal}] run execute if block ~~-1~ gold_block run clear @p coal 0 1
 
-# --- Iron (Сырой железо) ---
+# --- Iron (Сырое железо) ---
 # Продажа сырого железа: деньги, опыт, эффекты
 execute at @a[scores={lvl=5..25},hasitem={item=raw_iron}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 5
 execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=5..25},hasitem={item=raw_iron}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 4
@@ -104,7 +104,7 @@ execute at @a[scores={lvl=16..25},hasitem={item=netherrack}] run execute if bloc
 execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=16..25},hasitem={item=netherrack}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 50
 execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=16..25},hasitem={item=netherrack}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 100
 execute at @a[tag=boost:x4,tag=!boost:x2,scores={lvl=16..25},hasitem={item=netherrack}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 200
-execute at @a[scores={lvl=15..25},hasitem={item=netherrack},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
+execute at @a[scores={lvl=16..25},hasitem={item=netherrack},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
 execute at @a[scores={lvl=16..25},hasitem={item=netherrack},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=16..25},hasitem={item=netherrack}] run execute if block ~~-1~ gold_block run clear @p netherrack 0 1
 
@@ -169,8 +169,11 @@ execute at @a[scores={lvl=24..25},hasitem={item=obsidian},tag=player:sound] run 
 execute at @a[scores={lvl=24..25},hasitem={item=obsidian}] run execute if block ~~-1~ gold_block run clear @p obsidian 0 1
 
 # --- Crying Obsidian (Плачущий обсидиан) ---
-# Продажа плачущего обсидиана: деньги, эффекты
+# Продажа плачущего обсидиана: деньги, опыт (с Пещерой 25 уровень — не потолок: до 26 нужно 66 000 опыта), эффекты
 execute at @a[scores={lvl=25..25},hasitem={item=crying_obsidian}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 100
+execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=25..25},hasitem={item=crying_obsidian}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 100
+execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=25..25},hasitem={item=crying_obsidian}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 200
+execute at @a[tag=boost:x4,tag=!boost:x2,scores={lvl=25..25},hasitem={item=crying_obsidian}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 400
 execute at @a[scores={lvl=25..25},hasitem={item=crying_obsidian},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
 execute at @a[scores={lvl=25..25},hasitem={item=crying_obsidian},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=25..25},hasitem={item=crying_obsidian}] run execute if block ~~-1~ gold_block run clear @p crying_obsidian 0 1

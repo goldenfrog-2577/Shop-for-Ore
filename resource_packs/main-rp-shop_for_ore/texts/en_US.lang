@@ -7,7 +7,7 @@
 ## =============================
 
 ## --- PACK INFO ---
-pack.name=Datapack for map §lShop for Ore§r
+pack.name=Resource pack for map §lShop for Ore§r
 pack.description=Includes some small improvements for a smoother game. §cNot recommended to disable! §fVersion: §7[0.3.0_20261025_resources]
 
 ## --- PICKAXES ---
@@ -170,11 +170,11 @@ menu.howtoplay.line.4=• To sell ores or blocks, stand on a gold block
 menu.howtoplay.line.5=§l§cNote:§r§7 If you stole ore you can't mine, you can't sell it
 menu.howtoplay.line.6=§l§7Buying VIP
 menu.howtoplay.line.7=§r§7VIP is a privilege with new ores and a VIP shop
-menu.howtoplay.line.8=VIP costs 125K
+menu.howtoplay.line.8=VIP costs 125K (from 40 )
 menu.howtoplay.line.9=Buy it in Menu »  Upgrades
 menu.howtoplay.line.10=§l§7Rebirth
 menu.howtoplay.line.11=§r§7Rebirth is replaying the map with a permanent haste effect
-menu.howtoplay.line.12=Rebirth unlocks after 16 
+menu.howtoplay.line.12=Rebirth unlocks after 25 
 menu.howtoplay.line.13=Upgrade in Menu »  Upgrades
 menu.howtoplay.line.14=§r§l§7 What do the icons on the left mean?
 menu.howtoplay.line.15=§r§7 - your Nickname (in-game name)
@@ -210,6 +210,10 @@ menu.version.line.18=• The PvP arena no longer teleports you onto tree leaves
 menu.version.line.19=• Achievements and challenges with rewards — Server menu » Achievements
 menu.version.line.20=• Minigames (PvP: Last One Standing), a music switch in Settings, CPS check
 menu.version.line.21=• Wipe with a summary, CPS above the hotbar in the arena, settings showing their current state
+menu.version.line.22=• The Cave — the third location (levels 26–40): 10 pits in a U shape, pickaxes start again from wooden, a dome
+menu.version.line.23=• VIP is now a separate status (from level 40), rebirth from level 25; rebirth keeps VIP coins
+menu.version.line.24=• Shooting range: shoot targets with a bow for coins; the Wandering Trader's shop on the VIP island
+menu.version.line.25=• Jail (!jail), reports (!report), timed bans and mutes
 
 ## --- SHOP MENU ---
 menu.shop.title=§l§8Server Menu »  Shop
@@ -400,6 +404,7 @@ menu.bank.title=§l§8Server Menu »  Bank
 menu.bank.amount=§7Amount you want to send:
 menu.bank.amount_placeholder=§7Enter here...
 chat.bank.sent=§r §2Bank §8» §7Sent to §f%1$s§r§7: §e%2$s§7
+chat.bank.error.no_players=§r⩕ §l§cERROR!§r §8» §7There are no players online you can send coins to
 chat.bank.received=§r §2Bank §8» §f%1$s§r§7 sent you §e%2$s§7
 menu.bank.player=§rChoose a player:
 menu.bank.balance=§rBalance:
@@ -435,6 +440,7 @@ menu.warps.button.mine=§8Mine (by level)
 menu.warps.button.pvp=§8PvP arena
 menu.warps.button.spleef=§8Spleef
 menu.warps.button.tir=§8Shooting range
+menu.warps.button.vip=§8VIP island
 
 ## --- UPGRADES MENU ---
 menu.upgrades.title=§l§8Server Menu »  Upgrades
@@ -605,6 +611,8 @@ admin.players.button.unwarn=§8Remove a warning
 admin.players.button.kick=§8Kick
 admin.players.button.ban=§8Ban
 admin.players.button.role=§8Role
+admin.players.button.vip_give=§8Give VIP
+admin.players.button.vip_take=§8Remove VIP
 admin.players.button.resetpass=§8Reset password
 admin.players.resetpass.body=§7The player's password will be erased and registration of a new one will open right away. Progress is not affected. Continue?
 admin.players.money.title=§l§8Admin menu » Coins
@@ -837,7 +845,7 @@ chat.vip.error.owned=§r⩕ §l§cERROR!§r §8» §7You already have §eVIP
 chat.rebirth.first=§r §dRebirth §8» §f%1$s§r§7 made their first §eRebirth§7!
 chat.rebirth.level=§r §dRebirth §8» §7Your Rebirth level: §e%1$s
 chat.vip.bought=§r §aLvL UP §8» §f%1$s§r§7 bought §eVIP§7!
-chat.vip.welcome=§r §aLvL UP §8» §7Congrats on §eVIP§7! To get to the §eVIP island§7, open the §eServer Menu
+chat.vip.welcome=§r §aLvL UP §8» §7Congrats on §eVIP§7! To get to the §eVIP island§7, open the §eServer Menu §7» §eWarps
 chat.vip.migrated=§r §aLvL UP §8» §7VIP is now a separate status, and levels §e26–40§7 are the Cave. You keep VIP, your level is §e25§7: carry on in the Cave!
 
 ## --- BOOST MESSAGES ---
@@ -958,6 +966,8 @@ chat.cmd.help.detail=§r §7CMD §8» §f%1$s§r§8 — §7%2$s§r§7. Availa
 chat.cmd.warp.header=§8-----§f Warp Points §8-----§f
 chat.cmd.warp.done=§r §cServer §8» §7You were teleported: §e%1$s
 chat.cmd.warp.other=§r §7CMD §8» §7§f%1$s§r§7 was teleported: §e%2$s
+chat.cmd.warp.error.vip=§r⩕ §l§cERROR!§r §8» §7This point is for §eVIP§7 only
+chat.cmd.warp.error.vip_other=§r⩕ §l§cERROR!§r §8» §7Player §f%1$s§r§7 is not VIP and can't be sent to the VIP island
 chat.pvp.combat=§r⩕ §l§cERROR!§r §8» §7You are in combat on the PvP arena: teleport will be available in §e%1$s§7 s
 warp.spawn=Spawn
 warp.mine=Mine (by level)
@@ -1053,6 +1063,7 @@ chat.cmd.unban.use=§r §7CMD §8» §7Usage: §e!unban§7 <player/number fro
 chat.cmd.unban.done=§r §7CMD §8» §7Ban lifted: §f%1$s
 chat.cmd.banlist.header=§8------ §cBans §8------
 chat.cmd.banlist.empty=§7No bans
+chat.cmd.banlist.by_nick=(by nick)
 chat.cmd.freeze.use=§r §7CMD §8» §7Usage: §e!freeze§7 <player>
 chat.cmd.freeze.error.already=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 is already frozen — to unfreeze: §e!unfreeze
 chat.cmd.unfreeze.use=§r §7CMD §8» §7Usage: §e!unfreeze§7 <player>
@@ -1170,6 +1181,7 @@ chat.cmd.reload.done=§r §7CMD §8» §aAll scripts loaded
 chat.cmd.stats.lvl=§7Level: §e%1$s §f
 chat.cmd.stats.vip=§aVIP §8• §f%1$s
 chat.cmd.stats.xp=§7XP: §e%1$s§7/§e%2$s §f
+chat.cmd.stats.xp.max=§7XP: §e%1$s §7(max level) §f
 chat.cmd.stats.money=§7Coins: §e%1$s §f
 chat.cmd.stats.vip_coins=§7VIP coins: §e%1$s §r
 chat.cmd.stats.rebirth=§7Rebirth: §e%1$s §f
@@ -1184,6 +1196,8 @@ chat.cmd.report.error.cooldown=§r⩕ §l§cERROR!§r §8» §7You can send a re
 chat.cmd.report.error.no_staff=§r⩕ §l§cERROR!§r §8» §7No staff are online right now — report not sent
 chat.cmd.role.use=§r §7CMD §8» §7Usage: §e!role§7 <player> <player/helper/moder/admin>
 chat.cmd.role.done=§r §7CMD §8» §7§f%1$s§r§7 now has the role %2$s
+chat.admin.vip.given=§r §7CMD §8» §7Player §f%1$s§r§7 was given §eVIP
+chat.admin.vip.taken=§r §7CMD §8» §7§eVIP§7 removed from player §f%1$s
 chat.cmd.role.received=§r §cServer §8» §7You have been given the role %1$s
 chat.cmd.role.error.owner=§r⩕ §l§cERROR!§r §8» §7The owner's role can't be changed with a command
 chat.cmd.role.error.bot=§r⩕ §l§cERROR!§r §8» §7The bot can't get a role: it always has the "Bot" prefix

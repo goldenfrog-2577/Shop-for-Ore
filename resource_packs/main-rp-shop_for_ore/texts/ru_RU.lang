@@ -7,7 +7,7 @@
 ## =============================
 
 ## --- ИНФОРМАЦИЯ О ПАКЕ ---
-pack.name=Дата-пак для карты §lShop for Ore§r
+pack.name=Ресурс-пак для карты §lShop for Ore§r
 pack.description=Содержит в себе небольшие улучшения для комфортной игры. §cНе рекомендуется отключать! §fВерсия: §7[0.3.0_20261025_resources]
 
 ## --- КИРКИ ---
@@ -170,11 +170,11 @@ menu.howtoplay.line.4=• Чтобы продать руду или блоки, 
 menu.howtoplay.line.5=§l§cПримечание:§r§7 Если ты украл руду, которую ещё не можешь копать, продать её не получится
 menu.howtoplay.line.6=§l§7Покупка VIP
 menu.howtoplay.line.7=§r§7VIP - это привилегия с преимуществами в виде новой руды и VIP магазина
-menu.howtoplay.line.8=Стоит VIP - 125K
+menu.howtoplay.line.8=Стоит VIP - 125K (с 40 )
 menu.howtoplay.line.9=Покупается в Меню »  Прокачка
 menu.howtoplay.line.10=§l§7Ребитх
 menu.howtoplay.line.11=§r§7Ребитх - это перепрохождение карты с пожизненным эффектом спешки
-menu.howtoplay.line.12=Открывается ребитх после 16 
+menu.howtoplay.line.12=Открывается ребитх после 25 
 menu.howtoplay.line.13=Прокачивается в Меню »  Прокачка
 menu.howtoplay.line.14=§r§l§7 Что означают смайлики слева сбоку?
 menu.howtoplay.line.15=§r§7 - твой Никнейм (имя в игре)
@@ -210,6 +210,10 @@ menu.version.line.18=• На PvP-арену больше не телепорт�
 menu.version.line.19=• Достижения и испытания с наградами — Меню сервера » Достижения
 menu.version.line.20=• Мини-игры (PvP: последний выживший), выключатель музыки в Настройках, проверка CPS
 menu.version.line.21=• Вайп со сводкой, CPS над хотбаром на арене, настройки с текущим состоянием
+menu.version.line.22=• Пещера — третья локация (уровни 26–40): 10 ям буквой «П», кирки заново от деревянной, купол
+menu.version.line.23=• VIP теперь отдельный статус (с 40 уровня), ребитх — с 25 уровня; VIP-коины ребитх не сбрасывает
+menu.version.line.24=• Тир: стрельба из лука по мишеням за монеты; лавка странствующего торговца на VIP-острове
+menu.version.line.25=• Тюрьма (!jail), жалобы (!report), бан и мут на срок
 
 ## --- МЕНЮ МАГАЗИНА ---
 menu.shop.title=§l§8Меню сервера »  Магазин
@@ -400,6 +404,7 @@ menu.bank.title=§l§8Меню сервера »  Банк
 menu.bank.amount=§7Сумма, которую ты хочешь отправить:
 menu.bank.amount_placeholder=§7Введи сюда...
 chat.bank.sent=§r §2Банк §8» §7Перевод игроку §f%1$s§r§7: §e%2$s§7
+chat.bank.error.no_players=§r⩕ §l§cERROR!§r §8» §7Сейчас в сети нет игроков, которым можно перевести монеты
 chat.bank.received=§r §2Банк §8» §f%1$s§r§7 перевёл(а) тебе §e%2$s§7
 menu.bank.player=§rВыбери игрока:
 menu.bank.balance=§rБаланс:
@@ -435,6 +440,7 @@ menu.warps.button.mine=§8Шахта (по уровню)
 menu.warps.button.pvp=§8PvP-арена
 menu.warps.button.spleef=§8Сплиф
 menu.warps.button.tir=§8Тир
+menu.warps.button.vip=§8VIP-остров
 
 ## --- МЕНЮ ПРОКАЧКИ ---
 menu.upgrades.title=§l§8Меню сервера »  Прокачка
@@ -605,6 +611,8 @@ admin.players.button.unwarn=§8Снять предупреждение
 admin.players.button.kick=§8Выгнать
 admin.players.button.ban=§8Забанить
 admin.players.button.role=§8Роль
+admin.players.button.vip_give=§8Выдать VIP
+admin.players.button.vip_take=§8Снять VIP
 admin.players.button.resetpass=§8Сбросить пароль
 admin.players.resetpass.body=§7Пароль игрока будет стёрт, и ему сразу откроется регистрация нового. Прогресс не пострадает. Продолжить?
 admin.players.money.title=§l§8Меню админа » Монеты
@@ -837,7 +845,7 @@ chat.vip.error.owned=§r⩕ §l§cERROR!§r §8» §7У тебя уже есть
 chat.rebirth.first=§r §dРебитх §8» §f%1$s§r§7 сделал(а) свой первый §eребитх§7!
 chat.rebirth.level=§r §dРебитх §8» §7Твой уровень ребитха: §e%1$s
 chat.vip.bought=§r §aLvL UP §8» §f%1$s§r§7 купил(а) §eVIP§7!
-chat.vip.welcome=§r §aLvL UP §8» §7Поздравляем с §eVIP§7! Чтобы попасть на §eVIP-остров§7, открой §eМеню сервера
+chat.vip.welcome=§r §aLvL UP §8» §7Поздравляем с §eVIP§7! Чтобы попасть на §eVIP-остров§7, открой §eМеню сервера §7» §eТелепортации
 chat.vip.migrated=§r §aLvL UP §8» §7VIP теперь отдельный статус, а уровни §e26–40§7 — Пещера. VIP у тебя остался, уровень — §e25§7: продолжай в Пещере!
 
 ## --- БУСТЫ ---
@@ -958,6 +966,8 @@ chat.cmd.help.detail=§r §7CMD §8» §f%1$s§r§8 — §7%2$s§r§7. Дос
 chat.cmd.warp.header=§8-----§f Точки телепортации §8-----§f
 chat.cmd.warp.done=§r §cСервер §8» §7Ты телепортирован(а): §e%1$s
 chat.cmd.warp.other=§r §7CMD §8» §7Игрок §f%1$s§r§7 телепортирован: §e%2$s
+chat.cmd.warp.error.vip=§r⩕ §l§cERROR!§r §8» §7Эта точка — только для §eVIP
+chat.cmd.warp.error.vip_other=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 не VIP — на VIP-остров его не отправить
 chat.pvp.combat=§r⩕ §l§cERROR!§r §8» §7Ты в бою на PvP-арене: телепорт будет доступен через §e%1$s§7 сек.
 warp.spawn=Спавн
 warp.mine=Шахта (по уровню)
@@ -1053,6 +1063,7 @@ chat.cmd.unban.use=§r §7CMD §8» §7Использование: §e!unban�
 chat.cmd.unban.done=§r §7CMD §8» §7Бан снят: §f%1$s
 chat.cmd.banlist.header=§8------ §cБаны §8------
 chat.cmd.banlist.empty=§7Банов нет
+chat.cmd.banlist.by_nick=(по нику)
 chat.cmd.freeze.use=§r §7CMD §8» §7Использование: §e!freeze§7 <игрок>
 chat.cmd.freeze.error.already=§r⩕ §l§cERROR!§r §8» §7Игрок §f%1$s§r§7 уже заморожен — разморозить: §e!unfreeze
 chat.cmd.unfreeze.use=§r §7CMD §8» §7Использование: §e!unfreeze§7 <игрок>
@@ -1170,6 +1181,7 @@ chat.cmd.reload.done=§r §7CMD §8» §aВсе скрипты загруже
 chat.cmd.stats.lvl=§7Уровень: §e%1$s §f
 chat.cmd.stats.vip=§aVIP §8• §f%1$s
 chat.cmd.stats.xp=§7Опыт: §e%1$s§7/§e%2$s §f
+chat.cmd.stats.xp.max=§7Опыт: §e%1$s §7(макс. уровень) §f
 chat.cmd.stats.money=§7Монеты: §e%1$s §f
 chat.cmd.stats.vip_coins=§7VIP-коины: §e%1$s §r
 chat.cmd.stats.rebirth=§7Ребитх: §e%1$s §f
@@ -1184,6 +1196,8 @@ chat.cmd.report.error.cooldown=§r⩕ §l§cERROR!§r §8» §7Жалобу мо
 chat.cmd.report.error.no_staff=§r⩕ §l§cERROR!§r §8» §7Сейчас в сети нет персонала — жалоба не отправлена
 chat.cmd.role.use=§r §7CMD §8» §7Использование: §e!role§7 <игрок> <player/helper/moder/admin>
 chat.cmd.role.done=§r §7CMD §8» §7Игроку §f%1$s§r§7 назначена роль %2$s
+chat.admin.vip.given=§r §7CMD §8» §7Игроку §f%1$s§r§7 выдан §eVIP
+chat.admin.vip.taken=§r §7CMD §8» §7У игрока §f%1$s§r§7 снят §eVIP
 chat.cmd.role.received=§r §cСервер §8» §7Тебе назначена роль %1$s
 chat.cmd.role.error.owner=§r⩕ §l§cERROR!§r §8» §7Роль владельца командой не меняется
 chat.cmd.role.error.bot=§r⩕ §l§cERROR!§r §8» §7Боту роль не выдаётся: у него всегда префикс «Бот»

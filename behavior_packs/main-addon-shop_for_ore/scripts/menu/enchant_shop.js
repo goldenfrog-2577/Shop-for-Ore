@@ -57,10 +57,13 @@ export function enchantableItems(player) {
 }
 
 const shortId = (typeId) => typeId.replace('minecraft:', '');
-// Иконка предмета: textures/items/<id>, у золотых, деревянных, лука и арбалета в ванили другие имена файлов.
+// Ключ названия предмета: item.<id>.name, кроме ванильных исключений (удочка с морковью — item.carrotOnAStick.name)
+const NAME_KEYS = { carrot_on_a_stick: 'carrotOnAStick' };
+const nameKey = (typeId) => `item.${NAME_KEYS[shortId(typeId)] ?? shortId(typeId)}.name`;
+// Иконка предмета: textures/items/<id>, у золотых, деревянных, лука, арбалета и удочки в ванили другие имена файлов.
 // У щита отдельной иконки предмета в ванили нет — кнопка без значка
 const itemIcon = (typeId) => shortId(typeId) === 'shield' ? undefined
-	: `textures/items/${shortId(typeId).replace(/^golden_/, 'gold_').replace(/^wooden_/, 'wood_').replace(/^bow$/, 'bow_standby').replace(/^crossbow$/, 'crossbow_standby')}`;
+	: `textures/items/${shortId(typeId).replace(/^golden_/, 'gold_').replace(/^wooden_/, 'wood_').replace(/^bow$/, 'bow_standby').replace(/^fishing_rod$/, 'fishing_rod_uncast').replace(/^crossbow$/, 'crossbow_standby')}`;
 
 /**
  * Что можно купить для предмета: [{ e, level (текущий), next (или undefined, если максимум) }].
@@ -132,7 +135,7 @@ export function enchantsMenu(player, back) {
 	showMenu(player, '%menu.shop.enchants.title', '%menu.shop.enchants.body\n%menu.shop.enchants.body2', [
 		{ text: `%menu.shop.enchants.button.pickaxe\n${pick}`, icon: 'textures/items/diamond_pickaxe', run: () => pickaxeMenu(player, again) },
 		...enchantableItems(player).map(({ slot, item }) => ({
-			text: `%item.${shortId(item.typeId)}.name\n${currentEnchantsText(item, 2)}`, icon: itemIcon(item.typeId), run: () => itemEnchantMenu(player, slot, again)
+			text: `%${nameKey(item.typeId)}\n${currentEnchantsText(item, 2)}`, icon: itemIcon(item.typeId), run: () => itemEnchantMenu(player, slot, again)
 		})),
 		backButton(back)
 	], back);
@@ -168,7 +171,7 @@ function itemEnchantMenu(player, slot, back) {
 	const options = held ? optionsFor(held.item) : [];
 	if (!options.length) return back();
 	const typeId = held.item.typeId;
-	const body = `%menu.shop.item_enchants.item %item.${shortId(typeId)}.name\n%menu.shop.item_enchants.current ${currentEnchantsText(held.item)}\n\n%menu.shop.item_enchants.body`;
+	const body = `%menu.shop.item_enchants.item %${nameKey(typeId)}\n%menu.shop.item_enchants.current ${currentEnchantsText(held.item)}\n\n%menu.shop.item_enchants.body`;
 	showMenu(player, '%menu.shop.enchants.title', body, [
 		...options.map(o => ({
 			text: buyButton(o.e.name, o.level, o.e.max, priceFor(o.e, Math.min(o.level + 1, o.e.max))), icon: 'textures/items/book_enchanted',
