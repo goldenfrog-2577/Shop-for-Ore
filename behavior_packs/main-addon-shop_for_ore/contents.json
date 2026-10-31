@@ -296,6 +296,12 @@
 		},
 		{
 			"path" : "entities/thrown_ender_crystal.json"
+		},
+		{
+			"path" : "scripts/system/boosts.js"
+		},
+		{
+			"path" : "scripts/system/error_keys.js"
 		}],
 	"version" : 1
 }

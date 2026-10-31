@@ -2,6 +2,7 @@
 // список команд чата, точки !warp, эмодзи ---
 
 import { world, system } from '@minecraft/server';
+import { ERROR_KEYS } from './system/error_keys.js';
 
 /**
  * Получить значение очков игрока по определённому objective.
@@ -71,11 +72,21 @@ export function tellText(player, message, args = {}) {
 	return run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
 };
 
-// Сколько сообщений (tellraw @s — через tell, tellText и run) получил игрок: menu/forms.js по нему
-// закрывает всю цепочку меню, если после нажатия в чат пришло сообщение (ошибка, покупка и т. п.)
+// Сколько сообщений (tellraw @s — через tell, tellText и run) получил игрок и сколько из них — ошибки
+// (ключ из system/error_keys.js). menu/forms.js по ним решает, что делать с окнами после нажатия:
+// ошибка — закрыть всю цепочку, успех — оставить открытым последнее окно.
 const told = new Map();
+const toldErrors = new Map();
 /** @param {Entity} entity */
 export const toldCount = (entity) => told.get(entity.name) ?? 0;
+/** @param {Entity} entity */
+export const toldErrorCount = (entity) => toldErrors.get(entity.name) ?? 0;
+const TRANSLATE = /"translate":"([^"]+)"/g;
+/** В сообщении tellraw есть ключ ошибки. */
+export function isErrorMessage(command) {
+	for (const m of command.matchAll(TRANSLATE)) if (ERROR_KEYS.has(m[1])) return true;
+	return false;
+}
 
 /**
  * Выполнить команду и не ронять ошибку в ContentLog, если она не сработала
@@ -84,7 +95,10 @@ export const toldCount = (entity) => told.get(entity.name) ?? 0;
  * @param {string} command
  */
 export function run(entity, command) {
-	if (command.startsWith('tellraw @s ')) told.set(entity.name, toldCount(entity) + 1);
+	if (command.startsWith('tellraw @s ')) {
+		told.set(entity.name, toldCount(entity) + 1);
+		if (isErrorMessage(command)) toldErrors.set(entity.name, toldErrorCount(entity) + 1);
+	}
 	return entity.runCommandAsync(command).then((r) => r ?? {}, () => undefined);
 };
 
@@ -144,11 +158,11 @@ export function transferMoney(player, targetName, rawAmount) {
 	const amount = Number(raw);
 	// Целое положительное в пределах табло (дробная или огромная сумма «уходила» только в сообщении)
 	if (!/^\d+$/.test(raw) || !Number.isSafeInteger(amount) || amount <= 0 || amount > 2147483647) {
-		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.amount"}]}');
+		tell(player, 'chat.cmd.error.number', raw || '—', 1, 2147483647);
 		return false;
 	}
 	if (String(targetName).toLowerCase() === player.name.toLowerCase()) {
-		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.self"}]}');
+		tell(player, 'chat.cmd.error.self');
 		return false;
 	}
 	// Получатель должен быть в сети: иначе деньги ушли бы «фейковому игроку» с его ником
@@ -158,7 +172,7 @@ export function transferMoney(player, targetName, rawAmount) {
 		return false;
 	}
 	if (getScore(player, 'money') < amount) {
-		run(player, 'tellraw @s {"rawtext":[{"translate":"chat.bank.error.no_money"}]}');
+		tell(player, 'chat.error.no_money');
 		return false;
 	}
 	run(player, `scoreboard players remove @s money ${amount}`).then((res) => {
@@ -385,12 +399,13 @@ export const emotes = {
 
 // --- Точки телепортации для !warp ---
 // role — с какой роли точка доступна себе; отправить другого игрока — модератор и выше
-// (и не ниже роли точки). mine — шахта по уровню игрока, как кнопка «Спавн» в меню телепортаций.
+// (и не ниже роли точки). Меню сервера → Телепортации показывает все точки роли «игрок».
+// Спавн — всегда 0 5 0; шахта — по уровню: 1–15 — основная (у спавна), 16–25 — адская, 26–40 — третья
 export const WARPS = [
-	{ id: 'spawn', role: 'player', pos: [0, 2, 0] },
+	{ id: 'spawn', role: 'player', pos: [0, 5, 0] },
 	{ id: 'mine', role: 'player', pos: (p) => {
 		const lvl = getScore(p, 'lvl');
-		if (lvl >= 26) return [-60, 5, -60];
+		if (lvl >= 26) return [0, 5, -69];
 		if (lvl >= 16) return [0, 5, -33];
 		return [0, 5, 0];
 	} },
@@ -398,6 +413,9 @@ export const WARPS = [
 	// Арена: случайная точка площадки (system/pvp.js), чтобы игроки не появлялись друг у друга
 	{ id: 'pvp', role: 'player', arena: true },
 	{ id: 'spleef', role: 'player', pos: [500, 3, 500] },
+	{ id: 'tir', role: 'player', pos: [435, -45, 338] },
+	// Локация босса: пока босса нет — только персоналу
+	{ id: 'boss', role: 'admin', pos: [184, 11, 287] },
 	{ id: 'vip', role: 'admin', pos: [-60, 5, -60] },
 	{ id: 'cmd', role: 'admin', pos: [50, 5, 50] }
 ];
@@ -498,7 +516,7 @@ export const commandsList = [
 		role: 'helper'
 	},
 	{
-		command: '!tp §7<§fplayer§7>',
+		command: '!tp §7<§fplayer§8/§fx y z§7>',
 		description: '%chat.help.tp',
 		role: 'helper'
 	},
@@ -586,7 +604,7 @@ export const commandsList = [
 		role: 'admin'
 	},
 	{
-		command: '!boost §7<§fx2§8/§fx4§7> [§fminutes§7] §8| §fmagnet §7[§fplayer§7] [§fminutes§7]',
+		command: '!boost §7<§fx2§8/§fx4§7> [§fminutes§7] §8| §fmagnet §7[§fplayer§7] [§fminutes§7] §8| §fstop',
 		description: '%chat.help.boost',
 		role: 'admin'
 	},

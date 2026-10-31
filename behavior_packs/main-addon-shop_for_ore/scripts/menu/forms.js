@@ -5,27 +5,52 @@
 // В 1.19.50 формы принимают только строки: ключи перевода пишутся как «%ключ», после ключа —
 // пробел или перенос строки (сразу после ключа не ставим ни скобок, ни §-кодов). Параметров
 // (with, %1$s) у ключей в формах нет — порядок слов с ником собирается так, чтобы подходил всем языкам.
-// Если после нажатия игроку пришло сообщение в чат (ошибка, покупка, «настройка изменена»),
-// закрывается вся цепочка меню: формы, которые действие открыло бы следом, не показываются.
+// После нажатия игроку пришло сообщение в чат:
+//  • ошибка (ключ из system/error_keys.js: «⩕ ERROR!») — закрывается вся цепочка окон: формы, которые действие
+//    открыло бы следом, не показываются;
+//  • успех («Настройка изменена», «Деньги переведены»…) — остаётся только последнее окно: если действие само
+//    открывает следующую форму (обновлённое меню, родительский раздел), показывается она одна; если нет —
+//    меню, в котором нажали, открывается снова (окно с полями и «Да / Нет» — возвращают в своё меню, onBack).
+// Покупки через функции (.mcfunction) пишут в чат сами, скрипт этих сообщений не видит — после них окно закрывается.
 
 import { ActionFormData, ModalFormData, MessageFormData } from '@minecraft/server-ui';
-import { closedByPlayer, showWhenFree, toldCount } from '../DataBase.js';
+import { closedByPlayer, showWhenFree, toldCount, toldErrorCount } from '../DataBase.js';
 
-// Ник → сколько сообщений было у игрока до нажатия (пока выполняется действие кнопки)
+// Ник → { told, errors } до нажатия и opened — действие уже открыло форму после сообщения
 const acting = new Map();
-/** Выполнить действие кнопки; формы, открытые им после сообщения в чат, не покажутся. */
-function act(player, fn) {
-	acting.set(player.name, toldCount(player));
+/**
+ * Выполнить действие кнопки.
+ * @param {Player} player
+ * @param {() => void} fn
+ * @param {() => void} [reopen] — что открыть, если пришло сообщение об успехе, а действие само ничего не открыло
+ */
+function act(player, fn, reopen) {
+	const state = { told: toldCount(player), errors: toldErrorCount(player), opened: false };
+	acting.set(player.name, state);
 	try {
 		fn?.();
 	} finally {
 		acting.delete(player.name);
 	}
+	const success = toldCount(player) > state.told && toldErrorCount(player) === state.errors;
+	if (success && !state.opened && reopen) reopen();
 }
-/** Действие уже написало игроку в чат — новую форму не открываем. */
-const closedByMessage = (player) => acting.has(player.name) && toldCount(player) > acting.get(player.name);
+/**
+ * Можно ли показать форму, которую открывает действие кнопки:
+ * после ошибки — нет; после успеха — только одну (она и станет последним окном).
+ */
+function allowed(player) {
+	const state = acting.get(player.name);
+	if (!state) return true;
+	if (toldErrorCount(player) > state.errors) return false;
+	if (toldCount(player) > state.told) {
+		if (state.opened) return false;
+		state.opened = true;
+	}
+	return true;
+}
 // null — форма не показана (обработчики ничего не делают, «Назад» тоже не срабатывает)
-const show = (player, form) => closedByMessage(player) ? Promise.resolve(null) : showWhenFree(player, form);
+const show = (player, form) => allowed(player) ? showWhenFree(player, form) : Promise.resolve(null);
 
 /**
  * Кнопка «Назад».
@@ -51,7 +76,7 @@ export function showMenu(player, title, body, items, onBack) {
 		if (!r) return;
 		if (closedByPlayer(r)) return act(player, onBack);
 		if (r.canceled || r.selection === undefined) return;
-		act(player, list[r.selection]?.run);
+		act(player, list[r.selection]?.run, () => showMenu(player, title, body, items, onBack));
 	});
 }
 
@@ -66,7 +91,7 @@ export function showModal(player, form, onSubmit, onBack) {
 	return show(player, form).then(r => {
 		if (!r) return;
 		if (!r.formValues) return closedByPlayer(r) ? act(player, onBack) : undefined;
-		act(player, () => onSubmit(r.formValues));
+		act(player, () => onSubmit(r.formValues), onBack);
 	});
 }
 
@@ -85,13 +110,26 @@ export function confirm(player, title, body, onYes, onNo) {
 	const form = new MessageFormData()
 		.title(title)
 		.body(body)
-		.button1(' %admin.wipe.button.yes')
-		.button2(' %admin.wipe.button.no');
+		.button1(' %menu.common.yes')
+		.button2(' %menu.common.no');
 	return show(player, form).then(r => {
 		if (!r) return;
-		if (r.selection === 1) act(player, onYes);
+		if (r.selection === 1) act(player, onYes, onNo);
 		else if (onNo && (r.selection === 0 || closedByPlayer(r))) act(player, onNo);
 	});
+}
+
+/**
+ * Подтверждение опасного действия администратора (вайп, сброс игроков не в сети, отключение бустов):
+ * заголовок «Предупреждение» со знаком «!» из шрифта карты, кнопки «Да / Нет».
+ * @param {Player} player
+ * @param {string} body
+ * @param {() => void} onYes
+ * @param {() => void} [onNo] — «Нет» и крестик
+ */
+export const WARN_TITLE = '\ue1f8 %admin.wipe.title';
+export function wipeConfirm(player, body, onYes, onNo) {
+	return confirm(player, WARN_TITLE, body, onYes, onNo);
 }
 
 /**
