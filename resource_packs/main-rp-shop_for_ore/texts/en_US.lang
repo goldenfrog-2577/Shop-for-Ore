@@ -10,7 +10,7 @@
 ## --- PACK INFO ---
 ##   pack.*
 pack.name=Resource pack for map §lShop for Ore§r
-pack.description=Includes some small improvements for a smoother game. §cNot recommended to disable! §fVersion: §7[0.3.0_20261025_resources]
+pack.description=Includes some small improvements for a smoother game. §cNot recommended to disable! §fVersion: §7[0.3.0_20261031_resources]
 
 ## --- ITEMS & BLOCKS ---
 ##   item.*, tile.*, entity.*

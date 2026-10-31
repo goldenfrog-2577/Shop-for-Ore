@@ -19,7 +19,7 @@ import { redeemPromo } from '../system/promo.js';
 const OPEN = '\n%menu.common.tap_to_open';
 const COIN = '', LVL = '';
 // Номер сборки в «Версия карты»
-const BUILD = '0.3.0_20261025_dev';
+const BUILD = '0.3.0_20261031_rc';
 
 /** Строки описания из ключей prefix.1 … prefix.N через перенос. */
 const lines = (prefix, n, from = 1) => Array.from({ length: n - from + 1 }, (_, i) => `%${prefix}.${from + i}`).join('\n');

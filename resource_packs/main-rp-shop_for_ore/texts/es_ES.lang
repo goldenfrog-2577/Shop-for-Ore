@@ -10,7 +10,7 @@
 ## --- INFORMACIÓN DEL PACK ---
 ##   pack.*
 pack.name=Paquete de recursos para el mapa §lShop for Ore§r
-pack.description=Incluye pequeñas mejoras para una experiencia más cómoda. §c¡No se recomienda desactivar! §fVersión: §7[0.3.0_20261025_resources]
+pack.description=Incluye pequeñas mejoras para una experiencia más cómoda. §c¡No se recomienda desactivar! §fVersión: §7[0.3.0_20261031_resources]
 
 ## --- OBJETOS Y BLOQUES ---
 ##   item.*, tile.*, entity.*
