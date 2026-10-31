@@ -98,7 +98,8 @@ world.events.beforeChat.subscribe((data) => {
 	const muted = muteMinutesLeft(player);
 	if (muted > 0) {
 		data.cancel = true;
-		tell(player, 'chat.cmd.mute.active', String(muted));
+		if (muted === Infinity) tell(player, 'chat.cmd.mute.active.permanent');
+		else tell(player, 'chat.cmd.mute.active', String(muted));
 		return;
 	}
 

@@ -6,6 +6,7 @@
 // (сразу после ключа не ставим ни скобок, ни §-кодов).
 
 import { world } from '@minecraft/server';
+import { isJailed, tellJailed } from '../system/jail.js';
 import { isPending, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS } from '../DataBase.js';
 import { showMenu, showModal, modal, backButton, confirm, wipeConfirm, WARN_TITLE } from './forms.js';
 import { runChatCommand, setMoney } from '../chat/commands.js';
@@ -37,6 +38,12 @@ world.events.beforeItemUse.subscribe((data) => {
 	if (player.hasTag('state:frozen')) {
 		data.cancel = true;
 		tell(player, 'chat.cmd.freeze.active');
+		return;
+	}
+	// В тюрьме (!jail) — тоже: меню телепортаций вывело бы из камеры
+	if (isJailed(player)) {
+		data.cancel = true;
+		tellJailed(player);
 		return;
 	}
 	admin_menu(player);
@@ -326,10 +333,10 @@ function playerMoney(player, target) {
 }
 
 // Мут: длительность из списка (команда принимает 1–1440 минут)
-const MUTE_MINUTES = [5, 15, 30, 60, 180, 720, 1440];
+const MUTE_MINUTES = [5, 15, 30, 60, 180, 720, 1440, 'permanent'];
 function playerMute(player, target) {
 	const form = modal('%admin.players.mute.title')
-		.dropdown('%admin.players.mute.minutes', MUTE_MINUTES.map(m => `${m} %admin.common.min`), 0)
+		.dropdown('%admin.players.mute.minutes', MUTE_MINUTES.map(m => m === 'permanent' ? '%chat.term.permanent' : `${m} %admin.common.min`), 0)
 		.textField('%admin.players.reason_optional', '%admin.players.reason_placeholder');
 	showModal(player, form, (values) => {
 		const reason = String(values[1] ?? '').trim();
