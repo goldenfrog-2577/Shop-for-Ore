@@ -42,6 +42,7 @@ import './system/music.js';       // Выключатель музыки (Нас
 import './system/wipe.js';        // Вайп: номер вайпа, сброс игроков не в сети при входе
 import './system/offline_reset.js'; // !resetoffline: всё сбросить игрокам не в сети
 import './system/trident.js';     // Трезубец с «Громовержцем»: молния в поражённого игрока
+import './system/void.js';        // Бездна: упал ниже мира — на спавн
 
 // Импорт загрузчика скриптов
 import './register/loadScript.js';
