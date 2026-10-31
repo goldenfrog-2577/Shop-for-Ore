@@ -175,23 +175,112 @@ execute at @a[scores={lvl=25..25},hasitem={item=crying_obsidian},tag=player:part
 execute at @a[scores={lvl=25..25},hasitem={item=crying_obsidian},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=25..25},hasitem={item=crying_obsidian}] run execute if block ~~-1~ gold_block run clear @p crying_obsidian 0 1
 
+# --- Гранит (уровень 26, третья локация) ---
+execute at @a[scores={lvl=26..40},hasitem={item=stone,data=1}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 110
+execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=26..40},hasitem={item=stone,data=1}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 110
+execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=26..40},hasitem={item=stone,data=1}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 220
+execute at @a[tag=boost:x4,tag=!boost:x2,scores={lvl=26..40},hasitem={item=stone,data=1}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 440
+execute at @a[scores={lvl=26..40},hasitem={item=stone,data=1},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
+execute at @a[scores={lvl=26..40},hasitem={item=stone,data=1},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
+execute at @a[scores={lvl=26..40},hasitem={item=stone,data=1}] run execute if block ~~-1~ gold_block run clear @p stone 1 1
+
+# --- Андезит (уровень 27, третья локация) ---
+execute at @a[scores={lvl=27..40},hasitem={item=stone,data=5}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 120
+execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=27..40},hasitem={item=stone,data=5}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 120
+execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=27..40},hasitem={item=stone,data=5}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 240
+execute at @a[tag=boost:x4,tag=!boost:x2,scores={lvl=27..40},hasitem={item=stone,data=5}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 480
+execute at @a[scores={lvl=27..40},hasitem={item=stone,data=5},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
+execute at @a[scores={lvl=27..40},hasitem={item=stone,data=5},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
+execute at @a[scores={lvl=27..40},hasitem={item=stone,data=5}] run execute if block ~~-1~ gold_block run clear @p stone 5 1
+
+# --- Диорит (уровень 28, третья локация) ---
+execute at @a[scores={lvl=28..40},hasitem={item=stone,data=3}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 130
+execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=28..40},hasitem={item=stone,data=3}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 130
+execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=28..40},hasitem={item=stone,data=3}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 260
+execute at @a[tag=boost:x4,tag=!boost:x2,scores={lvl=28..40},hasitem={item=stone,data=3}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 520
+execute at @a[scores={lvl=28..40},hasitem={item=stone,data=3},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
+execute at @a[scores={lvl=28..40},hasitem={item=stone,data=3},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
+execute at @a[scores={lvl=28..40},hasitem={item=stone,data=3}] run execute if block ~~-1~ gold_block run clear @p stone 3 1
+
+# --- Глубинный сланец (уровень 30, третья локация) ---
+execute at @a[scores={lvl=30..40},hasitem={item=cobbled_deepslate}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 145
+execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=30..40},hasitem={item=cobbled_deepslate}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 145
+execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=30..40},hasitem={item=cobbled_deepslate}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 290
+execute at @a[tag=boost:x4,tag=!boost:x2,scores={lvl=30..40},hasitem={item=cobbled_deepslate}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 580
+execute at @a[scores={lvl=30..40},hasitem={item=cobbled_deepslate},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
+execute at @a[scores={lvl=30..40},hasitem={item=cobbled_deepslate},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
+execute at @a[scores={lvl=30..40},hasitem={item=cobbled_deepslate}] run execute if block ~~-1~ gold_block run clear @p cobbled_deepslate 0 1
+
+# --- Туф (уровень 31, третья локация) ---
+execute at @a[scores={lvl=31..40},hasitem={item=tuff}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 160
+execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=31..40},hasitem={item=tuff}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 160
+execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=31..40},hasitem={item=tuff}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 320
+execute at @a[tag=boost:x4,tag=!boost:x2,scores={lvl=31..40},hasitem={item=tuff}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 640
+execute at @a[scores={lvl=31..40},hasitem={item=tuff},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
+execute at @a[scores={lvl=31..40},hasitem={item=tuff},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
+execute at @a[scores={lvl=31..40},hasitem={item=tuff}] run execute if block ~~-1~ gold_block run clear @p tuff 0 1
+
+# --- Кальцит (уровень 33, третья локация) ---
+execute at @a[scores={lvl=33..40},hasitem={item=calcite}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 175
+execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=33..40},hasitem={item=calcite}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 175
+execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=33..40},hasitem={item=calcite}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 350
+execute at @a[tag=boost:x4,tag=!boost:x2,scores={lvl=33..40},hasitem={item=calcite}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 700
+execute at @a[scores={lvl=33..40},hasitem={item=calcite},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
+execute at @a[scores={lvl=33..40},hasitem={item=calcite},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
+execute at @a[scores={lvl=33..40},hasitem={item=calcite}] run execute if block ~~-1~ gold_block run clear @p calcite 0 1
+
+# --- Блок рудного железа (уровень 34, третья локация) ---
+execute at @a[scores={lvl=34..40},hasitem={item=raw_iron_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 190
+execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=34..40},hasitem={item=raw_iron_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 190
+execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=34..40},hasitem={item=raw_iron_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 380
+execute at @a[tag=boost:x4,tag=!boost:x2,scores={lvl=34..40},hasitem={item=raw_iron_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 760
+execute at @a[scores={lvl=34..40},hasitem={item=raw_iron_block},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
+execute at @a[scores={lvl=34..40},hasitem={item=raw_iron_block},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
+execute at @a[scores={lvl=34..40},hasitem={item=raw_iron_block}] run execute if block ~~-1~ gold_block run clear @p raw_iron_block 0 1
+
+# --- Блок рудного золота (уровень 35, третья локация) ---
+execute at @a[scores={lvl=35..40},hasitem={item=raw_gold_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 210
+execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=35..40},hasitem={item=raw_gold_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 210
+execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=35..40},hasitem={item=raw_gold_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 420
+execute at @a[tag=boost:x4,tag=!boost:x2,scores={lvl=35..40},hasitem={item=raw_gold_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 840
+execute at @a[scores={lvl=35..40},hasitem={item=raw_gold_block},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
+execute at @a[scores={lvl=35..40},hasitem={item=raw_gold_block},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
+execute at @a[scores={lvl=35..40},hasitem={item=raw_gold_block}] run execute if block ~~-1~ gold_block run clear @p raw_gold_block 0 1
+
+# --- Блок рудной меди (уровень 37, третья локация) ---
+execute at @a[scores={lvl=37..40},hasitem={item=raw_copper_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 230
+execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=37..40},hasitem={item=raw_copper_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 230
+execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=37..40},hasitem={item=raw_copper_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 460
+execute at @a[tag=boost:x4,tag=!boost:x2,scores={lvl=37..40},hasitem={item=raw_copper_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 920
+execute at @a[scores={lvl=37..40},hasitem={item=raw_copper_block},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
+execute at @a[scores={lvl=37..40},hasitem={item=raw_copper_block},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
+execute at @a[scores={lvl=37..40},hasitem={item=raw_copper_block}] run execute if block ~~-1~ gold_block run clear @p raw_copper_block 0 1
+
+# --- Блок аметиста (уровень 39, третья локация) ---
+execute at @a[scores={lvl=39..40},hasitem={item=amethyst_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 250
+execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=39..40},hasitem={item=amethyst_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 250
+execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=39..40},hasitem={item=amethyst_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 500
+execute at @a[tag=boost:x4,tag=!boost:x2,scores={lvl=39..40},hasitem={item=amethyst_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 1000
+execute at @a[scores={lvl=39..40},hasitem={item=amethyst_block},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
+execute at @a[scores={lvl=39..40},hasitem={item=amethyst_block},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
+execute at @a[scores={lvl=39..40},hasitem={item=amethyst_block}] run execute if block ~~-1~ gold_block run clear @p amethyst_block 0 1
 # Частицы продажи: у VIP с купленными в Косметике частицами (тег fx:sell) вместо стандартных — свои (scripts/menu/cosmetics_shop.js)
 # --- Amethyst (Аметист) ---
-# Продажа аметиста (уровень 26): деньги, эффекты
-execute at @a[scores={lvl=26..26},hasitem={item=amethyst_shard}] run execute if block ~~-1~ gold_block run scoreboard players add @p vip_coins 1
-execute at @a[scores={lvl=26..26},hasitem={item=amethyst_shard},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
-execute at @a[scores={lvl=26..26},hasitem={item=amethyst_shard},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
-execute at @a[scores={lvl=26..26},hasitem={item=amethyst_shard}] run execute if block ~~-1~ gold_block run clear @p amethyst_shard 0 1
+# Продажа аметистовых осколков из VIP-шахты: VIP-коины (VIP — тег player:vip, раньше это был уровень 26)
+execute at @a[tag=player:vip,hasitem={item=amethyst_shard}] run execute if block ~~-1~ gold_block run scoreboard players add @p vip_coins 1
+execute at @a[tag=player:vip,hasitem={item=amethyst_shard},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
+execute at @a[tag=player:vip,hasitem={item=amethyst_shard},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
+execute at @a[tag=player:vip,hasitem={item=amethyst_shard}] run execute if block ~~-1~ gold_block run clear @p amethyst_shard 0 1
 
 # --- Coins (Золотой слиток) ---
 # Продажа золотого слитка: деньги
-execute at @a[scores={lvl=1..26},hasitem={item=gold_ingot}] run scoreboard players add @p money 3
-execute at @a[scores={lvl=1..26},hasitem={item=gold_ingot}] run clear @p gold_ingot 0 1
+execute at @a[scores={lvl=1..40},hasitem={item=gold_ingot}] run scoreboard players add @p money 3
+execute at @a[scores={lvl=1..40},hasitem={item=gold_ingot}] run clear @p gold_ingot 0 1
 
 # --- Gift (Изумрудный блок) ---
 # Подарок из events/gift_event: первый, кто подобрал, объявляется всем (gift system > 0, пока подарок не найден)
 execute if score gift system matches 1.. as @a[hasitem={item=emerald_block}] run tellraw @a {"rawtext":[{"translate":"chat.event.gift_end","with":{"rawtext":[{"selector":"@s"}]}}]}
 execute if score gift system matches 1.. if entity @a[hasitem={item=emerald_block}] run scoreboard players set gift system 0
 # Продажа изумрудного блока: много денег (@s — сам владелец блока; раньше @p искал ближайшего к точке запуска функции)
-execute as @a[scores={lvl=1..26},hasitem={item=emerald_block}] run scoreboard players add @s money 150
-execute as @a[scores={lvl=1..26},hasitem={item=emerald_block}] run clear @s emerald_block 0 1
+execute as @a[scores={lvl=1..40},hasitem={item=emerald_block}] run scoreboard players add @s money 150
+execute as @a[scores={lvl=1..40},hasitem={item=emerald_block}] run clear @s emerald_block 0 1

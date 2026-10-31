@@ -1,6 +1,6 @@
 // --- Чат-логика и антиспам для Shop for Ore ---
 import { world, system } from '@minecraft/server';
-import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor, impersonatedRole, tell, run } from '../DataBase.js';
+import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor, impersonatedRole, tell, run, isVip } from '../DataBase.js';
 
 // --- Значения по умолчанию для тегов игрока ---
 const rank = 'rank:';
@@ -167,7 +167,7 @@ world.events.tick.subscribe(() => {
 		}
 		const role = getRole(player);
 		// Ник над головой: цвет из !color, иначе у игрока серый, у персонала — цвет роли. У VIP вместо монет — VIP-коины
-		const nameTag = `${getChatColor(player, 'name') ?? (role === 'player' ? '§7' : ROLE_COLORS[role])}${player.name}\n§f - ${metricNumbers(getScore(player,'lvl'))}\n§f - ${metricNumbers(getScore(player,'xp'))}/${metricNumbers(getScore(player,'xp_need'))}\n${getScore(player, 'lvl') >= 26 ? `§f - ${metricNumbers(getScore(player, 'vip_coins'))}` : `§f - ${metricNumbers(getScore(player, 'money'))}`}\n§f - ${metricNumbers(getScore(player,'rebirth'))}`;
+		const nameTag = `${getChatColor(player, 'name') ?? (role === 'player' ? '§7' : ROLE_COLORS[role])}${player.name}\n§f - ${metricNumbers(getScore(player,'lvl'))}\n§f - ${metricNumbers(getScore(player,'xp'))}/${metricNumbers(getScore(player,'xp_need'))}\n${isVip(player) ? `§f - ${metricNumbers(getScore(player, 'vip_coins'))}` : `§f - ${metricNumbers(getScore(player, 'money'))}`}\n§f - ${metricNumbers(getScore(player,'rebirth'))}`;
 		if (player.nameTag !== nameTag) player.nameTag = nameTag;
 	}
 });

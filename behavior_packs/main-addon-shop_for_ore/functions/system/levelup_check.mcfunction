@@ -3,4 +3,4 @@
 # получает +1 уровень. Работает для каждого игрока отдельно (@s): в старых блоках опыт
 # снимался у всех игроков на золотых блоках с подходящим уровнем, а не только у повысившегося.
 # Не больше одного уровня за тик; xp_need пересчитывается в конце system/levelup_apply.
-execute as @a[scores={lvl=1..24}] at @s if block ~~-1~ gold_block 0 if score @s xp >= @s xp_need run function system/levelup_apply
+execute as @a[scores={lvl=1..39}] at @s if block ~~-1~ gold_block 0 if score @s xp >= @s xp_need run function system/levelup_apply

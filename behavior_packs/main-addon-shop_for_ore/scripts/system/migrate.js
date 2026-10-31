@@ -2,8 +2,10 @@
 // Теги хранятся у каждого игрока в данных мира, поэтому старые меняются на новые, когда игрок в сети
 // (проверка раз в секунду). Табло qx и tpore переименовывает functions/system/setup (setup system = 2).
 // Когда у всех игроков мира теги уже новые, файл можно удалить.
+// Здесь же — перенос VIP с уровня 26 на тег (migrateVip, ниже).
 
 import { world, system } from '@minecraft/server';
+import { getScore, run, tell, VIP_TAG } from '../DataBase.js';
 
 // Старый тег → новый
 const PLAIN = {
@@ -51,6 +53,26 @@ export function migratePlayer(player) {
 	return n;
 }
 
+// VIP был уровнем 26 (до третьей локации, 0.3.0). Теперь VIP — тег player:vip, а уровни 26–40 — третья локация.
+// Один раз на игрока (тег sys:vip_migrated): уровень 26 → тег VIP и уровень 25 — дальше в третью локацию.
+// Игроки, дошедшие до 26 уровня уже после обновления, к этому времени отмечены и не трогаются.
+export const VIP_MIGRATED = 'sys:vip_migrated';
+export function migrateVip(player) {
+	if (player.hasTag(VIP_MIGRATED)) return false;
+	const lvl = getScore(player, 'lvl');
+	if (!(lvl > 0)) return false;          // счёт ещё не создан — проверим в следующую секунду
+	player.addTag(VIP_MIGRATED);
+	if (lvl !== 26) return false;
+	player.addTag(VIP_TAG);
+	run(player, 'scoreboard players set @s lvl 25');
+	run(player, 'scoreboard players set @s xp 0');
+	tell(player, 'chat.vip.migrated');
+	return true;
+}
+
 system.runSchedule(() => {
-	for (const player of world.getPlayers()) migratePlayer(player);
+	for (const player of world.getPlayers()) {
+		migratePlayer(player);
+		migrateVip(player);
+	}
 }, 20);

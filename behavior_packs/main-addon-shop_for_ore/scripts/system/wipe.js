@@ -15,7 +15,7 @@ const WIPE_TAG = 'sys:wipe:';
 export const WIPE_OBJECTIVES = ['money', 'vip_coins', 'lvl', 'xp', 'rebirth', 'online', 'efficiency', 'fortune', 'promo1', 'promo2', 'promo3', 'promo4',
 	'xp_need', 'magnet', 'pick', 'stat_mined', 'stat_kills', 'stat_playtime', 'stat_wins', 'stat_deaths', 'stat_win_pvp_ffa', 'stat_win_spleef'];
 // Теги: точное имя или префикс (с «:» на конце)
-const WIPE_TAGS = ['player', 'player:rebirth', 'boost:', 'ach:', 'stat:', 'cosmetic:', 'fx:', 'chat:name_color:', 'chat:text_color:', 'game:', WIPE_TAG];
+const WIPE_TAGS = ['player', 'player:rebirth', 'player:vip', 'sys:vip_migrated', 'boost:', 'ach:', 'stat:', 'cosmetic:', 'fx:', 'chat:name_color:', 'chat:text_color:', 'game:', WIPE_TAG];
 
 world.events.worldInitialize.subscribe((e) => {
 	const def = new DynamicPropertiesDefinition();
