@@ -305,6 +305,9 @@
 		},
 		{
 			"path" : "scripts/system/jail.js"
+		},
+		{
+			"path" : "scripts/system/tir.js"
 		}],
 	"version" : 1
 }
