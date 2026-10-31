@@ -7,11 +7,10 @@
 // купленное раньше (например, до ребитха) выбирается и без VIP, кроме частиц при продаже — они действуют только у VIP.
 
 import { world, BlockLocation } from '@minecraft/server';
-import { CHAT_COLORS, getChatColor, setChatColor, colorAllowed, getScore, metricNumbers, run, tell } from '../DataBase.js';
+import { CHAT_COLORS, getChatColor, setChatColor, colorAllowed, getScore, metricNumbers, run, tell, isVip } from '../DataBase.js';
 import { showMenu, backButton } from './forms.js';
 
 const VIP_COIN = '';
-const isVip = (player) => getScore(player, 'lvl') >= 26;
 
 // Цены в VIP-коинах (коин — за аметист на VIP-уровне)
 const COLOR_PRICE = { name: 150, text: 100 };

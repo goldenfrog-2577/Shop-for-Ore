@@ -4,7 +4,7 @@
 
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed } from '../system/jail.js';
-import { isPending, rawTranslate, tellText, tell, run, WARPS } from '../DataBase.js';
+import { isPending, rawTranslate, tellText, tell, run, WARPS, MAX_LEVEL } from '../DataBase.js';
 import { showMenu, showModal, modal, backButton, toggleMenu } from './forms.js';
 import { bank } from './bank_menu.js';
 import { enchantsMenu } from './enchant_shop.js';
@@ -69,7 +69,7 @@ export function menu(player) {
 function mapInfo(player) {
 	const back = () => menu(player);
 	showMenu(player, '%menu.about.title', '%menu.about.body', [
-		{ text: '%menu.about.button.levels', run: () => textPage(player, '%menu.levels.title', lines('menu.levels.line', 25), () => mapInfo(player)) },
+		{ text: '%menu.about.button.levels', run: () => textPage(player, '%menu.levels.title', lines('menu.levels.line', MAX_LEVEL), () => mapInfo(player)) },
 		{ text: '%menu.about.button.howtoplay', run: () => textPage(player, '%menu.howtoplay.title', HOWTOPLAY, () => mapInfo(player)) },
 		{ text: '%menu.about.button.creators', run: () => creators(player) },
 		{ text: '%menu.about.button.version', run: () => textPage(player, '%menu.version.title', VERSION, () => mapInfo(player)) },
@@ -238,7 +238,7 @@ function upgrading(player) {
 	const back = () => menu(player);
 	showMenu(player, '%menu.upgrades.title', '%menu.upgrades.body', [
 		product(player, '%menu.upgrades.button.vip', '125.0K', COIN, 'upgrade/upgrade_vip'),
-		product(player, '%menu.upgrades.button.rebirth', '16 - 25', LVL, 'upgrade/upgrade_rebirth'),
+		product(player, '%menu.upgrades.button.rebirth', `25 - ${MAX_LEVEL}`, LVL, 'upgrade/upgrade_rebirth'),
 		backButton(back)
 	], back);
 }

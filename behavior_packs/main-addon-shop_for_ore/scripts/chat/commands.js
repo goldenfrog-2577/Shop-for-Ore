@@ -2,7 +2,7 @@
 // Список команд и роли — commandsList в DataBase.js; runChatCommand вызывают и чат, и меню администратора.
 
 import { world } from '@minecraft/server';
-import { CHAT_COLORS, setChatColor, colorAllowed, impersonatedRole, commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS, setIssuer, clearIssuer, canLift, tell, parseTerm, termText } from '../DataBase.js';
+import { CHAT_COLORS, setChatColor, colorAllowed, impersonatedRole, commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS, setIssuer, clearIssuer, canLift, tell, parseTerm, termText, isVip } from '../DataBase.js';
 import { getBot, getBotName, spawnBot } from '../system/spawnbot.js';
 import { teleportToArena, combatSecondsLeft } from '../system/pvp.js';
 import { startMythic } from '../system/mythic.js';
@@ -406,7 +406,7 @@ export function runChatCommand(player, command, args) {
 		case 'balance': {
 			// Монеты на балансе; у VIP — ещё VIP-монеты
 			tell(player, 'chat.cmd.balance', getScore(player, 'money'));
-			if (getScore(player, 'lvl') >= 26) tell(player, 'chat.cmd.balance.vip', getScore(player, 'vip_coins'));
+			if (isVip(player)) tell(player, 'chat.cmd.balance.vip', getScore(player, 'vip_coins'));
 			break;
 		}
 
@@ -447,7 +447,7 @@ export function runChatCommand(player, command, args) {
 			}
 			const lvl = getScore(target, 'lvl');
 			const lines = [
-				{ translate: 'chat.cmd.stats.lvl', with: { rawtext: [lvl >= 26 ? { translate: 'chat.cmd.stats.vip' } : { text: String(lvl) }] } },
+				{ translate: 'chat.cmd.stats.lvl', with: { rawtext: [isVip(target) ? { translate: 'chat.cmd.stats.vip', with: [String(lvl)] } : { text: String(lvl) }] } },
 				{ translate: 'chat.cmd.stats.xp', with: [String(getScore(target, 'xp')), String(getScore(target, 'xp_need'))] },
 				{ translate: 'chat.cmd.stats.money', with: [String(getScore(target, 'money'))] },
 				{ translate: 'chat.cmd.stats.vip_coins', with: [String(getScore(target, 'vip_coins'))] },

@@ -23,7 +23,17 @@ tag @a[scores={lvl=19..19},hasitem={item=netherite_pickaxe,location=slot.hotbar,
 tag @a[scores={lvl=20..21},hasitem={item=netherite_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
 tag @a[scores={lvl=22..23},hasitem={item=netherite_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
 tag @a[scores={lvl=24..24},hasitem={item=netherite_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
-tag @a[scores={lvl=25..},hasitem={item=netherite_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
+tag @a[scores={lvl=25..25},hasitem={item=netherite_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
+# Третья локация (26–40): кирки идут заново от деревянной; ломают только её блоки
+tag @a[scores={lvl=26..27},hasitem={item=wooden_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
+tag @a[scores={lvl=28..29},hasitem={item=stone_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
+tag @a[scores={lvl=30..30},hasitem={item=stone_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
+tag @a[scores={lvl=31..32},hasitem={item=iron_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
+tag @a[scores={lvl=33..33},hasitem={item=iron_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
+tag @a[scores={lvl=34..34},hasitem={item=diamond_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
+tag @a[scores={lvl=35..36},hasitem={item=diamond_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
+tag @a[scores={lvl=37..38},hasitem={item=netherite_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
+tag @a[scores={lvl=39..},hasitem={item=netherite_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
 # В сплифе в этом слоте лопата (scripts/system/spleef.js) — кирку не выдаём, её вернут после игры
 tag @a[tag=game:spleef] remove sys:pick_update
 # В тире (scripts/system/tir.js) слот 1 свободен под лук — кирку вернём при выходе из зоны
@@ -45,6 +55,15 @@ replaceitem entity @a[tag=sys:pick_update,scores={lvl=19..19}] slot.hotbar 0 net
 replaceitem entity @a[tag=sys:pick_update,scores={lvl=20..21}] slot.hotbar 0 netherite_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["dirt","stone","coal_ore","iron_ore","copper_ore","redstone_ore","lit_redstone_ore","gold_ore","lapis_ore","diamond_ore","emerald_ore","netherrack","magma","quartz_ore","nether_gold_ore","ancient_debris"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
 replaceitem entity @a[tag=sys:pick_update,scores={lvl=22..23}] slot.hotbar 0 netherite_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["dirt","stone","coal_ore","iron_ore","copper_ore","redstone_ore","lit_redstone_ore","gold_ore","lapis_ore","diamond_ore","emerald_ore","netherrack","magma","quartz_ore","nether_gold_ore","ancient_debris","netherite_block"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
 replaceitem entity @a[tag=sys:pick_update,scores={lvl=24..24}] slot.hotbar 0 netherite_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["dirt","stone","coal_ore","iron_ore","copper_ore","redstone_ore","lit_redstone_ore","gold_ore","lapis_ore","diamond_ore","emerald_ore","netherrack","magma","quartz_ore","nether_gold_ore","ancient_debris","netherite_block","obsidian"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
-replaceitem entity @a[tag=sys:pick_update,scores={lvl=25..}] slot.hotbar 0 netherite_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["dirt","stone","coal_ore","iron_ore","copper_ore","redstone_ore","lit_redstone_ore","gold_ore","lapis_ore","diamond_ore","emerald_ore","netherrack","magma","quartz_ore","nether_gold_ore","ancient_debris","netherite_block","obsidian","crying_obsidian","amethyst_cluster"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
+replaceitem entity @a[tag=sys:pick_update,scores={lvl=25..25}] slot.hotbar 0 netherite_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["dirt","stone","coal_ore","iron_ore","copper_ore","redstone_ore","lit_redstone_ore","gold_ore","lapis_ore","diamond_ore","emerald_ore","netherrack","magma","quartz_ore","nether_gold_ore","ancient_debris","netherite_block","obsidian","crying_obsidian","amethyst_cluster"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
+replaceitem entity @a[tag=sys:pick_update,scores={lvl=26..27}] slot.hotbar 0 wooden_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["stone"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
+replaceitem entity @a[tag=sys:pick_update,scores={lvl=28..29}] slot.hotbar 0 stone_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["stone"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
+replaceitem entity @a[tag=sys:pick_update,scores={lvl=30..30}] slot.hotbar 0 stone_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["stone","deepslate"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
+replaceitem entity @a[tag=sys:pick_update,scores={lvl=31..32}] slot.hotbar 0 iron_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["stone","deepslate","tuff"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
+replaceitem entity @a[tag=sys:pick_update,scores={lvl=33..33}] slot.hotbar 0 iron_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["stone","deepslate","tuff","calcite"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
+replaceitem entity @a[tag=sys:pick_update,scores={lvl=34..34}] slot.hotbar 0 diamond_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["stone","deepslate","tuff","calcite","raw_iron_block"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
+replaceitem entity @a[tag=sys:pick_update,scores={lvl=35..36}] slot.hotbar 0 diamond_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["stone","deepslate","tuff","calcite","raw_iron_block","raw_gold_block"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
+replaceitem entity @a[tag=sys:pick_update,scores={lvl=37..38}] slot.hotbar 0 netherite_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["stone","deepslate","tuff","calcite","raw_iron_block","raw_gold_block","raw_copper_block"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
+replaceitem entity @a[tag=sys:pick_update,scores={lvl=39..}] slot.hotbar 0 netherite_pickaxe 1 0 {"minecraft:can_destroy":{"blocks":["stone","deepslate","tuff","calcite","raw_iron_block","raw_gold_block","raw_copper_block","amethyst_block"]},"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
 execute as @a[tag=sys:pick_update] run scoreboard players operation @s pick = @s lvl
 tag @a remove sys:pick_update
