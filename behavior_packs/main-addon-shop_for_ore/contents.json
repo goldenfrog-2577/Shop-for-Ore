@@ -313,6 +313,9 @@
 			"path" : "scripts/system/trader.js"
 		},
 		{
+			"path" : "scripts/system/promo.js"
+		},
+		{
 			"path" : "loot_tables/shop/trader/creeper_head.json"
 		},
 		{
