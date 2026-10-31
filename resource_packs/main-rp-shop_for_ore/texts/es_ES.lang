@@ -588,14 +588,13 @@ menu.rules.line.11=§r§l11.§r§7 No discutir decisiones del personal en el cha
 ##   menu.promo.*, chat.promo.*
 menu.promo.title=§l§8Menú del servidor »  Códigos promocionales
 menu.promo.body=§7Los códigos promocionales pueden encontrarse en cualquier parte. Están marcados en carteles con este §2color§7.
-menu.promo.hint=§7Si encuentras uno, introdúcelo abajo, respetando mayúsculas y minúsculas, o no funcionará.
+menu.promo.hint=§7Si encuentras uno, introdúcelo abajo; da igual si usas mayúsculas o minúsculas.
 menu.promo.placeholder=§7Introduce el código promocional...
-chat.promo.reward.1=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo §e500 
-chat.promo.reward.2=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo §e500 
-chat.promo.reward.3=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo §e25k 
-chat.promo.reward.4=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo §e100 
 chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7Ya has activado este §ecódigo promocional
 chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Código promocional inválido
+chat.promo.reward=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo %2$s
+chat.promo.error.vip=§r⩕ §l§cERROR!§r §8» §7Este código promocional es solo para §eVIP
+chat.promo.error.level=§r⩕ §l§cERROR!§r §8» §7Este código promocional funciona desde el nivel §e%1$s
 
 ## --- TELETRANSPORTES ---
 ##   menu.warps.*, warp.*, chat.cmd.warp.*, chat.cmd.tp.*, chat.cmd.tphere.*
@@ -693,6 +692,8 @@ ach.item.golden_apple=Manzana dorada
 ach.item.enchanted_golden_apple=Manzana dorada encantada
 ach.item.netherite_ingot=Lingote de netherita
 ach.item.totem_of_undying=Tótem de la inmortalidad
+ach.item.bow=Arco
+ach.item.arrow=Flechas
 chat.ach.task=§r §2 Logros §8» §7§f%1$s§r§7 ha conseguido el logro %2$s
 chat.ach.challenge=§r §5 Desafíos §8» §7§f%1$s§r§7 ha completado el desafío %2$s
 chat.cmd.achievement.use=§r §7CMD §8» §7Uso: §e!achievement§7 <jugador> <list/grant/revoke> [id]

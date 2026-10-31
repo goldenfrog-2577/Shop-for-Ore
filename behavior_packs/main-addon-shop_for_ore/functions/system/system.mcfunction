@@ -35,7 +35,7 @@ scoreboard players set @a[tag=!player] lvl 1
 scoreboard players set @a[tag=!player] efficiency 0
 scoreboard players set @a[tag=!player] fortune 0
 scoreboard players set @a[tag=!player:rebirth] rebirth 0
-# Недостающие счета (promo1–4, после вайпа — xp, money, lvl…) создаёт раз в секунду timers/ticks_20
+# Недостающие счета (после вайпа — xp, money, lvl…) создаёт раз в секунду timers/ticks_20
 
 # Выдача меню администратора и обычного меню — только если его нет в слоте
 # (раньше предмет перевыдавался каждый тик всем игрокам)

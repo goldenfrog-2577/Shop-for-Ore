@@ -8,12 +8,7 @@ execute if entity @e[name="X4Boost",scores={system=1..}] run function boost/x4_t
 tag @a[tag=!player] add player
 
 # Недостающие счета (раньше — каждый тик в system/system; секунды хватает)
-# promo1-4: «add 0» только создаёт счёт новичку и не обнуляет его после перерождения,
-# иначе промокоды снова срабатывают после каждого rebirth
-scoreboard players add @a promo1 0
-scoreboard players add @a promo2 0
-scoreboard players add @a promo3 0
-scoreboard players add @a promo4 0
+# Промокоды — теги promo:<код> (scripts/system/promo.js), табло promo1…promo4 больше не заполняются
 # Счёта нет, а тег player есть — так бывает после вайпа у тех, кто был не в сети: вайп сбрасывает
 # табло у всех («reset *»), а тег player снимает только с тех, кто в сети (@e). Без уровня у игрока
 # нет кирки и панели слева. «add 0» создаёт пустой счёт как 0 и не меняет существующий; уровня 0 не бывает

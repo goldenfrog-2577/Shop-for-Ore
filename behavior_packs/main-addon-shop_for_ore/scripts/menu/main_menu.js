@@ -4,7 +4,7 @@
 
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed } from '../system/jail.js';
-import { isPending, rawTranslate, tellText, tell, run, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed } from '../DataBase.js';
+import { isPending, tellText, tell, run, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed } from '../DataBase.js';
 import { showMenu, showModal, modal, backButton, toggleMenu } from './forms.js';
 import { bank } from './bank_menu.js';
 import { enchantsMenu } from './enchant_shop.js';
@@ -14,6 +14,7 @@ import { minigamesMenu } from './minigames_menu.js';
 import { runChatCommand } from '../chat/commands.js';
 import { MUSIC_OFF } from '../system/music.js';
 import { ChangePasswordUI } from '../register/change.js';
+import { redeemPromo } from '../system/promo.js';
 
 const OPEN = '\n%menu.common.tap_to_open';
 const COIN = '', LVL = '';
@@ -199,30 +200,10 @@ function rules(player) {
 	textPage(player, '%menu.rules.title', `%menu.rules.header\n\n${lines('menu.rules.line', RULES_COUNT)}\n\n%menu.rules.footer`, () => menu(player));
 }
 
-// Промокод — один раз на игрока: отметка в табло promoN (0 — не вводил)
-const PROMOCODES = {
-	kapycta: { scoreboard: 'promo1', objective: 'xp', amount: 500, message: 'chat.promo.reward.1' },
-	parkour: { scoreboard: 'promo2', objective: 'money', amount: 500, message: 'chat.promo.reward.2' },
-	hellbonus: { scoreboard: 'promo3', objective: 'xp', amount: 25000, message: 'chat.promo.reward.3' },
-	VIPbonus: { scoreboard: 'promo4', objective: 'vip_coins', amount: 100, message: 'chat.promo.reward.4' }
-};
-
+// Промокоды: список, условия и награды — system/promo.js
 function promocodes(player) {
 	const form = modal('%menu.promo.title').textField('%menu.promo.body\n\n%menu.promo.hint', '%menu.promo.placeholder');
-	showModal(player, form, ([code]) => redeemPromo(player, String(code ?? '').trim()), () => menu(player));
-}
-
-/** Без учёта регистра: «Kapycta» и «vipbonus» тоже подходят. */
-function redeemPromo(player, code) {
-	const key = Object.keys(PROMOCODES).find(k => k.toLowerCase() === code.toLowerCase());
-	if (!key) return tellText(player, '%chat.promo.error.invalid');
-	const promo = PROMOCODES[key];
-	// execute if … падает, если промокод уже вводили
-	player.runCommandAsync(`execute if score @s ${promo.scoreboard} matches 0`).then(() => {
-		run(player, `scoreboard players add @s ${promo.objective} ${promo.amount}`);
-		run(player, `scoreboard players set @s ${promo.scoreboard} 1`);
-		run(player, `tellraw @a ${rawTranslate(promo.message, player.name)}`);
-	}, () => tellText(player, '%chat.promo.error.used'));
+	showModal(player, form, ([code]) => redeemPromo(player, code), () => menu(player));
 }
 
 // Телепортации: те же точки, что у !warp (WARPS в DataBase.js), кроме точек персонала; VIP-остров — только VIP.
