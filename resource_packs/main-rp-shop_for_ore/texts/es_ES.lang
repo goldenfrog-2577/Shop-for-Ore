@@ -82,10 +82,10 @@ progressScreen.message.locating=Antes de hacer muchas preguntas, lee los cartele
 progressScreen.message.resourceLoading=Host Telegram: @goldenfrog_2577
 
 ## --- COMÚN: ROLES, COLORES, PLAZOS, ERRORES ---
-##   common.*, menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
+##   menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
 menu.common.tap_to_open=§8[§7Pulsa para abrir§8]
 menu.common.back=§8 Atrás
-common.vip_only=§8[§cSolo VIP§8]
+menu.common.vip_only=§8[§cSolo VIP§8]
 menu.common.yes=§2Sí
 menu.common.no=§4No
 chat.server.wiped=§r §cServidor §8» §7Se han reiniciado las estadísticas de todos los jugadores. Los desconectados se reiniciarán al entrar

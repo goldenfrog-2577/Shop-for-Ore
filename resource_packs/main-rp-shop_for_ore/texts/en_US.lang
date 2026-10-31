@@ -82,10 +82,10 @@ progressScreen.message.locating=Before asking too many questions, read the signs
 progressScreen.message.resourceLoading=Host Telegram: @goldenfrog_2577
 
 ## --- COMMON: ROLES, COLORS, TERMS, ERRORS ---
-##   common.*, menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
+##   menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
 menu.common.tap_to_open=§8[§7Press to open§8]
 menu.common.back=§8 Back
-common.vip_only=§8[§cVIP only§8]
+menu.common.vip_only=§8[§cVIP only§8]
 menu.common.yes=§2Yes
 menu.common.no=§4No
 chat.server.wiped=§r §cServer §8» §7All players' stats have been reset. Offline players will be reset when they join

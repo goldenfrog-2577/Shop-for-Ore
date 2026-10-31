@@ -82,10 +82,10 @@ progressScreen.message.locating=Прежде чем задавать много 
 progressScreen.message.resourceLoading=Telegram хоста: @goldenfrog_2577
 
 ## --- ОБЩЕЕ: РОЛИ, ЦВЕТА, СРОКИ, ОШИБКИ ---
-##   common.*, menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
+##   menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
 menu.common.tap_to_open=§8[§7Нажми, чтобы открыть§8]
 menu.common.back=§8 Назад
-common.vip_only=§8[§cТолько для VIP§8]
+menu.common.vip_only=§8[§cТолько для VIP§8]
 menu.common.yes=§2Да
 menu.common.no=§4Нет
 chat.server.wiped=§r §cСервер §8» §7Статистика всех игроков сброшена. Кто не в сети — будет сброшен при входе
