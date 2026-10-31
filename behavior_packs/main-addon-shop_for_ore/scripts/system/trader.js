@@ -7,6 +7,7 @@
 
 import { world } from '@minecraft/server';
 import { getScore, isVip, run, tell } from '../DataBase.js';
+import { TRADER_HEADS } from './achievements.js';
 
 /** Товары: кнопка (x, y, z) → id, цена, что выдать. */
 export const PRODUCTS = [
@@ -39,6 +40,9 @@ export function buy(player, product) {
 	run(player, `scoreboard players remove @s vip_coins ${product.price}`);
 	run(player, product.effect ?? `loot give @s loot "shop/trader/${product.id}"`);
 	tell(player, 'chat.trader.bought', { translate: `trader.item.${product.id}` }, String(product.price));
+	// Для достижений «У торговца» и «Коллекционер голов» (system/achievements.js)
+	player.addTag('stat:trader');
+	if (TRADER_HEADS.includes(product.id)) player.addTag(`stat:head:${product.id}`);
 	run(player, 'playsound random.levelup @s ~ ~ ~ 0.6 1.2');
 	return 'ok';
 }

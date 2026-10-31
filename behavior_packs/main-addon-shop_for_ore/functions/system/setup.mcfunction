@@ -1,4 +1,4 @@
-# Разовая настройка табло. Вызывается из system/timers, пока setup system меньше 5.
+# Разовая настройка табло. Вызывается из system/timers, пока setup system меньше 6.
 # 2 — табло qx и tpore переименованы в xp_need и magnet (единый стиль названий, 0.3.0)
 # Если понадобится новое табло — добавить сюда и поднять номер в timers и ниже.
 scoreboard objectives add xp_need dummy System
@@ -25,4 +25,7 @@ scoreboard objectives add stat_wins dummy
 scoreboard objectives add stat_deaths dummy
 scoreboard objectives add stat_win_pvp_ffa dummy
 scoreboard objectives add stat_win_spleef dummy
-scoreboard players set setup system 5
+# 6 — счётчики новых достижений: проданные осколки аметиста и попадания в тире
+scoreboard objectives add stat_amethyst dummy
+scoreboard objectives add stat_tir_hits dummy
+scoreboard players set setup system 6

@@ -21,6 +21,8 @@ scoreboard players reset * stat_wins
 scoreboard players reset * stat_deaths
 scoreboard players reset * stat_win_pvp_ffa
 scoreboard players reset * stat_win_spleef
+scoreboard players reset * stat_amethyst
+scoreboard players reset * stat_tir_hits
 
 # Теги (прогресс, достижения, косметика) снимает scripts/system/wipe.js — у игроков в сети сразу,
 # у остальных при входе (номер вайпа в свойстве мира shop:wipe_id)

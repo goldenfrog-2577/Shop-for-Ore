@@ -19,6 +19,7 @@ export const MIN_DISTANCE = 8;
 export const COOLDOWN_MS = 3000;
 export const CENTER_REWARD = 50, EDGE_REWARD = 10;
 const FAR_DISTANCE = 40;        // с этой дальности множитель ×2
+export const BULLSEYE_ACCURACY = 90, BULLSEYE_DISTANCE = 30;   // достижение «В яблочко»
 const CHECK_EVERY = 10;         // тиков между проверками входа и выхода
 const HOTBAR_FIRST = 0, INVENTORY_SIZE = 36;
 
@@ -76,6 +77,9 @@ world.events.projectileHit.subscribe((e) => {
 	if (r.error === 'close') { showHudLine(shooter, [{ translate: 'hud.tir.close', with: [String(MIN_DISTANCE)] }]); return; }
 	if (r.error) return;
 	run(shooter, `scoreboard players add @s money ${r.money}`);
+	// Для достижений: попадания (stat_tir_hits) и «В яблочко» — меткость 90 % с 30+ блоков (system/achievements.js)
+	run(shooter, 'scoreboard players add @s stat_tir_hits 1');
+	if (r.accuracy >= BULLSEYE_ACCURACY && r.distance >= BULLSEYE_DISTANCE) shooter.addTag('stat:tir_bullseye');
 	showHudLine(shooter, [{ translate: 'hud.tir.hit', with: [String(r.money), `${r.accuracy}%`, String(Math.round(r.distance))] }]);
 	run(shooter, r.accuracy >= 90 ? 'playsound random.levelup @s ~ ~ ~ 0.6 1.6' : 'playsound note.bell @s ~ ~ ~ 0.8 1.2');
 });
