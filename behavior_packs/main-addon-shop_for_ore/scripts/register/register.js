@@ -1,5 +1,5 @@
 // --- UI регистрации нового игрока ---
-// Форму вызывает register/system.js (раньше — отдельная проверка тега 'onRegister' каждый тик)
+// Форму вызывает register/system.js
 
 import { tellText, run } from '../DataBase.js';
 import { modal } from '../menu/forms.js';
@@ -32,9 +32,8 @@ export function RegisterUI(player) {
 			run(player, 'playsound note.bass @s');
 			return;
 		}
-		// Теги ставим синхронно и в правильном порядке: сначала пароль (соль + хеш), потом auth:done.
-		// Раньше это были отдельные команды tag: если команда с паролем падала
-		// (например, из-за кавычки в пароле), игрок становился «зарегистрированным» без пароля
+		// Теги ставим синхронно и в правильном порядке: сначала пароль (соль + хеш), потом auth:done —
+		// иначе при ошибке (например, кавычка в пароле) игрок стал бы «зарегистрированным» без пароля
 		setPassword(player, password);
 		player.addTag('auth:done');
 		player.removeTag('auth:register');

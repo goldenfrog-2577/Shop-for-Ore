@@ -79,7 +79,7 @@ function gamemodes(player) {
 		{ text: '%admin.gamemode.button.creative', icon: 'textures/ui/heart_new', run: () => runChatCommand(player, 'gm1', []) },
 		{ text: '%admin.gamemode.button.adventure', icon: 'textures/ui/absorption_heart', run: () => runChatCommand(player, 'gm2', []) },
 		{ text: '%admin.gamemode.button.spectator', icon: 'textures/ui/freeze_heart', run: () => runChatCommand(player, 'gm6', []) },
-		// Раньше кнопка только включала полёт — теперь переключает
+		// Полёт — переключатель: включить / выключить
 		{ text: player.hasTag('state:fly') ? '%admin.gamemode.button.fly_off' : '%admin.gamemode.button.fly_on', icon: 'textures/items/feather', run: () => runChatCommand(player, 'fly', []) },
 		back(() => admin_menu(player))
 	], () => admin_menu(player));
@@ -110,7 +110,7 @@ function warps(player) {
 		{ text: '%admin.warps.button.boss_zone', icon: 'textures/ui/World', run: tp(184, 11, 287) },
 		{ text: '%admin.warps.button.cmd_zone', icon: 'textures/ui/World', run: tp(50, 5, 50) },
 		{ text: '%admin.warps.button.random_player', icon: 'textures/ui/World', run: () => {
-			// Случайный игрок без роли; если таких нет — сообщение (раньше команда молча не срабатывала)
+			// Случайный игрок без роли; если таких нет — сообщение
 			const list = [...world.getPlayers()].filter(p => getRole(p) === 'player');
 			if (!list.length) return tell(player, 'chat.admin.error.no_players');
 			const target = list[Math.floor(Math.random() * list.length)];
@@ -442,7 +442,7 @@ function boostForm(player) {
 
 const eventLabel = (ev) => `%chat.cmd.event.name.${ev} §8— %admin.boosts.auto.every ${EVENT_PERIOD[ev]} %admin.common.min`;
 
-// Ивенты по таймеру: переключатели табло settings (раньше — только командой /scoreboard)
+// Ивенты по таймеру: переключатели табло settings (то же, что /scoreboard players set <ивент> settings 1|0)
 function autoEventsForm(player, onBack) {
 	const form = modal('%admin.boosts.auto.title');
 	for (const ev of EVENTS) form.toggle(eventLabel(ev), getSetting(ev) === 1);

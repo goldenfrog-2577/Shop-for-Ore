@@ -60,7 +60,7 @@ export function resetOffline(by) {
 			for (const s of objective.getScores()) {
 				const type = String(s.participant.type).toLowerCase();
 				if (type === 'fakeplayer') fake.push([s.participant.displayName, s.score]);
-				// Сущности — стойки X2Boost/X4Boost, rainEvent и т. п. (таймеры в табло system): раньше их счета терялись
+				// Сущности — стойки X2Boost/X4Boost, rainEvent и т. п. (таймеры в табло system): их счета тоже возвращаются
 				else if (type === 'entity') {
 					try { const e = s.participant.getEntity(); if (e) keep.push([e, s.score]); } catch { /* сущность не прогружена */ }
 				}
