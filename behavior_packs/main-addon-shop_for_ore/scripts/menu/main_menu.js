@@ -184,8 +184,10 @@ function boardSetting(player, back) {
 
 // ===== Правила, промокоды, телепортации, прокачка =====
 
+// Пункты правил: menu.rules.line.1…N в .lang (нарушение • наказание и срок)
+export const RULES_COUNT = 11;
 function rules(player) {
-	textPage(player, '%menu.rules.title', `%menu.rules.header\n\n${lines('menu.rules.line', 6)}\n\n%menu.rules.footer`, () => menu(player));
+	textPage(player, '%menu.rules.title', `%menu.rules.header\n\n${lines('menu.rules.line', RULES_COUNT)}\n\n%menu.rules.footer`, () => menu(player));
 }
 
 // Промокод — один раз на игрока: отметка в табло promoN (0 — не вводил)

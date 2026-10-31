@@ -123,7 +123,7 @@ export function debugLines(target) {
 		groups.get(group).push(i > 0 ? tag.slice(i + 1) : tag);
 	}
 	const lines = [
-		{ translate: 'chat.cmd.debug.role', with: { rawtext: [{ translate: `role.${getRole(target)}` }] } },
+		{ translate: 'chat.cmd.stats.role', with: { rawtext: [{ translate: `role.${getRole(target)}` }] } },
 		{ translate: 'chat.cmd.debug.pos', with: [`${Math.floor(x)} ${Math.floor(y)} ${Math.floor(z)}`, target.dimension.id.replace('minecraft:', '')] },
 		{ translate: 'chat.cmd.debug.scores', with: [scores] },
 		{ translate: 'chat.cmd.debug.tags', with: [String(tags.length)] }
@@ -182,7 +182,7 @@ function resolveTarget(player, name, otherRole, targetRole) {
 export function setMoney(player, target, action, raw) {
 	const amount = Number(raw);
 	if (!['add', 'take', 'set'].includes(action) || !/^\d+$/.test(raw) || amount > 2147483647) {
-		tell(player, 'chat.cmd.money.error.amount');
+		tell(player, 'chat.cmd.error.number', raw || '—', 0, 2147483647);
 		return false;
 	}
 	const before = getScore(target, 'money');
@@ -328,7 +328,7 @@ export function runChatCommand(player, command, args) {
 			}
 			const warp = available.find(w => w.id === args[0].toLowerCase());
 			if (!warp) {
-				tell(player, 'chat.cmd.warp.error.unknown', args[0]);
+				tell(player, 'chat.cmd.error.not_found', args[0], '!warp');
 				break;
 			}
 			// Замороженный не может уйти сам
@@ -471,7 +471,7 @@ export function runChatCommand(player, command, args) {
 				break;
 			}
 			if (target.name === player.name) {
-				tell(player, 'chat.cmd.report.error.self');
+				tell(player, 'chat.cmd.error.self');
 				break;
 			}
 			const last = lastReport.get(player.name);
@@ -778,7 +778,7 @@ export function runChatCommand(player, command, args) {
 			if (sbObjective) {
 				try { objective = world.scoreboard.getObjective(sbObjective); } catch { objective = undefined; }
 				if (!objective) {
-					tell(player, 'chat.cmd.scoreboard.error.objective', sbObjective);
+					tell(player, 'chat.cmd.error.not_found', sbObjective, '!scoreboard objectives');
 					break;
 				}
 			}
@@ -799,7 +799,7 @@ export function runChatCommand(player, command, args) {
 			}
 			const raw = args[3] ?? '';
 			if (!/^-?\d+$/.test(raw) || Math.abs(Number(raw)) > 2147483647) {
-				tell(player, 'chat.cmd.scoreboard.error.number', raw || '—');
+				tell(player, 'chat.cmd.error.number', raw || '—', -2147483648, 2147483647);
 				break;
 			}
 			const amount = Number(raw);
@@ -822,7 +822,7 @@ export function runChatCommand(player, command, args) {
 				}
 				// Выгнать можно только игрока с ролью ниже своей (владелец — любого, кроме себя)
 				if (target.name !== player.name && getRole(player) !== 'owner' && hasRole(target, getRole(player))) {
-					tell(player, 'chat.cmd.kick.error.role', target.name);
+					tell(player, 'chat.cmd.error.role', target.name);
 					break;
 				}
 				// Без причины — стандартное сообщение игры (раньше выгнанный видел сырой ключ %chat.cmd.kick.no_reason)
@@ -1116,7 +1116,7 @@ export function runChatCommand(player, command, args) {
 			const name = target?.name ?? args.join(' ');
 			const v = violationsOf(name);
 			const lines = Object.keys(CHECKS).filter(c => v[c]).map(c => ({ translate: 'chat.cmd.ac.line', with: { rawtext: [{ translate: `anticheat.check.${c}` }, { text: String(v[c]) }, { text: String(CHECKS[c]) }] } }));
-			tellList(player, { translate: 'chat.cmd.ac.player', with: [name] }, lines.length ? lines : [{ translate: 'chat.cmd.ac.clean' }]);
+			tellList(player, { translate: 'chat.cmd.ac.player', with: [name] }, lines.length ? lines : [{ translate: 'chat.cmd.ac.none' }]);
 			break;
 		}
 
@@ -1136,7 +1136,7 @@ export function runChatCommand(player, command, args) {
 			if (sub === 'start' || sub === 'stop') {
 				if (!hasRole(player, 'admin')) { tell(player, 'chat.cmd.error.no_permission'); break; }
 				const g = getGame(args[1]);
-				if (!g) { tell(player, 'chat.game.error.unknown', args[1] ?? ''); break; }
+				if (!g) { tell(player, 'chat.cmd.error.not_found', args[1] ?? '', '!game'); break; }
 				if (sub === 'start') {
 					if (!startGame(g)) tell(player, 'chat.cmd.game.error.start');
 				} else if (g.players.size) endGame(g, undefined, 'stop');
@@ -1163,7 +1163,7 @@ export function runChatCommand(player, command, args) {
 				break;
 			}
 			const a = findAchievement(args[2]);
-			if (!a) { tell(player, 'chat.cmd.achievement.error.unknown', args[2] ?? ''); break; }
+			if (!a) { tell(player, 'chat.cmd.error.not_found', args[2] ?? '', '!achievement <player> list'); break; }
 			if (action === 'grant') {
 				if (!unlock(target, a.id)) { tell(player, 'chat.cmd.achievement.error.has', target.name, a.id); break; }
 				tell(player, 'chat.cmd.achievement.granted', target.name, a.id);
@@ -1180,7 +1180,7 @@ export function runChatCommand(player, command, args) {
 			if ((args[0] || '').toLowerCase() === 'confirm') {
 				resetRequests.delete(player.name);
 				if (!asked || Date.now() - asked > WIPE_CONFIRM_MS) {
-					tell(player, 'chat.cmd.resetoffline.expired');
+					tell(player, 'chat.cmd.error.confirm_expired', '!resetoffline');
 					break;
 				}
 				resetOffline(player);
@@ -1199,7 +1199,7 @@ export function runChatCommand(player, command, args) {
 			if ((args[0] || '').toLowerCase() === 'confirm') {
 				wipeRequests.delete(player.name);
 				if (!asked || Date.now() - asked > WIPE_CONFIRM_MS) {
-					tell(player, 'chat.cmd.wipe.expired');
+					tell(player, 'chat.cmd.error.confirm_expired', '!wipe');
 					break;
 				}
 				wipeAll(player);
@@ -1236,7 +1236,7 @@ export function runChatCommand(player, command, args) {
 				break;
 			}
 			if (first.name === player.name) {
-				tell(player, 'chat.cmd.tp.error.self');
+				tell(player, 'chat.cmd.error.self');
 				break;
 			}
 			if (!canTeleport(player)) break;
@@ -1258,7 +1258,7 @@ export function runChatCommand(player, command, args) {
 				break;
 			}
 			if (tpTarget.name === player.name) {
-				tell(player, 'chat.cmd.tp.error.self');
+				tell(player, 'chat.cmd.error.self');
 				break;
 			}
 			if (!canTeleport(tpTarget, player)) break;
@@ -1366,7 +1366,7 @@ export function runChatCommand(player, command, args) {
 			}
 			const removed = removeBan(args.join(' '));
 			if (!removed) {
-				tell(player, 'chat.cmd.unban.error.not_found', args.join(' '));
+				tell(player, 'chat.cmd.error.not_found', args.join(' '), '!banlist');
 				break;
 			}
 			tell(player, 'chat.cmd.unban.done', removed.names.join(', '));

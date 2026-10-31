@@ -96,10 +96,10 @@ function warps(player) {
 		{ text: '%admin.warps.button.vip', icon: 'textures/ui/World', run: tp(-60, 5, -60) },
 		{ text: '%menu.warps.button.minigames', icon: 'textures/ui/World', run: tp(-109, 5, -60) },
 		// Туда же ведёт портал из мини-игр (system/system: -103 0 -51)
-		{ text: '%admin.warps.button.pvp_arena', icon: 'textures/ui/World', run: tp(292, -25, 259) },
+		{ text: '%menu.warps.button.pvp', icon: 'textures/ui/World', run: tp(292, -25, 259) },
 		// Сплиф (второй портал из мини-игр: -115 0 -51)
-		{ text: '%admin.warps.button.spleef', icon: 'textures/ui/World', run: tp(500, 3, 500) },
-		{ text: '%admin.warps.button.tier', icon: 'textures/ui/World', run: tp(435, -45, 338) },
+		{ text: '%menu.warps.button.spleef', icon: 'textures/ui/World', run: tp(500, 3, 500) },
+		{ text: '%menu.warps.button.tir', icon: 'textures/ui/World', run: tp(435, -45, 338) },
 		{ text: '%admin.warps.button.boss_zone', icon: 'textures/ui/World', run: tp(184, 11, 287) },
 		{ text: '%admin.warps.button.cmd_zone', icon: 'textures/ui/World', run: tp(50, 5, 50) },
 		{ text: '%admin.warps.button.random_player', icon: 'textures/ui/World', run: () => {
@@ -175,8 +175,8 @@ export function parseItemFields(id, count, data, maxCount = 255) {
 	const item = String(id ?? '').trim().toLowerCase();
 	const n = Number(String(count ?? '').trim() || 1), d = Number(String(data ?? '').trim() || 0);
 	if (!ITEM_ID.test(item)) return { error: 'chat.admin.item.error.id' };
-	if (!Number.isInteger(n) || n < 1 || n > maxCount) return { error: 'chat.admin.item.error.count' };
-	if (!Number.isInteger(d) || d < 0 || d > 32767) return { error: 'chat.admin.item.error.data' };
+	if (!Number.isInteger(n) || n < 1 || n > maxCount) return { error: 'chat.cmd.error.number', args: [String(count ?? ''), 1, maxCount] };
+	if (!Number.isInteger(d) || d < 0 || d > 32767) return { error: 'chat.cmd.error.number', args: [String(data ?? ''), 0, 32767] };
 	return { id: item, count: n, data: d };
 }
 function itemById(player, command, onBack) {
@@ -186,7 +186,7 @@ function itemById(player, command, onBack) {
 		.textField('%admin.item.data', '0', '0');
 	showModal(player, form, ([id, count, data]) => {
 		const parsed = parseItemFields(id, count, data);
-		if (parsed.error) return tell(player, parsed.error);
+		if (parsed.error) return tell(player, parsed.error, ...(parsed.args ?? []));
 		// Нет такого предмета — команда не сработает (run вернёт undefined)
 		run(player, `${command} ${parsed.id} ${parsed.count} ${parsed.data}`).then(r => {
 			if (r === undefined) tell(player, 'chat.admin.item.error.unknown', parsed.id);
@@ -254,7 +254,7 @@ function playerActions(player, target) {
 	}
 	items.push(
 		{ text: '%admin.players.button.spawn', icon: 'textures/ui/World', run: () => runChatCommand(player, 'warp', ['spawn', name]) },
-		{ text: '%admin.players.button.gamemode', icon: 'textures/ui/heart_new', run: () => playerGamemode(player, target) },
+		{ text: '%admin.main.button.gamemode', icon: 'textures/ui/heart_new', run: () => playerGamemode(player, target) },
 		{ text: '%admin.players.button.money', icon: 'textures/items/gold_ingot', run: () => playerMoney(player, target) },
 		...(target.hasTag('role:bot') ? [] : [{ text: '%admin.players.button.color', icon: 'textures/items/dye_powder_pink', run: () => playerColor(player, target) }])
 	);
@@ -479,7 +479,7 @@ export function botMenu(player) {
 			{ text: '%admin.bot.button.tp_to', icon: 'textures/items/ender_pearl', run: () => run(player, `tp @s "${bot.name}"`) },
 			{ text: '%admin.bot.button.say', icon: 'textures/ui/comment', run: () => botSay(player) },
 			{ text: '%admin.bot.button.slots', icon: 'textures/items/iron_chestplate', run: () => botSlots(player) },
-			{ text: '%admin.bot.button.effects', icon: 'textures/items/potion_bottle_splash_heal', run: () => botEffects(player) },
+			{ text: '%admin.main.button.effects', icon: 'textures/items/potion_bottle_splash_heal', run: () => botEffects(player) },
 			{ text: '%admin.bot.button.clear_effects', icon: 'textures/items/bucket_milk', run: () => {
 				run(bot, 'effect @s clear');
 				tell(player, 'chat.admin.bot.effect.cleared', bot.name);
@@ -527,7 +527,7 @@ function botEffects(player) {
 	const form = modal('%admin.bot.effects.title')
 		.dropdown('%admin.bot.effects.effect', BOT_EFFECTS.map(id => `%effect.${id}.name`), 0)
 		.slider('%admin.bot.effects.level', 0, 255, 1, 0)
-		.dropdown('%admin.bot.effects.time', EFFECT_SECONDS.map(secondsLabel), 1)
+		.dropdown('%admin.boosts.boost.minutes', EFFECT_SECONDS.map(secondsLabel), 1)
 		.toggle('%admin.bot.effects.hide', false);
 	showModal(player, form, ([effect, level, time, hide]) => {
 		const bot = getBot();
@@ -573,7 +573,7 @@ function botSlots(player) {
 			return tell(player, 'chat.admin.bot.slots.cleared', bot.name, slotName(slot));
 		}
 		const parsed = parseItemFields(id, count, data, 64);
-		if (parsed.error) return tell(player, parsed.error);
+		if (parsed.error) return tell(player, parsed.error, ...(parsed.args ?? []));
 		run(player, `${target} ${parsed.id} ${parsed.count} ${parsed.data}`).then(r => {
 			if (r === undefined) tell(player, 'chat.admin.item.error.unknown', parsed.id);
 			else tell(player, 'chat.admin.bot.slots.set', bot.name, parsed.id);
