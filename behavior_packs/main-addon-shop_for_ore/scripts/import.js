@@ -34,6 +34,7 @@ import './system/achievements.js'; // Достижения и испытания
 import './system/minigames.js';   // Основа мини-игр (PvP «Последний выживший»)
 import './system/spleef.js';      // Мини-игра «Сплиф»
 import './system/cps.js';         // Проверка CPS против автокликеров
+import './system/boosts.js';      // Бусты, выданные администратором: запись и отключение
 import './system/music.js';       // Выключатель музыки (Настройки)
 import './system/wipe.js';        // Вайп: номер вайпа, сброс игроков не в сети при входе
 import './system/offline_reset.js'; // !resetoffline: всё сбросить игрокам не в сети

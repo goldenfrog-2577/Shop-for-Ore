@@ -9,7 +9,7 @@ scoreboard objectives add pick dummy
 # Остатки старой версии: ticks (счётчик входа до 0.2.0) и loginAttempts нигде не используются
 scoreboard objectives remove ticks
 scoreboard objectives remove loginAttempts
-# Старые названия: xp_need пересчитывается раз в секунду (system/qx), магнит — временный, его не переносим
+# Старые названия: xp_need пересчитывается раз в секунду (system/xp_need), магнит — временный, его не переносим
 scoreboard objectives remove qx
 scoreboard objectives remove tpore
 # 3 — money2 (VIP-коины) → vip_coins; у игроков в сети баланс переносится
