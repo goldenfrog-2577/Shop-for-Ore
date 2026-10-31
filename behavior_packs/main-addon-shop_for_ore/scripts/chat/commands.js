@@ -677,7 +677,7 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case 'prefix': {
-			// Префиксы в чате (теги rank:). Уровень и VIP тоже хранятся тегами rank:§rN / rank:§aVIP — их не показываем и не трогаем
+			// Префиксы в чате (теги rank:). Уровень (rank:§rN + значок уровня) и VIP (rank:§aVIP) — тоже теги rank:, их не показываем и не трогаем
 			const prefixPlayer = args[0];
 			const prefixAction = (args[1] || '').toLowerCase();
 			const prefixName = args.slice(2).join(' ');
@@ -687,8 +687,8 @@ export function runChatCommand(player, command, args) {
 					tell(player, 'chat.cmd.error.offline', prefixPlayer);
 					break;
 				}
-				// Служебные префиксы — уровень (rank:§rN) и VIP (rank:§aVIP, ranks/rank_lvl_*) — не показываем и не снимаем
-				const prefixes = target.getTags().filter(t => t.startsWith('rank:') && !/^rank:(§r\d+|§aVIP)$/.test(t));
+				// Служебные префиксы — уровень (rank:§rN со значком) и VIP (rank:§aVIP, ranks/rank_lvl_*) — не показываем и не снимаем
+				const prefixes = target.getTags().filter(t => t.startsWith('rank:') && !/^rank:(§r\d+\ue153?|§aVIP)$/.test(t));
 				if (prefixAction === 'list') {
 					tell(player, 'chat.cmd.prefix.list', target.name, prefixes.length ? prefixes.map(t => t.slice(5)).join('§r§7, ') : '—');
 				} else {
