@@ -24,7 +24,7 @@ tag @a[scores={lvl=20..21},hasitem={item=netherite_pickaxe,location=slot.hotbar,
 tag @a[scores={lvl=22..23},hasitem={item=netherite_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
 tag @a[scores={lvl=24..24},hasitem={item=netherite_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
 tag @a[scores={lvl=25..25},hasitem={item=netherite_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
-# Третья локация (26–40): кирки идут заново от деревянной; ломают только её блоки
+# Пещера (26–40): кирки идут заново от деревянной; ломают только её блоки
 tag @a[scores={lvl=26..27},hasitem={item=wooden_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
 tag @a[scores={lvl=28..29},hasitem={item=stone_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update
 tag @a[scores={lvl=30..30},hasitem={item=stone_pickaxe,location=slot.hotbar,slot=0,quantity=0}] add sys:pick_update

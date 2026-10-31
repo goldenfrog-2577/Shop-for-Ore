@@ -175,7 +175,7 @@ execute at @a[scores={lvl=25..25},hasitem={item=crying_obsidian},tag=player:part
 execute at @a[scores={lvl=25..25},hasitem={item=crying_obsidian},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=25..25},hasitem={item=crying_obsidian}] run execute if block ~~-1~ gold_block run clear @p crying_obsidian 0 1
 
-# --- Гранит (уровень 26, третья локация) ---
+# --- Гранит (уровень 26, Пещера) ---
 execute at @a[scores={lvl=26..40},hasitem={item=stone,data=1}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 110
 execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=26..40},hasitem={item=stone,data=1}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 110
 execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=26..40},hasitem={item=stone,data=1}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 220
@@ -184,7 +184,7 @@ execute at @a[scores={lvl=26..40},hasitem={item=stone,data=1},tag=player:particl
 execute at @a[scores={lvl=26..40},hasitem={item=stone,data=1},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=26..40},hasitem={item=stone,data=1}] run execute if block ~~-1~ gold_block run clear @p stone 1 1
 
-# --- Андезит (уровень 27, третья локация) ---
+# --- Андезит (уровень 27, Пещера) ---
 execute at @a[scores={lvl=27..40},hasitem={item=stone,data=5}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 120
 execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=27..40},hasitem={item=stone,data=5}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 120
 execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=27..40},hasitem={item=stone,data=5}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 240
@@ -193,7 +193,7 @@ execute at @a[scores={lvl=27..40},hasitem={item=stone,data=5},tag=player:particl
 execute at @a[scores={lvl=27..40},hasitem={item=stone,data=5},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=27..40},hasitem={item=stone,data=5}] run execute if block ~~-1~ gold_block run clear @p stone 5 1
 
-# --- Диорит (уровень 28, третья локация) ---
+# --- Диорит (уровень 28, Пещера) ---
 execute at @a[scores={lvl=28..40},hasitem={item=stone,data=3}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 130
 execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=28..40},hasitem={item=stone,data=3}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 130
 execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=28..40},hasitem={item=stone,data=3}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 260
@@ -202,7 +202,7 @@ execute at @a[scores={lvl=28..40},hasitem={item=stone,data=3},tag=player:particl
 execute at @a[scores={lvl=28..40},hasitem={item=stone,data=3},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=28..40},hasitem={item=stone,data=3}] run execute if block ~~-1~ gold_block run clear @p stone 3 1
 
-# --- Глубинный сланец (уровень 30, третья локация) ---
+# --- Глубинный сланец (уровень 30, Пещера) ---
 execute at @a[scores={lvl=30..40},hasitem={item=cobbled_deepslate}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 145
 execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=30..40},hasitem={item=cobbled_deepslate}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 145
 execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=30..40},hasitem={item=cobbled_deepslate}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 290
@@ -211,7 +211,7 @@ execute at @a[scores={lvl=30..40},hasitem={item=cobbled_deepslate},tag=player:pa
 execute at @a[scores={lvl=30..40},hasitem={item=cobbled_deepslate},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=30..40},hasitem={item=cobbled_deepslate}] run execute if block ~~-1~ gold_block run clear @p cobbled_deepslate 0 1
 
-# --- Туф (уровень 31, третья локация) ---
+# --- Туф (уровень 31, Пещера) ---
 execute at @a[scores={lvl=31..40},hasitem={item=tuff}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 160
 execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=31..40},hasitem={item=tuff}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 160
 execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=31..40},hasitem={item=tuff}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 320
@@ -220,7 +220,7 @@ execute at @a[scores={lvl=31..40},hasitem={item=tuff},tag=player:particle,tag=!f
 execute at @a[scores={lvl=31..40},hasitem={item=tuff},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=31..40},hasitem={item=tuff}] run execute if block ~~-1~ gold_block run clear @p tuff 0 1
 
-# --- Кальцит (уровень 33, третья локация) ---
+# --- Кальцит (уровень 33, Пещера) ---
 execute at @a[scores={lvl=33..40},hasitem={item=calcite}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 175
 execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=33..40},hasitem={item=calcite}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 175
 execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=33..40},hasitem={item=calcite}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 350
@@ -229,7 +229,7 @@ execute at @a[scores={lvl=33..40},hasitem={item=calcite},tag=player:particle,tag
 execute at @a[scores={lvl=33..40},hasitem={item=calcite},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=33..40},hasitem={item=calcite}] run execute if block ~~-1~ gold_block run clear @p calcite 0 1
 
-# --- Блок рудного железа (уровень 34, третья локация) ---
+# --- Блок рудного железа (уровень 34, Пещера) ---
 execute at @a[scores={lvl=34..40},hasitem={item=raw_iron_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 190
 execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=34..40},hasitem={item=raw_iron_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 190
 execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=34..40},hasitem={item=raw_iron_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 380
@@ -238,7 +238,7 @@ execute at @a[scores={lvl=34..40},hasitem={item=raw_iron_block},tag=player:parti
 execute at @a[scores={lvl=34..40},hasitem={item=raw_iron_block},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=34..40},hasitem={item=raw_iron_block}] run execute if block ~~-1~ gold_block run clear @p raw_iron_block 0 1
 
-# --- Блок рудного золота (уровень 35, третья локация) ---
+# --- Блок рудного золота (уровень 35, Пещера) ---
 execute at @a[scores={lvl=35..40},hasitem={item=raw_gold_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 210
 execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=35..40},hasitem={item=raw_gold_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 210
 execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=35..40},hasitem={item=raw_gold_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 420
@@ -247,7 +247,7 @@ execute at @a[scores={lvl=35..40},hasitem={item=raw_gold_block},tag=player:parti
 execute at @a[scores={lvl=35..40},hasitem={item=raw_gold_block},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=35..40},hasitem={item=raw_gold_block}] run execute if block ~~-1~ gold_block run clear @p raw_gold_block 0 1
 
-# --- Блок рудной меди (уровень 37, третья локация) ---
+# --- Блок рудной меди (уровень 37, Пещера) ---
 execute at @a[scores={lvl=37..40},hasitem={item=raw_copper_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 230
 execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=37..40},hasitem={item=raw_copper_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 230
 execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=37..40},hasitem={item=raw_copper_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 460
@@ -256,7 +256,7 @@ execute at @a[scores={lvl=37..40},hasitem={item=raw_copper_block},tag=player:par
 execute at @a[scores={lvl=37..40},hasitem={item=raw_copper_block},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[scores={lvl=37..40},hasitem={item=raw_copper_block}] run execute if block ~~-1~ gold_block run clear @p raw_copper_block 0 1
 
-# --- Блок аметиста (уровень 39, третья локация) ---
+# --- Блок аметиста (уровень 39, Пещера) ---
 execute at @a[scores={lvl=39..40},hasitem={item=amethyst_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p money 250
 execute at @a[tag=!boost:x2,tag=!boost:x4,scores={lvl=39..40},hasitem={item=amethyst_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 250
 execute at @a[tag=boost:x2,tag=!boost:x4,scores={lvl=39..40},hasitem={item=amethyst_block}] run execute if block ~~-1~ gold_block run scoreboard players add @p xp 500

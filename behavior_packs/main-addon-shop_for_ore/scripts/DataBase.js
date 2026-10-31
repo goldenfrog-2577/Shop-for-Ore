@@ -10,7 +10,7 @@ import { ERROR_KEYS } from './system/error_keys.js';
  * @param {string} objective - Название цели (objective) в scoreboard.
  * @returns {number} - Значение очков или 0, если не найдено/ошибка.
  */
-// VIP — тег player:vip (покупка с MAX_LEVEL уровня, functions/upgrade/upgrade_vip). До третьей локации VIP был уровнем 26
+// VIP — тег player:vip (покупка с MAX_LEVEL уровня, functions/upgrade/upgrade_vip). До Пещеры (третьей локации) VIP был уровнем 26
 export const VIP_TAG = 'player:vip';
 export const MAX_LEVEL = 40;
 /** Игрок — VIP. */
