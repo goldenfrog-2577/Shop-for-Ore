@@ -183,12 +183,16 @@ export const isBanned = (typeId) => bannedItems.has(typeId) || typeId === 'minec
 
 // --- Предметы VIP-лавки (VIP-остров, x −84…−74): чары выше ванильного максимума продаются намеренно ---
 // Раньше предмет пропускался по одному имени — переименованный на наковальне меч «Зачарованая кирка #1»
-// проходил с любыми чарами. Теперь сверяются тип, имя и потолок каждого зачарования (из сундуков лавки);
+// проходил с любыми чарами. Теперь сверяются тип, имя и потолок каждого зачарования (из лавки торговца, system/trader.js);
 // прочие зачарования — по обычным правилам (магазин зачарований добавляет до ванильного максимума).
 export const VIP_ITEMS = {
 	'minecraft:netherite_pickaxe|§r§lЗачарованая кирка #1': { efficiency: 10, fortune: 5 },
 	'minecraft:netherite_pickaxe|§r§lЗачарованая кирка #2': { efficiency: 20, fortune: 10 },
 	'minecraft:netherite_pickaxe|§r§lЗачарованая кирка #3': { efficiency: 30, fortune: 15 },
+	// Из loot_tables/shop/trader (system/trader.js) — с исправленным «Зачарованная»; старое написание выше — у купленных раньше
+	'minecraft:netherite_pickaxe|§r§lЗачарованная кирка #1': { efficiency: 10, fortune: 5 },
+	'minecraft:netherite_pickaxe|§r§lЗачарованная кирка #2': { efficiency: 20, fortune: 10 },
+	'minecraft:netherite_pickaxe|§r§lЗачарованная кирка #3': { efficiency: 30, fortune: 15 },
 	'minecraft:skull|§r§eЧереп скелета': { protection: 10 },
 	'minecraft:skull|§r§eЧереп скелета-иссушителя': { protection: 10 },
 	'minecraft:skull|§r§eГолова зомби': { protection: 10 },
