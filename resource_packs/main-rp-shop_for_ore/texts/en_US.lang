@@ -238,7 +238,7 @@ chat.cmd.clearchat=§r §7CMD §8» §7Chat cleared...
 chat.cmd.clearchat.self=§r §7CMD §8» §7Chat cleared (only for you)
 
 ## --- MAIN MENU ---
-##   menu.main.*, menu.fallback.*
+##   menu.main.*
 menu.main.title=§l§8Server Menu
 menu.main.body=§7Menu creator: §fkapycta1231484
 menu.main.button.about=§8 About the Map
@@ -251,7 +251,43 @@ menu.main.button.warps=§8 Warps
 menu.main.button.upgrades=§8 Upgrades
 menu.main.button.achievements=§8 Achievements
 menu.main.button.games=§8 Minigames
-menu.fallback.notice=§7If you see this message, §cthe map scripts aren’t working right now§7 and this is the backup menu. What doesn’t depend on scripts still works: the shop (pickaxe enchantments, PvP kits, boosts), settings, rules, teleports and upgrades. The bank, promo codes, achievements, minigames, cosmetics and the trader’s shop are unavailable until the scripts work again. Tell the owner - §fkapycta1231484§7.
+
+## --- BACKUP NPC MENU (LEGACY MENU) ---
+##   legacy_menu.*
+legacy_menu.notice=§7If you see this message, the map scripts §caren’t working§7 right now and this is the backup menu. What doesn’t depend on scripts still works: the shop (pickaxe enchantments, PvP kits, boosts), settings, rules, teleports and upgrades. The bank, promo codes, achievements, minigames, cosmetics and the trader’s shop are unavailable until the scripts work again. Tell the owner - §fkapycta1231484§7.
+legacy_menu.button.about= About
+legacy_menu.button.shop= Shop
+legacy_menu.button.settings= Settings
+legacy_menu.button.rules= Rules
+legacy_menu.button.warps= Teleports
+legacy_menu.button.upgrades= Upgrades
+legacy_menu.button.back= Back
+legacy_menu.button.levels= Levels
+legacy_menu.button.howtoplay=⩆ How to play
+legacy_menu.button.enchants= Enchants
+legacy_menu.button.kits= PvP kits
+legacy_menu.button.boosts= Boosts
+legacy_menu.button.efficiency= Efficiency
+legacy_menu.button.fortune= Fortune
+legacy_menu.button.kit_iron= Iron
+legacy_menu.button.kit_diamond= Diamond
+legacy_menu.button.kit_netherite= Netherite
+legacy_menu.button.x2= Boost x2
+legacy_menu.button.x4= Boost x4
+legacy_menu.button.magnet=⩲ Ore magnet
+legacy_menu.button.board= Sidebar
+legacy_menu.button.particles= Particles
+legacy_menu.button.sounds= Sounds
+legacy_menu.button.music= Music
+legacy_menu.button.enable= Enable
+legacy_menu.button.icons_only= Icons only
+legacy_menu.button.disable= Disable
+legacy_menu.button.spawn= Spawn
+legacy_menu.button.mine= Mine
+legacy_menu.button.minigames= Minigames
+legacy_menu.button.vip_island= VIP island
+legacy_menu.button.vip= VIP
+legacy_menu.button.rebirth= Rebirth
 
 ## --- ABOUT: LEVELS, HOW TO PLAY, CREATORS, VERSION ---
 ##   menu.about.*, menu.levels.*, menu.howtoplay.*, menu.creators.*, menu.version.*
@@ -1319,3 +1355,4 @@ bot.guide.1=Hi, §e%1$s§f! I'm %2$s, this server's bot. Let me show you around.
 bot.guide.2=Mine with the pickaxe in your first slot, then stand on a §6gold block§f — your ore sells itself for coins and XP.
 bot.guide.3=Got enough XP for a level? Stand on the gold block again. New levels unlock new mines.
 bot.guide.4=The item in your last slot is the server menu: shop, teleports, achievements and settings. Good luck!
+

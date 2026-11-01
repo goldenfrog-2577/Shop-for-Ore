@@ -24,7 +24,7 @@ GO, NAV_TAG, READY = 'sys:fb_go_', 'sys:fb_nav', 'sys:fb_nav_ready'
 NPC_Y, NPC_Z = -60, 0
 # Игрок, нажавший кнопку: ближайший к NPC сцены, который стоит там же, где игрок (см. выше)
 PL = '@p[r=4]'
-COIN, LVL, WARP = '', '', ''
+COIN, LVL = '', ''  # глифы цен: коин и уровень
 MAX_LEVEL, RULES_COUNT = 40, 11
 
 
@@ -69,7 +69,7 @@ def go(name, scene):
 
 
 def back(scene):
-    return go('%menu.common.back', scene)
+    return go(B('back'), scene)
 
 
 def fn(name, function, then):
@@ -81,11 +81,21 @@ def tell(key):
     return f'/tellraw {PL} {json.dumps({"rawtext": [{"translate": key}]}, ensure_ascii=False)}'
 
 
-def price(key, cost, glyph=COIN):
-    return (f'%{key}', f'\n§8{cost} {glyph}')
+def B(name):
+    """Название кнопки — ключ legacy_menu.button.<name>: глиф и текст, не длиннее 16 символов (иначе обрезается)."""
+    return f'%legacy_menu.button.{name}'
+
+
+def prices(*items):
+    """Цены — в тексте сцены (у кнопки одна строка): «<кнопка> — <цена> <глиф>» построчно."""
+    out = ['\n']
+    for name, cost, *glyph in items:
+        out += ['\n', B(name), f' §7— {cost} §r{glyph[0] if glyph else COIN}']
+    return out
 
 
 def scene(tag, title, text, buttons):
+    assert len(buttons) <= 6, f'{tag}: больше 6 кнопок — игра не загружает такую сцену (проверено в игре)'
     return {'scene_tag': tag, 'npc_name': raw(title), 'text': raw(*text), 'buttons': buttons}
 
 
@@ -97,8 +107,8 @@ for i in range(14, 22):
 
 def toggle(kind, on_cmds, off_cmds):
     return scene(f'fb_{kind}', f'%menu.settings.{kind}.title', [f'%menu.settings.{kind}.body'], [
-        button('%menu.settings.button.enable', *on_cmds, tell('chat.settings.enabled'), open_scene('fb_settings')),
-        button('%menu.settings.button.disable', *off_cmds, tell('chat.settings.disabled'), open_scene('fb_settings')),
+        button(B('enable'), *on_cmds, tell('chat.settings.enabled'), open_scene('fb_settings')),
+        button(B('disable'), *off_cmds, tell('chat.settings.disabled'), open_scene('fb_settings')),
         back('fb_settings')])
 
 
@@ -108,55 +118,56 @@ def board(label, fn_name, msg):
 
 def warp(label, warp_id, x, y, z):
     done = json.dumps({'rawtext': [{'translate': 'chat.cmd.warp.done', 'with': {'rawtext': [{'translate': f'warp.{warp_id}'}]}}]}, ensure_ascii=False)
-    return button((WARP + ' ', label), f'/tellraw {PL} {done}', f'/tp {PL} {x} {y} {z}')  # сначала сообщение: после tp игрок уже не рядом с NPC
+    return button(label, f'/tellraw {PL} {done}', f'/tp {PL} {x} {y} {z}')  # сначала сообщение: после tp игрок уже не рядом с NPC
 
 
 scenes = [
-    scene('fb_main', '%menu.main.title', ['%menu.fallback.notice'], [
-        go('%menu.main.button.about', 'fb_about'),
-        go('%menu.main.button.shop', 'fb_shop'),
-        go('%menu.main.button.settings', 'fb_settings'),
-        go('%menu.main.button.rules', 'fb_rules'),
-        go('%menu.main.button.warps', 'fb_warps'),
-        go('%menu.main.button.upgrades', 'fb_upgrades')]),
+    scene('fb_main', '%menu.main.title', ['%legacy_menu.notice'], [
+        go(B('about'), 'fb_about'),
+        go(B('shop'), 'fb_shop'),
+        go(B('settings'), 'fb_settings'),
+        go(B('rules'), 'fb_rules'),
+        go(B('warps'), 'fb_warps'),
+        go(B('upgrades'), 'fb_upgrades')]),
     # О карте
     scene('fb_about', '%menu.about.title', ['%menu.about.body'], [
-        go('%menu.about.button.levels', 'fb_levels'),
-        go('%menu.about.button.howtoplay', 'fb_howtoplay'),
+        go(B('levels'), 'fb_levels'),
+        go(B('howtoplay'), 'fb_howtoplay'),
         back('fb_main')]),
     scene('fb_levels', '%menu.levels.title', lines('menu.levels.line', MAX_LEVEL), [back('fb_about')]),
     scene('fb_howtoplay', '%menu.howtoplay.title', howtoplay, [back('fb_about')]),
     # Магазин: только то, что покупают функции
     scene('fb_shop', '%menu.shop.title', ['%menu.shop.body'], [
-        go('%menu.shop.button.enchants', 'fb_enchants'),
-        go('%menu.shop.button.kits', 'fb_kits'),
-        go('%menu.shop.button.boosts', 'fb_boosts'),
+        go(B('enchants'), 'fb_enchants'),
+        go(B('kits'), 'fb_kits'),
+        go(B('boosts'), 'fb_boosts'),
         back('fb_main')]),
-    scene('fb_enchants', '%menu.shop.enchants.pickaxe.title', ['%menu.shop.enchants.pickaxe.body'], [
-        fn(price('enchantment.digging', '25.0K'), 'shop/enchants/efficiency', 'fb_shop'),
-        fn(price('enchantment.lootBonusDigger', '10.0K'), 'shop/enchants/fortune', 'fb_shop'),
+    scene('fb_enchants', '%menu.shop.enchants.pickaxe.title', ['%menu.shop.enchants.pickaxe.body', *prices(('efficiency', '25.0K'), ('fortune', '10.0K'))], [
+        fn(B('efficiency'), 'shop/enchants/efficiency', 'fb_shop'),
+        fn(B('fortune'), 'shop/enchants/fortune', 'fb_shop'),
         back('fb_shop')]),
-    scene('fb_kits', '%menu.shop.kits.title', ['%menu.shop.kits.body'], [
-        fn(price('menu.shop.kits.button.iron', '15.0K'), 'shop/pvp_kits/iron', 'fb_shop'),
-        fn(price('menu.shop.kits.button.diamond', '35.0K'), 'shop/pvp_kits/diamond', 'fb_shop'),
-        fn(price('menu.shop.kits.button.netherite', '50.0K'), 'shop/pvp_kits/netherite', 'fb_shop'),
+    scene('fb_kits', '%menu.shop.kits.title', ['%menu.shop.kits.body', *prices(('kit_iron', '15.0K'), ('kit_diamond', '35.0K'), ('kit_netherite', '50.0K'))], [
+        fn(B('kit_iron'), 'shop/pvp_kits/iron', 'fb_shop'),
+        fn(B('kit_diamond'), 'shop/pvp_kits/diamond', 'fb_shop'),
+        fn(B('kit_netherite'), 'shop/pvp_kits/netherite', 'fb_shop'),
         back('fb_shop')]),
-    scene('fb_boosts', '%menu.shop.boosts.title', ['%menu.shop.boosts.body', '\n\n', '%menu.shop.boosts.x2', '\n', '%menu.shop.boosts.x4', '\n', '%menu.shop.boosts.magnet'], [
-        fn(price('menu.shop.boosts.button.x2', '10.0K'), 'boost/x2_boost', 'fb_shop'),
-        fn(price('menu.shop.boosts.button.x4', '50.0K'), 'boost/x4_boost', 'fb_shop'),
-        fn(price('menu.shop.boosts.button.ore_magnet', '20.0K'), 'shop/ore_magnet/ore_magnet', 'fb_shop'),
+    scene('fb_boosts', '%menu.shop.boosts.title', ['%menu.shop.boosts.body', '\n\n', '%menu.shop.boosts.x2', '\n', '%menu.shop.boosts.x4', '\n', '%menu.shop.boosts.magnet',
+                                                   *prices(('x2', '10.0K'), ('x4', '50.0K'), ('magnet', '20.0K'))], [
+        fn(B('x2'), 'boost/x2_boost', 'fb_shop'),
+        fn(B('x4'), 'boost/x4_boost', 'fb_shop'),
+        fn(B('magnet'), 'shop/ore_magnet/ore_magnet', 'fb_shop'),
         back('fb_shop')]),
     # Настройки
     scene('fb_settings', '%menu.settings.title', ['%menu.settings.body'], [
-        go('%menu.settings.button.board', 'fb_board'),
-        go('%menu.settings.button.particles', 'fb_particles'),
-        go('%menu.settings.button.sounds', 'fb_sounds'),
-        go('%menu.settings.button.music', 'fb_music'),
+        go(B('board'), 'fb_board'),
+        go(B('particles'), 'fb_particles'),
+        go(B('sounds'), 'fb_sounds'),
+        go(B('music'), 'fb_music'),
         back('fb_main')]),
     scene('fb_board', '%menu.settings.board.title', ['%menu.settings.board.body'], [
-        board('%menu.settings.button.enable', 'scoreboard_on', 'chat.settings.enabled'),
-        board('%menu.settings.button.icons_only', 'scoreboard_icons', 'chat.settings.icons_only'),
-        board('%menu.settings.button.disable', 'scoreboard_off', 'chat.settings.disabled'),
+        board(B('enable'), 'scoreboard_on', 'chat.settings.enabled'),
+        board(B('icons_only'), 'scoreboard_icons', 'chat.settings.icons_only'),
+        board(B('disable'), 'scoreboard_off', 'chat.settings.disabled'),
         back('fb_settings')]),
     toggle('particles', [f'/tag {PL} add player:particle'], [f'/tag {PL} remove player:particle']),
     toggle('sounds', [f'/tag {PL} add player:sound'], [f'/tag {PL} remove player:sound']),
@@ -165,15 +176,15 @@ scenes = [
     scene('fb_rules', '%menu.rules.title', ['%menu.rules.header', '\n\n', *lines('menu.rules.line', RULES_COUNT), '\n\n', '%menu.rules.footer'], [back('fb_main')]),
     # Телепортации: точки без скриптов (PvP-арена, сплиф и тир работают на скриптах — их нет)
     scene('fb_warps', '%menu.warps.title', ['%menu.warps.body'], [
-        warp('%menu.warps.button.spawn', 'spawn', 0, 5, 0),
-        button((WARP + ' ', '%menu.warps.button.mine'), f'/execute as {PL} at @s run function fallback/warp_mine'),
-        warp('%menu.warps.button.minigames', 'minigames', -109, 5, -60),
-        button((WARP + ' ', '%menu.warps.button.vip'), f'/execute as {PL} at @s run function fallback/warp_vip'),
+        warp(B('spawn'), 'spawn', 0, 5, 0),
+        button(B('mine'), f'/execute as {PL} at @s run function fallback/warp_mine'),
+        warp(B('minigames'), 'minigames', -109, 5, -60),
+        button(B('vip_island'), f'/execute as {PL} at @s run function fallback/warp_vip'),
         back('fb_main')]),
     # Прокачка
-    scene('fb_upgrades', '%menu.upgrades.title', ['%menu.upgrades.body'], [
-        fn(price('menu.upgrades.button.vip', '125.0K'), 'upgrade/upgrade_vip', 'fb_main'),
-        fn(price('menu.upgrades.button.rebirth', f'25 - {MAX_LEVEL}', LVL), 'upgrade/upgrade_rebirth', 'fb_main'),
+    scene('fb_upgrades', '%menu.upgrades.title', ['%menu.upgrades.body', *prices(('vip', '125.0K'), ('rebirth', f'25 - {MAX_LEVEL}', LVL))], [
+        fn(B('vip'), 'upgrade/upgrade_vip', 'fb_main'),
+        fn(B('rebirth'), 'upgrade/upgrade_rebirth', 'fb_main'),
         back('fb_main')]),
 ]
 data = {'format_version': '1.17', 'minecraft:npc_dialogue': {'scenes': scenes}}

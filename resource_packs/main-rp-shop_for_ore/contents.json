@@ -132,6 +132,9 @@
 			"path" : "font/glyph_2A.png"
 		},
 		{
+			"path" : "font/glyph_E2.png"
+		},
+		{
 			"path" : "models/entity/floating_text.geo.json"
 		},
 		{
