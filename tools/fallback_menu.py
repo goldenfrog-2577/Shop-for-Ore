@@ -2,16 +2,16 @@
 # Запасное меню работает без Script API: тексты — ключи .lang (rawtext translate), кнопки — функции и команды.
 # Открывается функцией fallback/open, когда скрипты не отвечают (fallback/check). Запуск: python3 tools/fallback_menu.py
 # Цены и функции — те же, что в scripts/menu/main_menu.js; поменял там — поменяй здесь и пересобери.
-# Переход на другую сцену: кнопка ставит игроку теги sys:fb_nav и sys:fb_go_<сцена>, а открывает сцену
-# functions/fallback/nav (из timers/ticks_5, когда у кого-то есть sys:fb_nav). Если открыть сцену прямо из кнопки, окно закрывается вслед за нажатием
-# и уносит с собой только что открытую сцену.
+# У каждой сцены свой NPC (тег npc:<сцена>, functions/fallback/npcs): кнопка открывает следующую сцену через её NPC.
+# Один NPC свою же сцену из кнопки не открывает — нажатая кнопка закрывает его диалог вместе с новой сценой
+# (проверено в игре). Поэтому и после покупки — переход в раздел выше (сцена другого NPC), а не та же сцена.
 import json, os
 
 BP = os.path.join(os.path.dirname(__file__), '..', 'behavior_packs', 'main-addon-shop_for_ore')
 OUT = os.path.join(BP, 'dialogue', 'fallback_menu.json')
-NAV = os.path.join(BP, 'functions', 'fallback', 'nav.mcfunction')
-GO = 'sys:fb_go_'
-NAV_TAG = 'sys:fb_nav'
+NPCS = os.path.join(BP, 'functions', 'fallback', 'npcs.mcfunction')
+# NPC стоят в ряд под спавном: x 0…15, y −60, z 0 — один чанк, его держит ticking area fallback (fallback/check)
+NPC_Y, NPC_Z = -60, 0
 COIN, LVL, WARP = '', '', ''
 MAX_LEVEL, RULES_COUNT = 40, 11
 
@@ -33,17 +33,16 @@ def lines(prefix, n, start=1):
     return out
 
 
+def npc(scene):
+    return f'@e[type=npc,tag=npc:{scene},c=1]'
+
+
 def open_scene(scene):
-    return f'/tag @initiator add {GO}{scene[3:]}'
-
-
-def nav_flag():
-    return f'/tag @initiator add {NAV_TAG}'
+    return f'/dialogue open {npc(scene)} @initiator {scene}'
 
 
 def button(name, *commands):
     commands = list(commands)
-    if any(c.startswith(f'/tag @initiator add {GO}') for c in commands): commands.append(nav_flag())
     return {'name': raw(*name) if isinstance(name, tuple) else raw(name), 'commands': commands}
 
 
@@ -55,9 +54,9 @@ def back(scene):
     return go('%menu.common.back', scene)
 
 
-def fn(name, function, again):
-    """Покупка/действие функцией от имени игрока, потом снова та же сцена."""
-    return button(name, f'/execute as @initiator at @s run function {function}', open_scene(again))
+def fn(name, function, then):
+    """Покупка/действие функцией от имени игрока, потом — раздел выше (сцена другого NPC)."""
+    return button(name, f'/execute as @initiator at @s run function {function}', open_scene(then))
 
 
 def tell(key):
@@ -116,18 +115,18 @@ scenes = [
         go('%menu.shop.button.boosts', 'fb_boosts'),
         back('fb_main')]),
     scene('fb_enchants', '%menu.shop.enchants.pickaxe.title', ['%menu.shop.enchants.pickaxe.body'], [
-        fn(price('enchantment.digging', '25.0K'), 'shop/enchants/efficiency', 'fb_enchants'),
-        fn(price('enchantment.lootBonusDigger', '10.0K'), 'shop/enchants/fortune', 'fb_enchants'),
+        fn(price('enchantment.digging', '25.0K'), 'shop/enchants/efficiency', 'fb_shop'),
+        fn(price('enchantment.lootBonusDigger', '10.0K'), 'shop/enchants/fortune', 'fb_shop'),
         back('fb_shop')]),
     scene('fb_kits', '%menu.shop.kits.title', ['%menu.shop.kits.body'], [
-        fn(price('menu.shop.kits.button.iron', '15.0K'), 'shop/pvp_kits/iron', 'fb_kits'),
-        fn(price('menu.shop.kits.button.diamond', '35.0K'), 'shop/pvp_kits/diamond', 'fb_kits'),
-        fn(price('menu.shop.kits.button.netherite', '50.0K'), 'shop/pvp_kits/netherite', 'fb_kits'),
+        fn(price('menu.shop.kits.button.iron', '15.0K'), 'shop/pvp_kits/iron', 'fb_shop'),
+        fn(price('menu.shop.kits.button.diamond', '35.0K'), 'shop/pvp_kits/diamond', 'fb_shop'),
+        fn(price('menu.shop.kits.button.netherite', '50.0K'), 'shop/pvp_kits/netherite', 'fb_shop'),
         back('fb_shop')]),
     scene('fb_boosts', '%menu.shop.boosts.title', ['%menu.shop.boosts.body', '\n\n', '%menu.shop.boosts.x2', '\n', '%menu.shop.boosts.x4', '\n', '%menu.shop.boosts.magnet'], [
-        fn(price('menu.shop.boosts.button.x2', '10.0K'), 'boost/x2_boost', 'fb_boosts'),
-        fn(price('menu.shop.boosts.button.x4', '50.0K'), 'boost/x4_boost', 'fb_boosts'),
-        fn(price('menu.shop.boosts.button.ore_magnet', '20.0K'), 'shop/ore_magnet/ore_magnet', 'fb_boosts'),
+        fn(price('menu.shop.boosts.button.x2', '10.0K'), 'boost/x2_boost', 'fb_shop'),
+        fn(price('menu.shop.boosts.button.x4', '50.0K'), 'boost/x4_boost', 'fb_shop'),
+        fn(price('menu.shop.boosts.button.ore_magnet', '20.0K'), 'shop/ore_magnet/ore_magnet', 'fb_shop'),
         back('fb_shop')]),
     # Настройки
     scene('fb_settings', '%menu.settings.title', ['%menu.settings.body'], [
@@ -155,23 +154,25 @@ scenes = [
         back('fb_main')]),
     # Прокачка
     scene('fb_upgrades', '%menu.upgrades.title', ['%menu.upgrades.body'], [
-        fn(price('menu.upgrades.button.vip', '125.0K'), 'upgrade/upgrade_vip', 'fb_upgrades'),
-        fn(price('menu.upgrades.button.rebirth', f'25 - {MAX_LEVEL}', LVL), 'upgrade/upgrade_rebirth', 'fb_upgrades'),
+        fn(price('menu.upgrades.button.vip', '125.0K'), 'upgrade/upgrade_vip', 'fb_main'),
+        fn(price('menu.upgrades.button.rebirth', f'25 - {MAX_LEVEL}', LVL), 'upgrade/upgrade_rebirth', 'fb_main'),
         back('fb_main')]),
 ]
 data = {'format_version': '1.17', 'minecraft:npc_dialogue': {'scenes': scenes}}
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 with open(OUT, 'w', encoding='utf-8') as f:
     f.write(json.dumps(data, indent='\t', ensure_ascii=True) + '\n')
-# Переходы: по одному на сцену
-nav = ['# --- Запасное меню: открыть сцену, выбранную кнопкой (теги sys:fb_nav и sys:fb_go_<сцена>) ---',
-       '# Собирается tools/fallback_menu.py. Вызывается из timers/ticks_5, когда у кого-то есть sys:fb_nav, — уже после того,',
-       '# как окно с нажатой кнопкой закрылось (сцена, открытая прямо из кнопки, закрывается вместе с ним).']
-for sc in scenes:
+# NPC: по одному на сцену
+npcs = ['# --- Запасное меню: NPC сцен — по одному на сцену (тег npc:<сцена>), раз в секунду из fallback/check ---',
+        '# Собирается tools/fallback_menu.py. Нет NPC — барьер под ним и призыв; пока чанк не загружен, призыв не проходит —',
+        '# следующая попытка через секунду. Прежний общий NPC (npc:fallback, до отдельных NPC) убирается.',
+        'kill @e[type=npc,tag=npc:fallback]']
+for x, sc in enumerate(scenes):
     t = sc['scene_tag']
-    nav.append(f'execute as @a[tag={GO}{t[3:]}] run dialogue open @e[type=npc,tag=npc:fallback,c=1] @s {t}')
-    nav.append(f'tag @a remove {GO}{t[3:]}')
-nav.append(f'tag @a remove {NAV_TAG}')
-with open(NAV, 'w', encoding='utf-8') as f:
-    f.write('\n'.join(nav) + '\n')
+    npcs.append(f'execute unless entity @e[type=npc,tag=npc:{t}] run setblock {x} {NPC_Y - 1} {NPC_Z} barrier')
+    npcs.append(f'execute unless entity @e[type=npc,tag=npc:{t}] run summon npc {x} {NPC_Y} {NPC_Z} minecraft:entity_spawned {t}')
+    npcs.append(f'tag @e[type=npc,name={t},tag=!npc:{t}] add npc:{t}')
+assert len(scenes) <= 16, 'NPC не помещаются в один чанк'
+with open(NPCS, 'w', encoding='utf-8') as f:
+    f.write('\n'.join(npcs) + '\n')
 print('сцен:', len(scenes))

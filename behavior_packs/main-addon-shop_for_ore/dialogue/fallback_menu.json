@@ -28,8 +28,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_about",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_about,c=1] @initiator fb_about"
 						]
 					},
 					{
@@ -41,8 +40,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_shop",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_shop,c=1] @initiator fb_shop"
 						]
 					},
 					{
@@ -54,8 +52,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_settings",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_settings,c=1] @initiator fb_settings"
 						]
 					},
 					{
@@ -67,8 +64,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_rules",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_rules,c=1] @initiator fb_rules"
 						]
 					},
 					{
@@ -80,8 +76,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_warps",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_warps,c=1] @initiator fb_warps"
 						]
 					},
 					{
@@ -93,8 +88,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_upgrades",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_upgrades,c=1] @initiator fb_upgrades"
 						]
 					}
 				]
@@ -125,8 +119,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_levels",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_levels,c=1] @initiator fb_levels"
 						]
 					},
 					{
@@ -138,8 +131,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_howtoplay",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_howtoplay,c=1] @initiator fb_howtoplay"
 						]
 					},
 					{
@@ -151,8 +143,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_main",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_main,c=1] @initiator fb_main"
 						]
 					}
 				]
@@ -417,8 +408,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_about",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_about,c=1] @initiator fb_about"
 						]
 					}
 				]
@@ -572,8 +562,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_about",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_about,c=1] @initiator fb_about"
 						]
 					}
 				]
@@ -604,8 +593,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_enchants",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_enchants,c=1] @initiator fb_enchants"
 						]
 					},
 					{
@@ -617,8 +605,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_kits",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_kits,c=1] @initiator fb_kits"
 						]
 					},
 					{
@@ -630,8 +617,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_boosts",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_boosts,c=1] @initiator fb_boosts"
 						]
 					},
 					{
@@ -643,8 +629,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_main",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_main,c=1] @initiator fb_main"
 						]
 					}
 				]
@@ -679,8 +664,7 @@
 						},
 						"commands": [
 							"/execute as @initiator at @s run function shop/enchants/efficiency",
-							"/tag @initiator add sys:fb_go_enchants",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_shop,c=1] @initiator fb_shop"
 						]
 					},
 					{
@@ -696,8 +680,7 @@
 						},
 						"commands": [
 							"/execute as @initiator at @s run function shop/enchants/fortune",
-							"/tag @initiator add sys:fb_go_enchants",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_shop,c=1] @initiator fb_shop"
 						]
 					},
 					{
@@ -709,8 +692,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_shop",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_shop,c=1] @initiator fb_shop"
 						]
 					}
 				]
@@ -745,8 +727,7 @@
 						},
 						"commands": [
 							"/execute as @initiator at @s run function shop/pvp_kits/iron",
-							"/tag @initiator add sys:fb_go_kits",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_shop,c=1] @initiator fb_shop"
 						]
 					},
 					{
@@ -762,8 +743,7 @@
 						},
 						"commands": [
 							"/execute as @initiator at @s run function shop/pvp_kits/diamond",
-							"/tag @initiator add sys:fb_go_kits",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_shop,c=1] @initiator fb_shop"
 						]
 					},
 					{
@@ -779,8 +759,7 @@
 						},
 						"commands": [
 							"/execute as @initiator at @s run function shop/pvp_kits/netherite",
-							"/tag @initiator add sys:fb_go_kits",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_shop,c=1] @initiator fb_shop"
 						]
 					},
 					{
@@ -792,8 +771,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_shop",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_shop,c=1] @initiator fb_shop"
 						]
 					}
 				]
@@ -846,8 +824,7 @@
 						},
 						"commands": [
 							"/execute as @initiator at @s run function boost/x2_boost",
-							"/tag @initiator add sys:fb_go_boosts",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_shop,c=1] @initiator fb_shop"
 						]
 					},
 					{
@@ -863,8 +840,7 @@
 						},
 						"commands": [
 							"/execute as @initiator at @s run function boost/x4_boost",
-							"/tag @initiator add sys:fb_go_boosts",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_shop,c=1] @initiator fb_shop"
 						]
 					},
 					{
@@ -880,8 +856,7 @@
 						},
 						"commands": [
 							"/execute as @initiator at @s run function shop/ore_magnet/ore_magnet",
-							"/tag @initiator add sys:fb_go_boosts",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_shop,c=1] @initiator fb_shop"
 						]
 					},
 					{
@@ -893,8 +868,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_shop",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_shop,c=1] @initiator fb_shop"
 						]
 					}
 				]
@@ -925,8 +899,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_board",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_board,c=1] @initiator fb_board"
 						]
 					},
 					{
@@ -938,8 +911,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_particles",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_particles,c=1] @initiator fb_particles"
 						]
 					},
 					{
@@ -951,8 +923,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_sounds",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_sounds,c=1] @initiator fb_sounds"
 						]
 					},
 					{
@@ -964,8 +935,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_music",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_music,c=1] @initiator fb_music"
 						]
 					},
 					{
@@ -977,8 +947,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_main",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_main,c=1] @initiator fb_main"
 						]
 					}
 				]
@@ -1011,8 +980,7 @@
 						"commands": [
 							"/execute as @initiator at @s run function settings/scoreboard_on",
 							"/tellraw @initiator {\"rawtext\": [{\"translate\": \"chat.settings.enabled\"}]}",
-							"/tag @initiator add sys:fb_go_settings",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_settings,c=1] @initiator fb_settings"
 						]
 					},
 					{
@@ -1026,8 +994,7 @@
 						"commands": [
 							"/execute as @initiator at @s run function settings/scoreboard_icons",
 							"/tellraw @initiator {\"rawtext\": [{\"translate\": \"chat.settings.icons_only\"}]}",
-							"/tag @initiator add sys:fb_go_settings",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_settings,c=1] @initiator fb_settings"
 						]
 					},
 					{
@@ -1041,8 +1008,7 @@
 						"commands": [
 							"/execute as @initiator at @s run function settings/scoreboard_off",
 							"/tellraw @initiator {\"rawtext\": [{\"translate\": \"chat.settings.disabled\"}]}",
-							"/tag @initiator add sys:fb_go_settings",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_settings,c=1] @initiator fb_settings"
 						]
 					},
 					{
@@ -1054,8 +1020,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_settings",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_settings,c=1] @initiator fb_settings"
 						]
 					}
 				]
@@ -1088,8 +1053,7 @@
 						"commands": [
 							"/tag @initiator add player:particle",
 							"/tellraw @initiator {\"rawtext\": [{\"translate\": \"chat.settings.enabled\"}]}",
-							"/tag @initiator add sys:fb_go_settings",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_settings,c=1] @initiator fb_settings"
 						]
 					},
 					{
@@ -1103,8 +1067,7 @@
 						"commands": [
 							"/tag @initiator remove player:particle",
 							"/tellraw @initiator {\"rawtext\": [{\"translate\": \"chat.settings.disabled\"}]}",
-							"/tag @initiator add sys:fb_go_settings",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_settings,c=1] @initiator fb_settings"
 						]
 					},
 					{
@@ -1116,8 +1079,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_settings",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_settings,c=1] @initiator fb_settings"
 						]
 					}
 				]
@@ -1150,8 +1112,7 @@
 						"commands": [
 							"/tag @initiator add player:sound",
 							"/tellraw @initiator {\"rawtext\": [{\"translate\": \"chat.settings.enabled\"}]}",
-							"/tag @initiator add sys:fb_go_settings",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_settings,c=1] @initiator fb_settings"
 						]
 					},
 					{
@@ -1165,8 +1126,7 @@
 						"commands": [
 							"/tag @initiator remove player:sound",
 							"/tellraw @initiator {\"rawtext\": [{\"translate\": \"chat.settings.disabled\"}]}",
-							"/tag @initiator add sys:fb_go_settings",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_settings,c=1] @initiator fb_settings"
 						]
 					},
 					{
@@ -1178,8 +1138,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_settings",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_settings,c=1] @initiator fb_settings"
 						]
 					}
 				]
@@ -1212,8 +1171,7 @@
 						"commands": [
 							"/tag @initiator remove player:music_off",
 							"/tellraw @initiator {\"rawtext\": [{\"translate\": \"chat.settings.enabled\"}]}",
-							"/tag @initiator add sys:fb_go_settings",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_settings,c=1] @initiator fb_settings"
 						]
 					},
 					{
@@ -1228,8 +1186,7 @@
 							"/tag @initiator add player:music_off",
 							"/stopsound @initiator music.game",
 							"/tellraw @initiator {\"rawtext\": [{\"translate\": \"chat.settings.disabled\"}]}",
-							"/tag @initiator add sys:fb_go_settings",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_settings,c=1] @initiator fb_settings"
 						]
 					},
 					{
@@ -1241,8 +1198,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_settings",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_settings,c=1] @initiator fb_settings"
 						]
 					}
 				]
@@ -1345,8 +1301,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_main",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_main,c=1] @initiator fb_main"
 						]
 					}
 				]
@@ -1439,8 +1394,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_main",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_main,c=1] @initiator fb_main"
 						]
 					}
 				]
@@ -1475,8 +1429,7 @@
 						},
 						"commands": [
 							"/execute as @initiator at @s run function upgrade/upgrade_vip",
-							"/tag @initiator add sys:fb_go_upgrades",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_main,c=1] @initiator fb_main"
 						]
 					},
 					{
@@ -1492,8 +1445,7 @@
 						},
 						"commands": [
 							"/execute as @initiator at @s run function upgrade/upgrade_rebirth",
-							"/tag @initiator add sys:fb_go_upgrades",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_main,c=1] @initiator fb_main"
 						]
 					},
 					{
@@ -1505,8 +1457,7 @@
 							]
 						},
 						"commands": [
-							"/tag @initiator add sys:fb_go_main",
-							"/tag @initiator add sys:fb_nav"
+							"/dialogue open @e[type=npc,tag=npc:fb_main,c=1] @initiator fb_main"
 						]
 					}
 				]

@@ -220,13 +220,10 @@
 			"path" : "functions/fallback/check.mcfunction"
 		},
 		{
-			"path" : "functions/fallback/nav.mcfunction"
-		},
-		{
 			"path" : "functions/fallback/open.mcfunction"
 		},
 		{
-			"path" : "functions/fallback/spawn_npc.mcfunction"
+			"path" : "functions/fallback/npcs.mcfunction"
 		},
 		{
 			"path" : "functions/fallback/warp_mine.mcfunction"
