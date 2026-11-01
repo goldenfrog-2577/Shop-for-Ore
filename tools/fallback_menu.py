@@ -2,9 +2,15 @@
 # Запасное меню работает без Script API: тексты — ключи .lang (rawtext translate), кнопки — функции и команды.
 # Открывается функцией fallback/open, когда скрипты не отвечают (fallback/check). Запуск: python3 tools/fallback_menu.py
 # Цены и функции — те же, что в scripts/menu/main_menu.js; поменял там — поменяй здесь и пересобери.
+# Переход на другую сцену: кнопка ставит игроку тег sys:fb_go:<сцена>, а открывает сцену functions/fallback/nav
+# (из fallback/open, раз в 5 тиков). Если открыть сцену прямо из кнопки, окно закрывается вслед за нажатием
+# и уносит с собой только что открытую сцену.
 import json, os
 
-OUT = os.path.join(os.path.dirname(__file__), '..', 'behavior_packs', 'main-addon-shop_for_ore', 'dialogue', 'fallback_menu.json')
+BP = os.path.join(os.path.dirname(__file__), '..', 'behavior_packs', 'main-addon-shop_for_ore')
+OUT = os.path.join(BP, 'dialogue', 'fallback_menu.json')
+NAV = os.path.join(BP, 'functions', 'fallback', 'nav.mcfunction')
+GO = 'sys:fb_go:'
 COIN, LVL, WARP = '', '', ''
 MAX_LEVEL, RULES_COUNT = 40, 11
 
@@ -27,7 +33,7 @@ def lines(prefix, n, start=1):
 
 
 def open_scene(scene):
-    return f'/dialogue open @s @initiator {scene}'
+    return f'/tag @initiator add {GO}{scene}'
 
 
 def button(name, *commands):
@@ -150,4 +156,14 @@ data = {'format_version': '1.17', 'minecraft:npc_dialogue': {'scenes': scenes}}
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 with open(OUT, 'w', encoding='utf-8') as f:
     f.write(json.dumps(data, indent='\t', ensure_ascii=True) + '\n')
+# Переходы: по одному на сцену
+nav = ['# --- Запасное меню: открыть сцену, выбранную кнопкой (тег sys:fb_go:<сцена>) ---',
+       '# Собирается tools/fallback_menu.py. Вызывается из fallback/open раз в 5 тиков — уже после того, как окно',
+       '# с нажатой кнопкой закрылось (сцена, открытая прямо из кнопки, закрывается вместе с ним).']
+for sc in scenes:
+    t = sc['scene_tag']
+    nav.append(f'execute as @a[tag={GO}{t}] run dialogue open @e[type=npc,tag=npc:fallback,c=1] @s {t}')
+    nav.append(f'tag @a remove {GO}{t}')
+with open(NAV, 'w', encoding='utf-8') as f:
+    f.write('\n'.join(nav) + '\n')
 print('сцен:', len(scenes))
