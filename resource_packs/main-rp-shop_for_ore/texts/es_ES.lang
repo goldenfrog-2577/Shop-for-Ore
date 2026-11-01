@@ -551,9 +551,9 @@ menu.settings.sounds.title=§l§8 Ajustes » Sonidos
 menu.settings.sounds.body=§7Un sonido corto en cada venta de mineral en un bloque de oro: oyes que la venta avanza sin mirar las monedas.
 menu.settings.music.title=§l§8 Ajustes » Música
 menu.settings.music.body=§7La música de fondo del mapa. Si la desactivas, deja de sonar solo para ti. El volumen es el control «Música» de los ajustes del juego.
-chat.settings.enabled=§r §3Ajustes §8» §7Ajuste cambiado: §2Activado
-chat.settings.disabled=§r §3Ajustes §8» §7Ajuste cambiado: §4Desactivado
-chat.settings.icons_only=§r §3Ajustes §8» §7Ajuste cambiado: §gSolo iconos
+chat.settings.enabled=§r §3Ajustes §8» §7Ajuste cambiado: §aActivado
+chat.settings.disabled=§r §3Ajustes §8» §7Ajuste cambiado: §cDesactivado
+chat.settings.icons_only=§r §3Ajustes §8» §7Ajuste cambiado: §eSolo iconos
 
 ## --- BANCO Y DINERO ---
 ##   menu.bank.*, chat.bank.*, chat.cmd.pay.*, chat.cmd.balance*, chat.cmd.money.*

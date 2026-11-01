@@ -551,9 +551,9 @@ menu.settings.sounds.title=§l§8 Settings » Sounds
 menu.settings.sounds.body=§7A short sound on every ore sale on a gold block — you can hear the sale going without looking at the coins.
 menu.settings.music.title=§l§8 Settings » Music
 menu.settings.music.body=§7The map's background music. Turning it off stops it only for you. Volume is the «Music» slider in the game settings.
-chat.settings.enabled=§r §3Settings §8» §7Setting changed: §2On
-chat.settings.disabled=§r §3Settings §8» §7Setting changed: §4Off
-chat.settings.icons_only=§r §3Settings §8» §7Setting changed: §gIcons only
+chat.settings.enabled=§r §3Settings §8» §7Setting changed: §aOn
+chat.settings.disabled=§r §3Settings §8» §7Setting changed: §cOff
+chat.settings.icons_only=§r §3Settings §8» §7Setting changed: §eIcons only
 
 ## --- BANK & MONEY ---
 ##   menu.bank.*, chat.bank.*, chat.cmd.pay.*, chat.cmd.balance*, chat.cmd.money.*
