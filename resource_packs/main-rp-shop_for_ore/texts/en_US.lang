@@ -818,6 +818,7 @@ chat.tir.enter=§r §6 Shooting range §8» §7Your pickaxe is put away while
 chat.trader.bought=§r §eShop §8» §7Bought: §e%1$s§7 for §e%2$s 
 chat.trader.error.vip=§r⩕ §l§cERROR!§r §8» §7The trader’s shop is VIP only
 chat.trader.error.full=§r⩕ §l§cERROR!§r §8» §7No room in your inventory — free at least one slot
+chat.trader.error.full_kit=§r⩕ §l§cERROR!§r §8» §7No room in your inventory — the kit needs §e%1$s§7 free slots
 trader.item.wither_skull=Wither Skeleton Skull
 trader.item.dragon_head=Ender Dragon Head
 trader.item.creeper_head=Creeper Head
@@ -828,6 +829,8 @@ trader.item.pickaxe_1=Enchanted Pickaxe #1
 trader.item.pickaxe_2=Enchanted Pickaxe #2
 trader.item.pickaxe_3=Enchanted Pickaxe #3
 trader.item.haste=Haste V for 30 minutes
+trader.item.kit_diamond=Diamond Kit (Protection IV)
+trader.item.kit_netherite=Netherite Kit (Protection IV)
 
 ## --- EVENTS ---
 ##   chat.event.*, screen.event.*, chat.cmd.event.*
