@@ -794,6 +794,8 @@ chat.cmd.game.line=§e%1$s§8 — §f%2$s§8 · §7%3$s §8(%4$s/%5$s)
 chat.cmd.game.use=§r §7CMD §8» §7Usage: §e!game§7 [join <game> / leave]; admin: §e!game§7 start/stop <game>
 chat.cmd.game.error.start=§r⩕ §l§cERROR!§r §8» §7Cannot start: the game is running or has no players
 chat.cmd.game.error.empty=§r⩕ §l§cERROR!§r §8» §7No one is in this game
+chat.game.winner_bot=§r §6 Minigames §8» §7Bot §f%1$s§r§7 won %2$s! No reward
+chat.game.no_reward_bot=§r §6 Minigames §8» §7No reward: the only other player was the bot
 
 ## --- PVP ARENA & CPS ---
 ##   chat.pvp.*, hud.cps*, chat.cps.*, chat.cmd.cps.*
@@ -1196,7 +1198,7 @@ admin.server.button.top_pvp=§8Top by PvP wins
 admin.server.button.top_spleef=§8Top by Spleef wins
 
 ## --- ADMIN MENU: BOT & EFFECTS ---
-##   admin.bot.*, chat.admin.bot.*, chat.cmd.bot.*, effect.*
+##   admin.bot.*, chat.admin.bot.*, chat.cmd.bot.*, effect.*, hud.bot.*, bot.*
 admin.bot.title=§l§8Admin menu » Bot
 admin.bot.name=§7Bot name:
 admin.bot.present=§aThe bot is in the world
@@ -1270,3 +1272,44 @@ chat.admin.bot.error.name=§r⩕ §l§cERROR!§r §8» §7Bot name: 3 to 16 char
 chat.admin.bot.error.absent=§r⩕ §l§cERROR!§r §8» §7The bot is not in the world
 chat.admin.bot.error.present=§r⩕ §l§cERROR!§r §8» §7Bot §f%1$s§r§7 is already in the world. Manage it from the admin menu
 chat.cmd.bot.settings=§r §7CMD §8» §7Close the chat — the bot control window will open
+admin.bot.button.mode=§8Bot mode
+admin.bot.button.sit=§8Crouch
+admin.bot.button.totem=§8Auto totem
+admin.bot.button.return=§8Return after rejoining
+admin.bot.mode.title=§l§8Bot » Mode
+admin.bot.mode.now=§7Now:
+admin.bot.mode.idle=Normal
+admin.bot.mode.idle.desc=§8Stands where placed
+admin.bot.mode.dummy=Training dummy
+admin.bot.mode.dummy.desc=§8Frozen, can't die, shows damage
+admin.bot.mode.follow=Follows me
+admin.bot.mode.follow.desc=§8Teleports if left behind
+admin.bot.mode.stay=Stays here
+admin.bot.mode.stay.desc=§8Pushed away — walks back
+admin.bot.mode.mirror=Copies me
+admin.bot.mode.mirror.desc=§8Turns, crouches, jumps, steps
+admin.bot.mode.spar=Arena sparring
+admin.bot.mode.spar.desc=§8Fights the nearest player in the arena
+admin.bot.mode.game=In a minigame
+admin.bot.mode.game.desc=§8Fills a free spot
+admin.bot.spar.title=§l§8Bot » Sparring
+admin.bot.spar.level=§7Difficulty:
+admin.bot.spar.level.1=Easy
+admin.bot.spar.level.2=Medium
+admin.bot.spar.level.3=Hard
+admin.bot.spar.level.4=Cheater
+admin.bot.game.title=§l§8Bot » Minigame
+admin.bot.game.body=§7The bot joins the game and takes a player spot. Its wins and deaths don't count in stats, and the game reward is given only if at least two real players took part.
+chat.admin.bot.mode=§r §7CMD §8» §7Bot §f%1$s§r§7: mode "§e%2$s§7"
+chat.admin.bot.sit.on=§r §7CMD §8» §7Bot §f%1$s§r§7 crouched
+chat.admin.bot.sit.off=§r §7CMD §8» §7Bot §f%1$s§r§7 stood up
+chat.admin.bot.totem.on=§r §7CMD §8» §7Auto totem for bot §f%1$s§r§7 is on
+chat.admin.bot.totem.off=§r §7CMD §8» §7Auto totem for bot §f%1$s§r§7 is off
+chat.admin.bot.return.on=§r §7CMD §8» §7Bot §f%1$s§r§7 will come back after rejoining the world
+chat.admin.bot.return.off=§r §7CMD §8» §7Bot §f%1$s§r§7 won't come back after rejoining the world
+chat.admin.bot.error.game=§r⩕ §l§cERROR!§r §8» §7The bot can't join "%1$s": the game is running or full
+hud.bot.dummy=§7Damage: §c%1$s §8• §7DPS: §e%2$s §8• §7Hits: §f%3$s
+bot.guide.1=Hi, §e%1$s§f! I'm %2$s, this server's bot. Let me show you around.
+bot.guide.2=Mine with the pickaxe in your first slot, then stand on a §6gold block§f — your ore sells itself for coins and XP.
+bot.guide.3=Got enough XP for a level? Stand on the gold block again. New levels unlock new mines.
+bot.guide.4=The item in your last slot is the server menu: shop, teleports, achievements and settings. Good luck!

@@ -14,7 +14,8 @@ import { sendChatMessage } from '../chat/chat.js';
 import { getBot, getBotName, setBotName, spawnBot, removeBot } from '../system/spawnbot.js';
 import { wipeAll, wipeCounts } from '../system/wipe.js';
 import { resetOffline, offlineCounts } from '../system/offline_reset.js';
-import { canTeleport } from '../system/minigames.js';
+import { canTeleport, listGames } from '../system/minigames.js';
+import { setBotMode, toggleBot, rememberBotItem, botState, SPAR_LEVELS } from '../system/bot_ai.js';
 
 const BACK_ICON = 'textures/ui/icon_import';
 // Кружки цвета роли из шрифта карты: серый, синий, красный
@@ -509,6 +510,7 @@ export function botMenu(player) {
 		items.push(
 			{ text: '%admin.bot.button.tp_here', icon: 'textures/items/ender_pearl', run: () => run(player, `tp "${bot.name}" @s`) },
 			{ text: '%admin.bot.button.tp_to', icon: 'textures/items/ender_pearl', run: () => run(player, `tp @s "${bot.name}"`) },
+			{ text: `%admin.bot.button.mode\n§8%admin.bot.mode.${botState().mode}`, icon: 'textures/items/compass_item', run: () => botModeMenu(player) },
 			{ text: '%admin.bot.button.say', icon: 'textures/ui/comment', run: () => botSay(player) },
 			{ text: '%admin.bot.button.slots', icon: 'textures/items/iron_chestplate', run: () => botSlots(player) },
 			{ text: '%admin.main.button.effects', icon: 'textures/items/potion_bottle_splash_heal', run: () => botEffects(player) },
@@ -526,11 +528,65 @@ export function botMenu(player) {
 			tell(player, 'chat.admin.bot.spawned', name);
 		} });
 	}
+	const st = botState();
+	const toggle = (key, label, icon) => ({
+		text: `%admin.bot.button.${label}\n${st[key] ? '%menu.settings.state.on' : '%menu.settings.state.off'}`, icon,
+		run: () => {
+			const on = toggleBot(key);
+			tell(player, `chat.admin.bot.${label}.${on ? 'on' : 'off'}`, name);
+			botMenu(player);
+		}
+	});
 	items.push(
+		toggle('sit', 'sit', 'textures/ui/sneak_button_default'),
+		toggle('totem', 'totem', 'textures/items/totem'),
+		toggle('returnOnLoad', 'return', 'textures/ui/refresh_light'),
 		{ text: '%admin.bot.button.rename', icon: 'textures/items/name_tag', run: () => botRename(player) },
 		back(() => admin_menu(player))
 	);
 	showMenu(player, '%admin.bot.title', `%admin.bot.name §f${name}\n${bot ? '%admin.bot.present' : '%admin.bot.absent'}`, items, () => admin_menu(player));
+}
+
+// Режим бота (system/bot_ai.js): за мной и «повторяй» — за тем, кто открыл меню
+function botModeMenu(player) {
+	const name = getBotName();
+	const done = (mode, opts) => {
+		const error = setBotMode(mode, opts);
+		if (error) return tell(player, error, ...(opts?.game ? [{ translate: `minigame.${opts.game}.name` }] : []));
+		tell(player, 'chat.admin.bot.mode', name, { translate: `admin.bot.mode.${mode}` });
+	};
+	const mode = (id, icon, opts) => ({ text: `§8%admin.bot.mode.${id}\n%admin.bot.mode.${id}.desc`, icon, run: () => done(id, opts) });
+	showMenu(player, '%admin.bot.mode.title', `%admin.bot.mode.now §f%admin.bot.mode.${botState().mode}`, [
+		mode('idle', 'textures/server_icons/steve'),
+		mode('dummy', 'textures/items/armor_stand'),
+		mode('follow', 'textures/items/lead', { target: player.name }),
+		mode('stay', 'textures/blocks/barrier'),
+		mode('mirror', 'textures/items/mirror_glass', { target: player.name }),
+		{ text: '§8%admin.bot.mode.spar\n%admin.bot.mode.spar.desc', icon: 'textures/items/diamond_sword', run: () => botSpar(player) },
+		{ text: '§8%admin.bot.mode.game\n%admin.bot.mode.game.desc', icon: 'textures/items/diamond_shovel', run: () => botGame(player) },
+		back(() => botMenu(player))
+	], () => botMenu(player));
+}
+
+function botSpar(player) {
+	const form = modal('%admin.bot.spar.title')
+		.dropdown('%admin.bot.spar.level', SPAR_LEVELS.map(l => `%admin.bot.spar.level.${l}`), Math.max(0, SPAR_LEVELS.indexOf(botState().level)));
+	showModal(player, form, ([level]) => {
+		const error = setBotMode('spar', { level: SPAR_LEVELS[level] });
+		if (error) return tell(player, error);
+		tell(player, 'chat.admin.bot.mode', getBotName(), { translate: 'admin.bot.mode.spar' });
+	}, () => botModeMenu(player));
+}
+
+function botGame(player) {
+	showMenu(player, '%admin.bot.game.title', '%admin.bot.game.body', [
+		...listGames().map(g => ({ text: `§8%minigame.${g.def.id}.name\n§8%menu.games.phase.${g.phase} §7(${g.players.size}/${g.def.maxPlayers})`, run: () => {
+			const error = setBotMode('game', { game: g.def.id });
+			if (error) return tell(player, error, { translate: `minigame.${g.def.id}.name` });
+			tell(player, 'chat.admin.bot.mode', getBotName(), { translate: 'admin.bot.mode.game' });
+		} })),
+		back(() => botModeMenu(player))
+	], () => botModeMenu(player));
 }
 
 // Имя задаётся при появлении бота, поэтому бот, который уже в мире, призывается заново под новым именем
@@ -602,13 +658,18 @@ function botSlots(player) {
 		}
 		if (!String(id ?? '').trim()) {
 			run(player, `${target} air`);
+			rememberBotItem(slot.slot);
 			return tell(player, 'chat.admin.bot.slots.cleared', bot.name, slotName(slot));
 		}
 		const parsed = parseItemFields(id, count, data, 64);
 		if (parsed.error) return tell(player, parsed.error, ...(parsed.args ?? []));
 		run(player, `${target} ${parsed.id} ${parsed.count} ${parsed.data}`).then(r => {
 			if (r === undefined) tell(player, 'chat.admin.item.error.unknown', parsed.id);
-			else tell(player, 'chat.admin.bot.slots.set', bot.name, parsed.id);
+			else {
+				// Запомнить — после перезахода в мир бот получит предмет заново (system/bot_ai.js)
+				rememberBotItem(slot.slot, `${parsed.id} ${parsed.count} ${parsed.data}`);
+				tell(player, 'chat.admin.bot.slots.set', bot.name, parsed.id);
+			}
 		});
 	}, () => botMenu(player));
 }

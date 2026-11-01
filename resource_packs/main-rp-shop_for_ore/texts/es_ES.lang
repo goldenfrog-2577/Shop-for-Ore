@@ -794,6 +794,8 @@ chat.cmd.game.line=§e%1$s§8 — §f%2$s§8 · §7%3$s §8(%4$s/%5$s)
 chat.cmd.game.use=§r §7CMD §8» §7Uso: §e!game§7 [join <juego> / leave]; administrador: §e!game§7 start/stop <juego>
 chat.cmd.game.error.start=§r⩕ §l§cERROR!§r §8» §7No se puede empezar: el juego está en curso o no tiene jugadores
 chat.cmd.game.error.empty=§r⩕ §l§cERROR!§r §8» §7No hay nadie en este juego
+chat.game.winner_bot=§r §6 Minijuegos §8» §7¡El bot §f%1$s§r§7 ganó %2$s! Sin recompensa
+chat.game.no_reward_bot=§r §6 Minijuegos §8» §7Sin recompensa: aparte de ti, solo jugó el bot
 
 ## --- ARENA PVP Y CPS ---
 ##   chat.pvp.*, hud.cps*, chat.cps.*, chat.cmd.cps.*
@@ -1196,7 +1198,7 @@ admin.server.button.top_pvp=§8Top por victorias en PvP
 admin.server.button.top_spleef=§8Top por victorias en Spleef
 
 ## --- MENÚ DE ADMINISTRADOR: BOT Y EFECTOS ---
-##   admin.bot.*, chat.admin.bot.*, chat.cmd.bot.*, effect.*
+##   admin.bot.*, chat.admin.bot.*, chat.cmd.bot.*, effect.*, hud.bot.*, bot.*
 admin.bot.title=§l§8Admin » Bot
 admin.bot.name=§7Nombre del bot:
 admin.bot.present=§aEl bot está en el mundo
@@ -1270,3 +1272,44 @@ chat.admin.bot.error.name=§r⩕ §l§cERROR!§r §8» §7Nombre del bot: de 3 a
 chat.admin.bot.error.absent=§r⩕ §l§cERROR!§r §8» §7El bot no está en el mundo
 chat.admin.bot.error.present=§r⩕ §l§cERROR!§r §8» §7El bot §f%1$s§r§7 ya está en el mundo. Gestiónalo desde el menú de admin
 chat.cmd.bot.settings=§r §7CMD §8» §7Cierra el chat: se abrirá la ventana de control del bot
+admin.bot.button.mode=§8Modo del bot
+admin.bot.button.sit=§8Agacharse
+admin.bot.button.totem=§8Tótem automático
+admin.bot.button.return=§8Volver al reentrar
+admin.bot.mode.title=§l§8Bot » Modo
+admin.bot.mode.now=§7Ahora:
+admin.bot.mode.idle=Normal
+admin.bot.mode.idle.desc=§8Se queda donde lo pusiste
+admin.bot.mode.dummy=Saco de boxeo
+admin.bot.mode.dummy.desc=§8Congelado, no muere, muestra el daño
+admin.bot.mode.follow=Me sigue
+admin.bot.mode.follow.desc=§8Si se queda atrás, se teletransporta
+admin.bot.mode.stay=Se queda aquí
+admin.bot.mode.stay.desc=§8Si lo empujan, vuelve a su sitio
+admin.bot.mode.mirror=Me imita
+admin.bot.mode.mirror.desc=§8Giros, agacharse, saltos, pasos
+admin.bot.mode.spar=Combate en la arena
+admin.bot.mode.spar.desc=§8Ataca al jugador más cercano de la arena
+admin.bot.mode.game=En un minijuego
+admin.bot.mode.game.desc=§8Ocupa una plaza libre
+admin.bot.spar.title=§l§8Bot » Combate
+admin.bot.spar.level=§7Dificultad:
+admin.bot.spar.level.1=Fácil
+admin.bot.spar.level.2=Media
+admin.bot.spar.level.3=Difícil
+admin.bot.spar.level.4=Tramposo
+admin.bot.game.title=§l§8Bot » Minijuego
+admin.bot.game.body=§7El bot se une a la partida y ocupa la plaza de un jugador. Sus victorias y muertes no cuentan en las estadísticas, y la recompensa solo se da si jugaron al menos dos jugadores reales.
+chat.admin.bot.mode=§r §7CMD §8» §7Bot §f%1$s§r§7: modo «§e%2$s§7»
+chat.admin.bot.sit.on=§r §7CMD §8» §7El bot §f%1$s§r§7 se agachó
+chat.admin.bot.sit.off=§r §7CMD §8» §7El bot §f%1$s§r§7 se levantó
+chat.admin.bot.totem.on=§r §7CMD §8» §7Tótem automático del bot §f%1$s§r§7 activado
+chat.admin.bot.totem.off=§r §7CMD §8» §7Tótem automático del bot §f%1$s§r§7 desactivado
+chat.admin.bot.return.on=§r §7CMD §8» §7El bot §f%1$s§r§7 volverá al reentrar en el mundo
+chat.admin.bot.return.off=§r §7CMD §8» §7El bot §f%1$s§r§7 no volverá al reentrar en el mundo
+chat.admin.bot.error.game=§r⩕ §l§cERROR!§r §8» §7El bot no puede unirse a «%1$s»: la partida ya empezó o está llena
+hud.bot.dummy=§7Daño: §c%1$s §8• §7DPS: §e%2$s §8• §7Golpes: §f%3$s
+bot.guide.1=¡Hola, §e%1$s§f! Soy %2$s, el bot de este servidor. Te enseño lo básico.
+bot.guide.2=Pica con el pico del primer espacio y luego ponte sobre un §6bloque de oro§f: el mineral se vende solo por monedas y experiencia.
+bot.guide.3=¿Tienes experiencia para subir de nivel? Vuelve al bloque de oro. Los niveles nuevos abren minas nuevas.
+bot.guide.4=El objeto del último espacio es el menú del servidor: tienda, teletransportes, logros y ajustes. ¡Suerte!

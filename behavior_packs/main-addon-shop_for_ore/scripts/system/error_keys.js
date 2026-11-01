@@ -11,6 +11,7 @@ export const ERROR_KEYS = new Set([
 	'chat.account.error.password_length',
 	'chat.account.error.wrong_password',
 	'chat.admin.bot.error.absent',
+	'chat.admin.bot.error.game',
 	'chat.admin.bot.error.name',
 	'chat.admin.bot.error.present',
 	'chat.admin.error.no_players',

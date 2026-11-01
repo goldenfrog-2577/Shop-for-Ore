@@ -191,7 +191,8 @@ system.runSchedule(() => {
 const lastDeath = new Map();
 world.events.entityHurt.subscribe((e) => {
 	const victim = e.hurtEntity, killer = e.damagingEntity;
-	if (victim?.typeId !== 'minecraft:player' || victim.hasTag('role:bot')) return;
+	// Бот (спарринг, мини-игры) в статистику не идёт: ни как жертва, ни как убийца
+	if (victim?.typeId !== 'minecraft:player' || victim.hasTag('role:bot') || killer?.hasTag?.('role:bot')) return;
 	const byPlayer = killer?.typeId === 'minecraft:player' && killer !== victim;
 	if (!byPlayer && !victim.hasTag('player:pvp')) return;
 	let hp;

@@ -23,6 +23,7 @@ import './chat/commands.js';     // Команды чата
 import './system/anticheat.js';   // Античит: очки нарушений, сигналы персоналу, проверка инвентаря
 import './system/anticheat_checks.js';   // Античит: скорость, полёт, сквозь блоки, дальность и направление удара, копание
 import './system/spawnbot.js';    // Спавн бота
+import './system/bot_ai.js';      // Поведение бота: режимы, груша, спарринг, мини-игры, возврат, гид
 import './system/tools.js';       // Неразрушаемая кирка уровня
 import './system/pvp.js';         // PvP-арена: случайная точка входа и режим боя
 import './system/mythic.js';      // Ивент «Мистик»: сундук с лутом в центре арены
