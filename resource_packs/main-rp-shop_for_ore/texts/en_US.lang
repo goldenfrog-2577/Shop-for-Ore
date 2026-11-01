@@ -251,7 +251,7 @@ menu.main.button.warps=§8 Warps
 menu.main.button.upgrades=§8 Upgrades
 menu.main.button.achievements=§8 Achievements
 menu.main.button.games=§8 Minigames
-menu.fallback.notice=§cThe map scripts aren’t responding right now§7 — this is the backup menu. What doesn’t depend on scripts still works: the shop (pickaxe enchantments, PvP kits, boosts), settings, rules, teleports and upgrades. The bank, promo codes, achievements, minigames, cosmetics and the trader’s shop are unavailable until the scripts are back. Tell an admin.
+menu.fallback.notice=§7If you see this message, §cthe map scripts aren’t working right now§7 and this is the backup menu. What doesn’t depend on scripts still works: the shop (pickaxe enchantments, PvP kits, boosts), settings, rules, teleports and upgrades. The bank, promo codes, achievements, minigames, cosmetics and the trader’s shop are unavailable until the scripts work again. Tell the owner - §fkapycta1231484§7.
 
 ## --- ABOUT: LEVELS, HOW TO PLAY, CREATORS, VERSION ---
 ##   menu.about.*, menu.levels.*, menu.howtoplay.*, menu.creators.*, menu.version.*

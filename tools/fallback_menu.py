@@ -2,16 +2,28 @@
 # Запасное меню работает без Script API: тексты — ключи .lang (rawtext translate), кнопки — функции и команды.
 # Открывается функцией fallback/open, когда скрипты не отвечают (fallback/check). Запуск: python3 tools/fallback_menu.py
 # Цены и функции — те же, что в scripts/menu/main_menu.js; поменял там — поменяй здесь и пересобери.
-# У каждой сцены свой NPC (тег npc:<сцена>, functions/fallback/npcs): кнопка открывает следующую сцену через её NPC.
-# Один NPC свою же сцену из кнопки не открывает — нажатая кнопка закрывает его диалог вместе с новой сценой
-# (проверено в игре). Поэтому и после покупки — переход в раздел выше (сцена другого NPC), а не та же сцена.
+# Переход на другую сцену: кнопка ставит игроку теги sys:fb_go_<сцена> и sys:fb_nav, а сцену открывает функция
+# functions/fallback/nav не раньше чем через 5 тиков (timers/ticks_5: sys:fb_nav → sys:fb_nav_ready → nav).
+# Проверено в игре: команда /dialogue open из кнопки не открывает сцену (окно закрывается вслед за нажатием),
+# а из чата и из функции — открывает. У каждой сцены свой NPC (тег npc:<сцена>, functions/fallback/npcs).
+# Проверено в игре: команды кнопок выполняет NPC, а @initiator пуст — сцену открыла команда /dialogue open, а не
+# нажатие на NPC. И кнопки срабатывают, только когда NPC рядом с игроком и не в блоках (NPC в земле под игроком —
+# окно открывается, а кнопки молчат). Поэтому перед открытием NPC сцены переносится прямо к игроку (~ ~ ~), а кнопки
+# адресуют ближайшего к NPC игрока — @p[r=4]. Пока игрок держит меню (sys:fb_open), NPC остаётся при нём;
+# убрал меню или ушёл — NPC возвращается домой (fallback/npcs). Окно NPC, перенесённого издалека в тот же тик,
+# кнопкам не отвечает — поэтому NPC переносится за 5 тиков до открытия (fallback/bring, потом fallback/nav).
 import json, os
 
 BP = os.path.join(os.path.dirname(__file__), '..', 'behavior_packs', 'main-addon-shop_for_ore')
 OUT = os.path.join(BP, 'dialogue', 'fallback_menu.json')
 NPCS = os.path.join(BP, 'functions', 'fallback', 'npcs.mcfunction')
+NAV = os.path.join(BP, 'functions', 'fallback', 'nav.mcfunction')
+BRING = os.path.join(BP, 'functions', 'fallback', 'bring.mcfunction')
+GO, NAV_TAG, READY = 'sys:fb_go_', 'sys:fb_nav', 'sys:fb_nav_ready'
 # NPC стоят в ряд под спавном: x 0…15, y −60, z 0 — один чанк, его держит ticking area fallback (fallback/check)
 NPC_Y, NPC_Z = -60, 0
+# Игрок, нажавший кнопку: ближайший к NPC сцены, который стоит там же, где игрок (см. выше)
+PL = '@p[r=4]'
 COIN, LVL, WARP = '', '', ''
 MAX_LEVEL, RULES_COUNT = 40, 11
 
@@ -37,12 +49,18 @@ def npc(scene):
     return f'@e[type=npc,tag=npc:{scene},c=1]'
 
 
+def bring(players, scene):
+    """Перенести NPC сцены к игроку (до /dialogue open) — команда функции, не кнопки."""
+    return f'execute as {players} at @s run tp {npc(scene)} ~ ~ ~'
+
+
 def open_scene(scene):
-    return f'/dialogue open {npc(scene)} @initiator {scene}'
+    return f'/tag {PL} add {GO}{scene[3:]}'
 
 
 def button(name, *commands):
     commands = list(commands)
+    if any(c.startswith(f'/tag {PL} add {GO}') for c in commands): commands.append(f'/tag {PL} add {NAV_TAG}')
     return {'name': raw(*name) if isinstance(name, tuple) else raw(name), 'commands': commands}
 
 
@@ -56,11 +74,11 @@ def back(scene):
 
 def fn(name, function, then):
     """Покупка/действие функцией от имени игрока, потом — раздел выше (сцена другого NPC)."""
-    return button(name, f'/execute as @initiator at @s run function {function}', open_scene(then))
+    return button(name, f'/execute as {PL} at @s run function {function}', open_scene(then))
 
 
 def tell(key):
-    return f'/tellraw @initiator {json.dumps({"rawtext": [{"translate": key}]}, ensure_ascii=False)}'
+    return f'/tellraw {PL} {json.dumps({"rawtext": [{"translate": key}]}, ensure_ascii=False)}'
 
 
 def price(key, cost, glyph=COIN):
@@ -85,12 +103,12 @@ def toggle(kind, on_cmds, off_cmds):
 
 
 def board(label, fn_name, msg):
-    return button(label, f'/execute as @initiator at @s run function settings/{fn_name}', tell(msg), open_scene('fb_settings'))
+    return button(label, f'/execute as {PL} at @s run function settings/{fn_name}', tell(msg), open_scene('fb_settings'))
 
 
 def warp(label, warp_id, x, y, z):
     done = json.dumps({'rawtext': [{'translate': 'chat.cmd.warp.done', 'with': {'rawtext': [{'translate': f'warp.{warp_id}'}]}}]}, ensure_ascii=False)
-    return button((WARP + ' ', label), f'/tp @initiator {x} {y} {z}', f'/tellraw @initiator {done}')
+    return button((WARP + ' ', label), f'/tellraw {PL} {done}', f'/tp {PL} {x} {y} {z}')  # сначала сообщение: после tp игрок уже не рядом с NPC
 
 
 scenes = [
@@ -140,17 +158,17 @@ scenes = [
         board('%menu.settings.button.icons_only', 'scoreboard_icons', 'chat.settings.icons_only'),
         board('%menu.settings.button.disable', 'scoreboard_off', 'chat.settings.disabled'),
         back('fb_settings')]),
-    toggle('particles', ['/tag @initiator add player:particle'], ['/tag @initiator remove player:particle']),
-    toggle('sounds', ['/tag @initiator add player:sound'], ['/tag @initiator remove player:sound']),
-    toggle('music', ['/tag @initiator remove player:music_off'], ['/tag @initiator add player:music_off', '/stopsound @initiator music.game']),
+    toggle('particles', [f'/tag {PL} add player:particle'], [f'/tag {PL} remove player:particle']),
+    toggle('sounds', [f'/tag {PL} add player:sound'], [f'/tag {PL} remove player:sound']),
+    toggle('music', [f'/tag {PL} remove player:music_off'], [f'/tag {PL} add player:music_off', f'/stopsound {PL} music.game']),
     # Правила
     scene('fb_rules', '%menu.rules.title', ['%menu.rules.header', '\n\n', *lines('menu.rules.line', RULES_COUNT), '\n\n', '%menu.rules.footer'], [back('fb_main')]),
     # Телепортации: точки без скриптов (PvP-арена, сплиф и тир работают на скриптах — их нет)
     scene('fb_warps', '%menu.warps.title', ['%menu.warps.body'], [
         warp('%menu.warps.button.spawn', 'spawn', 0, 5, 0),
-        button((WARP + ' ', '%menu.warps.button.mine'), '/execute as @initiator at @s run function fallback/warp_mine'),
+        button((WARP + ' ', '%menu.warps.button.mine'), f'/execute as {PL} at @s run function fallback/warp_mine'),
         warp('%menu.warps.button.minigames', 'minigames', -109, 5, -60),
-        button((WARP + ' ', '%menu.warps.button.vip'), '/execute as @initiator at @s run function fallback/warp_vip'),
+        button((WARP + ' ', '%menu.warps.button.vip'), f'/execute as {PL} at @s run function fallback/warp_vip'),
         back('fb_main')]),
     # Прокачка
     scene('fb_upgrades', '%menu.upgrades.title', ['%menu.upgrades.body'], [
@@ -166,13 +184,41 @@ with open(OUT, 'w', encoding='utf-8') as f:
 npcs = ['# --- Запасное меню: NPC сцен — по одному на сцену (тег npc:<сцена>), раз в секунду из fallback/check ---',
         '# Собирается tools/fallback_menu.py. Нет NPC — барьер под ним и призыв; пока чанк не загружен, призыв не проходит —',
         '# следующая попытка через секунду. Прежний общий NPC (npc:fallback, до отдельных NPC) убирается.',
+        '# Перед открытием сцены NPC переносится к игроку (fallback/open, fallback/bring): кнопки адресуют ближайшего',
+        '# к NPC игрока, @initiator после /dialogue open пуст. Нет рядом игрока с меню в руке — NPC возвращается домой.',
         'kill @e[type=npc,tag=npc:fallback]']
 for x, sc in enumerate(scenes):
     t = sc['scene_tag']
     npcs.append(f'execute unless entity @e[type=npc,tag=npc:{t}] run setblock {x} {NPC_Y - 1} {NPC_Z} barrier')
     npcs.append(f'execute unless entity @e[type=npc,tag=npc:{t}] run summon npc {x} {NPC_Y} {NPC_Z} minecraft:entity_spawned {t}')
     npcs.append(f'tag @e[type=npc,name={t},tag=!npc:{t}] add npc:{t}')
+    # Рядом нет игрока с меню в руке — домой (NPC переносится к игроку при открытии сцены)
+    npcs.append(f'execute as @e[type=npc,tag=npc:{t}] at @s unless entity @a[r=6,hasitem={{item=server:menu,location=slot.weapon.mainhand}}] run tp @s {x} {NPC_Y} {NPC_Z}')
 assert len(scenes) <= 16, 'NPC не помещаются в один чанк'
+# Переходы: открыть сцену тем, у кого кнопка поставила тег, — уже после закрытия окна
+nav = ['# --- Запасное меню: открыть сцену, выбранную кнопкой (теги sys:fb_go_<сцена>) ---',
+       '# Собирается tools/fallback_menu.py. Вызывается из timers/ticks_5 для игроков с sys:fb_nav_ready — не раньше',
+       '# чем через 5 тиков после нажатия: команда /dialogue open из самой кнопки сцену не открывает (проверено в игре).',
+       '# Перед открытием NPC сцены переносится к игроку — иначе кнопки не сработают и не найдут, кто их нажал.']
+for sc in scenes:
+    t = sc['scene_tag']
+    who = f'@a[tag={READY},tag={GO}{t[3:]}]'
+    nav.append(bring(who, t))
+    nav.append(f'execute as {who} at @s run dialogue open {npc(t)} @s {t}')
+for sc in scenes:
+    nav.append(f'tag @a[tag={READY}] remove {GO}{sc["scene_tag"][3:]}')
+nav.append(f'tag @a remove {READY}')
+# Перенос NPC к игроку — за 5 тиков до открытия сцены (timers/ticks_5: sys:fb_nav → bring, sys:fb_nav_ready → nav)
+bring_fn = ['# --- Запасное меню: NPC сцены, выбранной кнопкой, — к игроку (за 5 тиков до fallback/nav) ---',
+            '# Собирается tools/fallback_menu.py. Вызывается из timers/ticks_5 для игроков с sys:fb_nav: окно NPC,',
+            '# перенесённого издалека в тот же тик, кнопкам не отвечает (проверено в игре).']
+for sc in scenes:
+    t = sc['scene_tag']
+    bring_fn.append(bring(f'@a[tag={NAV_TAG},tag={GO}{t[3:]}]', t))
+with open(BRING, 'w', encoding='utf-8') as f:
+    f.write('\n'.join(bring_fn) + '\n')
+with open(NAV, 'w', encoding='utf-8') as f:
+    f.write('\n'.join(nav) + '\n')
 with open(NPCS, 'w', encoding='utf-8') as f:
     f.write('\n'.join(npcs) + '\n')
 print('сцен:', len(scenes))

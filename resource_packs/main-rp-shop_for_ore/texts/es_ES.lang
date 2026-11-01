@@ -251,7 +251,7 @@ menu.main.button.warps=§8 Teletransportes
 menu.main.button.upgrades=§8 Mejoras
 menu.main.button.achievements=§8 Logros
 menu.main.button.games=§8 Minijuegos
-menu.fallback.notice=§cLos scripts del mapa no responden ahora mismo§7: este es el menú de reserva. Funciona lo que no depende de los scripts: la tienda (encantamientos del pico, kits PvP, potenciadores), los ajustes, las reglas, los teletransportes y las mejoras. El banco, los códigos promocionales, los logros, los minijuegos, los cosméticos y la tienda del comerciante no están disponibles hasta que los scripts vuelvan. Avisa a un administrador.
+menu.fallback.notice=§7Si ves este mensaje, §clos scripts del mapa no funcionan ahora mismo§7 y este es el menú de reserva. Funciona lo que no depende de los scripts: la tienda (encantamientos del pico, kits PvP, potenciadores), los ajustes, las reglas, los teletransportes y las mejoras. El banco, los códigos promocionales, los logros, los minijuegos, los cosméticos y la tienda del comerciante no están disponibles hasta que los scripts vuelvan a funcionar. Avisa al propietario - §fkapycta1231484§7.
 
 ## --- SOBRE EL MAPA: NIVELES, CÓMO JUGAR, CREADORES, VERSIÓN ---
 ##   menu.about.*, menu.levels.*, menu.howtoplay.*, menu.creators.*, menu.version.*

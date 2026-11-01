@@ -220,6 +220,12 @@
 			"path" : "functions/fallback/check.mcfunction"
 		},
 		{
+			"path" : "functions/fallback/bring.mcfunction"
+		},
+		{
+			"path" : "functions/fallback/nav.mcfunction"
+		},
+		{
 			"path" : "functions/fallback/open.mcfunction"
 		},
 		{
