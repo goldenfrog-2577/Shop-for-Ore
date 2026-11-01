@@ -47,8 +47,8 @@ item.server:admin_stick=§cПалочка адміна§r
 item.server:portable_ender_crystal.name=§eПортативний кристал Енду
 item.spawn_egg.entity.server:floating_text.name=Яйце призову голограми
 entity.server:floating_text.name=Голограма
-container.shop.feedback=Відгук класти сюди...
-container.shop.mythic=Містик
+container.shop.feedback=§lВідгук класти сюди...
+container.shop.mythic= §l§5Містик
 
 ## --- ТЕКСТИ ГРИ (ЗАМІНА ВАНІЛЬНИХ) ---
 ##   accessibility.*, advMode.*, button.*, chat.title.*, command_block.*, commands.*, death.*, disconnect*, map.*, multiplayer.*, progressScreen.*

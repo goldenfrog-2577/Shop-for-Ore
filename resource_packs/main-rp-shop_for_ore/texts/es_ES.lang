@@ -47,8 +47,8 @@ item.server:admin_stick=§cVara de admin§r
 item.server:portable_ender_crystal.name=§eCristal del End portátil
 item.spawn_egg.entity.server:floating_text.name=Huevo de holograma
 entity.server:floating_text.name=Holograma
-container.shop.feedback=Deja tu reseña aquí...
-container.shop.mythic=Místico
+container.shop.feedback=§lDeja tu reseña aquí...
+container.shop.mythic= §l§5Místico
 
 ## --- TEXTOS DEL JUEGO (SUSTITUYEN A LOS ORIGINALES) ---
 ##   accessibility.*, advMode.*, button.*, chat.title.*, command_block.*, commands.*, death.*, disconnect*, map.*, multiplayer.*, progressScreen.*

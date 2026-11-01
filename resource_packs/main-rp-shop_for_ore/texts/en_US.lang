@@ -47,8 +47,8 @@ item.server:admin_stick=§cAdmin Stick§r
 item.server:portable_ender_crystal.name=§ePortable End Crystal
 item.spawn_egg.entity.server:floating_text.name=Hologram Spawn Egg
 entity.server:floating_text.name=Hologram
-container.shop.feedback=Put your review here...
-container.shop.mythic=Mythic
+container.shop.feedback=§lPut your review here...
+container.shop.mythic= §l§5Mythic
 
 ## --- GAME TEXTS (VANILLA OVERRIDES) ---
 ##   accessibility.*, advMode.*, button.*, chat.title.*, command_block.*, commands.*, death.*, disconnect*, map.*, multiplayer.*, progressScreen.*
