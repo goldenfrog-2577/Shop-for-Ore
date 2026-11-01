@@ -17,8 +17,10 @@ world.events.beforeItemUse.subscribe((e) => {
 	tell(e.source, 'chat.pvp.crystal_arena_only');
 });
 
-// Где выбирать точку появления (по просьбе владельца карты) и по какой высоте искать пол
-const SPAWN_AREA = { x: [245, 335], z: [260, 340] };
+// Где выбирать точку появления: арена круглая — каменная стена по кругу радиусом ~55 вокруг (295, 300),
+// снаружи под ней тоже трава. Точка — случайная внутри круга SPAWN_RADIUS (с запасом до стены), равномерно по площади
+export const ARENA_CENTER = { x: 295, z: 300 };
+export const SPAWN_RADIUS = 45;
 const FLOOR_Y = [-31, -2];
 const START_Y = -25;          // высота, на которую телепортируем сначала (как старый портал)
 const FALLBACK = [292, -25, 259];
@@ -41,7 +43,11 @@ const lastCombat = new Map();   // ник → время последнего у
 const pending = [];             // { player, x, z, tries, tick }
 let tick = 0;
 
-const rand = ([a, b]) => a + Math.floor(Math.random() * (b - a + 1));
+/** Случайная точка внутри круга появления: { x, z }. */
+export function randomSpawnPoint(random = Math.random) {
+	const r = SPAWN_RADIUS * Math.sqrt(random()), a = 2 * Math.PI * random();
+	return { x: Math.round(ARENA_CENTER.x + r * Math.cos(a)), z: Math.round(ARENA_CENTER.z + r * Math.sin(a)) };
+}
 
 /** Сколько секунд игрок ещё «в бою» (0 — можно телепортироваться). */
 export function combatSecondsLeft(player) {
@@ -57,7 +63,7 @@ export function combatSecondsLeft(player) {
 
 /** Телепорт на арену в случайную точку площадки; безопасную высоту подбирает после прогрузки чанка. */
 export function teleportToArena(player) {
-	const x = rand(SPAWN_AREA.x), z = rand(SPAWN_AREA.z);
+	const { x, z } = randomSpawnPoint();
 	run(player, `tp @s ${x} ${START_Y} ${z}`);
 	pending.push({ player, x, z, tries: 1, tick: tick + CHECK_DELAY });
 }
@@ -102,7 +108,7 @@ world.events.tick.subscribe(() => {
 		if (y !== undefined) {
 			run(player, `tp @s ${job.x} ${y} ${job.z}`);
 		} else if (job.tries < MAX_TRIES) {
-			const x = rand(SPAWN_AREA.x), z = rand(SPAWN_AREA.z);
+			const { x, z } = randomSpawnPoint();
 			run(player, `tp @s ${x} ${START_Y} ${z}`);
 			pending.push({ player, x, z, tries: job.tries + 1, tick: tick + CHECK_DELAY });
 		} else {
