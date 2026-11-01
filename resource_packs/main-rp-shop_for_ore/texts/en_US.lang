@@ -263,7 +263,7 @@ legacy_menu.button.warps= Teleports
 legacy_menu.button.upgrades= Upgrades
 legacy_menu.button.back= Back
 legacy_menu.button.levels= Levels
-legacy_menu.button.howtoplay=⩆ How to play
+legacy_menu.button.howtoplay= Tutorial
 legacy_menu.button.enchants= Enchants
 legacy_menu.button.kits= PvP kits
 legacy_menu.button.boosts= Boosts
@@ -274,7 +274,7 @@ legacy_menu.button.kit_diamond= Diamond
 legacy_menu.button.kit_netherite= Netherite
 legacy_menu.button.x2= Boost x2
 legacy_menu.button.x4= Boost x4
-legacy_menu.button.magnet=⩲ Ore magnet
+legacy_menu.button.magnet= Ore magnet
 legacy_menu.button.board= Sidebar
 legacy_menu.button.particles= Particles
 legacy_menu.button.sounds= Sounds
@@ -1355,4 +1355,5 @@ bot.guide.1=Hi, §e%1$s§f! I'm %2$s, this server's bot. Let me show you around.
 bot.guide.2=Mine with the pickaxe in your first slot, then stand on a §6gold block§f — your ore sells itself for coins and XP.
 bot.guide.3=Got enough XP for a level? Stand on the gold block again. New levels unlock new mines.
 bot.guide.4=The item in your last slot is the server menu: shop, teleports, achievements and settings. Good luck!
+
 

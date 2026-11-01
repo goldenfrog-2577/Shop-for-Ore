@@ -263,7 +263,7 @@ legacy_menu.button.warps= Teletransporte
 legacy_menu.button.upgrades= Mejoras
 legacy_menu.button.back= Atrás
 legacy_menu.button.levels= Niveles
-legacy_menu.button.howtoplay=⩆ Cómo jugar
+legacy_menu.button.howtoplay= Tutorial
 legacy_menu.button.enchants= Encantamientos
 legacy_menu.button.kits= Kits PvP
 legacy_menu.button.boosts= Potenciadores
@@ -274,7 +274,7 @@ legacy_menu.button.kit_diamond= Diamante
 legacy_menu.button.kit_netherite= Netherita
 legacy_menu.button.x2= Potenciador x2
 legacy_menu.button.x4= Potenciador x4
-legacy_menu.button.magnet=⩲ Imán de mena
+legacy_menu.button.magnet= Imán de mena
 legacy_menu.button.board= Panel lateral
 legacy_menu.button.particles= Partículas
 legacy_menu.button.sounds= Sonidos
@@ -1355,4 +1355,5 @@ bot.guide.1=¡Hola, §e%1$s§f! Soy %2$s, el bot de este servidor. Te enseño lo
 bot.guide.2=Pica con el pico del primer espacio y luego ponte sobre un §6bloque de oro§f: el mineral se vende solo por monedas y experiencia.
 bot.guide.3=¿Tienes experiencia para subir de nivel? Vuelve al bloque de oro. Los niveles nuevos abren minas nuevas.
 bot.guide.4=El objeto del último espacio es el menú del servidor: tienda, teletransportes, logros y ajustes. ¡Suerte!
+
 

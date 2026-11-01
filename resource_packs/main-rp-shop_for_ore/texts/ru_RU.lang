@@ -263,7 +263,7 @@ legacy_menu.button.warps= Телепорты
 legacy_menu.button.upgrades= Прокачка
 legacy_menu.button.back= Назад
 legacy_menu.button.levels= Уровни
-legacy_menu.button.howtoplay=⩆ Как играть
+legacy_menu.button.howtoplay= Обучение
 legacy_menu.button.enchants= Зачарования
 legacy_menu.button.kits= PvP-наборы
 legacy_menu.button.boosts= Бусты
@@ -274,7 +274,7 @@ legacy_menu.button.kit_diamond= Алмазный
 legacy_menu.button.kit_netherite= Незеритовый
 legacy_menu.button.x2= Буст x2
 legacy_menu.button.x4= Буст x4
-legacy_menu.button.magnet=⩲ Магнит руды
+legacy_menu.button.magnet= Магнит руды
 legacy_menu.button.board= Панель слева
 legacy_menu.button.particles= Частицы
 legacy_menu.button.sounds= Звуки
@@ -1355,4 +1355,5 @@ bot.guide.1=Привет, §e%1$s§f! Я %2$s — бот этого сервер
 bot.guide.2=Копай киркой из первого слота, а потом встань на §6золотой блок§f — руда продастся сама: монеты и опыт.
 bot.guide.3=Хватает опыта на уровень — снова встань на золотой блок. Новые уровни открывают новые шахты.
 bot.guide.4=Предмет в последнем слоте — меню сервера: магазин, телепортации, достижения и настройки. Удачи!
+
 

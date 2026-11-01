@@ -95,8 +95,10 @@ def prices(*items):
 
 
 def scene(tag, title, text, buttons):
+    """Заголовок — §l§8 и название кнопки этого раздела (глиф и короткий текст): длинный заголовок обрезается."""
     assert len(buttons) <= 6, f'{tag}: больше 6 кнопок — игра не загружает такую сцену (проверено в игре)'
-    return {'scene_tag': tag, 'npc_name': raw(title), 'text': raw(*text), 'buttons': buttons}
+    name = raw(title) if title.startswith('%menu.') else {'rawtext': [{'text': '§l§8'}, {'translate': title[1:]}]}
+    return {'scene_tag': tag, 'npc_name': name, 'text': raw(*text), 'buttons': buttons}
 
 
 howtoplay = [' ', *lines('menu.howtoplay.line', 5), '\n\n ', *lines('menu.howtoplay.line', 9, 6),
@@ -106,7 +108,7 @@ for i in range(14, 22):
 
 
 def toggle(kind, on_cmds, off_cmds):
-    return scene(f'fb_{kind}', f'%menu.settings.{kind}.title', [f'%menu.settings.{kind}.body'], [
+    return scene(f'fb_{kind}', B(kind), [f'%menu.settings.{kind}.body'], [
         button(B('enable'), *on_cmds, tell('chat.settings.enabled'), open_scene('fb_settings')),
         button(B('disable'), *off_cmds, tell('chat.settings.disabled'), open_scene('fb_settings')),
         back('fb_settings')])
@@ -130,41 +132,41 @@ scenes = [
         go(B('warps'), 'fb_warps'),
         go(B('upgrades'), 'fb_upgrades')]),
     # О карте
-    scene('fb_about', '%menu.about.title', ['%menu.about.body'], [
+    scene('fb_about', B('about'), ['%menu.about.body'], [
         go(B('levels'), 'fb_levels'),
         go(B('howtoplay'), 'fb_howtoplay'),
         back('fb_main')]),
-    scene('fb_levels', '%menu.levels.title', lines('menu.levels.line', MAX_LEVEL), [back('fb_about')]),
-    scene('fb_howtoplay', '%menu.howtoplay.title', howtoplay, [back('fb_about')]),
+    scene('fb_levels', B('levels'), lines('menu.levels.line', MAX_LEVEL), [back('fb_about')]),
+    scene('fb_howtoplay', B('howtoplay'), howtoplay, [back('fb_about')]),
     # Магазин: только то, что покупают функции
-    scene('fb_shop', '%menu.shop.title', ['%menu.shop.body'], [
+    scene('fb_shop', B('shop'), ['%menu.shop.body'], [
         go(B('enchants'), 'fb_enchants'),
         go(B('kits'), 'fb_kits'),
         go(B('boosts'), 'fb_boosts'),
         back('fb_main')]),
-    scene('fb_enchants', '%menu.shop.enchants.pickaxe.title', ['%menu.shop.enchants.pickaxe.body', *prices(('efficiency', '25.0K'), ('fortune', '10.0K'))], [
+    scene('fb_enchants', B('enchants'), ['%menu.shop.enchants.pickaxe.body', *prices(('efficiency', '25.0K'), ('fortune', '10.0K'))], [
         fn(B('efficiency'), 'shop/enchants/efficiency', 'fb_shop'),
         fn(B('fortune'), 'shop/enchants/fortune', 'fb_shop'),
         back('fb_shop')]),
-    scene('fb_kits', '%menu.shop.kits.title', ['%menu.shop.kits.body', *prices(('kit_iron', '15.0K'), ('kit_diamond', '35.0K'), ('kit_netherite', '50.0K'))], [
+    scene('fb_kits', B('kits'), ['%menu.shop.kits.body', *prices(('kit_iron', '15.0K'), ('kit_diamond', '35.0K'), ('kit_netherite', '50.0K'))], [
         fn(B('kit_iron'), 'shop/pvp_kits/iron', 'fb_shop'),
         fn(B('kit_diamond'), 'shop/pvp_kits/diamond', 'fb_shop'),
         fn(B('kit_netherite'), 'shop/pvp_kits/netherite', 'fb_shop'),
         back('fb_shop')]),
-    scene('fb_boosts', '%menu.shop.boosts.title', ['%menu.shop.boosts.body', '\n\n', '%menu.shop.boosts.x2', '\n', '%menu.shop.boosts.x4', '\n', '%menu.shop.boosts.magnet',
+    scene('fb_boosts', B('boosts'), ['%menu.shop.boosts.body', '\n\n', '%menu.shop.boosts.x2', '\n', '%menu.shop.boosts.x4', '\n', '%menu.shop.boosts.magnet',
                                                    *prices(('x2', '10.0K'), ('x4', '50.0K'), ('magnet', '20.0K'))], [
         fn(B('x2'), 'boost/x2_boost', 'fb_shop'),
         fn(B('x4'), 'boost/x4_boost', 'fb_shop'),
         fn(B('magnet'), 'shop/ore_magnet/ore_magnet', 'fb_shop'),
         back('fb_shop')]),
     # Настройки
-    scene('fb_settings', '%menu.settings.title', ['%menu.settings.body'], [
+    scene('fb_settings', B('settings'), ['%menu.settings.body'], [
         go(B('board'), 'fb_board'),
         go(B('particles'), 'fb_particles'),
         go(B('sounds'), 'fb_sounds'),
         go(B('music'), 'fb_music'),
         back('fb_main')]),
-    scene('fb_board', '%menu.settings.board.title', ['%menu.settings.board.body'], [
+    scene('fb_board', B('board'), ['%menu.settings.board.body'], [
         board(B('enable'), 'scoreboard_on', 'chat.settings.enabled'),
         board(B('icons_only'), 'scoreboard_icons', 'chat.settings.icons_only'),
         board(B('disable'), 'scoreboard_off', 'chat.settings.disabled'),
@@ -173,16 +175,16 @@ scenes = [
     toggle('sounds', [f'/tag {PL} add player:sound'], [f'/tag {PL} remove player:sound']),
     toggle('music', [f'/tag {PL} remove player:music_off'], [f'/tag {PL} add player:music_off', f'/stopsound {PL} music.game']),
     # Правила
-    scene('fb_rules', '%menu.rules.title', ['%menu.rules.header', '\n\n', *lines('menu.rules.line', RULES_COUNT), '\n\n', '%menu.rules.footer'], [back('fb_main')]),
+    scene('fb_rules', B('rules'), ['%menu.rules.header', '\n\n', *lines('menu.rules.line', RULES_COUNT), '\n\n', '%menu.rules.footer'], [back('fb_main')]),
     # Телепортации: точки без скриптов (PvP-арена, сплиф и тир работают на скриптах — их нет)
-    scene('fb_warps', '%menu.warps.title', ['%menu.warps.body'], [
+    scene('fb_warps', B('warps'), ['%menu.warps.body'], [
         warp(B('spawn'), 'spawn', 0, 5, 0),
         button(B('mine'), f'/execute as {PL} at @s run function fallback/warp_mine'),
         warp(B('minigames'), 'minigames', -109, 5, -60),
         button(B('vip_island'), f'/execute as {PL} at @s run function fallback/warp_vip'),
         back('fb_main')]),
     # Прокачка
-    scene('fb_upgrades', '%menu.upgrades.title', ['%menu.upgrades.body', *prices(('vip', '125.0K'), ('rebirth', f'25 - {MAX_LEVEL}', LVL))], [
+    scene('fb_upgrades', B('upgrades'), ['%menu.upgrades.body', *prices(('vip', '125.0K'), ('rebirth', f'25 - {MAX_LEVEL}', LVL))], [
         fn(B('vip'), 'upgrade/upgrade_vip', 'fb_main'),
         fn(B('rebirth'), 'upgrade/upgrade_rebirth', 'fb_main'),
         back('fb_main')]),
