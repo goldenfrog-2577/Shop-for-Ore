@@ -186,13 +186,10 @@ export const isBanned = (typeId) => bannedItems.has(typeId) || typeId === 'minec
 // меч, переименованный на наковальне в «Зачарованая кирка #1», не пройдёт;
 // прочие зачарования — по обычным правилам (магазин зачарований добавляет до ванильного максимума).
 export const VIP_ITEMS = {
-	'minecraft:netherite_pickaxe|§r§lЗачарованая кирка #1': { efficiency: 10, fortune: 5 },
-	'minecraft:netherite_pickaxe|§r§lЗачарованая кирка #2': { efficiency: 20, fortune: 10 },
-	'minecraft:netherite_pickaxe|§r§lЗачарованая кирка #3': { efficiency: 30, fortune: 15 },
-	// Из loot_tables/shop/trader (system/trader.js) — с исправленным «Зачарованная»; старое написание выше — у купленных раньше
-	'minecraft:netherite_pickaxe|§r§lЗачарованная кирка #1': { efficiency: 10, fortune: 5 },
-	'minecraft:netherite_pickaxe|§r§lЗачарованная кирка #2': { efficiency: 20, fortune: 10 },
-	'minecraft:netherite_pickaxe|§r§lЗачарованная кирка #3': { efficiency: 30, fortune: 15 },
+	// Кирки лавки (structures/trader/pickaxe_*.mcstructure) — по названию из структуры
+	'minecraft:netherite_pickaxe|§r§l§fЗачарованая кирка #1': { efficiency: 10, fortune: 5 },
+	'minecraft:netherite_pickaxe|§r§l§fЗачарованая кирка #2': { efficiency: 20, fortune: 10 },
+	'minecraft:netherite_pickaxe|§r§l§fЗачарованая кирка #3': { efficiency: 30, fortune: 15 },
 	'minecraft:skull|§r§eЧереп скелета': { protection: 10 },
 	'minecraft:skull|§r§eЧереп скелета-иссушителя': { protection: 10 },
 	'minecraft:skull|§r§eГолова зомби': { protection: 10 },
