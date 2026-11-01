@@ -214,6 +214,27 @@
 			"path" : "structures/server/bot.mcstructure"
 		},
 		{
+			"path" : "dialogue/fallback_menu.json"
+		},
+		{
+			"path" : "functions/fallback/check.mcfunction"
+		},
+		{
+			"path" : "functions/fallback/open.mcfunction"
+		},
+		{
+			"path" : "functions/fallback/spawn_npc.mcfunction"
+		},
+		{
+			"path" : "functions/fallback/warp_mine.mcfunction"
+		},
+		{
+			"path" : "functions/fallback/warp_vip.mcfunction"
+		},
+		{
+			"path" : "scripts/system/fallback.js"
+		},
+		{
 			"path" : "structures/trader/wither_skull.mcstructure"
 		},
 		{

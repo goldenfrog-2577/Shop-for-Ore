@@ -38,7 +38,7 @@ import './system/cps.js';         // Проверка CPS против авто�
 import './system/boosts.js';      // Бусты, выданные администратором: запись и отключение
 import './system/jail.js';        // Тюрьма (!jail): камера у спавна, срок или навсегда
 import './system/tir.js';         // Тир: стрельба по мишеням за монеты, кирка убирается на время
-import './system/trader.js';      // Лавка странствующего торговца: кнопки, VIP-коины, loot tables
+import './system/trader.js';      // Лавка странствующего торговца: кнопки, VIP-коины, товары-структуры
 import './system/music.js';       // Выключатель музыки (Настройки)
 import './system/wipe.js';        // Вайп: номер вайпа, сброс игроков не в сети при входе
 import './system/offline_reset.js'; // !resetoffline: всё сбросить игрокам не в сети
@@ -46,6 +46,7 @@ import './system/trident.js';     // Трезубец с «Громовержц�
 import './system/void.js';        // Бездна: упал ниже мира — на спавн
 import './system/ranks.js';       // Префикс уровня в чате (rank:§rN, у VIP — rank:§aVIP)
 import './system/hud.js';         // Панель слева (actionbar)
+import './system/fallback.js';    // Пульс скриптов: без него включается запасное меню на NPC
 
 // Импорт загрузчика скриптов
 import './register/loadScript.js';
