@@ -13,7 +13,7 @@ pack.name=Paquete de recursos para el mapa §lShop for Ore§r
 pack.description=Incluye pequeñas mejoras para una experiencia más cómoda. §c¡No se recomienda desactivar! §fVersión: §7[0.3.0_20261031_resources]
 
 ## --- OBJETOS Y BLOQUES ---
-##   item.*, tile.*, entity.*
+##   item.*, tile.*, entity.*, container.shop.*
 item.stick.name=§lPico §aNivel§b 1
 item.wooden_pickaxe.name=§lPico §aNivel§b 2
 item.stone_pickaxe.name=§lPico §aNivel§b 3
@@ -47,6 +47,8 @@ item.server:admin_stick=§cVara de admin§r
 item.server:portable_ender_crystal.name=§eCristal del End portátil
 item.spawn_egg.entity.server:floating_text.name=Huevo de holograma
 entity.server:floating_text.name=Holograma
+container.shop.feedback=Deja tu reseña aquí...
+container.shop.mythic=Místico
 
 ## --- TEXTOS DEL JUEGO (SUSTITUYEN A LOS ORIGINALES) ---
 ##   accessibility.*, advMode.*, button.*, chat.title.*, command_block.*, commands.*, death.*, disconnect*, map.*, multiplayer.*, progressScreen.*

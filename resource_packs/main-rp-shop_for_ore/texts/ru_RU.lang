@@ -13,7 +13,7 @@ pack.name=Ресурс-пак для карты §lShop for Ore§r
 pack.description=Содержит в себе небольшие улучшения для комфортной игры. §cНе рекомендуется отключать! §fВерсия: §7[0.3.0_20261031_resources]
 
 ## --- ПРЕДМЕТЫ И БЛОКИ ---
-##   item.*, tile.*, entity.*
+##   item.*, tile.*, entity.*, container.shop.*
 item.stick.name=§lКирка §a1§b уровня
 item.wooden_pickaxe.name=§lКирка §a2§b уровня
 item.stone_pickaxe.name=§lКирка §a3§b уровня
@@ -47,6 +47,8 @@ item.server:admin_stick=§cПалочка админа§r
 item.server:portable_ender_crystal.name=§eПортативный кристалл Энда
 item.spawn_egg.entity.server:floating_text.name=Яйцо призыва голограммы
 entity.server:floating_text.name=Голограмма
+container.shop.feedback=Отзыв класть сюда...
+container.shop.mythic=Мистик
 
 ## --- ТЕКСТЫ ИГРЫ (ЗАМЕНА ВАНИЛЬНЫХ) ---
 ##   accessibility.*, advMode.*, button.*, chat.title.*, command_block.*, commands.*, death.*, disconnect*, map.*, multiplayer.*, progressScreen.*

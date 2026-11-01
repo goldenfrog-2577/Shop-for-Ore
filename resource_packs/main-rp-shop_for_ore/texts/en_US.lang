@@ -13,7 +13,7 @@ pack.name=Resource pack for map §lShop for Ore§r
 pack.description=Includes some small improvements for a smoother game. §cNot recommended to disable! §fVersion: §7[0.3.0_20261031_resources]
 
 ## --- ITEMS & BLOCKS ---
-##   item.*, tile.*, entity.*
+##   item.*, tile.*, entity.*, container.shop.*
 item.stick.name=§lPickaxe §aLevel§b 1
 item.wooden_pickaxe.name=§lPickaxe §aLevel§b 2
 item.stone_pickaxe.name=§lPickaxe §aLevel§b 3
@@ -47,6 +47,8 @@ item.server:admin_stick=§cAdmin Stick§r
 item.server:portable_ender_crystal.name=§ePortable End Crystal
 item.spawn_egg.entity.server:floating_text.name=Hologram Spawn Egg
 entity.server:floating_text.name=Hologram
+container.shop.feedback=Put your review here...
+container.shop.mythic=Mythic
 
 ## --- GAME TEXTS (VANILLA OVERRIDES) ---
 ##   accessibility.*, advMode.*, button.*, chat.title.*, command_block.*, commands.*, death.*, disconnect*, map.*, multiplayer.*, progressScreen.*
