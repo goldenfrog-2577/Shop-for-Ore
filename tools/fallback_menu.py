@@ -2,15 +2,16 @@
 # Запасное меню работает без Script API: тексты — ключи .lang (rawtext translate), кнопки — функции и команды.
 # Открывается функцией fallback/open, когда скрипты не отвечают (fallback/check). Запуск: python3 tools/fallback_menu.py
 # Цены и функции — те же, что в scripts/menu/main_menu.js; поменял там — поменяй здесь и пересобери.
-# Переход на другую сцену: кнопка ставит игроку тег sys:fb_go:<сцена>, а открывает сцену functions/fallback/nav
-# (из fallback/open, раз в 5 тиков). Если открыть сцену прямо из кнопки, окно закрывается вслед за нажатием
+# Переход на другую сцену: кнопка ставит игроку теги sys:fb_nav и sys:fb_go_<сцена>, а открывает сцену
+# functions/fallback/nav (из timers/ticks_5, когда у кого-то есть sys:fb_nav). Если открыть сцену прямо из кнопки, окно закрывается вслед за нажатием
 # и уносит с собой только что открытую сцену.
 import json, os
 
 BP = os.path.join(os.path.dirname(__file__), '..', 'behavior_packs', 'main-addon-shop_for_ore')
 OUT = os.path.join(BP, 'dialogue', 'fallback_menu.json')
 NAV = os.path.join(BP, 'functions', 'fallback', 'nav.mcfunction')
-GO = 'sys:fb_go:'
+GO = 'sys:fb_go_'
+NAV_TAG = 'sys:fb_nav'
 COIN, LVL, WARP = '', '', ''
 MAX_LEVEL, RULES_COUNT = 40, 11
 
@@ -33,11 +34,17 @@ def lines(prefix, n, start=1):
 
 
 def open_scene(scene):
-    return f'/tag @initiator add {GO}{scene}'
+    return f'/tag @initiator add {GO}{scene[3:]}'
+
+
+def nav_flag():
+    return f'/tag @initiator add {NAV_TAG}'
 
 
 def button(name, *commands):
-    return {'name': raw(*name) if isinstance(name, tuple) else raw(name), 'commands': list(commands)}
+    commands = list(commands)
+    if any(c.startswith(f'/tag @initiator add {GO}') for c in commands): commands.append(nav_flag())
+    return {'name': raw(*name) if isinstance(name, tuple) else raw(name), 'commands': commands}
 
 
 def go(name, scene):
@@ -157,13 +164,14 @@ os.makedirs(os.path.dirname(OUT), exist_ok=True)
 with open(OUT, 'w', encoding='utf-8') as f:
     f.write(json.dumps(data, indent='\t', ensure_ascii=True) + '\n')
 # Переходы: по одному на сцену
-nav = ['# --- Запасное меню: открыть сцену, выбранную кнопкой (тег sys:fb_go:<сцена>) ---',
-       '# Собирается tools/fallback_menu.py. Вызывается из fallback/open раз в 5 тиков — уже после того, как окно',
-       '# с нажатой кнопкой закрылось (сцена, открытая прямо из кнопки, закрывается вместе с ним).']
+nav = ['# --- Запасное меню: открыть сцену, выбранную кнопкой (теги sys:fb_nav и sys:fb_go_<сцена>) ---',
+       '# Собирается tools/fallback_menu.py. Вызывается из timers/ticks_5, когда у кого-то есть sys:fb_nav, — уже после того,',
+       '# как окно с нажатой кнопкой закрылось (сцена, открытая прямо из кнопки, закрывается вместе с ним).']
 for sc in scenes:
     t = sc['scene_tag']
-    nav.append(f'execute as @a[tag={GO}{t}] run dialogue open @e[type=npc,tag=npc:fallback,c=1] @s {t}')
-    nav.append(f'tag @a remove {GO}{t}')
+    nav.append(f'execute as @a[tag={GO}{t[3:]}] run dialogue open @e[type=npc,tag=npc:fallback,c=1] @s {t}')
+    nav.append(f'tag @a remove {GO}{t[3:]}')
+nav.append(f'tag @a remove {NAV_TAG}')
 with open(NAV, 'w', encoding='utf-8') as f:
     f.write('\n'.join(nav) + '\n')
 print('сцен:', len(scenes))
