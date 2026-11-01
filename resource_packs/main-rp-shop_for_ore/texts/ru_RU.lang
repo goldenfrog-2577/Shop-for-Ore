@@ -48,6 +48,7 @@ item.server:portable_ender_crystal.name=§eПортативный кристал
 item.spawn_egg.entity.server:floating_text.name=Яйцо призыва голограммы
 entity.server:floating_text.name=Голограмма
 container.shop.feedback=§lОтзыв класть сюда...
+container.shop.feedback_for_host=§lСундук для отзывов
 container.shop.mythic= §l§5Мистик
 
 ## --- ТЕКСТЫ ИГРЫ (ЗАМЕНА ВАНИЛЬНЫХ) ---
@@ -819,6 +820,7 @@ chat.trader.bought=§r §eМагазин §8» §7Куплено: §e%1$s§7 
 chat.trader.error.vip=§r⩕ §l§cERROR!§r §8» §7Лавка торговца — только для VIP
 chat.trader.error.full=§r⩕ §l§cERROR!§r §8» §7Нет места в инвентаре — освободи хотя бы один слот
 chat.trader.error.full_kit=§r⩕ §l§cERROR!§r §8» §7Нет места в инвентаре — для набора освободи §e%1$s§7 слотов
+chat.trader.error.give=§r⩕ §l§cERROR!§r §8» §7Не удалось выдать товар — VIP-коины не списаны. Сообщи администратору
 trader.item.wither_skull=Череп скелета-иссушителя
 trader.item.dragon_head=Голова дракона Края
 trader.item.creeper_head=Голова крипера

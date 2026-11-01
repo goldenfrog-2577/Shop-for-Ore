@@ -84,6 +84,7 @@ export const ERROR_KEYS = new Set([
 	'chat.shop.item_enchant.error.changed',
 	'chat.trader.error.full',
 	'chat.trader.error.full_kit',
+	'chat.trader.error.give',
 	'chat.trader.error.vip',
 	'chat.vip.error.owned',
 	'chat.vip.error.requirements'

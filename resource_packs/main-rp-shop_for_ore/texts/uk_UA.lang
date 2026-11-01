@@ -48,6 +48,7 @@ item.server:portable_ender_crystal.name=§eПортативний кристал
 item.spawn_egg.entity.server:floating_text.name=Яйце призову голограми
 entity.server:floating_text.name=Голограма
 container.shop.feedback=§lВідгук класти сюди...
+container.shop.feedback_for_host=§lСкриня для відгуків
 container.shop.mythic= §l§5Містик
 
 ## --- ТЕКСТИ ГРИ (ЗАМІНА ВАНІЛЬНИХ) ---
@@ -819,6 +820,7 @@ chat.trader.bought=§r §eМагазин §8» §7Куплено: §e%1$s§7 
 chat.trader.error.vip=§r⩕ §l§cERROR!§r §8» §7Крамниця торговця — лише для VIP
 chat.trader.error.full=§r⩕ §l§cERROR!§r §8» §7Немає місця в інвентарі — звільни хоча б один слот
 chat.trader.error.full_kit=§r⩕ §l§cERROR!§r §8» §7Немає місця в інвентарі — для набору звільни §e%1$s§7 слотів
+chat.trader.error.give=§r⩕ §l§cERROR!§r §8» §7Не вдалося видати товар — VIP-коїни не списано. Повідом адміністратора
 trader.item.wither_skull=Череп скелета-візера
 trader.item.dragon_head=Голова дракона Краю
 trader.item.creeper_head=Голова кріпера
