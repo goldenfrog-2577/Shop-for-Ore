@@ -48,6 +48,7 @@ item.server:portable_ender_crystal.name=§ePortable End Crystal
 item.spawn_egg.entity.server:floating_text.name=Hologram Spawn Egg
 entity.server:floating_text.name=Hologram
 container.shop.feedback=§lPut your review here...
+container.shop.feedback_for_host=§lFeedback chest
 container.shop.mythic= §l§5Mythic
 
 ## --- GAME TEXTS (VANILLA OVERRIDES) ---
@@ -819,6 +820,7 @@ chat.trader.bought=§r §eShop §8» §7Bought: §e%1$s§7 for §e%2$s 
 chat.trader.error.vip=§r⩕ §l§cERROR!§r §8» §7The trader’s shop is VIP only
 chat.trader.error.full=§r⩕ §l§cERROR!§r §8» §7No room in your inventory — free at least one slot
 chat.trader.error.full_kit=§r⩕ §l§cERROR!§r §8» §7No room in your inventory — the kit needs §e%1$s§7 free slots
+chat.trader.error.give=§r⩕ §l§cERROR!§r §8» §7Couldn’t hand out the item — no VIP coins were taken. Tell an admin
 trader.item.wither_skull=Wither Skeleton Skull
 trader.item.dragon_head=Ender Dragon Head
 trader.item.creeper_head=Creeper Head

@@ -48,6 +48,7 @@ item.server:portable_ender_crystal.name=§eCristal del End portátil
 item.spawn_egg.entity.server:floating_text.name=Huevo de holograma
 entity.server:floating_text.name=Holograma
 container.shop.feedback=§lDeja tu reseña aquí...
+container.shop.feedback_for_host=§lCofre de opiniones
 container.shop.mythic= §l§5Místico
 
 ## --- TEXTOS DEL JUEGO (SUSTITUYEN A LOS ORIGINALES) ---
@@ -819,6 +820,7 @@ chat.trader.bought=§r §eTienda §8» §7Comprado: §e%1$s§7 por §e%2$s �
 chat.trader.error.vip=§r⩕ §l§cERROR!§r §8» §7La tienda del comerciante es solo para VIP
 chat.trader.error.full=§r⩕ §l§cERROR!§r §8» §7No hay sitio en el inventario: libera al menos una casilla
 chat.trader.error.full_kit=§r⩕ §l§cERROR!§r §8» §7No hay sitio en el inventario: el kit necesita §e%1$s§7 casillas libres
+chat.trader.error.give=§r⩕ §l§cERROR!§r §8» §7No se pudo entregar el artículo: no se cobraron monedas VIP. Avisa a un administrador
 trader.item.wither_skull=Calavera de esqueleto wither
 trader.item.dragon_head=Cabeza de dragón
 trader.item.creeper_head=Cabeza de creeper

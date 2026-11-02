@@ -22,9 +22,10 @@ export const PRODUCTS = [
 	{ pos: [-82, 1, -54], id: 'zombie_head', price: 384 },
 	{ pos: [-80, 1, -54], id: 'player_head', price: 384 },
 	{ pos: [-78, 1, -54], id: 'haste', price: 512, effect: 'effect @s haste 1800 4 true' },
-	// На месте бывших «Удачи III» и «Эффективности V» (они — в Магазине → Зачарования): 4 вещи брони + меч
-	{ pos: [-76, 1, -54], id: 'kit_diamond', price: 768, slots: 5 },
-	{ pos: [-74, 1, -54], id: 'kit_netherite', price: 1152, slots: 5 }
+	// На месте бывших «Удачи III» и «Эффективности V» (они — в Магазине → Зачарования): 4 вещи брони + меч.
+	// Если смотреть на стену, слева направо: алмазный (x −74), незеритовый (x −76), Спешка (x −78)
+	{ pos: [-74, 1, -54], id: 'kit_diamond', price: 768, slots: 5 },
+	{ pos: [-76, 1, -54], id: 'kit_netherite', price: 1152, slots: 5 }
 ];
 
 /** Выдать товар: структура с предметами у ног игрока (только сущности — блоки вокруг не трогаются). */
@@ -37,10 +38,16 @@ function freeSlots(player) {
 	try { return player.getComponent('inventory').container.emptySlotsCount; } catch { return 0; }
 }
 
+// Покупка, которая ждёт выдачи товара: повторное нажатие до её конца не покупает второй раз
+const pending = new Set();
+
 /**
- * Покупка. @returns {string} итог: 'ok' | 'vip' | 'coins' | 'full'
+ * Покупка: проверки, затем выдача товара; коины списываются только после удачной выдачи
+ * (структура не загрузилась — коины остаются, игроку сообщение об ошибке).
+ * @returns {string} итог проверок: 'ok' (выдача начата) | 'vip' | 'coins' | 'full' | 'busy'
  */
 export function buy(player, product) {
+	if (pending.has(player.name)) return 'busy';
 	if (!isVip(player)) { tell(player, 'chat.trader.error.vip'); return 'vip'; }
 	if (getScore(player, 'vip_coins') < product.price) { tell(player, 'chat.shop.cosmetics.error.no_coins'); return 'coins'; }
 	const slots = product.effect ? 0 : product.slots ?? 1;
@@ -49,13 +56,17 @@ export function buy(player, product) {
 		else tell(player, 'chat.trader.error.full');
 		return 'full';
 	}
-	run(player, `scoreboard players remove @s vip_coins ${product.price}`);
-	run(player, product.effect ?? structureCommand(product.id));
-	tell(player, 'chat.trader.bought', { translate: `trader.item.${product.id}` }, String(product.price));
-	// Для достижений «У торговца» и «Коллекционер голов» (system/achievements.js)
-	player.addTag('stat:trader');
-	if (TRADER_HEADS.includes(product.id)) player.addTag(`stat:head:${product.id}`);
-	run(player, 'playsound random.levelup @s ~ ~ ~ 0.6 1.2');
+	pending.add(player.name);
+	run(player, product.effect ?? structureCommand(product.id)).then((result) => {
+		pending.delete(player.name);
+		if (!result) { tell(player, 'chat.trader.error.give'); return; }
+		run(player, `scoreboard players remove @s vip_coins ${product.price}`);
+		tell(player, 'chat.trader.bought', { translate: `trader.item.${product.id}` }, String(product.price));
+		// Для достижений «У торговца» и «Коллекционер голов» (system/achievements.js)
+		player.addTag('stat:trader');
+		if (TRADER_HEADS.includes(product.id)) player.addTag(`stat:head:${product.id}`);
+		run(player, 'playsound random.levelup @s ~ ~ ~ 0.6 1.2');
+	});
 	return 'ok';
 }
 
