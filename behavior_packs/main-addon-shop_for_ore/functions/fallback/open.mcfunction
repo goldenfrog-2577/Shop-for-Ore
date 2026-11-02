@@ -1,7 +1,7 @@
 # --- Запасное меню: открыть, когда игрок выбрал 9-й слот (меню в руке) ---
 # Вызывается из timers/ticks_5, пока меню включено. Снова откроется после смены слота и возврата.
 # Не открывается: до входа в аккаунт, замороженным и в камере тюрьмы (как обычное меню).
-# Переходы между сценами — fallback/nav (из timers/ticks_5), у каждой сцены свой NPC (fallback/npcs).
+# Переходы между сценами — fallback/navigation (из timers/ticks_5), у каждой сцены свой NPC (fallback/npc_menu).
 tag @a[tag=sys:fb_open,hasitem={item=server:menu,location=slot.weapon.mainhand,quantity=0}] remove sys:fb_open
 tag @a[tag=sys:fb_pre,hasitem={item=server:menu,location=slot.weapon.mainhand,quantity=0}] remove sys:fb_pre
 tag @a remove sys:fb_block

@@ -8,8 +8,8 @@ execute as @a[tag=boost:magnet] at @s run tp @e[type=item,r=6] @s
 execute if score fallback system matches 1 run function fallback/open
 
 # Запасное меню: переход на сцену, выбранную кнопкой: через 5 тиков после нажатия NPC сцены — к игроку (fallback/bring),
-# ещё через 5 — окно (fallback/nav)
-execute if entity @a[tag=sys:fb_nav_ready] run function fallback/nav
+# ещё через 5 — окно (fallback/navigation)
+execute if entity @a[tag=sys:fb_nav_ready] run function fallback/navigation
 execute if entity @a[tag=sys:fb_nav] run function fallback/bring
 tag @a[tag=sys:fb_nav] add sys:fb_nav_ready
 tag @a[tag=sys:fb_nav] remove sys:fb_nav

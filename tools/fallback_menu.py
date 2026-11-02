@@ -3,21 +3,21 @@
 # Открывается функцией fallback/open, когда скрипты не отвечают (fallback/check). Запуск: python3 tools/fallback_menu.py
 # Цены и функции — те же, что в scripts/menu/main_menu.js; поменял там — поменяй здесь и пересобери.
 # Переход на другую сцену: кнопка ставит игроку теги sys:fb_go_<сцена> и sys:fb_nav, а сцену открывает функция
-# functions/fallback/nav не раньше чем через 5 тиков (timers/ticks_5: sys:fb_nav → sys:fb_nav_ready → nav).
+# functions/fallback/navigation не раньше чем через 5 тиков (timers/ticks_5: sys:fb_nav → sys:fb_nav_ready → navigation).
 # Проверено в игре: команда /dialogue open из кнопки не открывает сцену (окно закрывается вслед за нажатием),
-# а из чата и из функции — открывает. У каждой сцены свой NPC (тег npc:<сцена>, functions/fallback/npcs).
+# а из чата и из функции — открывает. У каждой сцены свой NPC (тег npc:<сцена>, functions/fallback/npc_menu).
 # Проверено в игре: команды кнопок выполняет NPC, а @initiator пуст — сцену открыла команда /dialogue open, а не
 # нажатие на NPC. И кнопки срабатывают, только когда NPC рядом с игроком и не в блоках (NPC в земле под игроком —
 # окно открывается, а кнопки молчат). Поэтому перед открытием NPC сцены переносится прямо к игроку (~ ~ ~), а кнопки
 # адресуют ближайшего к NPC игрока — @p[r=4]. Пока игрок держит меню (sys:fb_open), NPC остаётся при нём;
-# убрал меню или ушёл — NPC возвращается домой (fallback/npcs). Окно NPC, перенесённого издалека в тот же тик,
-# кнопкам не отвечает — поэтому NPC переносится за 5 тиков до открытия (fallback/bring, потом fallback/nav).
+# убрал меню или ушёл — NPC возвращается домой (fallback/npc_menu). Окно NPC, перенесённого издалека в тот же тик,
+# кнопкам не отвечает — поэтому NPC переносится за 5 тиков до открытия (fallback/bring, потом fallback/navigation).
 import json, os
 
 BP = os.path.join(os.path.dirname(__file__), '..', 'behavior_packs', 'main-addon-shop_for_ore')
 OUT = os.path.join(BP, 'dialogue', 'fallback_menu.json')
-NPCS = os.path.join(BP, 'functions', 'fallback', 'npcs.mcfunction')
-NAV = os.path.join(BP, 'functions', 'fallback', 'nav.mcfunction')
+NPCS = os.path.join(BP, 'functions', 'fallback', 'npc_menu.mcfunction')
+NAV = os.path.join(BP, 'functions', 'fallback', 'navigation.mcfunction')
 BRING = os.path.join(BP, 'functions', 'fallback', 'bring.mcfunction')
 GO, NAV_TAG, READY = 'sys:fb_go_', 'sys:fb_nav', 'sys:fb_nav_ready'
 # NPC стоят в ряд под спавном: x 0…15, y −60, z 0 — один чанк, его держит ticking area fallback (fallback/check)
@@ -221,8 +221,8 @@ for sc in scenes:
 for sc in scenes:
     nav.append(f'tag @a[tag={READY}] remove {GO}{sc["scene_tag"][3:]}')
 nav.append(f'tag @a remove {READY}')
-# Перенос NPC к игроку — за 5 тиков до открытия сцены (timers/ticks_5: sys:fb_nav → bring, sys:fb_nav_ready → nav)
-bring_fn = ['# --- Запасное меню: NPC сцены, выбранной кнопкой, — к игроку (за 5 тиков до fallback/nav) ---',
+# Перенос NPC к игроку — за 5 тиков до открытия сцены (timers/ticks_5: sys:fb_nav → bring, sys:fb_nav_ready → navigation)
+bring_fn = ['# --- Запасное меню: NPC сцены, выбранной кнопкой, — к игроку (за 5 тиков до fallback/navigation) ---',
             '# Собирается tools/fallback_menu.py. Вызывается из timers/ticks_5 для игроков с sys:fb_nav: окно NPC,',
             '# перенесённого издалека в тот же тик, кнопкам не отвечает (проверено в игре).']
 for sc in scenes:
