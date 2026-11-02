@@ -818,6 +818,7 @@ chat.tir.enter=§r §6 Тир §8» §7Кирка убрана на врем�
 chat.trader.bought=§r §eМагазин §8» §7Куплено: §e%1$s§7 за §e%2$s 
 chat.trader.error.vip=§r⩕ §l§cERROR!§r §8» §7Лавка торговца — только для VIP
 chat.trader.error.full=§r⩕ §l§cERROR!§r §8» §7Нет места в инвентаре — освободи хотя бы один слот
+chat.trader.error.full_kit=§r⩕ §l§cERROR!§r §8» §7Нет места в инвентаре — для набора освободи §e%1$s§7 слотов
 trader.item.wither_skull=Череп скелета-иссушителя
 trader.item.dragon_head=Голова дракона Края
 trader.item.creeper_head=Голова крипера
@@ -828,6 +829,8 @@ trader.item.pickaxe_1=Зачарованная кирка #1
 trader.item.pickaxe_2=Зачарованная кирка #2
 trader.item.pickaxe_3=Зачарованная кирка #3
 trader.item.haste=Спешка V на 30 минут
+trader.item.kit_diamond=Алмазный набор (Защита IV)
+trader.item.kit_netherite=Незеритовый набор (Защита IV)
 
 ## --- ИВЕНТЫ ---
 ##   chat.event.*, screen.event.*, chat.cmd.event.*

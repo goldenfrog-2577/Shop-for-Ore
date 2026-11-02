@@ -818,6 +818,7 @@ chat.tir.enter=§r §6 Galería de tiro §8» §7Tu pico se guarda mientras d
 chat.trader.bought=§r §eTienda §8» §7Comprado: §e%1$s§7 por §e%2$s 
 chat.trader.error.vip=§r⩕ §l§cERROR!§r §8» §7La tienda del comerciante es solo para VIP
 chat.trader.error.full=§r⩕ §l§cERROR!§r §8» §7No hay sitio en el inventario: libera al menos una casilla
+chat.trader.error.full_kit=§r⩕ §l§cERROR!§r §8» §7No hay sitio en el inventario: el kit necesita §e%1$s§7 casillas libres
 trader.item.wither_skull=Calavera de esqueleto wither
 trader.item.dragon_head=Cabeza de dragón
 trader.item.creeper_head=Cabeza de creeper
@@ -828,6 +829,8 @@ trader.item.pickaxe_1=Pico encantado #1
 trader.item.pickaxe_2=Pico encantado #2
 trader.item.pickaxe_3=Pico encantado #3
 trader.item.haste=Prisa V durante 30 minutos
+trader.item.kit_diamond=Kit de diamante (Protección IV)
+trader.item.kit_netherite=Kit de netherita (Protección IV)
 
 ## --- EVENTOS ---
 ##   chat.event.*, screen.event.*, chat.cmd.event.*

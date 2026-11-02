@@ -356,6 +356,12 @@
 		},
 		{
 			"path" : "loot_tables/shop/trader/zombie_head.json"
+		},
+		{
+			"path" : "loot_tables/shop/trader/kit_diamond.json"
+		},
+		{
+			"path" : "loot_tables/shop/trader/kit_netherite.json"
 		}],
 	"version" : 1
 }

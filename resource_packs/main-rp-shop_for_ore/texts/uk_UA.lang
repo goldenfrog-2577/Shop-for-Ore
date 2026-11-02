@@ -818,6 +818,7 @@ chat.tir.enter=§r §6 Тир §8» §7Кайло прибрано на ча�
 chat.trader.bought=§r §eМагазин §8» §7Куплено: §e%1$s§7 за §e%2$s 
 chat.trader.error.vip=§r⩕ §l§cERROR!§r §8» §7Крамниця торговця — лише для VIP
 chat.trader.error.full=§r⩕ §l§cERROR!§r §8» §7Немає місця в інвентарі — звільни хоча б один слот
+chat.trader.error.full_kit=§r⩕ §l§cERROR!§r §8» §7Немає місця в інвентарі — для набору звільни §e%1$s§7 слотів
 trader.item.wither_skull=Череп скелета-візера
 trader.item.dragon_head=Голова дракона Краю
 trader.item.creeper_head=Голова кріпера
@@ -828,6 +829,8 @@ trader.item.pickaxe_1=Зачароване кайло #1
 trader.item.pickaxe_2=Зачароване кайло #2
 trader.item.pickaxe_3=Зачароване кайло #3
 trader.item.haste=Квапливість V на 30 хвилин
+trader.item.kit_diamond=Діамантовий набір (Захист IV)
+trader.item.kit_netherite=Незеритовий набір (Захист IV)
 
 ## --- ІВЕНТИ ---
 ##   chat.event.*, screen.event.*, chat.cmd.event.*
