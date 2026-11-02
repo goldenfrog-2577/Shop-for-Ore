@@ -27,6 +27,42 @@
 			"stream": true,
 			"volume": 0.4,
 			"load_on_low_memory": true
+		},
+		{
+			"name": "sounds/music/comforting_memories",
+			"stream": true,
+			"volume": 0.4,
+			"load_on_low_memory": true
+		},
+		{
+			"name": "sounds/music/endless",
+			"stream": true,
+			"volume": 0.4,
+			"load_on_low_memory": true
+		},
+		{
+			"name": "sounds/music/fireflies",
+			"stream": true,
+			"volume": 0.4,
+			"load_on_low_memory": true
+		},
+		{
+			"name": "sounds/music/floating_dream",
+			"stream": true,
+			"volume": 0.4,
+			"load_on_low_memory": true
+		},
+		{
+			"name": "sounds/music/home",
+			"stream": true,
+			"volume": 0.4,
+			"load_on_low_memory": true
+		},
+		{
+			"name": "sounds/music/os_piano",
+			"stream": true,
+			"volume": 0.4,
+			"load_on_low_memory": true
 		}]
 	}
 }
