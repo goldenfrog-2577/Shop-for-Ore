@@ -76,6 +76,8 @@ export const ERROR_KEYS = new Set([
 	'chat.shop.cosmetics.error.vip_sell',
 	'chat.shop.error.enchant_max',
 	'chat.shop.item_enchant.error.changed',
+	'chat.trader.error.full',
+	'chat.trader.error.vip',
 	'chat.vip.error.owned',
 	'chat.vip.error.requirements'
 ]);

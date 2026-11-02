@@ -308,6 +308,36 @@
 		},
 		{
 			"path" : "scripts/system/tir.js"
+		},
+		{
+			"path" : "scripts/system/trader.js"
+		},
+		{
+			"path" : "loot_tables/shop/trader/creeper_head.json"
+		},
+		{
+			"path" : "loot_tables/shop/trader/dragon_head.json"
+		},
+		{
+			"path" : "loot_tables/shop/trader/pickaxe_1.json"
+		},
+		{
+			"path" : "loot_tables/shop/trader/pickaxe_2.json"
+		},
+		{
+			"path" : "loot_tables/shop/trader/pickaxe_3.json"
+		},
+		{
+			"path" : "loot_tables/shop/trader/player_head.json"
+		},
+		{
+			"path" : "loot_tables/shop/trader/skeleton_skull.json"
+		},
+		{
+			"path" : "loot_tables/shop/trader/wither_skull.json"
+		},
+		{
+			"path" : "loot_tables/shop/trader/zombie_head.json"
 		}],
 	"version" : 1
 }
