@@ -4,7 +4,7 @@
 // Опыт — «текущий/нужный» (нужный — табло xp_need, functions/system/xp_need, сокращённо: «/195.0K»),
 // уровень — «N >> N+1»; на последнем уровне опыт без «/…», уровень — «40 >> МАКС.».
 // Числа подставляет игра (компоненты score), поэтому панель всегда показывает текущий счёт.
-// Раз в HUD_TICKS тиков — так же часто, как автопродажа меняет деньги и опыт.
+// Раз в HUD_TICKS тиков проверяем данные; отправляем при изменении или для продления показа.
 
 import { world } from '@minecraft/server';
 import { getScore, isVip, metricNumbers, run, MAX_LEVEL } from '../DataBase.js';
@@ -12,6 +12,7 @@ import { getScore, isVip, metricNumbers, run, MAX_LEVEL } from '../DataBase.js';
 export const ICONS_TAG = 'player:board_icons';
 export const OFF_TAG = 'player:board_no';
 const HUD_TICKS = 5;
+const KEEPALIVE_TICKS = 20;
 // Следующий уровень другим цветом — переход в новую локацию: 16 — Адская шахта
 const NEXT_LEVEL_COLOR = { 16: '§c' };
 
@@ -32,9 +33,8 @@ function iconsRawtext(coins) {
 }
 
 /** Обычная панель: подписи из .lang (hud.*). */
-function fullRawtext(player, vip, coins, level) {
+function fullRawtext(vip, coins, level, need) {
 	const last = level >= MAX_LEVEL;
-	const need = getScore(player, 'xp_need');
 	return [
 		{ translate: 'hud.profile' }, { selector: '@s' },
 		line(''), { translate: vip ? 'hud.vip_coins' : 'hud.money' }, score(coins),
@@ -45,22 +45,47 @@ function fullRawtext(player, vip, coins, level) {
 	];
 }
 
-/** rawtext панели игрока или undefined — панель выключена или уровня ещё нет. */
-export function hudRawtext(player) {
+function viewOf(player) {
 	if (player.hasTag(OFF_TAG)) return undefined;
 	const vip = isVip(player);
 	const coins = vip ? 'vip_coins' : 'money';
-	if (player.hasTag(ICONS_TAG)) return iconsRawtext(coins);
+	const icons = player.hasTag(ICONS_TAG);
 	const level = getScore(player, 'lvl');
-	if (level < 1) return undefined;
-	return fullRawtext(player, vip, coins, level);
+	if (!icons && level < 1) return undefined;
+	const need = !icons && level < MAX_LEVEL ? getScore(player, 'xp_need') : 0;
+	return { vip, coins, icons, level, need };
 }
 
+const rawtextOf = (view) => view.icons ? iconsRawtext(view.coins) : fullRawtext(view.vip, view.coins, view.level, view.need);
+
+/** rawtext панели игрока или undefined — панель выключена или уровня ещё нет. */
+export function hudRawtext(player) {
+	const view = viewOf(player);
+	return view ? rawtextOf(view) : undefined;
+}
+
+const sent = new Map();
+world.events.playerLeave.subscribe((e) => sent.delete(e.playerName));
 let tick = 0;
 world.events.tick.subscribe(() => {
 	if (++tick % HUD_TICKS !== 0) return;
 	for (const player of world.getPlayers()) {
-		const rawtext = hudRawtext(player);
-		if (rawtext) run(player, `titleraw @s actionbar ${JSON.stringify({ rawtext })}`);
+		const view = viewOf(player);
+		if (!view) {
+			sent.delete(player.name);
+			continue;
+		}
+		const mode = `${view.vip}|${view.icons}|${view.level}|${view.need}`;
+		// Компоненты score вычисляются игрой при отправке команды: сравниваем и сами счета.
+		const signature = `${mode}|${getScore(player, view.coins)}|${getScore(player, 'xp')}|${getScore(player, 'rebirth')}|${getScore(player, 'online')}`;
+		const previous = sent.get(player.name);
+		if (previous?.signature === signature && tick - previous.tick < KEEPALIVE_TICKS) continue;
+		const command = previous?.mode === mode ? previous.command : `titleraw @s actionbar ${JSON.stringify({ rawtext: rawtextOf(view) })}`;
+		const entry = { mode, signature, command, tick };
+		sent.set(player.name, entry);
+		run(player, command).then(result => {
+			// Ошибка очереди команд: повторить на следующей проверке, не ждать keepalive.
+			if (result === undefined && sent.get(player.name) === entry) sent.delete(player.name);
+		});
 	}
 });

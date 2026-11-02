@@ -10,10 +10,8 @@ import { run } from '../DataBase.js';
 
 const CHECK_EVERY_TICKS = 20;
 const FORCE_RATIO = 0.9;
-let tick = 0;
 
 system.runSchedule(() => {
-	if (++tick % CHECK_EVERY_TICKS !== 0) return;
 	for (const player of world.getPlayers()) {
 		// В сплифе в первом слоте лопата игры, в тире — что угодно (лук), а не кирка уровня
 		if (player.hasTag('game:spleef') || player.hasTag('zone:tir')) continue;
@@ -29,4 +27,4 @@ system.runSchedule(() => {
 			// нет компонента или игрок вышел — пропускаем
 		}
 	}
-});
+}, CHECK_EVERY_TICKS);
