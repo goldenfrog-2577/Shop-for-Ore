@@ -76,7 +76,7 @@ const gameName = (g) => ({ translate: `minigame.${g.def.id}.name` });
 export function joinGame(player, id) {
 	const g = getGame(id);
 	const fail = (key, ...a) => { tell(player, key, ...a); return false; };
-	if (!g) return fail('chat.game.error.unknown', String(id ?? ''));
+	if (!g) return fail('chat.cmd.error.not_found', String(id ?? ''), '!game');
 	if (isPending(player) || player.hasTag('role:bot')) return false;
 	if (gameOf(player)) return fail('chat.game.error.already', gameName(gameOf(player)));
 	// Зритель игры с запретом телепорта не может уйти в другую игру, пока та идёт
