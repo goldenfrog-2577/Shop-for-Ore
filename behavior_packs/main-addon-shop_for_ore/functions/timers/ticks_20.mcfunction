@@ -70,3 +70,6 @@ effect @a[scores={rebirth=5..}] haste 2 4 true
 # Группы компонентов в entities/player.json; тег player:pvp ставит system/system
 event entity @a[tag=!player:pvp] server:hunger_off
 event entity @a[tag=player:pvp] server:hunger_on
+
+## --- Запасное меню на NPC (functions/fallback/*): включено ли, NPC на месте ---
+function fallback/check

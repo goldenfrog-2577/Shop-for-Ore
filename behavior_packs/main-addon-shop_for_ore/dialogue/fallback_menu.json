@@ -1,0 +1,1516 @@
+{
+	"format_version": "1.17",
+	"minecraft:npc_dialogue": {
+		"scenes": [
+			{
+				"scene_tag": "fb_main",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.main.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.fallback.notice"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.main.button.about"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_about",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.main.button.shop"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_shop",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.main.button.settings"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_settings",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.main.button.rules"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_rules",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.main.button.warps"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_warps",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.main.button.upgrades"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_upgrades",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_about",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.about.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.about.body"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.about.button.levels"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_levels",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.about.button.howtoplay"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_howtoplay",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_main",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_levels",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.levels.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.levels.line.1"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.2"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.3"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.4"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.5"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.6"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.7"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.8"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.9"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.10"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.11"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.12"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.13"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.14"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.15"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.16"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.17"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.18"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.19"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.20"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.21"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.22"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.23"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.24"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.25"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.26"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.27"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.28"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.29"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.30"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.31"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.32"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.33"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.34"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.35"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.36"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.37"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.38"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.39"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.levels.line.40"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_about",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_howtoplay",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.howtoplay.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"text": "\ue101 "
+						},
+						{
+							"translate": "menu.howtoplay.line.1"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.2"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.3"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.4"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.5"
+						},
+						{
+							"text": "\n\n\ue152 "
+						},
+						{
+							"translate": "menu.howtoplay.line.6"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.7"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.8"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.9"
+						},
+						{
+							"text": "\n\n\ue151 "
+						},
+						{
+							"translate": "menu.howtoplay.line.10"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.11"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.12"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.13"
+						},
+						{
+							"text": "\n\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.14"
+						},
+						{
+							"text": "\n\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.15"
+						},
+						{
+							"text": "\n\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.16"
+						},
+						{
+							"text": "\n\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.17"
+						},
+						{
+							"text": "\n\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.18"
+						},
+						{
+							"text": "\n\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.19"
+						},
+						{
+							"text": "\n\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.20"
+						},
+						{
+							"text": "\n\n"
+						},
+						{
+							"translate": "menu.howtoplay.line.21"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_about",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_shop",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.shop.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.shop.body"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.shop.button.enchants"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_enchants",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.shop.button.kits"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_kits",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.shop.button.boosts"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_boosts",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_main",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_enchants",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.shop.enchants.pickaxe.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.shop.enchants.pickaxe.body"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "enchantment.digging"
+								},
+								{
+									"text": "\n\u00a7825.0K \ue152"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function shop/enchants/efficiency",
+							"/tag @p[r=4] add sys:fb_go_shop",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "enchantment.lootBonusDigger"
+								},
+								{
+									"text": "\n\u00a7810.0K \ue152"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function shop/enchants/fortune",
+							"/tag @p[r=4] add sys:fb_go_shop",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_shop",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_kits",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.shop.kits.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.shop.kits.body"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.shop.kits.button.iron"
+								},
+								{
+									"text": "\n\u00a7815.0K \ue152"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function shop/pvp_kits/iron",
+							"/tag @p[r=4] add sys:fb_go_shop",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.shop.kits.button.diamond"
+								},
+								{
+									"text": "\n\u00a7835.0K \ue152"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function shop/pvp_kits/diamond",
+							"/tag @p[r=4] add sys:fb_go_shop",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.shop.kits.button.netherite"
+								},
+								{
+									"text": "\n\u00a7850.0K \ue152"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function shop/pvp_kits/netherite",
+							"/tag @p[r=4] add sys:fb_go_shop",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_shop",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_boosts",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.shop.boosts.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.shop.boosts.body"
+						},
+						{
+							"text": "\n\n"
+						},
+						{
+							"translate": "menu.shop.boosts.x2"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.shop.boosts.x4"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.shop.boosts.magnet"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.shop.boosts.button.x2"
+								},
+								{
+									"text": "\n\u00a7810.0K \ue152"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function boost/x2_boost",
+							"/tag @p[r=4] add sys:fb_go_shop",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.shop.boosts.button.x4"
+								},
+								{
+									"text": "\n\u00a7850.0K \ue152"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function boost/x4_boost",
+							"/tag @p[r=4] add sys:fb_go_shop",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.shop.boosts.button.ore_magnet"
+								},
+								{
+									"text": "\n\u00a7820.0K \ue152"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function shop/ore_magnet/ore_magnet",
+							"/tag @p[r=4] add sys:fb_go_shop",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_shop",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_settings",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.settings.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.settings.body"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.settings.button.board"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_board",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.settings.button.particles"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_particles",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.settings.button.sounds"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_sounds",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.settings.button.music"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_music",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_main",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_board",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.settings.board.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.settings.board.body"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.settings.button.enable"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function settings/scoreboard_on",
+							"/tellraw @p[r=4] {\"rawtext\": [{\"translate\": \"chat.settings.enabled\"}]}",
+							"/tag @p[r=4] add sys:fb_go_settings",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.settings.button.icons_only"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function settings/scoreboard_icons",
+							"/tellraw @p[r=4] {\"rawtext\": [{\"translate\": \"chat.settings.icons_only\"}]}",
+							"/tag @p[r=4] add sys:fb_go_settings",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.settings.button.disable"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function settings/scoreboard_off",
+							"/tellraw @p[r=4] {\"rawtext\": [{\"translate\": \"chat.settings.disabled\"}]}",
+							"/tag @p[r=4] add sys:fb_go_settings",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_settings",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_particles",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.settings.particles.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.settings.particles.body"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.settings.button.enable"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add player:particle",
+							"/tellraw @p[r=4] {\"rawtext\": [{\"translate\": \"chat.settings.enabled\"}]}",
+							"/tag @p[r=4] add sys:fb_go_settings",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.settings.button.disable"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] remove player:particle",
+							"/tellraw @p[r=4] {\"rawtext\": [{\"translate\": \"chat.settings.disabled\"}]}",
+							"/tag @p[r=4] add sys:fb_go_settings",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_settings",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_sounds",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.settings.sounds.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.settings.sounds.body"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.settings.button.enable"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add player:sound",
+							"/tellraw @p[r=4] {\"rawtext\": [{\"translate\": \"chat.settings.enabled\"}]}",
+							"/tag @p[r=4] add sys:fb_go_settings",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.settings.button.disable"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] remove player:sound",
+							"/tellraw @p[r=4] {\"rawtext\": [{\"translate\": \"chat.settings.disabled\"}]}",
+							"/tag @p[r=4] add sys:fb_go_settings",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_settings",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_music",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.settings.music.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.settings.music.body"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.settings.button.enable"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] remove player:music_off",
+							"/tellraw @p[r=4] {\"rawtext\": [{\"translate\": \"chat.settings.enabled\"}]}",
+							"/tag @p[r=4] add sys:fb_go_settings",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.settings.button.disable"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add player:music_off",
+							"/stopsound @p[r=4] music.game",
+							"/tellraw @p[r=4] {\"rawtext\": [{\"translate\": \"chat.settings.disabled\"}]}",
+							"/tag @p[r=4] add sys:fb_go_settings",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_settings",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_rules",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.rules.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.rules.header"
+						},
+						{
+							"text": "\n\n"
+						},
+						{
+							"translate": "menu.rules.line.1"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.rules.line.2"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.rules.line.3"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.rules.line.4"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.rules.line.5"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.rules.line.6"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.rules.line.7"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.rules.line.8"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.rules.line.9"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.rules.line.10"
+						},
+						{
+							"text": "\n"
+						},
+						{
+							"translate": "menu.rules.line.11"
+						},
+						{
+							"text": "\n\n"
+						},
+						{
+							"translate": "menu.rules.footer"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_main",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_warps",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.warps.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.warps.body"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"text": "\ue179 "
+								},
+								{
+									"translate": "menu.warps.button.spawn"
+								}
+							]
+						},
+						"commands": [
+							"/tellraw @p[r=4] {\"rawtext\": [{\"translate\": \"chat.cmd.warp.done\", \"with\": {\"rawtext\": [{\"translate\": \"warp.spawn\"}]}}]}",
+							"/tp @p[r=4] 0 5 0"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"text": "\ue179 "
+								},
+								{
+									"translate": "menu.warps.button.mine"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function fallback/warp_mine"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"text": "\ue179 "
+								},
+								{
+									"translate": "menu.warps.button.minigames"
+								}
+							]
+						},
+						"commands": [
+							"/tellraw @p[r=4] {\"rawtext\": [{\"translate\": \"chat.cmd.warp.done\", \"with\": {\"rawtext\": [{\"translate\": \"warp.minigames\"}]}}]}",
+							"/tp @p[r=4] -109 5 -60"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"text": "\ue179 "
+								},
+								{
+									"translate": "menu.warps.button.vip"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function fallback/warp_vip"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_main",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			},
+			{
+				"scene_tag": "fb_upgrades",
+				"npc_name": {
+					"rawtext": [
+						{
+							"translate": "menu.upgrades.title"
+						}
+					]
+				},
+				"text": {
+					"rawtext": [
+						{
+							"translate": "menu.upgrades.body"
+						}
+					]
+				},
+				"buttons": [
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.upgrades.button.vip"
+								},
+								{
+									"text": "\n\u00a78125.0K \ue152"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function upgrade/upgrade_vip",
+							"/tag @p[r=4] add sys:fb_go_main",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.upgrades.button.rebirth"
+								},
+								{
+									"text": "\n\u00a7825 - 40 \ue153"
+								}
+							]
+						},
+						"commands": [
+							"/execute as @p[r=4] at @s run function upgrade/upgrade_rebirth",
+							"/tag @p[r=4] add sys:fb_go_main",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					},
+					{
+						"name": {
+							"rawtext": [
+								{
+									"translate": "menu.common.back"
+								}
+							]
+						},
+						"commands": [
+							"/tag @p[r=4] add sys:fb_go_main",
+							"/tag @p[r=4] add sys:fb_nav"
+						]
+					}
+				]
+			}
+		]
+	}
+}

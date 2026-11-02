@@ -3,3 +3,13 @@ scoreboard players set t5 timer 0
 function system/autosale
 # «Магнит руды» (shop/ore_magnet/ore_magnet): предметы в радиусе 6 блоков летят к купившему
 execute as @a[tag=boost:magnet] at @s run tp @e[type=item,r=6] @s
+
+# Запасное меню на NPC: открыть игроку с меню в руке, пока скрипты не отвечают (fallback/check)
+execute if score fallback system matches 1 run function fallback/open
+
+# Запасное меню: переход на сцену, выбранную кнопкой: через 5 тиков после нажатия NPC сцены — к игроку (fallback/bring),
+# ещё через 5 — окно (fallback/nav)
+execute if entity @a[tag=sys:fb_nav_ready] run function fallback/nav
+execute if entity @a[tag=sys:fb_nav] run function fallback/bring
+tag @a[tag=sys:fb_nav] add sys:fb_nav_ready
+tag @a[tag=sys:fb_nav] remove sys:fb_nav
