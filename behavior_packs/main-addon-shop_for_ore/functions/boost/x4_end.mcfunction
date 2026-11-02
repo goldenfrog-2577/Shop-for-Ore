@@ -1,5 +1,5 @@
 # Конец буста x4_boost: сообщение, сброс табло, снятие тегов, звук.
-execute as @e[name="X4Boost",scores={system=0..0}] run tellraw @a {"rawtext":[{"translate":"chat.boost.x4_end"}]}
+execute if score boost_x4 system matches 0 run tellraw @a {"rawtext":[{"translate":"chat.boost.x4_end"}]}
 scoreboard players reset * display
 scoreboard players set scoreboards.map display 0
 tag @a remove boost:x4

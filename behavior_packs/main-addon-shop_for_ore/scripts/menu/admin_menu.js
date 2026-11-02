@@ -5,6 +5,7 @@
 // В 1.19.50 формы принимают только строки: ключи перевода пишутся как «%ключ», после ключа — пробел или перенос
 // (сразу после ключа не ставим ни скобок, ни §-кодов).
 
+import { boostSeconds } from '../system/boosts.js';
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed, jailMinutesLeft } from '../system/jail.js';
 import { isPending, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS, isVip, VIP_TAG } from '../DataBase.js';
@@ -455,16 +456,12 @@ function autoEventsForm(player, onBack) {
 
 // ===== Сервер: сводка =====
 
-/** Идущие бусты: таймер — табло system у стойки X2Boost/X4Boost, в секундах (timers/ticks_20). */
+/** Общие бусты: служебные таймеры в system, в секундах. */
 function activeBoosts() {
 	const list = [];
-	for (const [type, stand] of [['x2', 'X2Boost'], ['x4', 'X4Boost']]) {
-		try {
-			for (const e of world.getDimension('overworld').getEntities({ name: stand })) {
-				const left = getScore(e, 'system');
-				if (left > 0) { list.push({ type, minutes: Math.ceil(left / 60) }); break; }
-			}
-		} catch { /* стойки нет в загруженных чанках */ }
+	for (const type of ['x2', 'x4']) {
+		const left = boostSeconds(type);
+		if (left > 0) list.push({ type, minutes: Math.ceil(left / 60) });
 	}
 	return list;
 }

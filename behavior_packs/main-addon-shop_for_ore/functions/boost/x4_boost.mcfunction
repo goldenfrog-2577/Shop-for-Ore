@@ -2,22 +2,20 @@
 # Вызывается из меню (Магазин → Бусты) от имени игрока (@s).
 # Тег sys:buy_ok отмечает успешную покупку: деньги списываются только вместе с выдачей буста.
 
-# Буст уже идёт (x2 или x4) — ошибка
-execute as @s[tag=boost:x4] run tellraw @s {"rawtext":[{"translate":"chat.boost.error.active"}]}
-execute as @s[tag=boost:x4] run playsound minecraft.glass.broke @s
-execute as @s[tag=boost:x2] run tellraw @s {"rawtext":[{"translate":"chat.boost.error.active"}]}
-execute as @s[tag=boost:x2] run playsound minecraft.glass.broke @s
-
-# Не хватает денег — ошибка
-execute as @s[tag=!boost:x2,tag=!boost:x4,scores={money=..49999}] run tellraw @s {"rawtext":[{"translate":"chat.error.no_money"}]}
-
+tag @s remove sys:buy_ok
+execute if score stand_timers_migrated system matches 0 run tellraw @s {"rawtext":[{"translate":"chat.boost.error.loading"}]}
+execute if score stand_timers_migrated system matches 1 if score boost_x2 system matches 1.. run tellraw @s {"rawtext":[{"translate":"chat.boost.error.active"}]}
+execute if score stand_timers_migrated system matches 1 if score boost_x2 system matches 1.. run playsound minecraft.glass.broke @s
+execute if score stand_timers_migrated system matches 1 if score boost_x4 system matches 1.. run tellraw @s {"rawtext":[{"translate":"chat.boost.error.active"}]}
+execute if score stand_timers_migrated system matches 1 if score boost_x4 system matches 1.. run playsound minecraft.glass.broke @s
+execute if score stand_timers_migrated system matches 1 if score boost_x2 system matches ..0 if score boost_x4 system matches ..0 as @s[scores={money=..49999}] run tellraw @s {"rawtext":[{"translate":"chat.error.no_money"}]}
 # Покупка
-execute as @s[tag=!boost:x2,tag=!boost:x4,scores={money=50000..}] run tag @s add sys:buy_ok
+execute if score stand_timers_migrated system matches 1 if score boost_x2 system matches ..0 if score boost_x4 system matches ..0 as @s[scores={money=50000..}] run tag @s add sys:buy_ok
 scoreboard players remove @s[tag=sys:buy_ok] money 50000
 execute as @s[tag=sys:buy_ok] as @a at @s run playsound note.bell @s
 execute as @s[tag=sys:buy_ok] run scoreboard players set scoreboards.x4boost display 0
 execute as @s[tag=sys:buy_ok] run tellraw @a {"rawtext":[{"translate":"chat.boost.x4","with":{"rawtext":[{"selector":"@s"}]}}]}
-execute as @s[tag=sys:buy_ok] run scoreboard players set @e[name="X4Boost"] system 300
-# Тег буста получают все онлайн; зашедшим позже его выдаёт timers/ticks_20, пока таймер X4Boost идёт
+execute as @s[tag=sys:buy_ok] run scoreboard players set boost_x4 system 300
+# Тег буста получают все онлайн; зашедшим позже его выдаёт timers/ticks_20, пока таймер boost_x4 идёт
 execute as @s[tag=sys:buy_ok] run tag @a add boost:x4
 tag @s remove sys:buy_ok

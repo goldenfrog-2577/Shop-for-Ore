@@ -10,7 +10,14 @@ import { run } from '../DataBase.js';
 
 const ADMIN_BOOST = 'shop:admin_boost';
 export const MAGNET_ADMIN_TAG = 'boost:magnet_admin';
-const STANDS = { x2: 'X2Boost', x4: 'X4Boost' };
+export const BOOST_TIMERS = { x2: 'boost_x2', x4: 'boost_x4' };
+
+function systemScore(name) {
+	try { return world.scoreboard.getObjective('system').getScores().find(s => s.participant.displayName === name)?.score ?? 0; } catch { return 0; }
+}
+
+export const boostTimersReady = () => systemScore('stand_timers_migrated') === 1;
+export const boostSeconds = (type) => BOOST_TIMERS[type] ? systemScore(BOOST_TIMERS[type]) : 0;
 
 world.events.worldInitialize.subscribe((e) => {
 	const def = new DynamicPropertiesDefinition();
@@ -29,20 +36,20 @@ export function adminBoost(now = Date.now()) {
 	try { value = world.getDynamicProperty(ADMIN_BOOST); } catch { value = undefined; }
 	if (!value) return undefined;
 	const [type, end] = String(value).split(':');
-	if (!STANDS[type] || !(Number(end) > now)) return undefined;
-	const active = [...world.getPlayers()].some(p => p.hasTag(`boost:${type}`));
+	if (!BOOST_TIMERS[type] || !(Number(end) > now)) return undefined;
+	const active = boostSeconds(type) > 0;
 	return active ? type : undefined;
 }
 
 /**
  * Отключить бусты, выданные администратором: общий x2/x4 и личные магниты.
- * Общий буст заканчивается обычным путём (таймер стойки — 1, на следующей секунде boost/x2_end: сообщение всем).
+ * Общий буст заканчивается обычным путём (служебный таймер — 1, на следующей секунде boost/x2_end: сообщение всем).
  * @returns {{ boost?: string, magnets: string[] }} что отключено
  */
 export function stopAdminBoosts() {
 	const dim = world.getDimension('overworld');
 	const boost = adminBoost();
-	if (boost) run(dim, `scoreboard players set @e[name="${STANDS[boost]}"] system 1`);
+	if (boost) run(dim, `scoreboard players set ${BOOST_TIMERS[boost]} system 1`);
 	try { world.setDynamicProperty(ADMIN_BOOST, ''); } catch { /* нет свойства */ }
 	const magnets = [];
 	for (const p of world.getPlayers()) {

@@ -1,4 +1,4 @@
-# Конец «золотого дождя»: таймер rainEvent дошёл до 0.
-execute as @e[name="rainEvent",scores={system=0..0}] run tellraw @a {"rawtext":[{"translate":"chat.event.rain_end"}]}
-execute as @e[name="rainEvent",scores={system=0..0}] run scoreboard players set @e[name="rainEvent"] system -1
+# Конец «золотого дождя»: таймер rain_event дошёл до 0.
+execute if score rain_event system matches 0 run tellraw @a {"rawtext":[{"translate":"chat.event.rain_end"}]}
+execute if score rain_event system matches 0 run scoreboard players set rain_event system -1
 weather clear

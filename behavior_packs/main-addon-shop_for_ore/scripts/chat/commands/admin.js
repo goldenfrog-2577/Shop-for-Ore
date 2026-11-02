@@ -8,7 +8,7 @@ import { botMenu } from '../../menu/admin_menu.js';
 import { getBot, spawnBot, getBotName } from '../../system/spawnbot.js';
 import { LEVEL_RANK_RE } from '../../system/ranks.js';
 import { startMythic } from '../../system/mythic.js';
-import { stopAdminBoosts, markAdminBoost, MAGNET_ADMIN_TAG } from '../../system/boosts.js';
+import { stopAdminBoosts, markAdminBoost, MAGNET_ADMIN_TAG, BOOST_TIMERS, boostSeconds, boostTimersReady } from '../../system/boosts.js';
 import { ACHIEVEMENTS, has as hasAchievement, findAchievement, unlock, revoke } from '../../system/achievements.js';
 import { addBan, kickBanned, findBan, removeBan, getBans, banActive, banMinutesLeft } from '../../system/ban.js';
 import { resolveTarget, tellList, canPunish } from './common.js';
@@ -386,6 +386,10 @@ export const ADMIN_COMMANDS = {
 	boost(player, args) {
 		// Бесплатный общий буст x2/x4 на 1–60 минут (по умолчанию 5). Как покупка в магазине, но без списания денег
 		const type = (args[0] || '').toLowerCase();
+		if (['x2', 'x4', 'stop'].includes(type) && !boostTimersReady()) {
+			tell(player, 'chat.boost.error.loading');
+			return;
+		}
 		// !boost stop — отключить бусты, выданные администратором (купленные игроками не трогаются)
 		if (type === 'stop') {
 			const { boost, magnets } = stopAdminBoosts();
@@ -417,15 +421,14 @@ export const ADMIN_COMMANDS = {
 			tell(player, 'chat.cmd.boost.use');
 			return;
 		}
-		if ([...world.getPlayers()].some(p => p.hasTag('boost:x2') || p.hasTag('boost:x4'))) {
+		if (boostSeconds('x2') > 0 || boostSeconds('x4') > 0) {
 			tell(player, 'chat.boost.error.active');
 			return;
 		}
-		const stand = type === 'x2' ? 'X2Boost' : 'X4Boost';
+		const timer = BOOST_TIMERS[type];
 		run(player, `scoreboard players set scoreboards.${type}boost display 0`);
-		run(player, `scoreboard players set @e[name="${stand}"] system ${minutes * 60}`);
-		// Раньше здесь ставился старый тег x2boost (до 0.3.0); буст всё равно работал — тег boost:x2 раз в секунду
-		// ставит timers/ticks_20 по таймеру стойки
+		run(player, `scoreboard players set ${timer} system ${minutes * 60}`);
+		// Общий тег обновляется для зашедших позже по служебному таймеру.
 		run(player, `tag @a add boost:${type}`);
 		markAdminBoost(type, minutes);
 		run(player, `tellraw @a ${rawTranslate('chat.cmd.boost.started', player.name, type, String(minutes))}`);

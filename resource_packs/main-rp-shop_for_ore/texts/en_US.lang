@@ -457,6 +457,7 @@ menu.shop.boosts.button.ore_magnet=§6⩲ Ore Magnet
 chat.boost.x2_end=§r §bBoost §8» §7The §ex2 boost§7 has ended. Buy a new one in §eShop → Boosts
 chat.boost.x4_end=§r §bBoost §8» §7The §ex4 boost§7 has ended. Buy a new one in §eShop → Boosts
 chat.boost.error.active=§r⩕ §l§cERROR!§r §8» §7A boost is already active. Wait for it to end!
+chat.boost.error.loading=§r⩕ §l§cERROR!§r §8» §7Boosts are not ready yet. Try again in a few seconds.
 chat.boost.x2=§r §bBoost §8» §f%1$s§r§7 bought an §ex2 boost§7 for everyone for §e5 minutes§7!
 chat.boost.x4=§r §bBoost §8» §f%1$s§r§7 bought an §ex4 boost§7 for everyone for §e5 minutes§7!
 chat.ore_magnet.bought=§r §eShop §8» §eOre Magnet§7 is on for §e5 minutes§7: items dropped nearby fly to you
