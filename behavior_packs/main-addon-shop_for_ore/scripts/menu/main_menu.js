@@ -19,7 +19,7 @@ import { redeemPromo } from '../system/promo.js';
 const OPEN = '\n%menu.common.tap_to_open';
 const COIN = '', LVL = '';
 // Номер сборки в «Версия карты»
-const BUILD = '0.3.0_20261025_dev';
+const BUILD = '0.3.0_20261031_rc';
 
 /** Строки описания из ключей prefix.1 … prefix.N через перенос. */
 const lines = (prefix, n, from = 1) => Array.from({ length: n - from + 1 }, (_, i) => `%${prefix}.${from + i}`).join('\n');
@@ -83,7 +83,7 @@ function mapInfo(player) {
 const HOWTOPLAY = ['\ue101 ' + lines('menu.howtoplay.line', 5), '\ue152 ' + lines('menu.howtoplay.line', 9, 6), '\ue151 ' + lines('menu.howtoplay.line', 13, 10),
 	...Array.from({ length: 8 }, (_, i) => `%menu.howtoplay.line.${14 + i}`)].join('\n\n');
 // Строк «что нового» в .lang: menu.version.line.3…VERSION_LINES
-const VERSION_LINES = 25;
+const VERSION_LINES = 26;
 const VERSION = `%menu.version.line.1\n\n§r%menu.version.label §a${BUILD}§r\n%menu.version.line.2\n\n${lines('menu.version.line', VERSION_LINES, 3)}`;
 
 /** Страница текста с одной кнопкой «Назад». */

@@ -10,7 +10,7 @@
 ## --- ІНФОРМАЦІЯ ПРО ПАК ---
 ##   pack.*
 pack.name=Ресурс-пак для карти §lShop for Ore§r
-pack.description=Містить невеликі покращення для комфортної гри. §cНе рекомендується вимикати! §fВерсія: §7[0.3.0_20261025_resources]
+pack.description=Містить невеликі покращення для комфортної гри. §cНе рекомендується вимикати! §fВерсія: §7[0.3.0_20261031_resources]
 
 ## --- ПРЕДМЕТИ І БЛОКИ ---
 ##   item.*, tile.*, entity.*
@@ -312,7 +312,7 @@ menu.howtoplay.line.10=§l§7Ребітх
 menu.howtoplay.line.11=§r§7Ребітх — це перепроходження карти з довічним ефектом поспіху
 menu.howtoplay.line.12=Відкривається ребітх після 25 
 menu.howtoplay.line.13=Прокачується у Меню »  Прокачка
-menu.howtoplay.line.14=§r§l§7 Що означають смайлики зліва збоку?
+menu.howtoplay.line.14=§r§l§7 Що означають значки зліва збоку?
 menu.howtoplay.line.15=§r§7 — твій Нікнейм (ім'я у грі)
 menu.howtoplay.line.16=§r§7 — ваші Гроші / Монети / Коїни
 menu.howtoplay.line.17=§r§7 — ваші VIP коїни / монети
@@ -348,6 +348,7 @@ menu.version.line.22=• Печера — третя локація (рівні 
 menu.version.line.23=• VIP тепер окремий статус (з 40 рівня), ребітх — з 25 рівня; VIP-коїни ребітх не скидає
 menu.version.line.24=• Тир: стрільба з лука по мішенях за монети; лавка мандрівного торговця на VIP-острові
 menu.version.line.25=• В'язниця (!jail), скарги (!report), бан і мут на строк
+menu.version.line.26=• 12 нових досягнень, нові промокоди; того, хто впав у безодню, повертає на спавн
 
 ## --- РІВНІ, VIP І РЕБІТХ ---
 ##   chat.lvlup.*, menu.upgrades.*, chat.vip.*, chat.rebirth.*
@@ -695,6 +696,32 @@ ach.item.netherite_ingot=Незеритовий злиток
 ach.item.totem_of_undying=Тотем безсмертя
 ach.item.bow=Лук
 ach.item.arrow=Стріли
+ach.lvl_26.name=У глибину
+ach.lvl_26.desc=Досягти 26 рівня — ласкаво просимо до Печери
+ach.lvl_33.name=Серце Печери
+ach.lvl_33.desc=Досягти 33 рівня — найглибші руди вже поруч
+ach.lvl_40.name=На вершині
+ach.lvl_40.desc=Досягти 40 рівня — максимального на сервері
+ach.amethyst_500.name=Аметистова лихоманка
+ach.amethyst_500.desc=Продати 500 уламків аметисту у VIP-шахті
+ach.tir_first.name=Перший постріл
+ach.tir_first.desc=Влучити в мішень у тирі
+ach.tir_bullseye.name=У яблучко
+ach.tir_bullseye.desc=Влучити в мішень із влучністю 90 % або вище з 30 блоків і далі
+ach.tir_100.name=Снайпер
+ach.tir_100.desc=Влучити в мішені тиру 100 разів
+ach.spleef_5.name=Король сплифу
+ach.spleef_5.desc=Перемогти у сплифі 5 разів
+ach.trader.name=У торговця
+ach.trader.desc=Купити будь-що в крамниці торговця на VIP-острові
+ach.all_heads.name=Колекціонер голів
+ach.all_heads.desc=Купити всі 6 голів у крамниці торговця
+ach.all_promos.name=Мисливець за кодами
+ach.all_promos.desc=Ввести всі промокоди сервера
+ach.void.name=Стрибок віри
+ach.void.desc=Впасти в безодню — сервер підхопить
+ach.item.feather=Перо
+ach.item.sniper_bow=Лук «Сила III»
 chat.ach.task=§r §2 Досягнення §8» §7§f%1$s§r§7 отримав(ла) досягнення %2$s
 chat.ach.challenge=§r §5 Випробування §8» §7§f%1$s§r§7 виконав(ла) випробування %2$s
 chat.cmd.achievement.use=§r §7CMD §8» §7Використання: §e!achievement§7 <гравець> <list/grant/revoke> [id]

@@ -271,6 +271,8 @@ execute at @a[scores={lvl=39..40},hasitem={item=amethyst_block}] run execute if 
 # --- Amethyst (Аметист) ---
 # Продажа аметистовых осколков из VIP-шахты: VIP-коины (VIP — тег player:vip, раньше это был уровень 26)
 execute at @a[tag=player:vip,hasitem={item=amethyst_shard}] run execute if block ~~-1~ gold_block run scoreboard players add @p vip_coins 1
+# Счётчик для достижения «Аметистовая лихорадка» (scripts/system/achievements.js)
+execute at @a[tag=player:vip,hasitem={item=amethyst_shard}] run execute if block ~~-1~ gold_block run scoreboard players add @p stat_amethyst 1
 execute at @a[tag=player:vip,hasitem={item=amethyst_shard},tag=player:particle,tag=!fx:sell] run execute if block ~~-1~ gold_block run particle minecraft:totem_particle ~~~
 execute at @a[tag=player:vip,hasitem={item=amethyst_shard},tag=player:sound] run execute if block ~~-1~ gold_block run playsound random.pop @p
 execute at @a[tag=player:vip,hasitem={item=amethyst_shard}] run execute if block ~~-1~ gold_block run clear @p amethyst_shard 0 1

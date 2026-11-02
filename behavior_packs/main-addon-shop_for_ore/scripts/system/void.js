@@ -34,6 +34,7 @@ world.events.tick.subscribe(() => {
 	for (const player of survivalPlayers()) {
 		if (!fellIntoVoid(player)) continue;
 		run(player, `tp @s ${SPAWN.join(' ')}`);
+		player.addTag('stat:void');   // достижение «Прыжок веры» (system/achievements.js)
 		tell(player, 'chat.server.void');
 	}
 });

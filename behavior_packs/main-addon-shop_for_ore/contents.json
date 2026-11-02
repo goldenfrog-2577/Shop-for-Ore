@@ -319,6 +319,9 @@
 			"path" : "scripts/system/promo.js"
 		},
 		{
+			"path" : "loot_tables/achievements/sniper_bow.json"
+		},
+		{
 			"path" : "loot_tables/shop/trader/creeper_head.json"
 		},
 		{
