@@ -214,6 +214,39 @@
 			"path" : "structures/server/bot.mcstructure"
 		},
 		{
+			"path" : "structures/trader/wither_skull.mcstructure"
+		},
+		{
+			"path" : "structures/trader/dragon_head.mcstructure"
+		},
+		{
+			"path" : "structures/trader/creeper_head.mcstructure"
+		},
+		{
+			"path" : "structures/trader/skeleton_skull.mcstructure"
+		},
+		{
+			"path" : "structures/trader/zombie_head.mcstructure"
+		},
+		{
+			"path" : "structures/trader/player_head.mcstructure"
+		},
+		{
+			"path" : "structures/trader/pickaxe_1.mcstructure"
+		},
+		{
+			"path" : "structures/trader/pickaxe_2.mcstructure"
+		},
+		{
+			"path" : "structures/trader/pickaxe_3.mcstructure"
+		},
+		{
+			"path" : "structures/trader/kit_diamond.mcstructure"
+		},
+		{
+			"path" : "structures/trader/kit_netherite.mcstructure"
+		},
+		{
 			"path" : "texts/en_US.lang"
 		},
 		{
@@ -329,39 +362,6 @@
 		},
 		{
 			"path" : "loot_tables/achievements/sniper_bow.json"
-		},
-		{
-			"path" : "loot_tables/shop/trader/creeper_head.json"
-		},
-		{
-			"path" : "loot_tables/shop/trader/dragon_head.json"
-		},
-		{
-			"path" : "loot_tables/shop/trader/pickaxe_1.json"
-		},
-		{
-			"path" : "loot_tables/shop/trader/pickaxe_2.json"
-		},
-		{
-			"path" : "loot_tables/shop/trader/pickaxe_3.json"
-		},
-		{
-			"path" : "loot_tables/shop/trader/player_head.json"
-		},
-		{
-			"path" : "loot_tables/shop/trader/skeleton_skull.json"
-		},
-		{
-			"path" : "loot_tables/shop/trader/wither_skull.json"
-		},
-		{
-			"path" : "loot_tables/shop/trader/zombie_head.json"
-		},
-		{
-			"path" : "loot_tables/shop/trader/kit_diamond.json"
-		},
-		{
-			"path" : "loot_tables/shop/trader/kit_netherite.json"
 		}],
 	"version" : 1
 }

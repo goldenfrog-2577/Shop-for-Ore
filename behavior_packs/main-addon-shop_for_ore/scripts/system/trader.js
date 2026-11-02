@@ -1,8 +1,10 @@
 // --- Лавка странствующего торговца (VIP-остров, домик x −84…−74, z −58…−54) ---
 // Под каждым товаром в рамке — кнопка (y 1). Нажал — скрипт знает, кто нажал. Покупать могут только VIP (тег player:vip),
-// цена — в VIP-коинах. Предметы выдаёт /loot give из loot_tables/shop/trader, Спешку — /effect. Название, тип головы и зачарования сверх максимума задаёт loot table;
-// античит знает эти предметы по названию (VIP_ITEMS в system/anticheat.js). Наборы брони (Защита IV, меч с Остротой V) — ванильный
-// максимум, отдельной записи в античите не нужно; им нужно столько свободных слотов, сколько в наборе вещей (slots).
+// цена — в VIP-коинах. Предметы — готовые структуры structures/trader/<товар>.mcstructure (предметы, лежащие на земле):
+// /structure load ставит их у ног покупателя, Спешку — /effect. Только структура сохраняет всё сразу: зачарования сверх
+// ванильного максимума (loot table их срезает), CanDestroy и keep_on_death у кирок, проклятия в наборах.
+// Античит знает VIP-предметы по названию (VIP_ITEMS в system/anticheat.js); у наборов чары ванильные — записи не нужно.
+// Набору нужно столько свободных слотов, сколько в нём вещей (slots).
 
 import { world } from '@minecraft/server';
 import { getScore, isVip, run, tell } from '../DataBase.js';
@@ -25,6 +27,9 @@ export const PRODUCTS = [
 	{ pos: [-74, 1, -54], id: 'kit_netherite', price: 1152, slots: 5 }
 ];
 
+/** Выдать товар: структура с предметами у ног игрока (только сущности — блоки вокруг не трогаются). */
+export const structureCommand = (id) => `structure load "trader:${id}" ~ ~ ~ 0_degrees none true false`;
+
 /** Товар у кнопки в этой точке. */
 export const productAt = ({ x, y, z }) => PRODUCTS.find(p => p.pos[0] === x && p.pos[1] === y && p.pos[2] === z);
 
@@ -45,7 +50,7 @@ export function buy(player, product) {
 		return 'full';
 	}
 	run(player, `scoreboard players remove @s vip_coins ${product.price}`);
-	run(player, product.effect ?? `loot give @s loot "shop/trader/${product.id}"`);
+	run(player, product.effect ?? structureCommand(product.id));
 	tell(player, 'chat.trader.bought', { translate: `trader.item.${product.id}` }, String(product.price));
 	// Для достижений «У торговца» и «Коллекционер голов» (system/achievements.js)
 	player.addTag('stat:trader');
