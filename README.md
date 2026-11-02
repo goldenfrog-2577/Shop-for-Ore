@@ -119,6 +119,8 @@ behavior_packs/
   main-addon-shop_for_ore/     # Пак поведения
     functions/                 # Функции (system, timers, upgrade, shop, boost, events, settings)
     scripts/                   # Script API: меню (menu/forms.js — общие формы), чат и команды, регистрация, системы (system/)
+      DataBase.js              # Общие данные и помощники — разделы перечислены в начале файла
+      chat/commands.js         # Разбор !команд, права; обработчики — chat/commands/{player,moderation,admin,owner}.js
     entities/ items/ structures/
     texts/                     # Локализация названий пака
 resource_packs/

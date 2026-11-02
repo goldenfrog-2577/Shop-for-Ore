@@ -1,5 +1,5 @@
 // --- UI авторизации игрока при входе ---
-// Форму вызывает register/system.js (раньше — отдельная проверка тега 'onLogin' каждый тик)
+// Форму вызывает register/system.js
 
 import { tellText, run, tell } from '../DataBase.js';
 import { modal } from '../menu/forms.js';

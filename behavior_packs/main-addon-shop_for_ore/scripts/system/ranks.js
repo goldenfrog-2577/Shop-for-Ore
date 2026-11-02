@@ -2,7 +2,7 @@
 // Каждому игроку — тег rank:§r<уровень> со значком уровня, у VIP вместо уровня — rank:§aVIP.
 // Чат (chat/chat.js) показывает все теги rank: в квадратных скобках, поэтому чужие префиксы уровня
 // (после повышения, ребитха, покупки VIP) снимаются. Свои префиксы игрока (!prefix) не трогаются.
-// Раз в секунду, как раньше functions/ranks/rank_lvl_* (до 0.3.0).
+// Раз в секунду.
 
 import { world } from '@minecraft/server';
 import { getScore, isVip, MAX_LEVEL } from '../DataBase.js';

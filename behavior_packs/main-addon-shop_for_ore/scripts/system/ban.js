@@ -51,7 +51,7 @@ export function addBan({ id, name }, by, reason, minutes = Infinity, now = Date.
 
 /**
  * Разбан по нику или номеру в !banlist (1…). Номер считается среди действующих банов — как их показывает
- * !banlist (раньше — по всему списку вместе с истёкшими, и номер мог указать на другой бан).
+ * !banlist: истёкшие баны не считаются.
  * @returns {object|undefined} снятый бан
  */
 export function removeBan(nameOrIndex, now = Date.now()) {

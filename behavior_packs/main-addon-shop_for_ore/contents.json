@@ -157,6 +157,21 @@
 			"path" : "scripts/chat/commands.js"
 		},
 		{
+			"path" : "scripts/chat/commands/common.js"
+		},
+		{
+			"path" : "scripts/chat/commands/player.js"
+		},
+		{
+			"path" : "scripts/chat/commands/moderation.js"
+		},
+		{
+			"path" : "scripts/chat/commands/admin.js"
+		},
+		{
+			"path" : "scripts/chat/commands/owner.js"
+		},
+		{
 			"path" : "scripts/import.js"
 		},
 		{

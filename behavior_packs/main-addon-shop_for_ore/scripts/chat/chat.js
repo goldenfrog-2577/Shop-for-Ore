@@ -35,7 +35,6 @@ function isSpamming(playerName, message) {
 	const data = playerMessages.get(playerName);
 	data.timestamps = data.timestamps.filter((ts) => now - ts <= FLOOD_TIME);
 	// Повтор того же сообщения запрещён только в пределах FLOOD_TIME
-	// (раньше — навсегда, пока игрок не напишет что-то другое)
 	if (data.lastMessage === message && data.timestamps.length > 0) {
 		return true;
 	}
@@ -69,7 +68,7 @@ const nameColorOf = (player) => getChatColor(player, 'name') ?? ROLE_COLORS[getR
 const textColorOf = (player) => getChatColor(player, 'text') ?? '§f';
 
 // --- Замена эмодзи в сообщении на символы ---
-// Имя эмодзи начинается с буквы: «счёт 1:2:3» и время «12:30:» — не эмодзи (раньше «:2:» становилось значком)
+// Имя эмодзи начинается с буквы: «счёт 1:2:3» и время «12:30:» — не эмодзи
 export function replaceEmotes(message) {
 	return message.replace(/:([a-zA-Z_][a-zA-Z0-9_]*):/g,
 		(match) => {
@@ -155,7 +154,7 @@ export function sendChatMessage(sender, message) {
 }
 
 // --- Обновление nameTag игрока (отображение информации над головой) ---
-// Раз в секунду и только если текст изменился (раньше — каждый тик для всех игроков)
+// Раз в секунду и только если текст изменился
 const NAMETAG_REFRESH_TICKS = 20;
 let nameTagTick = 0;
 world.events.tick.subscribe(() => {
@@ -177,7 +176,7 @@ world.events.tick.subscribe(() => {
 });
 
 // Мут истекает сам: раз в секунду проверяем замученных — muteMinutesLeft снимет тег и напишет игроку,
-// что писать снова можно (раньше тег снимался молча, только при следующей попытке написать)
+// что писать снова можно
 system.runSchedule(() => {
 	for (const player of world.getPlayers()) {
 		if (player.getTags().some(t => t.startsWith('state:mute:'))) muteMinutesLeft(player);

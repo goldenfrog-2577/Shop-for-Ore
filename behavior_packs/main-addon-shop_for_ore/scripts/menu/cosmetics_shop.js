@@ -34,7 +34,6 @@ export const DEATHS = [
 	{ id: 'souls', particle: 'minecraft:soul_particle', price: 450, icon: 'textures/server_icons/soul_sand' }
 ];
 // Частицы при продаже на золотом блоке (вместо стандартного тотема из autosale) — только VIP.
-// «Лава» раньше была бесплатной у VIP (аметист в autosale), теперь продаётся здесь
 export const SELLS = [
 	{ id: 'heart', particle: 'minecraft:heart_particle', price: 200, icon: 'textures/items/apple_golden' },
 	{ id: 'happy', particle: 'minecraft:villager_happy', price: 200, icon: 'textures/items/emerald' },

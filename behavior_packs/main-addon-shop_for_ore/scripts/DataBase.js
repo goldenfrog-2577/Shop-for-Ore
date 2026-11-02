@@ -1,8 +1,23 @@
-// --- Общие данные и помощники: счёт, сообщения (tell, tellText), команды (run), роли, наказания,
-// список команд чата, точки !warp, эмодзи ---
+// --- Общие данные и помощники: их импортирует почти каждый скрипт ---
+// Разделы:
+//   1. Константы игры
+//   2. Счёт в табло и числа
+//   3. Команды и сообщения игроку
+//   4. Игроки и формы
+//   5. Деньги
+//   6. Роли
+//   7. Цвета ника и текста в чате
+//   8. Защита от выдачи себя за персонал
+//   9. Наказания
+//   10. Кто выдал ограничение
+//   11. Эмодзи в чате
+//   12. Точки телепортации для !warp
+//   13. Список команд чата
 
 import { world, system } from '@minecraft/server';
 import { ERROR_KEYS } from './system/error_keys.js';
+
+// ======== Константы игры ========
 
 // VIP — тег player:vip (покупка с MAX_LEVEL уровня, functions/upgrade/upgrade_vip). До Пещеры (третьей локации) VIP был уровнем 26
 export const VIP_TAG = 'player:vip';
@@ -12,6 +27,8 @@ export const isVip = (player) => player.hasTag(VIP_TAG);
 
 // Пункты правил: menu.rules.line.1…N в .lang (нарушение • наказание и срок) — меню «Правила» и !rules
 export const RULES_COUNT = 11;
+
+// ======== Счёт в табло и числа ========
 
 /**
  * Получить значение очков игрока по определённому objective.
@@ -25,7 +42,7 @@ export function getScore(entity, objective) {
 	} catch (error) {
 		return 0;
 	}
-};
+}
 
 /**
  * Преобразует число в сокращённый формат (K, M, B и т.д.).
@@ -43,43 +60,9 @@ export function metricNumbers(value) {
 		scaled /= 1000;
 	}
 	return scaled.toFixed(1) + types[selectType];
-};
+}
 
-/**
- * Собирает JSON для tellraw с переводимым ключом и параметрами.
- * Параметры подставляются в %1$s, %2$s… строки .lang — так каждый язык сам
- * выбирает порядок слов, а кавычки в нике/тексте не ломают JSON.
- * @param {string} key - Ключ из .lang (без %).
- * @param {...(string|number)} args - Значения для %1$s, %2$s…
- * @returns {string}
- */
-export function rawTranslate(key, ...args) {
-	return JSON.stringify({ rawtext: [{ translate: key, with: args.map(String) }] });
-};
-
-/**
- * Отправить игроку строку, где ключи перевода записаны как %ключ (например '\n%chat.account.logged_in\n ').
- * Раньше это делал player.tell(): после переименования ключей (#24) такие сообщения перестали
- * появляться в игре, а tellraw с translate для тех же ключей работает (проверено на 1.19.51).
- * Поэтому строка разбирается на куски {text} и {translate} и уходит через tellraw.
- * Параметры ключей (%1$s в .lang) — в args: { 'account.register.greeting': [ник] }, тогда порядок слов
- * задаёт перевод, а не скрипт.
- * @param {Player} player
- * @param {string} message
- * @param {Record<string, (string|number)[]>} [args]
- */
-export function tellText(player, message, args = {}) {
-	const rawtext = [];
-	const re = /%([a-z][a-z0-9_]*(?:\.[a-z0-9_]+)+)/g;
-	let last = 0, m;
-	while ((m = re.exec(message)) !== null) {
-		if (m.index > last) rawtext.push({ text: message.slice(last, m.index) });
-		rawtext.push(args[m[1]] ? { translate: m[1], with: args[m[1]].map(String) } : { translate: m[1] });
-		last = re.lastIndex;
-	}
-	if (last < message.length) rawtext.push({ text: message.slice(last) });
-	return run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
-};
+// ======== Команды и сообщения игроку: run, tell, tellText, rawTranslate ========
 
 // Сколько сообщений (tellraw @s — через tell, tellText и run) получил игрок и сколько из них — ошибки
 // (ключ из system/error_keys.js). menu/forms.js по ним решает, что делать с окнами после нажатия:
@@ -109,7 +92,70 @@ export function run(entity, command) {
 		if (isErrorMessage(command)) toldErrors.set(entity.name, toldErrorCount(entity) + 1);
 	}
 	return entity.runCommandAsync(command).then((r) => r ?? {}, () => undefined);
-};
+}
+
+/**
+ * Собирает JSON для tellraw с переводимым ключом и параметрами.
+ * Параметры подставляются в %1$s, %2$s… строки .lang — так каждый язык сам
+ * выбирает порядок слов, а кавычки в нике/тексте не ломают JSON.
+ * @param {string} key - Ключ из .lang (без %).
+ * @param {...(string|number)} args - Значения для %1$s, %2$s…
+ * @returns {string}
+ */
+export function rawTranslate(key, ...args) {
+	return JSON.stringify({ rawtext: [{ translate: key, with: args.map(String) }] });
+}
+
+/**
+ * Как rawTranslate, но аргументом может быть и ключ перевода: { translate: 'role.admin' }.
+ * Нужен, когда в сообщение подставляется переводимое слово (название роли).
+ * @param {string} key
+ * @param {...(string|number|{translate: string})} args
+ * @returns {string}
+ */
+export function rawTranslateRich(key, ...args) {
+	const parts = args.map(a => (a !== null && typeof a === 'object') ? a : { text: String(a) });
+	return JSON.stringify({ rawtext: [{ translate: key, with: { rawtext: parts } }] });
+}
+
+/**
+ * Сообщение игроку ключом перевода: tell(player, 'chat.cmd.tp.done', ник).
+ * Аргументы — строки и числа или переводимые части ({ translate: 'role.admin' }, { rawtext: […] }).
+ * @param {Player} player
+ * @param {string} key
+ * @param {...(string|number|object)} args
+ */
+export function tell(player, key, ...args) {
+	const json = !args.length ? JSON.stringify({ rawtext: [{ translate: key }] })
+		: args.some(a => a !== null && typeof a === 'object') ? rawTranslateRich(key, ...args) : rawTranslate(key, ...args);
+	return run(player, `tellraw @s ${json}`);
+}
+
+/**
+ * Отправить игроку строку, где ключи перевода записаны как %ключ (например '\n%chat.account.logged_in\n ').
+ * Раньше это делал player.tell(): после переименования ключей (#24) такие сообщения перестали
+ * появляться в игре, а tellraw с translate для тех же ключей работает (проверено на 1.19.51).
+ * Поэтому строка разбирается на куски {text} и {translate} и уходит через tellraw.
+ * Параметры ключей (%1$s в .lang) — в args: { 'account.register.greeting': [ник] }, тогда порядок слов
+ * задаёт перевод, а не скрипт.
+ * @param {Player} player
+ * @param {string} message
+ * @param {Record<string, (string|number)[]>} [args]
+ */
+export function tellText(player, message, args = {}) {
+	const rawtext = [];
+	const re = /%([a-z][a-z0-9_]*(?:\.[a-z0-9_]+)+)/g;
+	let last = 0, m;
+	while ((m = re.exec(message)) !== null) {
+		if (m.index > last) rawtext.push({ text: message.slice(last, m.index) });
+		rawtext.push(args[m[1]] ? { translate: m[1], with: args[m[1]].map(String) } : { translate: m[1] });
+		last = re.lastIndex;
+	}
+	if (last < message.length) rawtext.push({ text: message.slice(last) });
+	return run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
+}
+
+// ======== Игроки и формы ========
 
 /**
  * Найти игрока онлайн по имени (без учёта регистра).
@@ -123,7 +169,16 @@ export function findPlayer(name) {
 		if (p.name.toLowerCase() === lower) return p;
 	}
 	return undefined;
-};
+}
+
+/**
+ * Игрок ещё не вошёл в аккаунт (ждёт логина или регистрации).
+ * @param {Player} player
+ * @returns {boolean}
+ */
+export function isPending(player) {
+	return player.hasTag('auth:login') || player.hasTag('auth:register');
+}
 
 /**
  * Форму закрыл сам игрок (крестик или «Назад» на телефоне), а не движок: при userBusy
@@ -133,16 +188,27 @@ export function findPlayer(name) {
  */
 export function closedByPlayer(response) {
 	return !!response.canceled && response.cancelationReason !== 'userBusy';
-};
+}
 
 /**
- * Игрок ещё не вошёл в аккаунт (ждёт логина или регистрации).
- * @param {Player} player
- * @returns {boolean}
+ * Показать форму, когда игрок сможет её увидеть. Из чата (!password) форма сразу не откроется:
+ * пока открыт чат, show() отменяется с userBusy — повторяем раз в 10 тиков, до 30 секунд.
  */
-export function isPending(player) {
-	return player.hasTag('auth:login') || player.hasTag('auth:register');
-};
+export function showWhenFree(player, form, tries = 60) {
+	return form.show(player).then(r => {
+		if (r.canceled && r.cancelationReason === 'userBusy' && tries > 0) {
+			return new Promise(res => {
+				const id = system.runSchedule(() => {
+					system.clearRunSchedule(id);
+					res(showWhenFree(player, form, tries - 1));
+				}, 10);
+			});
+		}
+		return r;
+	});
+}
+
+// ======== Деньги: перевод игроку (!pay, Банк) ========
 
 /**
  * Перевод денег (табло money) другому игроку в сети — общий для меню банка и !pay.
@@ -178,15 +244,117 @@ export function transferMoney(player, targetName, rawAmount) {
 	run(player, `scoreboard players remove @s money ${amount}`).then((res) => {
 		if (res === undefined) return;
 		run(target, `scoreboard players add @s money ${amount}`);
-		player.addTag('stat:paid');   // достижение «Щедрость» (system/achievements.js)
+		player.addTag('stat:paid');   // достижение «Щедрая душа» (system/achievements.js)
 		run(player, `tellraw @s ${rawTranslate('chat.bank.sent', target.name, amount)}`);
 		run(target, `tellraw @s ${rawTranslate('chat.bank.received', player.name, amount)}`);
 		run(player, 'playsound note.bell @s');
 	});
 	return true;
-};
+}
 
-// --- Наказания: мут, предупреждения, заморозка, тюрьма (хранятся тегами — переживают перезаход) ---
+// ======== Роли: уровни доступа к командам и меню ========
+
+// Владелец — хост мира (тег role:owner, до 0.3.0 — host), он один. Хелпера (наблюдение и тюрьма: !tp, !invis, !jail,
+// !gm6, !cps, !ac, жалобы, предупреждения CPS и сигналы античита), модератора и администратора назначает
+// владелец командой !role, роль хранится тегом role:<id>. Префикс в чате (тег rank:,
+// команда !prefix) — отдельное украшение и прав не даёт.
+export const ROLES = ['player', 'helper', 'moder', 'admin', 'owner'];
+
+// Цвет ника по роли (в чате и над головой), если у игрока нет своего тега name:
+export const ROLE_COLORS = { player: '§f', helper: '§3', moder: '§9', admin: '§c', owner: '§4' };
+
+// Цвет ника и префикса бота карты
+export const BOT_COLOR = '§f';
+
+/**
+ * Роль игрока: 'player' | 'helper' | 'moder' | 'admin' | 'owner'.
+ * @param {Player} player
+ * @returns {string}
+ */
+export function getRole(player) {
+	// Бот карты (тег bot) — всегда без роли: прав у него нет, в чате у него свой префикс «Бот»
+	if (player.hasTag('role:bot')) return 'player';
+	if (player.hasTag('role:owner')) return 'owner';
+	if (player.hasTag('role:admin')) return 'admin';
+	if (player.hasTag('role:moder')) return 'moder';
+	if (player.hasTag('role:helper')) return 'helper';
+	return 'player';
+}
+
+/**
+ * Есть ли у игрока роль не ниже указанной (администратор может всё, что модератор, и т. д.).
+ * @param {Player} player
+ * @param {string} role
+ * @returns {boolean}
+ */
+export function hasRole(player, role) {
+	return ROLES.indexOf(getRole(player)) >= ROLES.indexOf(role);
+}
+
+// ======== Цвета ника и текста в чате (!color, меню администратора → Игроки → Цвет) ========
+
+// Хранятся тегами chat:name_color:<код> и chat:text_color:<код>, код — символ после «§» (без самого «§»).
+// Только цвета, которые есть в 1.19.50 (0–9, a–g); оформление (§l, §o…) не допускается
+export const CHAT_COLORS = {
+	black: '0', dark_blue: '1', dark_green: '2', dark_aqua: '3', dark_red: '4', dark_purple: '5', gold: '6', gray: '7',
+	dark_gray: '8', blue: '9', green: 'a', aqua: 'b', red: 'c', light_purple: 'd', yellow: 'e', white: 'f', minecoin_gold: 'g'
+};
+const COLOR_TAG = { name: 'chat:name_color:', text: 'chat:text_color:' };
+
+/**
+ * Цвет игрока ('§b') для kind = 'name' | 'text' или undefined, если не задан.
+ * Цвет роли, которой у игрока нет (например, роль сняли), не применяется.
+ */
+export function getChatColor(player, kind) {
+	const tag = player.getTags().find(t => t.startsWith(COLOR_TAG[kind]));
+	const code = tag?.slice(COLOR_TAG[kind].length);
+	return code && Object.values(CHAT_COLORS).includes(code) && colorAllowed(player, code) ? `§${code}` : undefined;
+}
+
+/** Задать цвет (код '0'–'g') или снять (undefined). */
+export function setChatColor(player, kind, code) {
+	player.getTags().filter(t => t.startsWith(COLOR_TAG[kind])).forEach(t => player.removeTag(t));
+	if (code) player.addTag(COLOR_TAG[kind] + code);
+}
+
+// ======== Защита от выдачи себя за персонал (цвет ника, префикс, теги) ========
+
+// Цвета ролей: тёмно-красный — владелец, красный — администратор, синий — модератор. Ник этого цвета
+// и префикс с этим цветом или названием роли может быть только у того, у кого роль не ниже.
+// Цвет хелпера (тёмно-бирюзовый, §3) не закреплён: его продают в Косметике, а купленное не отбираем — защищено только название
+const RESERVED_COLORS = { '4': 'owner', 'c': 'admin', '9': 'moder' };
+// Названия ролей на 4 языках карты (основы слов); «бот» — только целым словом
+const ROLE_WORDS = [
+	[/владел|власник|owner|propietari|dueñ/i, 'owner'],
+	[/админ|адмін|admin/i, 'admin'],
+	[/модер|moder/i, 'moder'],
+	[/хелпер|helper|ayudante|помічник/i, 'helper'],
+	[/(^|[^a-zа-яёіїє])(бот|bot)($|[^a-zа-яёіїє])/i, 'bot']
+];
+
+/** Можно ли игроку цвет с кодом code ('0'–'g'). */
+export function colorAllowed(player, code) {
+	const role = RESERVED_COLORS[code];
+	return !role || hasRole(player, role);
+}
+
+/**
+ * Роль, за которую текст (префикс) выдаёт игрока, если у него этой роли нет: по цвету роли или её названию.
+ * @returns {'owner'|'admin'|'moder'|'helper'|'bot'|undefined}
+ */
+export function impersonatedRole(player, text) {
+	for (const [, code] of String(text).matchAll(/§(.)/g)) {
+		if (!colorAllowed(player, code.toLowerCase())) return RESERVED_COLORS[code.toLowerCase()];
+	}
+	const plain = String(text).replace(/§./g, '');
+	for (const [re, role] of ROLE_WORDS) {
+		if (!re.test(plain)) continue;
+		if (role === 'bot' ? !player.hasTag('role:bot') : !hasRole(player, role)) return role;
+	}
+	return undefined;
+}
+
+// ======== Наказания: мут, предупреждения, заморозка, тюрьма (хранятся тегами — переживают перезаход) ========
 // state:mute:<время окончания в мс | permanent>, state:warn:<1|2>, state:frozen, state:jail:<… | permanent> (system/jail.js)
 
 // Самый длинный срок числом — 30 дней (мут, тюрьма, бан); дольше — permanent
@@ -229,7 +397,7 @@ export function muteMinutesLeft(player) {
 		return 0;
 	}
 	return Math.ceil(left / 60000);
-};
+}
 
 /**
  * Число предупреждений игрока (тег state:warn:N).
@@ -239,108 +407,10 @@ export function muteMinutesLeft(player) {
 export function getWarns(player) {
 	const tag = player.getTags().find(t => t.startsWith(WARN_TAG));
 	return tag ? Number(tag.slice(WARN_TAG.length)) || 0 : 0;
-};
-
-// --- Роли: уровни доступа к командам и меню ---
-// Владелец — хост мира (тег role:owner, до 0.3.0 — host), он один. Хелпера (наблюдение и тюрьма: !tp, !invis, !jail,
-// !gm6, !cps, !ac, жалобы, предупреждения CPS и сигналы античита), модератора и администратора назначает
-// владелец командой !role, роль хранится тегом role:<id>. Префикс в чате (тег rank:,
-// команда !prefix) — отдельное украшение и прав не даёт.
-export const ROLES = ['player', 'helper', 'moder', 'admin', 'owner'];
-
-// Цвет ника по роли (в чате и над головой), если у игрока нет своего тега name:
-export const ROLE_COLORS = { player: '§f', helper: '§3', moder: '§9', admin: '§c', owner: '§4' };
-
-// Цвет ника и префикса бота карты
-export const BOT_COLOR = '§f';
-
-// --- Цвета ника и текста в чате (!color, меню администратора → Игроки → Цвет) ---
-// Хранятся тегами chat:name_color:<код> и chat:text_color:<код>, код — символ после «§» (без самого «§»).
-// Только цвета, которые есть в 1.19.50 (0–9, a–g); оформление (§l, §o…) не допускается
-export const CHAT_COLORS = {
-	black: '0', dark_blue: '1', dark_green: '2', dark_aqua: '3', dark_red: '4', dark_purple: '5', gold: '6', gray: '7',
-	dark_gray: '8', blue: '9', green: 'a', aqua: 'b', red: 'c', light_purple: 'd', yellow: 'e', white: 'f', minecoin_gold: 'g'
-};
-const COLOR_TAG = { name: 'chat:name_color:', text: 'chat:text_color:' };
-
-// --- Защита от выдачи себя за персонал (цвет ника, префикс, теги) ---
-// Цвета ролей: тёмно-красный — владелец, красный — администратор, синий — модератор. Ник этого цвета
-// и префикс с этим цветом или названием роли может быть только у того, у кого роль не ниже.
-// Цвет хелпера (тёмно-бирюзовый, §3) не закреплён: его продают в Косметике, а купленное не отбираем — защищено только название
-const RESERVED_COLORS = { '4': 'owner', 'c': 'admin', '9': 'moder' };
-// Названия ролей на 4 языках карты (основы слов); «бот» — только целым словом
-const ROLE_WORDS = [
-	[/владел|власник|owner|propietari|dueñ/i, 'owner'],
-	[/админ|адмін|admin/i, 'admin'],
-	[/модер|moder/i, 'moder'],
-	[/хелпер|helper|ayudante|помічник/i, 'helper'],
-	[/(^|[^a-zа-яёіїє])(бот|bot)($|[^a-zа-яёіїє])/i, 'bot']
-];
-
-/** Можно ли игроку цвет с кодом code ('0'–'g'). */
-export function colorAllowed(player, code) {
-	const role = RESERVED_COLORS[code];
-	return !role || hasRole(player, role);
 }
 
-/**
- * Роль, за которую текст (префикс) выдаёт игрока, если у него этой роли нет: по цвету роли или её названию.
- * @returns {'owner'|'admin'|'moder'|'helper'|'bot'|undefined}
- */
-export function impersonatedRole(player, text) {
-	for (const [, code] of String(text).matchAll(/§(.)/g)) {
-		if (!colorAllowed(player, code.toLowerCase())) return RESERVED_COLORS[code.toLowerCase()];
-	}
-	const plain = String(text).replace(/§./g, '');
-	for (const [re, role] of ROLE_WORDS) {
-		if (!re.test(plain)) continue;
-		if (role === 'bot' ? !player.hasTag('role:bot') : !hasRole(player, role)) return role;
-	}
-	return undefined;
-}
-
-/**
- * Цвет игрока ('§b') для kind = 'name' | 'text' или undefined, если не задан.
- * Цвет роли, которой у игрока нет (например, роль сняли), не применяется.
- */
-export function getChatColor(player, kind) {
-	const tag = player.getTags().find(t => t.startsWith(COLOR_TAG[kind]));
-	const code = tag?.slice(COLOR_TAG[kind].length);
-	return code && Object.values(CHAT_COLORS).includes(code) && colorAllowed(player, code) ? `§${code}` : undefined;
-}
-
-/** Задать цвет (код '0'–'g') или снять (undefined). */
-export function setChatColor(player, kind, code) {
-	player.getTags().filter(t => t.startsWith(COLOR_TAG[kind])).forEach(t => player.removeTag(t));
-	if (code) player.addTag(COLOR_TAG[kind] + code);
-}
-
-/**
- * Роль игрока: 'player' | 'helper' | 'moder' | 'admin' | 'owner'.
- * @param {Player} player
- * @returns {string}
- */
-export function getRole(player) {
-	// Бот карты (тег bot) — всегда без роли: прав у него нет, в чате у него свой префикс «Бот»
-	if (player.hasTag('role:bot')) return 'player';
-	if (player.hasTag('role:owner')) return 'owner';
-	if (player.hasTag('role:admin')) return 'admin';
-	if (player.hasTag('role:moder')) return 'moder';
-	if (player.hasTag('role:helper')) return 'helper';
-	return 'player';
-};
-
-/**
- * Есть ли у игрока роль не ниже указанной (администратор может всё, что модератор, и т. д.).
- * @param {Player} player
- * @param {string} role
- * @returns {boolean}
- */
-export function hasRole(player, role) {
-	return ROLES.indexOf(getRole(player)) >= ROLES.indexOf(role);
-};
-
-// --- Кто выдал ограничение (мут, заморозку, предупреждения): тег state:<вид>_by:<роль> (вид — mute, warn, frozen) ---
+// ======== Кто выдал ограничение (мут, заморозку, предупреждения) ========
+// Тег state:<вид>_by:<роль> (вид — mute, warn, frozen).
 // Снять ограничение может только тот, чья роль не ниже роли выдавшего (владелец — любое).
 const issuerTag = (kind) => `state:${kind}_by:`;
 
@@ -370,30 +440,7 @@ export function canLift(player, target, kind) {
 	return false;
 }
 
-/**
- * Как rawTranslate, но аргументом может быть и ключ перевода: { translate: 'role.admin' }.
- * Нужен, когда в сообщение подставляется переводимое слово (название роли).
- * @param {string} key
- * @param {...(string|number|{translate: string})} args
- * @returns {string}
- */
-export function rawTranslateRich(key, ...args) {
-	const parts = args.map(a => (a !== null && typeof a === 'object') ? a : { text: String(a) });
-	return JSON.stringify({ rawtext: [{ translate: key, with: { rawtext: parts } }] });
-};
-
-/**
- * Сообщение игроку ключом перевода: tell(player, 'chat.cmd.tp.done', ник).
- * Аргументы — строки и числа или переводимые части ({ translate: 'role.admin' }, { rawtext: […] }).
- * @param {Player} player
- * @param {string} key
- * @param {...(string|number|object)} args
- */
-export function tell(player, key, ...args) {
-	const json = !args.length ? JSON.stringify({ rawtext: [{ translate: key }] })
-		: args.some(a => a !== null && typeof a === 'object') ? rawTranslateRich(key, ...args) : rawTranslate(key, ...args);
-	return run(player, `tellraw @s ${json}`);
-}
+// ======== Эмодзи в чате (:имя: → значок шрифта) ========
 
 // Список эмодзи для чата и интерфейса
 export const emotes = {
@@ -418,7 +465,11 @@ export const emotes = {
 	':rebirth:': '\ue151'
 };
 
-// --- Точки телепортации для !warp ---
+// Список эмодзи в виде массива объектов для вывода в интерфейсе
+export const emotesList = Object.entries(emotes).map(([name, symbol]) => ({ name, symbol }));
+
+// ======== Точки телепортации для !warp ========
+
 // role — с какой роли точка доступна себе; отправить другого игрока — модератор и выше
 // (и не ниже роли точки). Меню сервера → Телепортации показывает все точки роли «игрок».
 // Спавн — всегда 0 5 0; шахта — по уровню: 1–15 — основная (у спавна), 16–25 — адская, 26–40 — Пещера.
@@ -445,7 +496,10 @@ export const WARPS = [
 /** Может ли игрок пользоваться точкой: роль не ниже точки, точка VIP — только VIP и персоналу. */
 export const warpAllowed = (player, warp) => hasRole(player, warp.role) && (!warp.vip || isVip(player) || hasRole(player, 'helper'));
 
-// Список команд: описание для !help и минимальная роль (см. ROLES).
+// ======== Список команд чата: имя, описание (ключ .lang), роль — !help, chat/commands.js ========
+
+// Список команд: описание для !help и минимальная роль (см. ROLES). Обработчик — метод в объекте своей роли
+// в chat/commands/: player.js, moderation.js (хелпер, модератор), admin.js, owner.js.
 // Порядок = порядок в !help: по ролям (игрок → владелец), внутри роли — по смыслу
 export const commandsList = [
 	// ===== Игрок: справка и общение =====
@@ -735,24 +789,3 @@ export const commandsList = [
 		role: 'owner'
 	}
 ];
-
-// Список эмодзи в виде массива объектов для вывода в интерфейсе
-export const emotesList = Object.entries(emotes).map(([name, symbol]) => ({ name, symbol }));
-
-/**
- * Показать форму, когда игрок сможет её увидеть. Из чата (!password) форма сразу не откроется:
- * пока открыт чат, show() отменяется с userBusy — повторяем раз в 10 тиков, до 30 секунд.
- */
-export function showWhenFree(player, form, tries = 60) {
-	return form.show(player).then(r => {
-		if (r.canceled && r.cancelationReason === 'userBusy' && tries > 0) {
-			return new Promise(res => {
-				const id = system.runSchedule(() => {
-					system.clearRunSchedule(id);
-					res(showWhenFree(player, form, tries - 1));
-				}, 10);
-			});
-		}
-		return r;
-	});
-}
