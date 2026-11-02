@@ -25,6 +25,8 @@
 	},
 
 	// Плашка над хотбаром (scripts/system/toast.js): заголовок (/title), который начинается с метки §s§f§o,
+	// Метку ищем в ('t' + текст): строку, которая начинается с цифры («1 >> 2», отсчёт «3»), выражения интерфейса
+	// считают числом, и вычитание метки давало пустоту — заголовок уходил в плашку и строку CPS пустыми.
 	// показывается не по центру, а снизу посередине — для достижений и других уведомлений;
 	// с меткой §s§f§c — строкой пониже (CPS на PvP-арене).
 	// Сам элемент — ванильный hud_title_text: игра создаёт его на время заголовка и убирает после
@@ -208,7 +210,7 @@
 									},
 									{
 										"binding_type": "view",
-										"source_property_name": "(((#sfo_raw - '§s§f§o') = #sfo_raw) and ((#sfo_raw - '§s§f§c') = #sfo_raw))",
+										"source_property_name": "(((('t' + #sfo_raw) - '§s§f§o') = ('t' + #sfo_raw)) and ((('t' + #sfo_raw) - '§s§f§c') = ('t' + #sfo_raw)))",
 										"target_property_name": "#visible"
 									}
 								]
@@ -246,7 +248,7 @@
 								],
 								"bindings": [
 									{ "binding_name": "#hud_title_text_string", "binding_name_override": "#sfo_raw", "binding_type": "global" },
-									{ "binding_type": "view", "source_property_name": "(not ((#sfo_raw - '§s§f§c') = #sfo_raw))", "target_property_name": "#visible" }
+									{ "binding_type": "view", "source_property_name": "(not ((('t' + #sfo_raw) - '§s§f§c') = ('t' + #sfo_raw)))", "target_property_name": "#visible" }
 								]
 							}
 						},
@@ -305,7 +307,7 @@
 									},
 									{
 										"binding_type": "view",
-										"source_property_name": "(not ((#sfo_raw - '§s§f§o') = #sfo_raw))",
+										"source_property_name": "(not ((('t' + #sfo_raw) - '§s§f§o') = ('t' + #sfo_raw)))",
 										"target_property_name": "#visible"
 									}
 								]

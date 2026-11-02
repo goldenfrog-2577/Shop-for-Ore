@@ -13,7 +13,7 @@ pack.name=Paquete de recursos para el mapa §lShop for Ore§r
 pack.description=Incluye pequeñas mejoras para una experiencia más cómoda. §c¡No se recomienda desactivar! §fVersión: §7[0.3.0_20261031_resources]
 
 ## --- OBJETOS Y BLOQUES ---
-##   item.*, tile.*, entity.*
+##   item.*, tile.*, entity.*, container.shop.*
 item.stick.name=§lPico §aNivel§b 1
 item.wooden_pickaxe.name=§lPico §aNivel§b 2
 item.stone_pickaxe.name=§lPico §aNivel§b 3
@@ -47,6 +47,8 @@ item.server:admin_stick=§cVara de admin§r
 item.server:portable_ender_crystal.name=§eCristal del End portátil
 item.spawn_egg.entity.server:floating_text.name=Huevo de holograma
 entity.server:floating_text.name=Holograma
+container.shop.feedback=Deja tu reseña aquí...
+container.shop.mythic=Místico
 
 ## --- TEXTOS DEL JUEGO (SUSTITUYEN A LOS ORIGINALES) ---
 ##   accessibility.*, advMode.*, button.*, chat.title.*, command_block.*, commands.*, death.*, disconnect*, map.*, multiplayer.*, progressScreen.*
@@ -549,9 +551,9 @@ menu.settings.sounds.title=§l§8 Ajustes » Sonidos
 menu.settings.sounds.body=§7Un sonido corto en cada venta de mineral en un bloque de oro: oyes que la venta avanza sin mirar las monedas.
 menu.settings.music.title=§l§8 Ajustes » Música
 menu.settings.music.body=§7La música de fondo del mapa. Si la desactivas, deja de sonar solo para ti. El volumen es el control «Música» de los ajustes del juego.
-chat.settings.enabled=§r §3Ajustes §8» §7Ajuste cambiado: §2Activado
-chat.settings.disabled=§r §3Ajustes §8» §7Ajuste cambiado: §4Desactivado
-chat.settings.icons_only=§r §3Ajustes §8» §7Ajuste cambiado: §gSolo iconos
+chat.settings.enabled=§r §3Ajustes §8» §7Ajuste cambiado: §aActivado
+chat.settings.disabled=§r §3Ajustes §8» §7Ajuste cambiado: §cDesactivado
+chat.settings.icons_only=§r §3Ajustes §8» §7Ajuste cambiado: §eSolo iconos
 
 ## --- BANCO Y DINERO ---
 ##   menu.bank.*, chat.bank.*, chat.cmd.pay.*, chat.cmd.balance*, chat.cmd.money.*
