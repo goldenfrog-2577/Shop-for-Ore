@@ -47,8 +47,8 @@ item.server:admin_stick=§cПалочка админа§r
 item.server:portable_ender_crystal.name=§eПортативный кристалл Энда
 item.spawn_egg.entity.server:floating_text.name=Яйцо призыва голограммы
 entity.server:floating_text.name=Голограмма
-container.shop.feedback=Отзыв класть сюда...
-container.shop.mythic=Мистик
+container.shop.feedback=§lОтзыв класть сюда...
+container.shop.mythic= §l§5Мистик
 
 ## --- ТЕКСТЫ ИГРЫ (ЗАМЕНА ВАНИЛЬНЫХ) ---
 ##   accessibility.*, advMode.*, button.*, chat.title.*, command_block.*, commands.*, death.*, disconnect*, map.*, multiplayer.*, progressScreen.*
@@ -794,6 +794,8 @@ chat.cmd.game.line=§e%1$s§8 — §f%2$s§8 · §7%3$s §8(%4$s/%5$s)
 chat.cmd.game.use=§r §7CMD §8» §7Использование: §e!game§7 [join <игра> / leave]; администратор: §e!game§7 start/stop <игра>
 chat.cmd.game.error.start=§r⩕ §l§cERROR!§r §8» §7Нельзя начать: игра уже идёт или в ней никого нет
 chat.cmd.game.error.empty=§r⩕ §l§cERROR!§r §8» §7В этой игре никого нет
+chat.game.winner_bot=§r §6 Мини-игры §8» §7Бот §f%1$s§r§7 победил в игре %2$s! Награды нет
+chat.game.no_reward_bot=§r §6 Мини-игры §8» §7Награды нет: кроме тебя, играл только бот
 
 ## --- PVP-АРЕНА И CPS ---
 ##   chat.pvp.*, hud.cps*, chat.cps.*, chat.cmd.cps.*
@@ -1196,7 +1198,7 @@ admin.server.button.top_pvp=§8Топ по победам в PvP
 admin.server.button.top_spleef=§8Топ по победам в сплифе
 
 ## --- МЕНЮ АДМИНИСТРАТОРА: БОТ И ЭФФЕКТЫ ---
-##   admin.bot.*, chat.admin.bot.*, chat.cmd.bot.*, effect.*
+##   admin.bot.*, chat.admin.bot.*, chat.cmd.bot.*, effect.*, hud.bot.*, bot.*
 admin.bot.title=§l§8Меню админа » Бот
 admin.bot.name=§7Имя бота:
 admin.bot.present=§aБот в мире
@@ -1270,3 +1272,44 @@ chat.admin.bot.error.name=§r⩕ §l§cERROR!§r §8» §7Имя бота: от 
 chat.admin.bot.error.absent=§r⩕ §l§cERROR!§r §8» §7Бота нет в мире
 chat.admin.bot.error.present=§r⩕ §l§cERROR!§r §8» §7Бот §f%1$s§r§7 уже в мире. Управление ботом — в меню админа
 chat.cmd.bot.settings=§r §7CMD §8» §7Закрой чат — откроется окно управления ботом
+admin.bot.button.mode=§8Режим бота
+admin.bot.button.sit=§8Присесть
+admin.bot.button.totem=§8Автототем
+admin.bot.button.return=§8Возвращать после перезахода
+admin.bot.mode.title=§l§8Бот » Режим
+admin.bot.mode.now=§7Сейчас:
+admin.bot.mode.idle=Обычный
+admin.bot.mode.idle.desc=§8Стоит, где поставили
+admin.bot.mode.dummy=Груша для битья
+admin.bot.mode.dummy.desc=§8Заморожен, не умирает, показывает урон
+admin.bot.mode.follow=Ходит за мной
+admin.bot.mode.follow.desc=§8Отстанет — телепортируется
+admin.bot.mode.stay=Стоит здесь
+admin.bot.mode.stay.desc=§8Оттолкнули — вернётся на место
+admin.bot.mode.mirror=Повторяет за мной
+admin.bot.mode.mirror.desc=§8Поворот, присед, прыжки, шаги
+admin.bot.mode.spar=Спарринг на арене
+admin.bot.mode.spar.desc=§8Бьёт ближайшего игрока на арене
+admin.bot.mode.game=В мини-игре
+admin.bot.mode.game.desc=§8Добор игроков
+admin.bot.spar.title=§l§8Бот » Спарринг
+admin.bot.spar.level=§7Сложность:
+admin.bot.spar.level.1=Лёгкий
+admin.bot.spar.level.2=Средний
+admin.bot.spar.level.3=Сложный
+admin.bot.spar.level.4=Читер
+admin.bot.game.title=§l§8Бот » Мини-игра
+admin.bot.game.body=§7Бот запишется в игру и займёт место игрока. Победы и смерти бота в статистику не идут, а награду за игру дают, только если живых игроков было хотя бы двое.
+chat.admin.bot.mode=§r §7CMD §8» §7Бот §f%1$s§r§7: режим «§e%2$s§7»
+chat.admin.bot.sit.on=§r §7CMD §8» §7Бот §f%1$s§r§7 присел
+chat.admin.bot.sit.off=§r §7CMD §8» §7Бот §f%1$s§r§7 встал
+chat.admin.bot.totem.on=§r §7CMD §8» §7Автототем бота §f%1$s§r§7 включён
+chat.admin.bot.totem.off=§r §7CMD §8» §7Автототем бота §f%1$s§r§7 выключен
+chat.admin.bot.return.on=§r §7CMD §8» §7Бот §f%1$s§r§7 вернётся после перезахода в мир
+chat.admin.bot.return.off=§r §7CMD §8» §7Бот §f%1$s§r§7 не вернётся после перезахода в мир
+chat.admin.bot.error.game=§r⩕ §l§cERROR!§r §8» §7Бот не может войти в «%1$s»: игра уже идёт или мест нет
+hud.bot.dummy=§7Урон: §c%1$s §8• §7DPS: §e%2$s §8• §7Ударов: §f%3$s
+bot.guide.1=Привет, §e%1$s§f! Я %2$s — бот этого сервера. Сейчас быстро всё покажу.
+bot.guide.2=Копай киркой из первого слота, а потом встань на §6золотой блок§f — руда продастся сама: монеты и опыт.
+bot.guide.3=Хватает опыта на уровень — снова встань на золотой блок. Новые уровни открывают новые шахты.
+bot.guide.4=Предмет в последнем слоте — меню сервера: магазин, телепортации, достижения и настройки. Удачи!

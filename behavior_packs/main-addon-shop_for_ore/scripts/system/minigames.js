@@ -73,18 +73,19 @@ const tellGame = (g, key, ...args) => {
 };
 const gameName = (g) => ({ translate: `minigame.${g.def.id}.name` });
 
-/** Записаться в игру. @returns {boolean} */
-export function joinGame(player, id) {
+/** Записаться в игру. Бота (role:bot) — только с allowBot (меню администратора → Бот, system/bot_ai.js). @returns {boolean} */
+export function joinGame(player, id, { allowBot = false } = {}) {
 	const g = getGame(id);
 	const fail = (key, ...a) => { tell(player, key, ...a); return false; };
 	if (!g) return fail('chat.cmd.error.not_found', String(id ?? ''), '!game');
-	if (isPending(player) || player.hasTag('role:bot')) return false;
+	if (isPending(player) || (player.hasTag('role:bot') && !allowBot)) return false;
 	if (gameOf(player)) return fail('chat.game.error.already', gameName(gameOf(player)));
 	// Зритель игры с запретом телепорта не может уйти в другую игру, пока та идёт
 	if (teleportLock(player)) return fail('chat.game.error.teleport', gameName(teleportLock(player)));
 	if (player.hasTag('state:frozen')) return fail('chat.cmd.freeze.active');
 	if (isJailed(player)) return fail(jailMinutesLeft(player) === Infinity ? 'chat.jail.active.permanent' : 'chat.jail.active', String(jailMinutesLeft(player)));
-	if (combatSecondsLeft(player) > 0) return fail('chat.pvp.combat', combatSecondsLeft(player));
+	// Бот после спарринга «в бою», но сбегать ему не от кого
+	if (!allowBot && combatSecondsLeft(player) > 0) return fail('chat.pvp.combat', combatSecondsLeft(player));
 	if (g.phase === 'running') return fail('chat.game.error.running', gameName(g));
 	if (g.players.size >= g.def.maxPlayers) return fail('chat.game.error.full', gameName(g));
 	g.players.add(player.name);
@@ -164,6 +165,8 @@ export function startGame(g) {
 	g.alive = new Set(g.players);
 	g.watchers.clear();
 	g.startedWith = g.players.size;
+	// Награда и статистика — только если играли хотя бы двое живых: бот добирает игроков, но победа над ним одним не в счёт
+	g.humans = [...g.players].filter(n => !findPlayer(n)?.hasTag('role:bot')).length;
 	g.def.onStart?.(g);
 	let index = 0;
 	for (const name of g.players) {
@@ -181,7 +184,9 @@ export function startGame(g) {
 /** Закончить игру. winner — ник или undefined (ничья / остановил администратор). */
 export function endGame(g, winner, reason = 'end') {
 	const p = winner ? findPlayer(winner) : undefined;
-	if (p && g.startedWith >= 2) {
+	if (p?.hasTag('role:bot')) {
+		run(p, `tellraw @a ${rawTranslateRich('chat.game.winner_bot', winner, gameName(g))}`);
+	} else if (p && g.startedWith >= 2 && g.humans >= 2) {
 		const r = g.def.reward ?? {};
 		if (r.money) run(p, `scoreboard players add @s money ${r.money}`);
 		if (r.vip_coins) run(p, `scoreboard players add @s vip_coins ${r.vip_coins}`);
@@ -192,6 +197,10 @@ export function endGame(g, winner, reason = 'end') {
 		const reward = [r.money ? `§e+${r.money} §f${COIN}` : '', r.vip_coins ? `§e+${r.vip_coins} §f${VIP_COIN}` : ''].filter(Boolean).join('§7, ');
 		run(p, `tellraw @a ${rawTranslateRich('chat.game.winner', winner, gameName(g))}`);
 		tell(p, 'chat.game.reward', reward || '—');
+	} else if (p && g.startedWith >= 2) {
+		// Победил живой игрок, но живых было меньше двух (остальные — бот): без награды и статистики
+		run(p, `tellraw @a ${rawTranslateRich('chat.game.winner', winner, gameName(g))}`);
+		tell(p, 'chat.game.no_reward_bot');
 	} else {
 		tellGame(g, reason === 'stop' ? 'chat.game.stopped' : 'chat.game.draw', gameName(g));
 	}

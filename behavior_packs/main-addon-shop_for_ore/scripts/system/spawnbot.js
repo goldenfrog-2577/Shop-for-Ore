@@ -1,7 +1,8 @@
 // --- Бот карты (симулированный игрок GameTest) ---
-// Призывается функцией system/spawnbot (командный блок GameTest на 1000001 -60 1000002).
-// Управление — из меню администратора (раздел «Бот»). Имя бота хранится в свойстве мира
-// shop:bot_name и переживает перезапуск; сам бот после перезахода в мир пропадает.
+// Призывается функцией system/spawnbot: тест GameTest server:spawnbot на площадке 1000000 −60 1000000
+// (далеко от карты), после появления бот переносится к призвавшему или в заданную точку.
+// Управление — из меню администратора (раздел «Бот»). Имя бота хранится в свойстве мира shop:bot_name;
+// после перезахода в мир бота нет — его возвращает system/bot_ai.js (если включено). Поведение — там же.
 
 import * as GT from '@minecraft/server-gametest';
 import { world, BlockLocation, DynamicPropertiesDefinition } from '@minecraft/server';
@@ -12,7 +13,11 @@ const BOT_NAME_PROPERTY = 'shop:bot_name';
 export const BOT_DEFAULT_NAME = 'Bot';
 
 // Текущий бот и тест, в котором он живёт (нужен, чтобы убрать бота)
-const state = { bot: undefined, test: undefined, summoner: undefined };
+const state = { bot: undefined, test: undefined, summoner: undefined, at: undefined };
+// Кто хочет знать о появлении и уборке бота (system/bot_ai.js)
+const spawnListeners = [], removeListeners = [];
+export const onBotSpawned = (fn) => spawnListeners.push(fn);
+export const onBotRemoved = (fn) => removeListeners.push(fn);
 
 world.events.worldInitialize.subscribe((e) => {
 	const def = new DynamicPropertiesDefinition();
@@ -46,9 +51,13 @@ export function getBot() {
 	return undefined;
 }
 
-/** Призвать бота; summoner — игрок, к которому его телепортировать. */
-export function spawnBot(summoner) {
+/**
+ * Призвать бота. summoner — игрок, к которому его телепортировать (или измерение, если игрока нет);
+ * at — точка { x, y, z }, куда поставить бота вместо призвавшего.
+ */
+export function spawnBot(summoner, at) {
 	state.summoner = summoner;
+	state.at = at;
 	run(summoner, 'function system/spawnbot');
 }
 
@@ -62,6 +71,7 @@ export function removeBot() {
 		bot.kill();
 	}
 	state.bot = undefined;
+	for (const fn of removeListeners) fn();
 	return true;
 }
 
@@ -73,9 +83,12 @@ GT.register('server', 'spawnbot', (test) => {
 	state.bot = bot;
 	state.test = test;
 	// Бот появляется у тестовой площадки (далеко от карты) — переносим его к призвавшему
-	const summoner = state.summoner;
+	const { summoner, at } = state;
 	state.summoner = undefined;
-	if (summoner) run(summoner, `tp "${bot.name}" @s`);
+	state.at = undefined;
+	if (at) run(bot, `tp @s ${at.x} ${at.y} ${at.z}`);
+	else if (summoner?.name !== undefined) run(summoner, `tp "${bot.name}" @s`);   // игрок (у измерения имени нет)
+	for (const fn of spawnListeners) fn(bot);
 })
 	.maxTicks(hours*72000)
 	.structureName('server:bot');

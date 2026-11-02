@@ -47,8 +47,8 @@ item.server:admin_stick=§cПалочка адміна§r
 item.server:portable_ender_crystal.name=§eПортативний кристал Енду
 item.spawn_egg.entity.server:floating_text.name=Яйце призову голограми
 entity.server:floating_text.name=Голограма
-container.shop.feedback=Відгук класти сюди...
-container.shop.mythic=Містик
+container.shop.feedback=§lВідгук класти сюди...
+container.shop.mythic= §l§5Містик
 
 ## --- ТЕКСТИ ГРИ (ЗАМІНА ВАНІЛЬНИХ) ---
 ##   accessibility.*, advMode.*, button.*, chat.title.*, command_block.*, commands.*, death.*, disconnect*, map.*, multiplayer.*, progressScreen.*
@@ -794,6 +794,8 @@ chat.cmd.game.line=§e%1$s§8 — §f%2$s§8 · §7%3$s §8(%4$s/%5$s)
 chat.cmd.game.use=§r §7CMD §8» §7Використання: §e!game§7 [join <гра> / leave]; адміністратор: §e!game§7 start/stop <гра>
 chat.cmd.game.error.start=§r⩕ §l§cERROR!§r §8» §7Не можна почати: гра вже триває або в ній нікого немає
 chat.cmd.game.error.empty=§r⩕ §l§cERROR!§r §8» §7У цій грі нікого немає
+chat.game.winner_bot=§r §6 Міні-ігри §8» §7Бот §f%1$s§r§7 переміг у грі %2$s! Нагороди немає
+chat.game.no_reward_bot=§r §6 Міні-ігри §8» §7Нагороди немає: окрім тебе, грав лише бот
 
 ## --- PVP-АРЕНА І CPS ---
 ##   chat.pvp.*, hud.cps*, chat.cps.*, chat.cmd.cps.*
@@ -1196,7 +1198,7 @@ admin.server.button.top_pvp=§8Топ за перемогами в PvP
 admin.server.button.top_spleef=§8Топ за перемогами у сплефі
 
 ## --- МЕНЮ АДМІНІСТРАТОРА: БОТ І ЕФЕКТИ ---
-##   admin.bot.*, chat.admin.bot.*, chat.cmd.bot.*, effect.*
+##   admin.bot.*, chat.admin.bot.*, chat.cmd.bot.*, effect.*, hud.bot.*, bot.*
 admin.bot.title=§l§8Меню адміна » Бот
 admin.bot.name=§7Ім'я бота:
 admin.bot.present=§aБот у світі
@@ -1270,3 +1272,44 @@ chat.admin.bot.error.name=§r⩕ §l§cERROR!§r §8» §7Ім'я бота: ві
 chat.admin.bot.error.absent=§r⩕ §l§cERROR!§r §8» §7Бота немає у світі
 chat.admin.bot.error.present=§r⩕ §l§cERROR!§r §8» §7Бот §f%1$s§r§7 уже у світі. Керування ботом — у меню адміна
 chat.cmd.bot.settings=§r §7CMD §8» §7Закрий чат — відкриється вікно керування ботом
+admin.bot.button.mode=§8Режим бота
+admin.bot.button.sit=§8Присісти
+admin.bot.button.totem=§8Автототем
+admin.bot.button.return=§8Повертати після перезаходу
+admin.bot.mode.title=§l§8Бот » Режим
+admin.bot.mode.now=§7Зараз:
+admin.bot.mode.idle=Звичайний
+admin.bot.mode.idle.desc=§8Стоїть, де поставили
+admin.bot.mode.dummy=Груша для биття
+admin.bot.mode.dummy.desc=§8Заморожений, не вмирає, показує шкоду
+admin.bot.mode.follow=Ходить за мною
+admin.bot.mode.follow.desc=§8Відстане — телепортується
+admin.bot.mode.stay=Стоїть тут
+admin.bot.mode.stay.desc=§8Відштовхнули — повернеться на місце
+admin.bot.mode.mirror=Повторює за мною
+admin.bot.mode.mirror.desc=§8Поворот, присід, стрибки, кроки
+admin.bot.mode.spar=Спаринг на арені
+admin.bot.mode.spar.desc=§8Б'є найближчого гравця на арені
+admin.bot.mode.game=У мінігрі
+admin.bot.mode.game.desc=§8Добір гравців
+admin.bot.spar.title=§l§8Бот » Спаринг
+admin.bot.spar.level=§7Складність:
+admin.bot.spar.level.1=Легкий
+admin.bot.spar.level.2=Середній
+admin.bot.spar.level.3=Складний
+admin.bot.spar.level.4=Читер
+admin.bot.game.title=§l§8Бот » Мінігра
+admin.bot.game.body=§7Бот запишеться в гру й займе місце гравця. Перемоги й смерті бота до статистики не йдуть, а нагороду за гру дають, лише якщо живих гравців було щонайменше двоє.
+chat.admin.bot.mode=§r §7CMD §8» §7Бот §f%1$s§r§7: режим «§e%2$s§7»
+chat.admin.bot.sit.on=§r §7CMD §8» §7Бот §f%1$s§r§7 присів
+chat.admin.bot.sit.off=§r §7CMD §8» §7Бот §f%1$s§r§7 підвівся
+chat.admin.bot.totem.on=§r §7CMD §8» §7Автототем бота §f%1$s§r§7 увімкнено
+chat.admin.bot.totem.off=§r §7CMD §8» §7Автототем бота §f%1$s§r§7 вимкнено
+chat.admin.bot.return.on=§r §7CMD §8» §7Бот §f%1$s§r§7 повернеться після перезаходу у світ
+chat.admin.bot.return.off=§r §7CMD §8» §7Бот §f%1$s§r§7 не повернеться після перезаходу у світ
+chat.admin.bot.error.game=§r⩕ §l§cERROR!§r §8» §7Бот не може увійти в «%1$s»: гра вже йде або місць немає
+hud.bot.dummy=§7Шкода: §c%1$s §8• §7DPS: §e%2$s §8• §7Ударів: §f%3$s
+bot.guide.1=Привіт, §e%1$s§f! Я %2$s — бот цього сервера. Зараз швидко все покажу.
+bot.guide.2=Копай кайлом із першого слота, а потім стань на §6золотий блок§f — руда продасться сама: монети й досвід.
+bot.guide.3=Вистачає досвіду на рівень — знову стань на золотий блок. Нові рівні відкривають нові шахти.
+bot.guide.4=Предмет в останньому слоті — меню сервера: магазин, телепортації, досягнення й налаштування. Успіхів!
