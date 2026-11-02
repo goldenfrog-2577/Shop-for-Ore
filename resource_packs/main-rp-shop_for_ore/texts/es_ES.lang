@@ -92,6 +92,7 @@ chat.server.wiped=§r §cServidor §8» §7Se han reiniciado las estadística
 chat.server.wiped.offline=§r §cServidor §8» §7Mientras no estabas, el servidor empezó de nuevo (reinicio): se borraron el progreso, los logros y los cosméticos. Tu rol, contraseña y ajustes siguen igual
 chat.server.reset_offline=§r §cServidor §8» §7Mientras no estabas, el dueño reinició los datos de los jugadores desconectados: progreso, rol y contraseña. Regístrate de nuevo
 chat.server.kicked=§r §cServidor §8» §f%1$s§r§7 fue expulsado por un administrador
+chat.server.void=§r §cServidor §8» §7Caíste al vacío: vuelves al spawn
 chat.error.no_money=§r⩕ §l§cERROR!§r §8» §7No tienes suficientes 
 chat.cmd.error.no_permission=§r⩕ §l§cERROR!§r §8» §7No tienes permiso para usar este comando
 chat.cmd.error.unknown=§r⩕ §l§cERROR!§r §8» §7Comando desconocido: §e%1$s§7. Escribe §e!help§7 para ver la lista de comandos

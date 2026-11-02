@@ -289,6 +289,9 @@
 			"path" : "scripts/system/trident.js"
 		},
 		{
+			"path" : "scripts/system/void.js"
+		},
+		{
 			"path" : "scripts/system/spleef.js"
 		},
 		{

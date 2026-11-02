@@ -92,6 +92,7 @@ chat.server.wiped=§r §cServer §8» §7All players' stats have been reset. 
 chat.server.wiped.offline=§r §cServer §8» §7While you were away the server started over (wipe): progress, achievements and cosmetics were reset. Your role, password and settings are kept
 chat.server.reset_offline=§r §cServer §8» §7While you were away, the owner reset offline players’ data: progress, role and password. Please register again
 chat.server.kicked=§r §cServer §8» §f%1$s§r§7 was removed by an administrator
+chat.server.void=§r §cServer §8» §7You fell into the void — back to spawn
 chat.error.no_money=§r⩕ §l§cERROR!§r §8» §7Not enough 
 chat.cmd.error.no_permission=§r⩕ §l§cERROR!§r §8» §7You don't have permission to use this command
 chat.cmd.error.unknown=§r⩕ §l§cERROR!§r §8» §7Unknown command: §e%1$s§7. Type §e!help§7 to see the list of commands
