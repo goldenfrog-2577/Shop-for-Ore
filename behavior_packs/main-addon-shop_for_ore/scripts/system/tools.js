@@ -15,8 +15,8 @@ let tick = 0;
 system.runSchedule(() => {
 	if (++tick % CHECK_EVERY_TICKS !== 0) return;
 	for (const player of world.getPlayers()) {
-		// В сплифе в первом слоте лопата игры, а не кирка уровня
-		if (player.hasTag('game:spleef')) continue;
+		// В сплифе в первом слоте лопата игры, в тире — что угодно (лук), а не кирка уровня
+		if (player.hasTag('game:spleef') || player.hasTag('zone:tir')) continue;
 		try {
 			const item = player.getComponent('inventory').container.getItem(0);
 			if (!item) continue;
