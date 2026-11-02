@@ -16,6 +16,7 @@ import { cpsOf, cpsLimit } from '../system/cps.js';
 import { CHECKS, violationsOf, flaggedPlayers, acMode, modeName, MODE, clearViolations } from '../system/anticheat.js';
 import { wipeAll, wipeCounts } from '../system/wipe.js';
 import { resetOffline, offlineCounts } from '../system/offline_reset.js';
+import { markAdminBoost, stopAdminBoosts, MAGNET_ADMIN_TAG } from '../system/boosts.js';
 
 // --- Общие помощники команд ---
 
@@ -211,13 +212,19 @@ function canPunish(player, target) {
 	return true;
 }
 
+/** Координата для !tp: число (можно с дробью и минусом) или относительная ~ / ~-3.5. */
+export const isCoord = (a) => /^(~?-?\d+(\.\d+)?|~)$/.test(a);
+
 /**
- * «Магнит руды» бесплатно (персонал): табло magnet — секунды, тег boost:magnet (timers/ticks_5, ticks_20).
+ * «Магнит руды» бесплатно (персонал): табло magnet — секунды, тег boost:magnet (timers/ticks_5, ticks_20)
+ * и boost:magnet_admin — знак, что магнит выдан, а не куплен.
  * Если магнит уже работает — время заменяется новым.
  */
 export function giveOreMagnet(player, target, minutes) {
 	run(target, `scoreboard players set @s magnet ${minutes * 60}`);
 	target.addTag('boost:magnet');
+	// Выдан администратором — снимается кнопкой «Отключить выданные бусты» (system/boosts.js)
+	target.addTag(MAGNET_ADMIN_TAG);
 	tell(target, 'chat.cmd.boost.magnet.received', player.name, String(minutes));
 	run(target, 'playsound note.bell @s');
 	if (target.name !== player.name) tell(player, 'chat.cmd.boost.magnet.done', target.name, String(minutes));
@@ -858,6 +865,16 @@ export function runChatCommand(player, command, args) {
 		case 'boost': {
 			// Бесплатный общий буст x2/x4 на 1–60 минут (по умолчанию 5). Как покупка в магазине, но без списания денег
 			const type = (args[0] || '').toLowerCase();
+			// !boost stop — отключить бусты, выданные администратором (купленные игроками не трогаются)
+			if (type === 'stop') {
+				const { boost, magnets } = stopAdminBoosts();
+				if (!boost && !magnets.length) {
+					tell(player, 'chat.cmd.boost.stop.none');
+					break;
+				}
+				tell(player, 'chat.cmd.boost.stop.done', boost ?? '—', String(magnets.length));
+				break;
+			}
 			// Личный «Магнит руды» (как в магазине): !boost magnet [ник] [минуты 1–60] — себе или игроку
 			if (type === 'magnet') {
 				const rest = args.slice(1);
@@ -886,7 +903,10 @@ export function runChatCommand(player, command, args) {
 			const stand = type === 'x2' ? 'X2Boost' : 'X4Boost';
 			run(player, `scoreboard players set scoreboards.${type}boost display 0`);
 			run(player, `scoreboard players set @e[name="${stand}"] system ${minutes * 60}`);
-			run(player, `tag @a add ${type}boost`);
+			// Раньше здесь ставился старый тег x2boost (до 0.3.0); буст всё равно работал — тег boost:x2 раз в секунду
+			// ставит timers/ticks_20 по таймеру стойки
+			run(player, `tag @a add boost:${type}`);
+			markAdminBoost(type, minutes);
 			run(player, `tellraw @a ${rawTranslate('chat.cmd.boost.started', player.name, type, String(minutes))}`);
 			run(player, 'execute positioned as @a run playsound note.bell @a');
 			break;
@@ -1194,8 +1214,19 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case 'tp': {
-			// !tp <ник> — ты к игроку (отправить другого игрока к себе — !tphere)
+			// !tp <ник> — ты к игроку (отправить другого игрока к себе — !tphere); !tp <x> <y> <z> — в точку
+			// (числа или ~ / ~5 относительно себя, как у /tp)
 			if (!args[0]) {
+				tell(player, 'chat.cmd.tp.use');
+				break;
+			}
+			if (args.length === 3 && args.every(isCoord)) {
+				if (!canTeleport(player)) break;
+				run(player, `tp @s ${args.join(' ')}`);
+				tell(player, 'chat.cmd.tp.coords', args.join(' '));
+				break;
+			}
+			if (args.length > 1 && args.some(isCoord) && !findPlayer(args.join(' '))) {
 				tell(player, 'chat.cmd.tp.use');
 				break;
 			}

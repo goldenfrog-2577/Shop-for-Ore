@@ -9,6 +9,8 @@ execute as @s[scores={magnet=..0,money=20000..}] run tag @s add sys:buy_ok
 scoreboard players remove @s[tag=sys:buy_ok] money 20000
 scoreboard players set @s[tag=sys:buy_ok] magnet 300
 tag @s[tag=sys:buy_ok] add boost:magnet
+# Купленный магнит — не «выданный администратором» (его не снимет «Отключить выданные бусты»)
+tag @s[tag=sys:buy_ok] remove boost:magnet_admin
 execute as @s[tag=sys:buy_ok] run tellraw @s {"rawtext":[{"translate":"chat.ore_magnet.bought"}]}
 execute as @s[tag=sys:buy_ok] at @s run playsound note.bell @s
 tag @s remove sys:buy_ok

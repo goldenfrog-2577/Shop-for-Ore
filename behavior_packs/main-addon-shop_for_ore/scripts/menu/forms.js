@@ -95,6 +95,19 @@ export function confirm(player, title, body, onYes, onNo) {
 }
 
 /**
+ * Подтверждение опасного действия администратора (вайп, сброс игроков не в сети, отключение бустов):
+ * заголовок «Предупреждение» со знаком «!» из шрифта карты, кнопки «Да / Нет».
+ * @param {Player} player
+ * @param {string} body
+ * @param {() => void} onYes
+ * @param {() => void} [onNo] — «Нет» и крестик
+ */
+export const WARN_TITLE = '\ue1f8 %admin.wipe.title';
+export function wipeConfirm(player, body, onYes, onNo) {
+	return confirm(player, WARN_TITLE, body, onYes, onNo);
+}
+
+/**
  * Окно «Включить / Выключить» с текущим состоянием в описании (Настройки).
  * @param {Player} player
  * @param {string} title

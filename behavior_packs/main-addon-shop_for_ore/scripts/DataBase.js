@@ -385,12 +385,13 @@ export const emotes = {
 
 // --- Точки телепортации для !warp ---
 // role — с какой роли точка доступна себе; отправить другого игрока — модератор и выше
-// (и не ниже роли точки). mine — шахта по уровню игрока, как кнопка «Спавн» в меню телепортаций.
+// (и не ниже роли точки). Меню сервера → Телепортации показывает все точки роли «игрок».
+// Спавн — всегда 0 5 0; шахта — по уровню: 1–15 — основная (у спавна), 16–25 — адская, 26–40 — третья
 export const WARPS = [
-	{ id: 'spawn', role: 'player', pos: [0, 2, 0] },
+	{ id: 'spawn', role: 'player', pos: [0, 5, 0] },
 	{ id: 'mine', role: 'player', pos: (p) => {
 		const lvl = getScore(p, 'lvl');
-		if (lvl >= 26) return [-60, 5, -60];
+		if (lvl >= 26) return [0, 5, -69];
 		if (lvl >= 16) return [0, 5, -33];
 		return [0, 5, 0];
 	} },
@@ -398,6 +399,9 @@ export const WARPS = [
 	// Арена: случайная точка площадки (system/pvp.js), чтобы игроки не появлялись друг у друга
 	{ id: 'pvp', role: 'player', arena: true },
 	{ id: 'spleef', role: 'player', pos: [500, 3, 500] },
+	{ id: 'tir', role: 'player', pos: [435, -45, 338] },
+	// Локация босса: пока босса нет — только персоналу
+	{ id: 'boss', role: 'admin', pos: [184, 11, 287] },
 	{ id: 'vip', role: 'admin', pos: [-60, 5, -60] },
 	{ id: 'cmd', role: 'admin', pos: [50, 5, 50] }
 ];
@@ -498,7 +502,7 @@ export const commandsList = [
 		role: 'helper'
 	},
 	{
-		command: '!tp §7<§fplayer§7>',
+		command: '!tp §7<§fplayer§8/§fx y z§7>',
 		description: '%chat.help.tp',
 		role: 'helper'
 	},
@@ -586,7 +590,7 @@ export const commandsList = [
 		role: 'admin'
 	},
 	{
-		command: '!boost §7<§fx2§8/§fx4§7> [§fminutes§7] §8| §fmagnet §7[§fplayer§7] [§fminutes§7]',
+		command: '!boost §7<§fx2§8/§fx4§7> [§fminutes§7] §8| §fmagnet §7[§fplayer§7] [§fminutes§7] §8| §fstop',
 		description: '%chat.help.boost',
 		role: 'admin'
 	},
