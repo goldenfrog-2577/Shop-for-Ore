@@ -2,13 +2,16 @@
 execute as @a[x=0,y=1,z=-20,r=3,scores={lvl=1..15}] at @s run tp @s 0 5 0
 # Мост в третью локацию (уровни 26–40): ниже 26 уровня — обратно в адскую шахту
 execute as @a[x=0,y=1,z=-56,r=3,scores={lvl=1..25}] at @s run tp @s 0 5 -33
+# VIP-остров (x −86…−34, z −70…−43: VIP-шахта и лавка торговца) — только VIP (тег player:vip) и персоналу.
+# Попасть туда — !warp vip или Меню сервера → Телепортации (scripts/DataBase.js, WARPS)
+execute as @a[x=-87,y=-8,z=-71,dx=54,dy=30,dz=29,tag=!player:vip,tag=!role:owner,tag=!role:admin,tag=!role:moder,tag=!role:helper,tag=!role:bot] at @s run tp @s 0 5 0
 # Зона командных блоков — владельцу, администраторам и ботам (бот: тег role:bot, scripts/system/spawnbot.js)
 execute as @a[x=50,y=0,z=50,r=25,tag=!role:owner,tag=!role:admin,tag=!role:bot] at @s run tp @s 0 5 0
 execute as @a[x=0,y=-60,z=0,r=55] at @s run tp @s 0 5 0
 execute as @a[x=60,y=-60,z=0,r=55] at @s run tp @s 0 5 0
 execute as @a[x=0,y=-60,z=-33,r=55] at @s run tp @s 0 5 0
 execute as @a at @s if block ~~~ planks 5 run tp @s 0 5 0
-# Телепортация на спавн, если игрок стоит на багровых или искажённых досках
+# Телепортация в адскую шахту, если игрок стоит на багровых или искажённых досках
 execute as @a at @s if block ~~~ crimson_planks run tp @s 0 5 -33
 execute as @a at @s if block ~~~ warped_planks run tp @s 0 5 -33
 # Телепортация в определённые мини-игры
@@ -26,7 +29,8 @@ xp -100l @a[lm=1]
 # Начальные значения для новых игроков (без тега player)
 scoreboard players set @a[tag=!player] xp 0
 scoreboard players set @a[tag=!player] money 0
-scoreboard players set @a[tag=!player] vip_coins 0
+# VIP-коины переживают ребитх (upgrade_rebirth снимает тег player): «add 0» создаёт счёт новичку и не трогает накопленное
+scoreboard players add @a[tag=!player] vip_coins 0
 scoreboard players set @a[tag=!player] lvl 1
 scoreboard players set @a[tag=!player] efficiency 0
 scoreboard players set @a[tag=!player] fortune 0

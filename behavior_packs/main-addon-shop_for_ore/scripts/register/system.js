@@ -3,7 +3,7 @@
 
 import { tellText, run } from '../DataBase.js';
 import { world } from '@minecraft/server';
-import { LoginUI } from './login.js';
+import { LoginUI, loginLockSeconds } from './login.js';
 import { RegisterUI } from './register.js';
 import { hasPassword } from './password.js';
 import { migratePlayer } from '../system/migrate.js';
@@ -96,7 +96,7 @@ world.events.tick.subscribe(() => {
 		const firstSeen = !waitTicks.has(player.name);
 		const waited = (waitTicks.get(player.name) ?? 0) + 1;
 
-		// Эффекты блокировки управления: сразу и затем раз в секунду
+		// Эффекты блокировки управления: сразу и затем раз в EFFECT_REFRESH_TICKS тиков (10 с)
 		if (firstSeen || tickCounter % EFFECT_REFRESH_TICKS === 0) {
 			run(player, `effect @s slowness ${EFFECT_SECONDS} 255 true`);
 			run(player, `effect @s blindness ${EFFECT_SECONDS} 255 true`);
@@ -105,7 +105,8 @@ world.events.tick.subscribe(() => {
 		// Через 40 тиков показываем форму; если игрок не вошёл — покажем снова ещё через 40
 		if (waited >= FORM_DELAY_TICKS) {
 			waitTicks.set(player.name, 0);
-			if (!formOpen.has(player.name)) {
+			// После 5 неверных паролей подряд — минута паузы (register/login.js): форма входа не показывается
+			if (!formOpen.has(player.name) && !(canLogin(player) && loginLockSeconds(player) > 0)) {
 				// Форма выбирается по состоянию аккаунта, а не по тегу: даже если остались оба тега,
 				// показывается одна форма
 				openForm(player, canLogin(player) ? LoginUI : RegisterUI);

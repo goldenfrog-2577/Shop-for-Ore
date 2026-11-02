@@ -4,4 +4,4 @@ execute as @e[name="X4Boost",scores={system=0..0}] run tellraw @a {"rawtext":[{"
 scoreboard players reset * display
 scoreboard players set scoreboards.map display 0
 tag @a remove boost:x4
-execute positioned as @a run playsound minecraft.tnt.explode @a
+execute as @a at @s run playsound minecraft.tnt.explode @s

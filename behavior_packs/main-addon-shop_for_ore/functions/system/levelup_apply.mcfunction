@@ -97,7 +97,7 @@ execute if score @s lvl matches 23 run execute as @a at @s run playsound random.
 # 24 -> 25 (нужно 60000 опыта)
 execute if score @s lvl matches 24 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.25","with":{"rawtext":[{"selector":"@s"}]}}]}
 execute if score @s lvl matches 24 run title @s title 24 §7>>§a 25
-execute if score @s lvl matches 24 run execute as @a at @s run playsound minecraft.challenge.complete @s
+execute if score @s lvl matches 24 run execute as @a at @s run playsound random.levelup @s
 
 # 25 -> 26 (нужно 66000 опыта)
 execute if score @s lvl matches 25 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.26","with":{"rawtext":[{"selector":"@s"}]}}]}

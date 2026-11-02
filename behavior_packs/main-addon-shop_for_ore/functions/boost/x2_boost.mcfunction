@@ -15,7 +15,7 @@ execute as @s[tag=!boost:x2,tag=!boost:x4,scores={money=..9999}] run tellraw @s 
 # Покупка
 execute as @s[tag=!boost:x2,tag=!boost:x4,scores={money=10000..}] run tag @s add sys:buy_ok
 scoreboard players remove @s[tag=sys:buy_ok] money 10000
-execute as @s[tag=sys:buy_ok] positioned as @a run playsound note.bell @a
+execute as @s[tag=sys:buy_ok] as @a at @s run playsound note.bell @s
 execute as @s[tag=sys:buy_ok] run scoreboard players set scoreboards.x2boost display 0
 execute as @s[tag=sys:buy_ok] run tellraw @a {"rawtext":[{"translate":"chat.boost.x2","with":{"rawtext":[{"selector":"@s"}]}}]}
 execute as @s[tag=sys:buy_ok] run scoreboard players set @e[name="X2Boost"] system 300

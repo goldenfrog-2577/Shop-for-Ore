@@ -14,7 +14,7 @@ scoreboard players add @s[tag=sys:rebirth_now] rebirth 1
 
 # Если только что получен первый rebirth — сообщение всем и звук
 execute as @s[tag=sys:rebirth_now,scores={rebirth=1}] run tellraw @a {"rawtext":[{"translate":"chat.rebirth.first","with":{"rawtext":[{"selector":"@s"}]}}]}
-execute as @s[tag=sys:rebirth_now,scores={rebirth=1}] positioned as @a run playsound mob.enderdragon.death @a ~~~ 0.7
+execute as @s[tag=sys:rebirth_now,scores={rebirth=1}] as @a at @s run playsound mob.enderdragon.death @s ~~~ 0.7
 
 # Сообщение игроку о текущем уровне rebirth (2 и выше)
 execute as @s[tag=sys:rebirth_now] run tellraw @s {"rawtext":[{"translate":"chat.rebirth.level","with":{"rawtext":[{"score":{"name":"@s","objective":"rebirth"}}]}}]}

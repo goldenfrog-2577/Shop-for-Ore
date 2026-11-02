@@ -37,5 +37,5 @@ scoreboard players set @a[scores={lvl=35..35}] xp_need 147000
 scoreboard players set @a[scores={lvl=36..36}] xp_need 158000
 scoreboard players set @a[scores={lvl=37..37}] xp_need 170000
 scoreboard players set @a[scores={lvl=38..38}] xp_need 183000
-scoreboard players set @a[scores={lvl=39..39}] xp_need 197000
+scoreboard players set @a[scores={lvl=39..39}] xp_need 195000
 scoreboard players set @a[scores={lvl=40..}] xp_need 0

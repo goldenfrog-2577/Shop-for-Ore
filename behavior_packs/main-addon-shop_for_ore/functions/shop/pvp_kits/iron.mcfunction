@@ -1,17 +1,37 @@
-# Ошибка: недостаточно денег для покупки железного набора
-execute as @s[scores={money=0..14999}] run tellraw @s {"rawtext":[{"translate":"chat.error.no_money"}]}
+# --- PvP-набор «железный» за 15000 ---
+# Вызывается из меню (Магазин → PvP-наборы) от имени игрока (@s). Тег sys:buy_ok — покупка прошла.
+# Броня надевается только в пустой слот (replaceitem … keep): раньше replaceitem затирал надетое — и броню
+# с купленными зачарованиями, и головы из лавки торговца. Слот занят — предмет набора кладётся в инвентарь.
+# Слот проверяем по самому предмету набора: был в слоте до покупки (sys:kit_had) или не встал после неё —
+# значит, слот занят, и предмет выдаётся через give.
+execute as @s[scores={money=..14999}] run tellraw @s {"rawtext":[{"translate":"chat.error.no_money"}]}
+tag @s[scores={money=15000..}] add sys:buy_ok
+scoreboard players remove @s[tag=sys:buy_ok] money 15000
 
-# Выдача железной брони через replaceitem (заменяет текущую броню)
-execute as @s[scores={money=15000..}] run replaceitem entity @s slot.armor.head 0 iron_helmet
-execute as @s[scores={money=15000..}] run replaceitem entity @s slot.armor.chest 0 iron_chestplate
-execute as @s[scores={money=15000..}] run replaceitem entity @s slot.armor.legs 0 iron_leggings
-execute as @s[scores={money=15000..}] run replaceitem entity @s slot.armor.feet 0 iron_boots
+tag @s[tag=sys:buy_ok,hasitem={item=iron_helmet,location=slot.armor.head}] add sys:kit_had
+execute as @s[tag=sys:buy_ok] run replaceitem entity @s slot.armor.head 0 keep iron_helmet
+give @s[tag=sys:buy_ok,tag=sys:kit_had] iron_helmet
+give @s[tag=sys:buy_ok,tag=!sys:kit_had,hasitem={item=iron_helmet,location=slot.armor.head,quantity=0}] iron_helmet
+tag @s remove sys:kit_had
 
-# Выдача железного меча (оставляем give, так как это не броня)
-execute as @s[scores={money=15000..}] run give @s iron_sword
+tag @s[tag=sys:buy_ok,hasitem={item=iron_chestplate,location=slot.armor.chest}] add sys:kit_had
+execute as @s[tag=sys:buy_ok] run replaceitem entity @s slot.armor.chest 0 keep iron_chestplate
+give @s[tag=sys:buy_ok,tag=sys:kit_had] iron_chestplate
+give @s[tag=sys:buy_ok,tag=!sys:kit_had,hasitem={item=iron_chestplate,location=slot.armor.chest,quantity=0}] iron_chestplate
+tag @s remove sys:kit_had
 
-# Сообщение игроку о покупке набора
-execute as @s[scores={money=15000..}] run tellraw @s {"rawtext":[{"translate":"chat.shop.kit.iron"}]}
+tag @s[tag=sys:buy_ok,hasitem={item=iron_leggings,location=slot.armor.legs}] add sys:kit_had
+execute as @s[tag=sys:buy_ok] run replaceitem entity @s slot.armor.legs 0 keep iron_leggings
+give @s[tag=sys:buy_ok,tag=sys:kit_had] iron_leggings
+give @s[tag=sys:buy_ok,tag=!sys:kit_had,hasitem={item=iron_leggings,location=slot.armor.legs,quantity=0}] iron_leggings
+tag @s remove sys:kit_had
 
-# Списание денег за набор
-execute as @s[scores={money=15000..}] run scoreboard players remove @s money 15000
+tag @s[tag=sys:buy_ok,hasitem={item=iron_boots,location=slot.armor.feet}] add sys:kit_had
+execute as @s[tag=sys:buy_ok] run replaceitem entity @s slot.armor.feet 0 keep iron_boots
+give @s[tag=sys:buy_ok,tag=sys:kit_had] iron_boots
+give @s[tag=sys:buy_ok,tag=!sys:kit_had,hasitem={item=iron_boots,location=slot.armor.feet,quantity=0}] iron_boots
+tag @s remove sys:kit_had
+
+give @s[tag=sys:buy_ok] iron_sword
+execute as @s[tag=sys:buy_ok] run tellraw @s {"rawtext":[{"translate":"chat.shop.kit.iron"}]}
+tag @s remove sys:buy_ok

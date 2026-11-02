@@ -1,17 +1,37 @@
-# Ошибка: недостаточно денег для покупки незеритового набора
-execute as @s[scores={money=0..49999}] run tellraw @s {"rawtext":[{"translate":"chat.error.no_money"}]}
+# --- PvP-набор «незеритовый» за 50000 ---
+# Вызывается из меню (Магазин → PvP-наборы) от имени игрока (@s). Тег sys:buy_ok — покупка прошла.
+# Броня надевается только в пустой слот (replaceitem … keep): раньше replaceitem затирал надетое — и броню
+# с купленными зачарованиями, и головы из лавки торговца. Слот занят — предмет набора кладётся в инвентарь.
+# Слот проверяем по самому предмету набора: был в слоте до покупки (sys:kit_had) или не встал после неё —
+# значит, слот занят, и предмет выдаётся через give.
+execute as @s[scores={money=..49999}] run tellraw @s {"rawtext":[{"translate":"chat.error.no_money"}]}
+tag @s[scores={money=50000..}] add sys:buy_ok
+scoreboard players remove @s[tag=sys:buy_ok] money 50000
 
-# Выдача незеритовой брони через replaceitem (заменяет текущую броню)
-execute as @s[scores={money=50000..}] run replaceitem entity @s slot.armor.head 0 netherite_helmet
-execute as @s[scores={money=50000..}] run replaceitem entity @s slot.armor.chest 0 netherite_chestplate
-execute as @s[scores={money=50000..}] run replaceitem entity @s slot.armor.legs 0 netherite_leggings
-execute as @s[scores={money=50000..}] run replaceitem entity @s slot.armor.feet 0 netherite_boots
+tag @s[tag=sys:buy_ok,hasitem={item=netherite_helmet,location=slot.armor.head}] add sys:kit_had
+execute as @s[tag=sys:buy_ok] run replaceitem entity @s slot.armor.head 0 keep netherite_helmet
+give @s[tag=sys:buy_ok,tag=sys:kit_had] netherite_helmet
+give @s[tag=sys:buy_ok,tag=!sys:kit_had,hasitem={item=netherite_helmet,location=slot.armor.head,quantity=0}] netherite_helmet
+tag @s remove sys:kit_had
 
-# Выдача незеритового меча (оставляем give, так как это не броня)
-execute as @s[scores={money=50000..}] run give @s netherite_sword
+tag @s[tag=sys:buy_ok,hasitem={item=netherite_chestplate,location=slot.armor.chest}] add sys:kit_had
+execute as @s[tag=sys:buy_ok] run replaceitem entity @s slot.armor.chest 0 keep netherite_chestplate
+give @s[tag=sys:buy_ok,tag=sys:kit_had] netherite_chestplate
+give @s[tag=sys:buy_ok,tag=!sys:kit_had,hasitem={item=netherite_chestplate,location=slot.armor.chest,quantity=0}] netherite_chestplate
+tag @s remove sys:kit_had
 
-# Сообщение игроку о покупке набора
-execute as @s[scores={money=50000..}] run tellraw @s {"rawtext":[{"translate":"chat.shop.kit.netherite"}]}
+tag @s[tag=sys:buy_ok,hasitem={item=netherite_leggings,location=slot.armor.legs}] add sys:kit_had
+execute as @s[tag=sys:buy_ok] run replaceitem entity @s slot.armor.legs 0 keep netherite_leggings
+give @s[tag=sys:buy_ok,tag=sys:kit_had] netherite_leggings
+give @s[tag=sys:buy_ok,tag=!sys:kit_had,hasitem={item=netherite_leggings,location=slot.armor.legs,quantity=0}] netherite_leggings
+tag @s remove sys:kit_had
 
-# Списание денег за набор
-execute as @s[scores={money=50000..}] run scoreboard players remove @s money 50000
+tag @s[tag=sys:buy_ok,hasitem={item=netherite_boots,location=slot.armor.feet}] add sys:kit_had
+execute as @s[tag=sys:buy_ok] run replaceitem entity @s slot.armor.feet 0 keep netherite_boots
+give @s[tag=sys:buy_ok,tag=sys:kit_had] netherite_boots
+give @s[tag=sys:buy_ok,tag=!sys:kit_had,hasitem={item=netherite_boots,location=slot.armor.feet,quantity=0}] netherite_boots
+tag @s remove sys:kit_had
+
+give @s[tag=sys:buy_ok] netherite_sword
+execute as @s[tag=sys:buy_ok] run tellraw @s {"rawtext":[{"translate":"chat.shop.kit.netherite"}]}
+tag @s remove sys:buy_ok
