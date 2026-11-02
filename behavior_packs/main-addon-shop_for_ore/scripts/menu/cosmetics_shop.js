@@ -90,9 +90,9 @@ function buy(player, kind, id, cost, mark, nameKey) {
 	return true;
 }
 
-// Пометка «[Только для VIP]» (common.vip_only) — второй строкой у заголовка и разделов; у товаров её нет.
+// Пометка «[Только для VIP]» (menu.common.vip_only) — второй строкой у заголовка и разделов; у товаров её нет.
 // Не VIP — пометка есть, VIP — строки нет совсем (без пустого переноса)
-const VIP_ONLY = '%common.vip_only';
+const VIP_ONLY = '%menu.common.vip_only';
 const vipMark = (player, text) => isVip(player) ? text : `${text}\n${VIP_ONLY}`;
 
 // --- Главное окно ---

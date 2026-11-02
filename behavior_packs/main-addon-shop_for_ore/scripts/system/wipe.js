@@ -2,7 +2,7 @@
 // Счета сбрасывает functions/system/wipe (scoreboard players reset * — у всех, и у тех, кто не в сети).
 // Теги командой у игроков не в сети не снять, поэтому у вайпа есть номер (свойство мира shop:wipe_id):
 // игрок с отметкой sys:wipe:<номер> уже сброшен, остальных сбросит при входе.
-// Сбрасывается: прогресс (уровень, опыт, монеты, VIP-коины, ребитхи, зачарования, промокоды, бусты),
+// Сбрасывается: прогресс (уровень, опыт, монеты, VIP-коины, ребитхи, зачарования, промокоды — теги promo:, бусты),
 // достижения и их счётчики, косметика (купленное и выбранное, цвета в чате), запись в мини-игры.
 // Остаются: роль, пароль, баны, наказания, настройки игрока (панель, частицы, звуки, музыка).
 
@@ -15,7 +15,7 @@ const WIPE_TAG = 'sys:wipe:';
 export const WIPE_OBJECTIVES = ['money', 'vip_coins', 'lvl', 'xp', 'rebirth', 'online', 'efficiency', 'fortune', 'promo1', 'promo2', 'promo3', 'promo4',
 	'xp_need', 'magnet', 'pick', 'stat_mined', 'stat_kills', 'stat_playtime', 'stat_wins', 'stat_deaths', 'stat_win_pvp_ffa', 'stat_win_spleef'];
 // Теги: точное имя или префикс (с «:» на конце)
-const WIPE_TAGS = ['player', 'player:rebirth', 'player:vip', 'sys:vip_migrated', 'boost:', 'ach:', 'stat:', 'cosmetic:', 'fx:', 'chat:name_color:', 'chat:text_color:', 'game:', WIPE_TAG];
+const WIPE_TAGS = ['player', 'player:rebirth', 'player:vip', 'sys:vip_migrated', 'boost:', 'ach:', 'stat:', 'cosmetic:', 'fx:', 'chat:name_color:', 'chat:text_color:', 'game:', 'promo:', WIPE_TAG];
 
 world.events.worldInitialize.subscribe((e) => {
 	const def = new DynamicPropertiesDefinition();

@@ -82,10 +82,10 @@ progressScreen.message.locating=Перш ніж ставити багато пи
 progressScreen.message.resourceLoading=Telegram хоста: @goldenfrog_2577
 
 ## --- СПІЛЬНЕ: РОЛІ, КОЛЬОРИ, СТРОКИ, ПОМИЛКИ ---
-##   common.*, menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
+##   menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
 menu.common.tap_to_open=§8[§7Натисніть, щоб відкрити§8]
 menu.common.back=§8 Назад
-common.vip_only=§8[§cТільки для VIP§8]
+menu.common.vip_only=§8[§cТільки для VIP§8]
 menu.common.yes=§2Так
 menu.common.no=§4Ні
 chat.server.wiped=§r §cСервер §8» §7Статистику всіх гравців скинуто. Хто не в мережі — буде скинутий при вході
@@ -588,14 +588,13 @@ menu.rules.line.11=§r§l11.§r§7 Не сперечатися з рішення
 ##   menu.promo.*, chat.promo.*
 menu.promo.title=§l§8Меню сервера »  Промокоди
 menu.promo.body=§7Промокоди можна знайти будь-де. Вони позначені на табличках §2таким§7 кольором.
-menu.promo.hint=§7Якщо ти знайшов такий, введи його у поле нижче, дотримуючись регістру, інакше промокод не спрацює.
+menu.promo.hint=§7Якщо ти знайшов такий, введи його в поле нижче — великі й малі літери можна не розрізняти.
 menu.promo.placeholder=§7Введи промокод...
-chat.promo.reward.1=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e500 
-chat.promo.reward.2=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e500 
-chat.promo.reward.3=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e25k 
-chat.promo.reward.4=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) §e100 
 chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7Ти вже активував(ла) цей §eпромокод
 chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Невірний промокод
+chat.promo.reward=§r §aПромокод §8» §f%1$s§r§7 активував(ла) промокод і отримав(ла) %2$s
+chat.promo.error.vip=§r⩕ §l§cERROR!§r §8» §7Цей промокод — лише для §eVIP
+chat.promo.error.level=§r⩕ §l§cERROR!§r §8» §7Цей промокод діє з §e%1$s§7 рівня
 
 ## --- ТЕЛЕПОРТАЦІЇ ---
 ##   menu.warps.*, warp.*, chat.cmd.warp.*, chat.cmd.tp.*, chat.cmd.tphere.*
@@ -693,6 +692,8 @@ ach.item.golden_apple=Золоте яблуко
 ach.item.enchanted_golden_apple=Зачароване золоте яблуко
 ach.item.netherite_ingot=Незеритовий злиток
 ach.item.totem_of_undying=Тотем безсмертя
+ach.item.bow=Лук
+ach.item.arrow=Стріли
 chat.ach.task=§r §2 Досягнення §8» §7§f%1$s§r§7 отримав(ла) досягнення %2$s
 chat.ach.challenge=§r §5 Випробування §8» §7§f%1$s§r§7 виконав(ла) випробування %2$s
 chat.cmd.achievement.use=§r §7CMD §8» §7Використання: §e!achievement§7 <гравець> <list/grant/revoke> [id]

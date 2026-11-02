@@ -82,10 +82,10 @@ progressScreen.message.locating=Before asking too many questions, read the signs
 progressScreen.message.resourceLoading=Host Telegram: @goldenfrog_2577
 
 ## --- COMMON: ROLES, COLORS, TERMS, ERRORS ---
-##   common.*, menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
+##   menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
 menu.common.tap_to_open=§8[§7Press to open§8]
 menu.common.back=§8 Back
-common.vip_only=§8[§cVIP only§8]
+menu.common.vip_only=§8[§cVIP only§8]
 menu.common.yes=§2Yes
 menu.common.no=§4No
 chat.server.wiped=§r §cServer §8» §7All players' stats have been reset. Offline players will be reset when they join
@@ -588,14 +588,13 @@ menu.rules.line.11=§r§l11.§r§7 No arguing with staff decisions in chat — s
 ##   menu.promo.*, chat.promo.*
 menu.promo.title=§l§8Server Menu »  Promo Codes
 menu.promo.body=§7Promo codes can be found anywhere. They're marked on signs in §2this§7 color.
-menu.promo.hint=§7If you find one, enter it below, case-sensitive, or it won't work.
+menu.promo.hint=§7If you find one, enter it below — upper or lower case doesn't matter.
 menu.promo.placeholder=§7Enter promo code...
-chat.promo.reward.1=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e500 
-chat.promo.reward.2=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e500 
-chat.promo.reward.3=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e25k 
-chat.promo.reward.4=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got §e100 
 chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7You have already activated this §epromo code
 chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Invalid promo code
+chat.promo.reward=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got %2$s
+chat.promo.error.vip=§r⩕ §l§cERROR!§r §8» §7This promo code is for §eVIP§7 only
+chat.promo.error.level=§r⩕ §l§cERROR!§r §8» §7This promo code works from level §e%1$s
 
 ## --- TELEPORTS ---
 ##   menu.warps.*, warp.*, chat.cmd.warp.*, chat.cmd.tp.*, chat.cmd.tphere.*
@@ -693,6 +692,8 @@ ach.item.golden_apple=Golden Apple
 ach.item.enchanted_golden_apple=Enchanted Golden Apple
 ach.item.netherite_ingot=Netherite Ingot
 ach.item.totem_of_undying=Totem of Undying
+ach.item.bow=Bow
+ach.item.arrow=Arrows
 chat.ach.task=§r §2 Achievements §8» §7§f%1$s§r§7 has made the advancement %2$s
 chat.ach.challenge=§r §5 Challenges §8» §7§f%1$s§r§7 has completed the challenge %2$s
 chat.cmd.achievement.use=§r §7CMD §8» §7Usage: §e!achievement§7 <player> <list/grant/revoke> [id]

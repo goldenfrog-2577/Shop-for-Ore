@@ -2,10 +2,11 @@
 // Теги хранятся у каждого игрока в данных мира, поэтому старые меняются на новые, когда игрок в сети
 // (проверка раз в секунду). Табло qx и tpore переименовывает functions/system/setup (setup system = 2).
 // Когда у всех игроков мира теги уже новые, файл можно удалить.
-// Здесь же — перенос VIP с уровня 26 на тег (migrateVip, ниже).
+// Здесь же — перенос VIP с уровня 26 на тег (migrateVip, ниже) и промокодов из табло в теги (system/promo.js).
 
 import { world, system } from '@minecraft/server';
 import { getScore, run, tell, VIP_TAG } from '../DataBase.js';
+import { migrateLegacyPromos } from './promo.js';
 
 // Старый тег → новый
 const PLAIN = {
@@ -77,5 +78,7 @@ system.runSchedule(() => {
 	for (const player of world.getPlayers()) {
 		migratePlayer(player);
 		migrateVip(player);
+		// Промокоды: табло promo1…promo4 → теги promo:<код> (system/promo.js)
+		migrateLegacyPromos(player);
 	}
 }, 20);
