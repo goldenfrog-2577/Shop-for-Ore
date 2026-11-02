@@ -186,19 +186,40 @@ export function transferMoney(player, targetName, rawAmount) {
 	return true;
 };
 
-// --- Наказания: мут, предупреждения, заморозка (хранятся тегами — переживают перезаход) ---
-// state:mute:<время окончания в мс>, state:warn:<1|2>, state:frozen
+// --- Наказания: мут, предупреждения, заморозка, тюрьма (хранятся тегами — переживают перезаход) ---
+// state:mute:<время окончания в мс | permanent>, state:warn:<1|2>, state:frozen, state:jail:<… | permanent> (system/jail.js)
+
+// Самый длинный срок числом — 30 дней (мут, тюрьма, бан); дольше — permanent
+export const MAX_TERM_MINUTES = 30 * 24 * 60;
+/**
+ * Срок наказания из аргумента команды: «30» или «30m» — минуты, «2h» — часы, «1d» — дни; «permanent» — навсегда.
+ * @param {string} arg
+ * @returns {number|undefined} минуты, Infinity — навсегда, undefined — не срок
+ */
+export function parseTerm(arg) {
+	const a = String(arg ?? '').toLowerCase();
+	if (a === 'permanent' || a === 'perm') return Infinity;
+	const m = /^(\d+)([mhd]?)$/.exec(a);
+	if (!m) return undefined;
+	const minutes = Number(m[1]) * ({ '': 1, m: 1, h: 60, d: 1440 })[m[2]];
+	return minutes >= 1 && minutes <= MAX_TERM_MINUTES ? minutes : undefined;
+}
+/** Срок для сообщения: «90 мин» или «навсегда» — часть rawtext. */
+export const termText = (minutes) => minutes === Infinity ? { translate: 'chat.term.permanent' }
+	: { rawtext: [{ text: `${minutes} ` }, { translate: 'chat.term.minutes' }] };
 const MUTE_TAG = 'state:mute:';
 const WARN_TAG = 'state:warn:';
 
 /**
- * Сколько ещё минут игрок в муте (0 — не в муте). Истёкший мут снимается.
+ * Сколько ещё минут игрок в муте (0 — не в муте, Infinity — навсегда). Истёкший мут снимается.
  * @param {Player} player
  * @returns {number}
  */
 export function muteMinutesLeft(player) {
 	const tag = player.getTags().find(t => t.startsWith(MUTE_TAG));
 	if (!tag) return 0;
+	// Мут навсегда — до !unmute
+	if (tag === MUTE_TAG + 'permanent') return Infinity;
 	const left = Number(tag.slice(MUTE_TAG.length)) - Date.now();
 	if (!(left > 0)) {
 		// Мут истёк сам — тег снимается здесь (проверка в чате и раз в секунду в chat/chat.js) и игроку пишем
@@ -221,7 +242,7 @@ export function getWarns(player) {
 };
 
 // --- Роли: уровни доступа к командам и меню ---
-// Владелец — хост мира (тег role:owner, до 0.3.0 — host), он один. Хелпера (только наблюдение: !tp, !invis,
+// Владелец — хост мира (тег role:owner, до 0.3.0 — host), он один. Хелпера (наблюдение и тюрьма: !tp, !invis, !jail,
 // !gm6, !cps, !ac, жалобы, предупреждения CPS и сигналы античита), модератора и администратора назначает
 // владелец командой !role, роль хранится тегом role:<id>. Префикс в чате (тег rank:,
 // команда !prefix) — отдельное украшение и прав не даёт.
@@ -516,6 +537,16 @@ export const commandsList = [
 		role: 'helper'
 	},
 	{
+		command: '!jail §7<§fplayer§7> <§ftime§8/§fpermanent§7> [§freason§7]',
+		description: '%chat.help.jail',
+		role: 'helper'
+	},
+	{
+		command: '!unjail §7<§fplayer§7>',
+		description: '%chat.help.unjail',
+		role: 'helper'
+	},
+	{
 		command: '!tp §7<§fplayer§8/§fx y z§7>',
 		description: '%chat.help.tp',
 		role: 'helper'
@@ -538,7 +569,7 @@ export const commandsList = [
 		role: 'moder'
 	},
 	{
-		command: '!mute §7<§fplayer§7> <§fminutes§7> [§freason§7]',
+		command: '!mute §7<§fplayer§7> <§ftime§8/§fpermanent§7> [§freason§7]',
 		description: '%chat.help.mute',
 		role: 'moder'
 	},
@@ -614,7 +645,7 @@ export const commandsList = [
 		role: 'admin'
 	},
 	{
-		command: '!ban §7<§fplayer§7> [§freason§7]',
+		command: '!ban §7<§fplayer§7> [§ftime§8/§fpermanent§7] [§freason§7]',
 		description: '%chat.help.ban',
 		role: 'admin'
 	},

@@ -2,14 +2,14 @@
 // Список команд и роли — commandsList в DataBase.js; runChatCommand вызывают и чат, и меню администратора.
 
 import { world } from '@minecraft/server';
-import { CHAT_COLORS, setChatColor, colorAllowed, impersonatedRole, commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS, setIssuer, clearIssuer, canLift, tell } from '../DataBase.js';
+import { CHAT_COLORS, setChatColor, colorAllowed, impersonatedRole, commandsList, emotes, emotesList, rawTranslate, rawTranslateRich, isPending, run, findPlayer, tellText, getRole, hasRole, ROLES, getScore, transferMoney, muteMinutesLeft, getWarns, WARPS, setIssuer, clearIssuer, canLift, tell, parseTerm, termText } from '../DataBase.js';
 import { getBot, getBotName, spawnBot } from '../system/spawnbot.js';
 import { teleportToArena, combatSecondsLeft } from '../system/pvp.js';
 import { startMythic } from '../system/mythic.js';
 import { ChangePasswordUI, resetPassword } from '../register/change.js';
 import { freezePlayer, unfreezePlayer } from '../system/freeze.js';
 import { botMenu } from '../menu/admin_menu.js';
-import { addBan, removeBan, getBans, findBan, kickBanned } from '../system/ban.js';
+import { addBan, removeBan, getBans, findBan, kickBanned, banActive, banMinutesLeft } from '../system/ban.js';
 import { ACHIEVEMENTS, findAchievement, unlock, revoke, has as hasAchievement } from '../system/achievements.js';
 import { listGames, getGame, joinGame, leaveGame, startGame, endGame, canTeleport } from '../system/minigames.js';
 import { cpsOf, cpsLimit } from '../system/cps.js';
@@ -17,6 +17,7 @@ import { CHECKS, violationsOf, flaggedPlayers, acMode, modeName, MODE, clearViol
 import { wipeAll, wipeCounts } from '../system/wipe.js';
 import { resetOffline, offlineCounts } from '../system/offline_reset.js';
 import { markAdminBoost, stopAdminBoosts, MAGNET_ADMIN_TAG } from '../system/boosts.js';
+import { jail, release, isJailed, tellJailed } from '../system/jail.js';
 
 // --- Общие помощники команд ---
 
@@ -212,6 +213,13 @@ function canPunish(player, target) {
 	return true;
 }
 
+/** Сообщение «ты в муте» с оставшимся сроком (или «навсегда»). */
+function tellMuted(player) {
+	const left = muteMinutesLeft(player);
+	if (left === Infinity) tell(player, 'chat.cmd.mute.active.permanent');
+	else tell(player, 'chat.cmd.mute.active', String(left));
+}
+
 /** Координата для !tp: число (можно с дробью и минусом) или относительная ~ / ~-3.5. */
 export const isCoord = (a) => /^(~?-?\d+(\.\d+)?|~)$/.test(a);
 
@@ -331,9 +339,13 @@ export function runChatCommand(player, command, args) {
 				tell(player, 'chat.cmd.error.not_found', args[0], '!warp');
 				break;
 			}
-			// Замороженный не может уйти сам
+			// Замороженный и посаженный в тюрьму не могут уйти сами
 			if (!args[1] && player.hasTag('state:frozen')) {
 				tell(player, 'chat.cmd.freeze.active');
+				break;
+			}
+			if (!args[1] && isJailed(player)) {
+				tellJailed(player);
 				break;
 			}
 			// Режим боя на PvP-арене: сам уйти нельзя, пока не пройдут 15 секунд после удара
@@ -365,7 +377,7 @@ export function runChatCommand(player, command, args) {
 		case 'msg': {
 			// Личное сообщение другому игроку с поддержкой эмодзи (в муте — нельзя)
 			if (muteMinutesLeft(player) > 0) {
-				tell(player, 'chat.cmd.mute.active', muteMinutesLeft(player));
+				tellMuted(player);
 				break;
 			}
 			if (args[0] && args.length > 1) {
@@ -380,7 +392,7 @@ export function runChatCommand(player, command, args) {
 			// Ответ тому, с кем последним переписывался в ЛС
 			const partner = lastPrivate.get(player.name);
 			if (muteMinutesLeft(player) > 0) {
-				tell(player, 'chat.cmd.mute.active', muteMinutesLeft(player));
+				tellMuted(player);
 			} else if (!args.length) {
 				tell(player, 'chat.cmd.reply.use');
 			} else if (!partner) {
@@ -925,10 +937,11 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case 'mute': {
-			// Мут на 1–1440 минут: нельзя писать в общий чат и ЛС. Хранится тегом mute:<окончание>
+			// Мут: срок (30, 30m, 2h, 1d — до 30 дней) или permanent — до !unmute. Нельзя писать в общий чат и ЛС.
+			// Хранится тегом state:mute:<окончание | permanent>
 			const target = args[0] ? findPlayer(args[0]) : undefined;
-			const minutes = Number(args[1]);
-			if (!args[0] || !/^\d+$/.test(args[1] || '') || minutes < 1 || minutes > 1440) {
+			const minutes = parseTerm(args[1]);
+			if (!args[0] || minutes === undefined) {
 				tell(player, 'chat.cmd.mute.use');
 				break;
 			}
@@ -940,10 +953,58 @@ export function runChatCommand(player, command, args) {
 			// Перебить мут, выданный старшим, нельзя (canPunish это не проверяет: роль цели может быть ниже обоих)
 			if (muteMinutesLeft(target) > 0 && !canLift(player, target, 'mute')) break;
 			target.getTags().filter(t => t.startsWith('state:mute:')).forEach(t => target.removeTag(t));
-			target.addTag(`state:mute:${Date.now() + minutes * 60000}`);
+			target.addTag(`state:mute:${minutes === Infinity ? 'permanent' : Date.now() + minutes * 60000}`);
 			setIssuer(target, 'mute', getRole(player));
 			const reason = args.slice(2).join(' ');
-			run(player, `tellraw @a ${rawTranslateRich('chat.cmd.mute', target.name, String(minutes), reason ? { text: reason } : { translate: 'chat.cmd.kick.no_reason' })}`);
+			run(player, `tellraw @a ${rawTranslateRich('chat.cmd.mute', target.name, termText(minutes), reason ? { text: reason } : { translate: 'chat.cmd.kick.no_reason' })}`);
+			break;
+		}
+
+		case 'jail': {
+			// Тюрьма (system/jail.js): срок (30, 30m, 2h, 1d — до 30 дней) или permanent — до !unjail. Хелпер и выше
+			const target = args[0] ? findPlayer(args[0]) : undefined;
+			const minutes = parseTerm(args[1]);
+			if (!args[0] || minutes === undefined) {
+				tell(player, 'chat.cmd.jail.use');
+				break;
+			}
+			if (!target) {
+				tell(player, 'chat.cmd.error.offline', args[0]);
+				break;
+			}
+			if (!canPunish(player, target)) break;
+			if (target.hasTag('role:bot')) {
+				tell(player, 'chat.cmd.error.self');
+				break;
+			}
+			// Перебить срок, назначенный старшей ролью, нельзя
+			if (isJailed(target) && !canLift(player, target, 'jail')) break;
+			// Из мини-игры — сначала выйти (иначе игра ждала бы его до конца)
+			leaveGame(target, 'jail');
+			jail(target, minutes);
+			setIssuer(target, 'jail', getRole(player));
+			const reason = args.slice(2).join(' ');
+			run(player, `tellraw @a ${rawTranslateRich('chat.cmd.jail', target.name, termText(minutes), reason ? { text: reason } : { translate: 'chat.cmd.kick.no_reason' })}`);
+			break;
+		}
+
+		case 'unjail': {
+			const target = args[0] ? findPlayer(args[0]) : undefined;
+			if (!args[0]) {
+				tell(player, 'chat.cmd.unjail.use');
+				break;
+			}
+			if (!target) {
+				tell(player, 'chat.cmd.error.offline', args[0]);
+				break;
+			}
+			if (!isJailed(target)) {
+				tell(player, 'chat.cmd.unjail.error.not_jailed', target.name);
+				break;
+			}
+			if (!canLift(player, target, 'jail')) break;
+			release(target, 'chat.jail.released.early');
+			run(player, `tellraw @a ${rawTranslate('chat.cmd.unjail', target.name, player.name)}`);
 			break;
 		}
 
@@ -1220,6 +1281,11 @@ export function runChatCommand(player, command, args) {
 				tell(player, 'chat.cmd.tp.use');
 				break;
 			}
+			// Хелпера, посаженного старшим, телепорт из тюрьмы не выпускает
+			if (isJailed(player)) {
+				tellJailed(player);
+				break;
+			}
 			if (args.length === 3 && args.every(isCoord)) {
 				if (!canTeleport(player)) break;
 				run(player, `tp @s ${args.join(' ')}`);
@@ -1329,12 +1395,15 @@ export function runChatCommand(player, command, args) {
 		}
 
 		case 'ban': {
-			// Бан: по номеру игрока в мире и нику (system/ban.js). Игрока в сети — сразу выгоняет
+			// Бан: по номеру игрока в мире и нику (system/ban.js). Игрока в сети — сразу выгоняет.
+			// !ban <ник> [срок|permanent] [причина]: без срока — навсегда, как раньше
 			if (!args[0]) {
 				tell(player, 'chat.cmd.ban.use');
 				break;
 			}
-			const reason = args.slice(1).join(' ');
+			const term = parseTerm(args[1]);
+			const banMinutes = term ?? Infinity;
+			const reason = args.slice(term === undefined ? 1 : 2).join(' ');
 			const target = findPlayer(args[0]);
 			if (target) {
 				if (!canPunish(player, target)) break;
@@ -1342,19 +1411,19 @@ export function runChatCommand(player, command, args) {
 					tell(player, 'chat.cmd.error.self');
 					break;
 				}
-				if (!addBan({ id: target.id, name: target.name }, player.name, reason)) {
+				if (!addBan({ id: target.id, name: target.name }, player.name, reason, banMinutes)) {
 					tell(player, 'chat.cmd.ban.error.full');
 					break;
 				}
-				run(player, `tellraw @a ${rawTranslateRich('chat.cmd.ban.done', target.name, reason ? { text: reason } : { translate: 'chat.cmd.kick.no_reason' })}`);
+				run(player, `tellraw @a ${rawTranslateRich('chat.cmd.ban.done', target.name, termText(banMinutes), reason ? { text: reason } : { translate: 'chat.cmd.kick.no_reason' })}`);
 				kickBanned(target, findBan(target));
 			} else {
 				// Не в сети — бан только по нику; номер игрока запомнится, когда он зайдёт под этим ником
-				if (!addBan({ name: args[0] }, player.name, reason)) {
+				if (!addBan({ name: args[0] }, player.name, reason, banMinutes)) {
 					tell(player, 'chat.cmd.ban.error.full');
 					break;
 				}
-				tell(player, 'chat.cmd.ban.offline', args[0]);
+				tell(player, 'chat.cmd.ban.offline', args[0], termText(banMinutes));
 			}
 			break;
 		}
@@ -1377,7 +1446,9 @@ export function runChatCommand(player, command, args) {
 			const bans = getBans();
 			const rawtext = [{ translate: 'chat.cmd.banlist.header' }];
 			if (!bans.length) rawtext.push({ text: '\n' }, { translate: 'chat.cmd.banlist.empty' });
-			bans.forEach((b, i) => rawtext.push({ text: `\n§e${i + 1}. §f${b.names.join('§7, §f')} §8— §7${b.by}${b.reason ? ' §8— §7' + b.reason : ''}${b.id ? '' : ' §8(ник)'}` }));
+			bans.filter(b => banActive(b)).forEach((b, i) => {
+				rawtext.push({ text: `\n§e${i + 1}. §f${b.names.join('§7, §f')} §8— §7${b.by}${b.reason ? ' §8— §7' + b.reason : ''}${b.id ? '' : ' §8(ник)'} §8— §c` }, termText(banMinutesLeft(b)));
+			});
 			rawtext.push({ text: '\n§8------------------------' });
 			run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
 			break;

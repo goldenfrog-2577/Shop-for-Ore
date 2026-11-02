@@ -3,6 +3,7 @@
 // Прокачка, Достижения, Мини-игры. Формы строит menu/forms.js: крестик — на уровень вверх.
 
 import { world } from '@minecraft/server';
+import { isJailed, tellJailed } from '../system/jail.js';
 import { isPending, rawTranslate, tellText, tell, run, WARPS } from '../DataBase.js';
 import { showMenu, showModal, modal, backButton, toggleMenu } from './forms.js';
 import { bank } from './bank_menu.js';
@@ -36,6 +37,12 @@ world.events.beforeItemUse.subscribe((data) => {
 	if (player.hasTag('state:frozen')) {
 		data.cancel = true;
 		tell(player, 'chat.cmd.freeze.active');
+		return;
+	}
+	// В тюрьме (!jail) — тоже: меню телепортаций вывело бы из камеры
+	if (isJailed(player)) {
+		data.cancel = true;
+		tellJailed(player);
 		return;
 	}
 	menu(player);
