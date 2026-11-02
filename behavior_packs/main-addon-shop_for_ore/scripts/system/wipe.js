@@ -1,5 +1,5 @@
 // --- Вайп (!wipe confirm, меню администратора → «Вайп»): сброс прогресса всех игроков ---
-// Счета сбрасывает functions/system/wipe (scoreboard players reset * — у всех, и у тех, кто не в сети).
+// Счета сбрасываются у всех сразу, и у тех, кто не в сети: scoreboard players reset * <табло>.
 // Теги командой у игроков не в сети не снять, поэтому у вайпа есть номер (свойство мира shop:wipe_id):
 // игрок с отметкой sys:wipe:<номер> уже сброшен, остальных сбросит при входе.
 // Сбрасывается: прогресс (уровень, опыт, монеты, VIP-коины, ребитхи, зачарования, промокоды — теги promo:, бусты),
@@ -8,12 +8,13 @@
 
 import { world, DynamicPropertiesDefinition } from '@minecraft/server';
 import { run, tell } from '../DataBase.js';
+import { STATS } from './achievements.js';
 
 const WIPE_ID = 'shop:wipe_id';
 const WIPE_TAG = 'sys:wipe:';
-// Табло прогресса — те же, что сбрасывает functions/system/wipe
-export const WIPE_OBJECTIVES = ['money', 'vip_coins', 'lvl', 'xp', 'rebirth', 'online', 'efficiency', 'fortune', 'promo1', 'promo2', 'promo3', 'promo4',
-	'xp_need', 'magnet', 'pick', 'stat_mined', 'stat_kills', 'stat_playtime', 'stat_wins', 'stat_deaths', 'stat_win_pvp_ffa', 'stat_win_spleef', 'stat_amethyst', 'stat_tir_hits'];
+// Табло прогресса и счётчики достижений (STATS). promo1…4 — отметки промокодов до 0.3.0 (system/promo.js)
+export const WIPE_OBJECTIVES = ['money', 'vip_coins', 'lvl', 'xp', 'rebirth', 'online', 'efficiency', 'fortune', 'xp_need', 'magnet', 'pick',
+	'promo1', 'promo2', 'promo3', 'promo4', ...STATS];
 // Теги: точное имя или префикс (с «:» на конце)
 const WIPE_TAGS = ['player', 'player:rebirth', 'player:vip', 'sys:vip_migrated', 'boost:', 'ach:', 'stat:', 'cosmetic:', 'fx:', 'chat:name_color:', 'chat:text_color:', 'game:', 'promo:', WIPE_TAG];
 
@@ -47,7 +48,8 @@ export function wipeCounts() {
 export function wipeAll(by) {
 	const id = wipeId() + 1;
 	world.setDynamicProperty(WIPE_ID, id);
-	run(by, 'function system/wipe');
+	for (const objective of WIPE_OBJECTIVES) run(by, `scoreboard players reset * ${objective}`);
+	run(by, 'playsound random.levelup @s');
 	for (const player of world.getPlayers()) wipePlayer(player, id);
 	return id;
 }

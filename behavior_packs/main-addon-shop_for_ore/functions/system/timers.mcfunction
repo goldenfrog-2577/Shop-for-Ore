@@ -1,13 +1,11 @@
-# Планировщик: заменяет повторяющиеся командные блоки с задержкой (x=56 и x=58, z≈53..58).
-# Счётчики — «фейковые игроки» tN в табло timer; каждый тик +1, на N — запуск timers/ticks_N и сброс.
-# Табло создаются один раз (system/setup), а не каждый тик
+# Планировщик: каждый тик (tick.json). Счётчики — «фейковые игроки» tN в табло timer: каждый тик +1,
+# на N — запуск timers/ticks_N и сброс. Табло создаёт один раз system/setup.
 # В Bedrock «execute if/unless score» с несуществующим счётом не срабатывает ни в одном варианте,
 # поэтому счёт сначала создаётся через «add 0».
 scoreboard players add setup system 0
 execute if score setup system matches ..5 run function system/setup
 
 # Каждый тик: конец «золотого дождя»
-# было: командный блок (56, 4, 56)
 execute if entity @e[name="rainEvent",scores={system=0..0}] run function events/rain_end
 
 scoreboard players add t5 timer 1

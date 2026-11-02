@@ -36,9 +36,6 @@ export function migratedTag(tag) {
 		return /^[0-9a-g]$/.test(code) ? c[1] + code : '';
 	}
 	if (Object.prototype.hasOwnProperty.call(PLAIN, tag)) return PLAIN[tag];
-	// Префикс уровня без значка (rank:§rN — промежуточная сборка 0.3.0 с Пещерой): снять, ranks/rank_lvl_add
-	// раз в секунду выдаст правильный — «rank:§rN» + значок уровня
-	if (/^rank:§r\d+$/.test(tag)) return '';
 	const p = PREFIX.find(([from]) => tag.startsWith(from));
 	return p ? p[1] + tag.slice(p[0].length) : undefined;
 }

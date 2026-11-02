@@ -1,4 +1,5 @@
-# Стоимость следующего уровня. Вызывается из timers/ticks_20 и сразу после повышения (system/levelup_apply)
+# Стоимость следующего уровня (опыт): табло xp_need. Вызывается из timers/ticks_20 и сразу после повышения (system/levelup_apply).
+# Чтобы поменять цену уровня — только здесь: панель слева, !stats и повышение берут её из табло.
 scoreboard players set @a[scores={lvl=1..1}] xp_need 100
 scoreboard players set @a[scores={lvl=2..2}] xp_need 125
 scoreboard players set @a[scores={lvl=3..3}] xp_need 250

@@ -18,6 +18,7 @@ import { wipeAll, wipeCounts } from '../system/wipe.js';
 import { resetOffline, offlineCounts } from '../system/offline_reset.js';
 import { markAdminBoost, stopAdminBoosts, MAGNET_ADMIN_TAG } from '../system/boosts.js';
 import { jail, release, isJailed, tellJailed } from '../system/jail.js';
+import { LEVEL_RANK_RE } from '../system/ranks.js';
 
 // --- Общие помощники команд ---
 
@@ -687,8 +688,8 @@ export function runChatCommand(player, command, args) {
 					tell(player, 'chat.cmd.error.offline', prefixPlayer);
 					break;
 				}
-				// Служебные префиксы — уровень (rank:§rN со значком) и VIP (rank:§aVIP, ranks/rank_lvl_*) — не показываем и не снимаем
-				const prefixes = target.getTags().filter(t => t.startsWith('rank:') && !/^rank:(§r\d+\ue153?|§aVIP)$/.test(t));
+				// Служебные префиксы — уровень и VIP (system/ranks.js) — не показываем и не снимаем
+				const prefixes = target.getTags().filter(t => t.startsWith('rank:') && !LEVEL_RANK_RE.test(t));
 				if (prefixAction === 'list') {
 					tell(player, 'chat.cmd.prefix.list', target.name, prefixes.length ? prefixes.map(t => t.slice(5)).join('§r§7, ') : '—');
 				} else {

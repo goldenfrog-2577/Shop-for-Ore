@@ -126,15 +126,6 @@ export function findPlayer(name) {
 };
 
 /**
- * JSON для tellraw из готового текста: кавычки и обратные слэши экранируются.
- * @param {string} text
- * @returns {string}
- */
-export function rawText(text) {
-	return JSON.stringify({ rawtext: [{ text: String(text) }] });
-};
-
-/**
  * Форму закрыл сам игрок (крестик или «Назад» на телефоне), а не движок: при userBusy
  * (открыт чат или другое окно) форма тоже отменяется, но возвращать в меню нельзя — получится цикл.
  * @param {{ canceled?: boolean, cancelationReason?: string }} response
