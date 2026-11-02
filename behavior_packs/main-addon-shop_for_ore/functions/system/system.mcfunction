@@ -1,5 +1,7 @@
 # Телепортация игроков из определённых зон и условий
 execute as @a[x=0,y=1,z=-20,r=3,scores={lvl=1..15}] at @s run tp @s 0 5 0
+# Мост в третью локацию (уровни 26–40): ниже 26 уровня — обратно в адскую шахту
+execute as @a[x=0,y=1,z=-56,r=3,scores={lvl=1..25}] at @s run tp @s 0 5 -33
 # Зона командных блоков — владельцу, администраторам и ботам (бот: тег role:bot, scripts/system/spawnbot.js)
 execute as @a[x=50,y=0,z=50,r=25,tag=!role:owner,tag=!role:admin,tag=!role:bot] at @s run tp @s 0 5 0
 execute as @a[x=0,y=-60,z=0,r=55] at @s run tp @s 0 5 0

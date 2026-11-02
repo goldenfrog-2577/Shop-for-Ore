@@ -8,7 +8,7 @@
 // погаснет плашка (иначе старый игрок при первом входе получил бы десяток сразу).
 
 import { world, system } from '@minecraft/server';
-import { getScore, run, isPending, rawTranslateRich } from '../DataBase.js';
+import { getScore, run, isPending, rawTranslateRich, isVip } from '../DataBase.js';
 import { TRAILS } from '../menu/cosmetics_shop.js';
 import { showToast, TOAST_TICKS } from './toast.js';
 
@@ -33,7 +33,7 @@ export const ACHIEVEMENTS = [
 	{ id: 'lvl_10', type: 'task', ...score('lvl', 10), reward: { money: 5000, xp: 100 } },
 	{ id: 'lvl_15', type: 'task', ...score('lvl', 15), reward: { money: 15000, xp: 250 } },
 	{ id: 'lvl_20', type: 'task', ...score('lvl', 20), reward: { money: 40000, vip_coins: 10 } },
-	{ id: 'vip', type: 'task', ...score('lvl', 26), reward: { vip_coins: 50 } },
+	{ id: 'vip', type: 'task', done: (p) => isVip(p), reward: { vip_coins: 50 } },
 	{ id: 'rebirth_1', type: 'task', ...score('rebirth', 1), reward: { vip_coins: 25 } },
 	{ id: 'mined_1k', type: 'task', ...score('stat_mined', 1000), reward: { money: 2000 } },
 	{ id: 'mined_10k', type: 'task', ...score('stat_mined', 10000), reward: { money: 10000, xp: 500 } },

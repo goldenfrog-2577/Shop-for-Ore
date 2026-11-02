@@ -99,6 +99,67 @@ execute if score @s lvl matches 24 run tellraw @a {"rawtext":[{"translate":"chat
 execute if score @s lvl matches 24 run title @s title 24 §7>>§a 25
 execute if score @s lvl matches 24 run execute as @a at @s run playsound minecraft.challenge.complete @s
 
+# 25 -> 26 (нужно 66000 опыта)
+execute if score @s lvl matches 25 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.26","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 25 run title @s title 25 §7>>§a 26
+execute if score @s lvl matches 25 run execute as @a at @s run playsound minecraft.challenge.complete @s
+# 26 -> 27 (нужно 72000 опыта)
+execute if score @s lvl matches 26 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.27","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 26 run title @s title 26 §7>>§f 27
+execute if score @s lvl matches 26 run execute as @a at @s run playsound random.orb @s
+# 27 -> 28 (нужно 78000 опыта)
+execute if score @s lvl matches 27 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.28","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 27 run title @s title 27 §7>>§f 28
+execute if score @s lvl matches 27 run execute as @a at @s run playsound random.orb @s
+# 28 -> 29 (нужно 85000 опыта)
+execute if score @s lvl matches 28 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.29","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 28 run title @s title 28 §7>>§f 29
+execute if score @s lvl matches 28 run execute as @a at @s run playsound random.orb @s
+# 29 -> 30 (нужно 92000 опыта)
+execute if score @s lvl matches 29 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.30","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 29 run title @s title 29 §7>>§f 30
+execute if score @s lvl matches 29 run execute as @a at @s run playsound random.orb @s
+# 30 -> 31 (нужно 100000 опыта)
+execute if score @s lvl matches 30 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.31","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 30 run title @s title 30 §7>>§f 31
+execute if score @s lvl matches 30 run execute as @a at @s run playsound random.orb @s
+# 31 -> 32 (нужно 108000 опыта)
+execute if score @s lvl matches 31 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.32","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 31 run title @s title 31 §7>>§f 32
+execute if score @s lvl matches 31 run execute as @a at @s run playsound random.orb @s
+# 32 -> 33 (нужно 117000 опыта)
+execute if score @s lvl matches 32 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.33","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 32 run title @s title 32 §7>>§f 33
+execute if score @s lvl matches 32 run execute as @a at @s run playsound random.orb @s
+# 33 -> 34 (нужно 126000 опыта)
+execute if score @s lvl matches 33 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.34","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 33 run title @s title 33 §7>>§f 34
+execute if score @s lvl matches 33 run execute as @a at @s run playsound random.orb @s
+# 34 -> 35 (нужно 136000 опыта)
+execute if score @s lvl matches 34 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.35","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 34 run title @s title 34 §7>>§f 35
+execute if score @s lvl matches 34 run execute as @a at @s run playsound random.orb @s
+# 35 -> 36 (нужно 147000 опыта)
+execute if score @s lvl matches 35 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.36","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 35 run title @s title 35 §7>>§f 36
+execute if score @s lvl matches 35 run execute as @a at @s run playsound random.orb @s
+# 36 -> 37 (нужно 158000 опыта)
+execute if score @s lvl matches 36 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.37","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 36 run title @s title 36 §7>>§f 37
+execute if score @s lvl matches 36 run execute as @a at @s run playsound random.orb @s
+# 37 -> 38 (нужно 170000 опыта)
+execute if score @s lvl matches 37 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.38","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 37 run title @s title 37 §7>>§f 38
+execute if score @s lvl matches 37 run execute as @a at @s run playsound random.orb @s
+# 38 -> 39 (нужно 183000 опыта)
+execute if score @s lvl matches 38 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.39","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 38 run title @s title 38 §7>>§f 39
+execute if score @s lvl matches 38 run execute as @a at @s run playsound random.orb @s
+# 39 -> 40 (нужно 197000 опыта)
+execute if score @s lvl matches 39 run tellraw @a {"rawtext":[{"translate":"chat.lvlup.level.40","with":{"rawtext":[{"selector":"@s"}]}}]}
+execute if score @s lvl matches 39 run title @s title 39 §7>>§a 40
+execute if score @s lvl matches 39 run execute as @a at @s run playsound minecraft.challenge.complete @s
+
 # Списываем стоимость текущего уровня и повышаем
 scoreboard players operation @s xp -= @s xp_need
 scoreboard players add @s lvl 1
