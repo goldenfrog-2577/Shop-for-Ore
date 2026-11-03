@@ -54,3 +54,21 @@ for(let l=0;l<4;l++){
 	}
 }
 console.log('PASS: four language key order/parameters, UI key separators, assembled player cards (VIP/mute states), amount/glyph colors and bot presence/statuses.');
+
+// The role-error wording is grounded in the actual permission predicates.
+const roles=['player','helper','moder','admin','owner'];
+let sent;
+const guard={getRole:p=>p.role,hasRole:(p,r)=>roles.indexOf(p.role)>=roles.indexOf(r),tell:(...a)=>{sent=a;}};
+vm.runInNewContext(load('scripts/chat/commands/common.js')+'\nglobalThis.punish=canPunish;',guard);
+for(const a of roles)for(const b of roles){
+ const actor={name:'A',role:a},target={name:'B',role:b};
+ const allowed=guard.punish(actor,target);
+ assert.equal(allowed,a==='owner'||roles.indexOf(a)>roles.indexOf(b),'punishment role boundary');
+ if(!allowed)assert.equal(sent[1],'chat.cmd.error.role');
+ assert.equal(guard.punish(actor,actor),false,'self punishment');
+}
+const db=load('scripts/DataBase.js'),begin=db.indexOf('function canLift('),end=db.indexOf('\n}',begin)+2;
+const lift={hasRole:guard.hasRole,getIssuer:p=>p.issuer,run:(p,s)=>{sent=s;},rawTranslateRich:(k,p)=>{assert.equal(k,'chat.cmd.error.issuer');assert.ok(p.translate.startsWith('role.'));return '{}';}};
+vm.runInNewContext(db.slice(begin,end)+'\nglobalThis.lift=canLift;',lift);
+for(const a of roles)for(const issuer of [null,...roles])assert.equal(lift.lift({role:a},{issuer},'mute'),!issuer||roles.indexOf(a)>=roles.indexOf(issuer),'issuer role boundary');
+console.log('PASS: punishment rejects equal/higher roles; lifting accepts the issuer role and higher (owner exception preserved).');
