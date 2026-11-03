@@ -538,7 +538,7 @@ export const warpAllowed = (player, warp) => hasRole(player, warp.role) && (!war
 // ======== Список команд чата: имя, описание (ключ .lang), роль — !help, chat/commands.js ========
 
 // Список команд: описание для !help и минимальная роль (см. ROLES). Обработчик — метод в объекте своей роли
-// в chat/commands/: player.js, moderation.js (хелпер, модератор), admin.js, owner.js.
+// в chat/commands/: player.js, moderation.js (хелпер, модератор), admin.js; команды владельца — в chat/commands.js.
 // Порядок = порядок в !help: по ролям (игрок → владелец), внутри роли — по смыслу
 export const commandsList = [
 	// ===== Игрок: справка и общение =====
