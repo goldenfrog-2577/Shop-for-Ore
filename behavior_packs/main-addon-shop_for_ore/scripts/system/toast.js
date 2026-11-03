@@ -6,6 +6,7 @@
 // Вторая метка HUD_MARK — строка CPS на PvP-арене (system/cps.js), ниже плашки. Канал один, поэтому
 // пока видна плашка или заголовок по центру, строка CPS не отправляется (isBusy).
 
+import { world } from '@minecraft/server';
 import { run } from '../DataBase.js';
 
 // Невидимая метка: коды форматирования §s§f§o (Shop for Ore). Та же строка — в hud_screen.json
@@ -17,7 +18,8 @@ export const TOAST_TICKS = FADE_IN + STAY + FADE_OUT;
 export const HUD_MARK = '§s§f§c';
 
 // Ник → время (мс), до которого канал title занят плашкой или заголовком
-const busyUntil = new Map();
+const busyUntil = new Map(), hudLeases = new Map();
+world.events.playerLeave.subscribe(e => { busyUntil.delete(e.playerName); hudLeases.delete(e.playerName); });
 const markBusy = (player, ticks) => busyUntil.set(player.name, Date.now() + ticks * 50);
 /** Канал title сейчас занят (плашка или заголовок по центру). */
 export const isBusy = (player) => (busyUntil.get(player.name) ?? 0) > Date.now();
@@ -48,8 +50,11 @@ export function showTitle(player, rawtext, fadeIn = 0, stay = 20, fadeOut = 5) {
  * Если канал занят плашкой или заголовком — не отправляется.
  * @returns {boolean} отправлена
  */
-export function showHudLine(player, rawtext) {
+export function showHudLine(player, rawtext, { priority = 0, source = 'arena' } = {}) {
+	const lease = hudLeases.get(player.name), now = Date.now();
+	if (lease && lease.until > now && lease.priority > priority && lease.source !== source) return false;
 	if (isBusy(player)) return false;
+	hudLeases.set(player.name, { priority, source, until: now + 2000 });
 	run(player, 'title @s times 0 30 5');
 	run(player, `titleraw @s title ${JSON.stringify({ rawtext: [{ text: HUD_MARK }, ...rawtext] })}`);
 	return true;

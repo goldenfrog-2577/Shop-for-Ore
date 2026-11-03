@@ -1,6 +1,6 @@
 // --- Чат-логика и антиспам для Shop for Ore ---
 import { world, system } from '@minecraft/server';
-import { getScore, metricNumbers, emotes, isPending, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor, impersonatedRole, tell, run, isVip } from '../DataBase.js';
+import { getScore, metricNumbers, emotes, isPending, isBot, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor, impersonatedRole, tell, run, isVip } from '../DataBase.js';
 
 // --- Значения по умолчанию для тегов игрока ---
 const rank = 'rank:';
@@ -64,6 +64,7 @@ function getRanks(player) {
 }
 
 // --- Цвет ника и текста в чате: тег chat:name_color / chat:text_color (команда !color), иначе ник — цвет роли ---
+const botNameColor = player => ROLE_COLORS[['owner', 'admin', 'moder', 'helper'].find(role => player.hasTag('role:' + role))] ?? BOT_COLOR;
 const nameColorOf = (player) => getChatColor(player, 'name') ?? ROLE_COLORS[getRole(player)] ?? '§f';
 const textColorOf = (player) => getChatColor(player, 'text') ?? '§f';
 
@@ -139,9 +140,9 @@ export function sendChatMessage(sender, message) {
 	const time = `${now.getUTCHours()}:${now.getUTCMinutes().toString().padStart(2, '0')}`;
 	const formatMessage = replaceEmotes(message);
 	// Бот карты: только префикс «Бот» — роли и ранги (rank:) его не перебивают
-	if (sender.hasTag('role:bot')) {
+	if (isBot(sender)) {
 		const rawtext = [{ text: ` §7${time} §8[` }];
-		rawtext.push({ translate: 'role.tag.bot' }, { text: `§r§8]§r ${BOT_COLOR}${sender.name}  §f${formatMessage}` });
+		rawtext.push({ translate: 'role.tag.bot' }, { text: `§r§8] | [§r${Math.max(1, getScore(sender, 'lvl'))}§8]§r ${botNameColor(sender)}${sender.name}  §f${formatMessage}` });
 		run(world.getDimension('overworld'), `tellraw @a ${JSON.stringify({ rawtext })}`);
 		return;
 	}
@@ -161,8 +162,8 @@ world.events.tick.subscribe(() => {
 	if (++nameTagTick % NAMETAG_REFRESH_TICKS !== 0) return;
 	for (const player of world.getPlayers()) {
 		// Бот: над головой только ник в цвете бота (уровня и денег у него нет)
-		if (player.hasTag('role:bot')) {
-			if (player.nameTag !== BOT_COLOR + player.name) player.nameTag = BOT_COLOR + player.name;
+		if (isBot(player)) {
+			if (player.nameTag !== botNameColor(player) + player.name) player.nameTag = botNameColor(player) + player.name;
 			continue;
 		}
 		const role = getRole(player);
@@ -170,7 +171,7 @@ world.events.tick.subscribe(() => {
 		const need = getScore(player, 'xp_need');
 		const xp = `${metricNumbers(getScore(player, 'xp'))}${need > 0 ? `/${metricNumbers(need)}` : ''}`;
 		// Ник над головой: цвет из !color, иначе у игрока серый, у персонала — цвет роли. У VIP вместо монет — VIP-коины
-		const nameTag = `${getChatColor(player, 'name') ?? (role === 'player' ? '§7' : ROLE_COLORS[role])}${player.name}\n§f - ${metricNumbers(getScore(player,'lvl'))}\n§f - ${xp}\n${isVip(player) ? `§f - ${metricNumbers(getScore(player, 'vip_coins'))}` : `§f - ${metricNumbers(getScore(player, 'money'))}`}\n§f - ${metricNumbers(getScore(player,'rebirth'))}`;
+		const nameTag = `${getChatColor(player, 'name') ?? (role === 'player' ? '§7' : ROLE_COLORS[role])}${player.name}\n§f - ${isVip(player) ? 'VIP' : metricNumbers(getScore(player,'lvl'))}\n§f - ${isVip(player) ? '\ue128' : xp}\n${isVip(player) ? `§f - ${metricNumbers(getScore(player, 'vip_coins'))}` : `§f - ${metricNumbers(getScore(player, 'money'))}`}\n§f - ${metricNumbers(getScore(player,'rebirth'))}`;
 		if (player.nameTag !== nameTag) player.nameTag = nameTag;
 	}
 });

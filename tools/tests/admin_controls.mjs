@@ -3,7 +3,7 @@ const bp=new URL('../../behavior_packs/main-addon-shop_for_ore/',import.meta.url
 const load=p=>fs.readFileSync(new URL(p,bp),'utf8').replace(/^import .*;\r?\n/gm,'').replace(/\bexport (?=(?:async )?function|const)/g,'');
 const mk=(name,role='player',tags=[])=>{const p={name,role,tags:new Set(tags),scores:{money:100,vip_coins:50},getTags:()=>[...p.tags],hasTag:t=>p.tags.has(t),addTag:t=>p.tags.add(t),removeTag:t=>p.tags.delete(t)};return p;};
 const owner=mk('Owner','owner'),a=mk('Alice'),b=mk('Bob'),bot=mk('Bot','player',['role:bot']);let captured;
-const ctx={world:{events:{beforeItemUse:{subscribe(){}}},getPlayers:()=>[owner,bot,b,a].values()},getRole:p=>p.role,hasRole:(p,r)=>p.role==='owner'||r==='admin'&&p.role==='admin',
+const ctx={world:{events:{beforeItemUse:{subscribe(){}}},getPlayers:()=>[owner,bot,b,a].values()},isBot:p=>p.hasTag('role:bot')||p.hasTag('sys:bot'),getRole:p=>p.role,hasRole:(p,r)=>p.role==='owner'||r==='admin'&&p.role==='admin',
 	showMenu:(p,title,body,items)=>{captured={title,body,items};},showModal(){},modal(){},backButton:fn=>({text:'%admin.common.back',run:fn}),
 	getScore:(p,k)=>p.scores[k]??0,getWarns:()=>2,findPlayer:n=>[owner,a,b,bot].find(p=>p.name===n),isVip:p=>p.hasTag('player:vip'),VIP_TAG:'player:vip',
 	isJailed:()=>false,muteMinutesLeft:()=>15,playtimeText:()=> '1 h',tell(){},getBot:()=>bot};

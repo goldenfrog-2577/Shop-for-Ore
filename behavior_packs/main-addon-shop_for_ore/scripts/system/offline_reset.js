@@ -9,7 +9,7 @@
 
 import { world, DynamicPropertiesDefinition } from '@minecraft/server';
 import { syncResetEpoch, markResetEpoch } from './reset_history.js';
-import { run, tell } from '../DataBase.js';
+import { run, tell, isBot } from '../DataBase.js';
 
 const RESET_ID = 'shop:offline_reset_id';
 export const RESET_TAG = 'sys:offline_reset:';
@@ -82,6 +82,7 @@ export function resetOffline(by) {
  * @returns {boolean} теги сняты
  */
 export function applyOfflineReset(player) {
+	if (isBot(player)) return false;
 	syncResetEpoch(player);
 	const id = prop(RESET_ID);
 	if (id <= 0 || player.hasTag(RESET_TAG + id)) return false;

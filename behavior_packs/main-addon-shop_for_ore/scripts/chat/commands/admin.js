@@ -264,7 +264,7 @@ export const ADMIN_COMMANDS = {
 			const tags = target.getTags().filter(t => !/^(auth:(salt|hash):|password:)/.test(t));
 			tell(player, 'chat.cmd.tag.list', target.name, tags.length ? tags.join('§r§7, ') : '—');
 		} else if (tagTarget && ['add', 'remove'].includes(tagAction) && tagName) {
-			if (/^(role|auth):|^password:/.test(tagName)) {
+			if (/^(role|auth):|^password:/.test(tagName) || tagName === 'sys:bot') {
 				tell(player, 'chat.cmd.tag.error.protected');
 				return;
 			}

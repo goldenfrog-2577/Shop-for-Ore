@@ -1,7 +1,7 @@
 // --- Система регистрации и логина игроков ---
 // Добавляет нужные теги при входе и блокирует действия до прохождения логина/регистрации
 
-import { tellText, run } from '../DataBase.js';
+import { tellText, run, isBot } from '../DataBase.js';
 import { world } from '@minecraft/server';
 import { LoginUI, loginLockSeconds } from './login.js';
 import { RegisterUI } from './register.js';
@@ -41,6 +41,7 @@ function canLogin(player) {
 // с обоими сразу — старый код показывал им две формы одновременно
 world.events.playerJoin.subscribe((data) => {
 	const player = data.player;
+	if (isBot(player)) return;
 	// Не был в сети во время !resetoffline — все теги снимаются (до проверки пароля: регистрация заново)
 	applyOfflineReset(player);
 	// Старые названия тегов (до 0.3.0) — сразу на новые, иначе зарегистрированный игрок попал бы на регистрацию
@@ -84,6 +85,7 @@ let tickCounter = 0;
 world.events.tick.subscribe(() => {
 	tickCounter++;
 	for (const player of world.getPlayers()) {
+		if (isBot(player)) { waitTicks.delete(player.name); continue; }
 		const needLogin = player.hasTag('auth:login');
 		const needRegister = player.hasTag('auth:register');
 		if (!needLogin && !needRegister) {

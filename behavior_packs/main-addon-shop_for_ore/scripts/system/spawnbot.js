@@ -65,13 +65,13 @@ export function spawnBot(summoner, at) {
 export function removeBot() {
 	const bot = getBot();
 	if (!bot) return false;
+	for (const fn of removeListeners) fn(bot);
 	try {
 		state.test.removeSimulatedPlayer(bot);
 	} catch {
 		bot.kill();
 	}
 	state.bot = undefined;
-	for (const fn of removeListeners) fn();
 	return true;
 }
 
@@ -79,7 +79,12 @@ export function removeBot() {
 GT.register('server', 'spawnbot', (test) => {
 	const bot = test.spawnSimulatedPlayer(new BlockLocation(0, 2, 0), getBotName());
 	// По тегу бота узнают чат (префикс «Бот» вместо ролей и рангов) и роли (у бота роли нет)
+	bot.addTag('sys:bot');
 	bot.addTag('role:bot');
+	bot.addTag('auth:done');
+	bot.removeTag('auth:login'); bot.removeTag('auth:register');
+	run(bot, 'effect @s blindness 0');
+	run(bot, 'effect @s slowness 0');
 	state.bot = bot;
 	state.test = test;
 	// Бот появляется у тестовой площадки (далеко от карты) — переносим его к призвавшему

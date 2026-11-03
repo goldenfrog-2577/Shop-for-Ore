@@ -13,8 +13,8 @@
 // с прежним режимом и предметами из «Управления слотами».
 // Победы и смерти бота в статистику и достижения не идут (achievements.js, minigames.js).
 
-import { world, Location, BlockLocation, DynamicPropertiesDefinition } from '@minecraft/server';
-import { run, findPlayer, getScore, isPending } from '../DataBase.js';
+import { world, Location, BlockLocation, DynamicPropertiesDefinition, MinecraftEffectTypes } from '@minecraft/server';
+import { run, findPlayer, getScore, isPending, isBot } from '../DataBase.js';
 import { getBot, spawnBot, removeBot, onBotSpawned, onBotRemoved } from './spawnbot.js';
 import { freezePlayer, unfreezePlayer } from './freeze.js';
 import { showHudLine } from './toast.js';
@@ -28,10 +28,10 @@ const SPAR = {
 	1: { cooldown: 12, reach: 2.6, speed: 0.8 },
 	2: { cooldown: 8, reach: 3.0, speed: 1 },
 	3: { cooldown: 5, reach: 3.2, speed: 1 },
-	4: { cooldown: 3, reach: 3.6, speed: 1.2 }
+	4: { cooldown: 2, reach: 3.2, speed: 1.4 }
 };
 const STATE_PROP = 'shop:bot_state';
-const SEEK_RADIUS = 24;         // спарринг: дальше этого противника не ищет
+const SEEK_RADIUS = 64;         // спарринг: дальше этого противника не ищет
 const FOLLOW_NEAR = 2.5, FOLLOW_FAR = 3.5, FOLLOW_TP = 24;
 const DPS_WINDOW_MS = 5000;     // груша: DPS за последние 5 секунд
 const RESPAWN_TICKS = 60;       // погиб (груша не погибает) — через 3 с снова в мире на прежнем месте
@@ -70,12 +70,38 @@ const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
 const loc = (p) => new Location(p.x, p.y, p.z);
 const safe = (fn) => { try { return fn(); } catch { return undefined; } };
 
+// Перестраиваем путь раз в секунду. Телепорт — только между измерениями или после 10 с без движения.
+let motion;
+function walkTo(bot, goal, { target, speed = 1, near = 1.2, recover = true } = {}) {
+	if (tick % 10 !== 0) return;
+	if (target && target.dimension.id !== bot.dimension.id) {
+		if (recover) run(bot, `tp @s "${target.name}"`);
+		motion = undefined; return;
+	}
+	const d = dist(bot.location, goal);
+	if (d <= near) { safe(() => bot.stopMoving()); motion = undefined; return; }
+	if (!motion) motion = { last: { ...bot.location }, at: tick, pathAt: -100 };
+	if (dist(bot.location, motion.last) >= 0.35) { motion.last = { ...bot.location }; motion.at = tick; }
+	const stuck = tick - motion.at;
+	if (stuck >= 60 && stuck % 20 === 0) safe(() => bot.jump());
+	if (stuck >= 200 && recover && d > 6) {
+		if (target) run(bot, `tp @s "${target.name}"`); else run(bot, `tp @s ${goal.x} ${goal.y} ${goal.z}`);
+		motion = undefined; return;
+	}
+	if (tick - motion.pathAt >= 20 && Math.abs(safe(() => bot.velocity.y) ?? 0) < 0.03) {
+		speed = Math.min(1, Math.max(0, speed));
+		motion.pathAt = tick;
+		if (target) safe(() => bot.navigateToEntity(target, speed)); else safe(() => bot.navigateToLocation(loc(goal), speed));
+	}
+}
+
 // ===== Режимы =====
 
 /** Выйти из прежнего режима: разморозить, остановить, выйти из мини-игры. */
 function leaveMode(bot) {
 	if (state.mode === 'dummy') unfreezePlayer(bot);
-	if (state.mode === 'game' && gameOf(bot)) leaveGame(bot);
+	if (gameOf(bot)) leaveGame(bot, 'bot');
+	motion = undefined; guide = undefined;
 	safe(() => bot.stopMoving());
 	safe(() => bot.stopBreakingBlock());
 }
@@ -88,9 +114,10 @@ export function setBotMode(mode, opts = {}) {
 	const bot = getBot();
 	if (!bot) return 'chat.admin.bot.error.absent';
 	if (!MODES.includes(mode)) return 'chat.cmd.error.not_found';
+	if (mode === 'game' && gameOf(bot)?.def.id === opts.game) { state.mode = 'game'; state.game = opts.game; saveState(); return undefined; }
 	if (mode === 'game') {
 		const g = getGame(opts.game);
-		if (!g || g.phase === 'running' || g.players.size >= g.def.maxPlayers) return 'chat.admin.bot.error.game';
+		if (!g || (gameOf(bot) !== g && g.players.size >= g.def.maxPlayers)) return 'chat.admin.bot.error.game';
 	}
 	leaveMode(bot);
 	state.mode = mode;
@@ -148,7 +175,8 @@ onBotSpawned((bot) => {
 	if (mode === 'stay' && state.stay) run(bot, `tp @s ${state.stay.x} ${state.stay.y} ${state.stay.z}`);
 });
 
-onBotRemoved(() => {
+onBotRemoved((bot) => {
+	if (bot && gameOf(bot)) leaveGame(bot, 'bot');
 	state.present = false;
 	if (state.mode === 'game') state.mode = 'idle';
 	saveState();
@@ -178,7 +206,7 @@ function dummyHit(bot, attacker, damage) {
 	hits.set(attacker.name, list);
 	const total = list.reduce((s, h) => s + h.dmg, 0);
 	const span = Math.max(1, (now - list[0].t) / 1000);
-	showHudLine(attacker, [{ translate: 'hud.bot.dummy', with: [damage.toFixed(1), (total / span).toFixed(1), String(list.length)] }]);
+	showHudLine(attacker, [{ translate: 'hud.bot.dummy', with: [damage.toFixed(1), (total / span).toFixed(1), String(list.length)] }], { priority: 10, source: 'dummy' });
 }
 world.events.playerLeave.subscribe((e) => hits.delete(e.playerName));
 
@@ -189,7 +217,7 @@ let lastHit = -100;
 function nearestOpponent(bot, among) {
 	let best, bestD = SEEK_RADIUS;
 	for (const p of world.getPlayers()) {
-		if (p.id === bot.id || p.hasTag('role:bot') || isPending(p)) continue;
+		if (p.id === bot.id || isBot(p) || p.dimension.id !== bot.dimension.id || isPending(p)) continue;
 		if (among ? !among.has(p.name) : !p.hasTag('player:pvp')) continue;
 		const d = dist(p.location, bot.location);
 		if (d < bestD) { best = p; bestD = d; }
@@ -201,9 +229,17 @@ function fight(bot, among) {
 	const t = nearestOpponent(bot, among);
 	if (!t) { if (tick % 20 === 0) safe(() => bot.stopMoving()); return; }
 	const cfg = SPAR[state.level] ?? SPAR[2];
+	if (state.level === 4 && tick % 20 === 0) {
+		const effect = safe(() => bot.getEffect(MinecraftEffectTypes.speed));
+		if (!effect || effect.amplifier < 1 || effect.duration < 20) run(bot, 'effect @s speed 2 1 true');
+	}
 	safe(() => bot.lookAtEntity(t));
 	const d = dist(t.location, bot.location);
-	if (d > cfg.reach - 0.4 && tick % 10 === 0) safe(() => bot.navigateToEntity(t, cfg.speed));
+	if (state.level === 4 && d <= cfg.reach + 0.5) {
+		const angle = tick / 12, goal = { x: t.location.x + Math.cos(angle) * 2, y: t.location.y, z: t.location.z + Math.sin(angle) * 2 };
+		walkTo(bot, goal, { speed: cfg.speed, near: 0.4, recover: false });
+	} else walkTo(bot, t.location, { target: t, speed: cfg.speed, near: cfg.reach - 0.5, recover: false });
+	if (state.level === 4 && d > 1.5 && tick % 8 === 0) safe(() => bot.jump());
 	if (d <= cfg.reach && tick - lastHit >= cfg.cooldown) {
 		lastHit = tick;
 		safe(() => bot.attackEntity(t));
@@ -216,7 +252,7 @@ function spleef(bot, among) {
 	if (!t) return;
 	const under = new BlockLocation(Math.floor(t.location.x), Math.floor(t.location.y) - 1, Math.floor(t.location.z));
 	const d = dist(t.location, bot.location);
-	if (d > 4 && tick % 10 === 0) safe(() => bot.navigateToEntity(t, 1));
+	if (d > 4) walkTo(bot, t.location, { target: t, near: 4, recover: false });
 	if (d <= 4.5 && tick % 6 === 0) {
 		safe(() => bot.lookAtBlock(under));
 		safe(() => bot.breakBlock(under));
@@ -247,6 +283,8 @@ world.events.tick.subscribe(() => {
 		return;
 	}
 	if (!bot) return;
+	if (!bot.hasTag('sys:bot')) bot.addTag('sys:bot');
+	if (!bot.hasTag('role:bot')) bot.addTag('role:bot');
 
 	if (healNext) {
 		healNext = false;
@@ -262,21 +300,21 @@ world.events.tick.subscribe(() => {
 	}
 	if (state.mode !== 'mirror') safe(() => { if (bot.isSneaking !== state.sit) bot.isSneaking = state.sit; });
 
+	if (tick % 40 === 0) guideTick(bot);
+	if (guide) { guideStep(bot); return; }
+
 	switch (state.mode) {
 		case 'follow': {
 			const t = findPlayer(state.target);
 			if (!t) break;
 			const d = t.dimension.id === bot.dimension.id ? dist(t.location, bot.location) : Infinity;
-			if (d > FOLLOW_TP) run(bot, `tp @s "${t.name}"`);
-			else if (d > FOLLOW_FAR && tick % 10 === 0) safe(() => bot.navigateToEntity(t, 1));
-			else if (d <= FOLLOW_NEAR && tick % 10 === 0) safe(() => bot.stopMoving());
+			walkTo(bot, t.location, { target: t, near: FOLLOW_NEAR, speed: 1.1 });
 			if (tick % 4 === 0) safe(() => bot.lookAtEntity(t));
 			break;
 		}
 		case 'stay': {
 			if (!state.stay || tick % 10 !== 0) break;
-			if (dist(bot.location, state.stay) > 1.2) safe(() => bot.navigateToLocation(loc(state.stay), 1));
-			else safe(() => bot.stopMoving());
+			walkTo(bot, state.stay, { near: 1.2 });
 			break;
 		}
 		case 'mirror': {
@@ -284,9 +322,7 @@ world.events.tick.subscribe(() => {
 			if (!t) break;
 			const o = state.offset ?? { x: 2, y: 0, z: 0 };
 			const goal = { x: t.location.x + o.x, y: t.location.y, z: t.location.z + o.z };
-			if (dist(goal, bot.location) > FOLLOW_TP) run(bot, `tp @s ${goal.x} ${goal.y} ${goal.z}`);
-			else if (dist(goal, bot.location) > 0.4) safe(() => bot.moveToLocation(loc(goal), 1));
-			else safe(() => bot.stopMoving());
+			walkTo(bot, goal, { speed: 1.1, near: 0.4 });
 			safe(() => bot.setRotation(t.rotation.x, t.rotation.y));
 			safe(() => { bot.isSneaking = t.isSneaking; });
 			if (t.velocity.y > 0.2 && tick % 4 === 0) safe(() => bot.jump());
@@ -307,9 +343,7 @@ world.events.tick.subscribe(() => {
 			break;
 	}
 
-	// Гид для новичков — раз в 2 секунды ищем, кому показать
-	if (tick % 40 === 0) guideTick(bot);
-	guideStep(bot);
+
 });
 
 // ===== Гид для новичков =====
@@ -322,32 +356,31 @@ const busyModes = ['dummy', 'mirror', 'spar', 'game'];
 
 function guideTick(bot) {
 	for (const p of world.getPlayers()) {
-		if (p.hasTag(GUIDED_TAG) || p.hasTag('role:bot') || isPending(p) || !p.hasTag('auth:done')) continue;
+		if (p.hasTag(GUIDED_TAG) || isBot(p) || isPending(p) || !p.hasTag('auth:done')) continue;
 		const newbie = getScore(p, 'lvl') <= 1 && getScore(p, 'rebirth') === 0 && getScore(p, 'stat_playtime') < 5;
 		if (!newbie) { p.addTag(GUIDED_TAG); continue; }
 		if (guide || busyModes.includes(state.mode)) continue;
 		p.addTag(GUIDED_TAG);
-		const { x, y, z } = bot.location;
-		guide = { name: p.name, step: 0, at: tick, back: { x, y, z } };
-		// Встать в двух блоках перед игроком, лицом к нему
-		run(p, `tp "${bot.name}" ^ ^ ^2 facing @s`);
+		guide = { name: p.name, step: 0, at: tick, back: { ...bot.location }, returning: false };
+		motion = undefined;
+		break;
 	}
 }
 
 function guideStep(bot) {
-	if (!guide || tick < guide.at) return;
+	if (!guide) return;
 	const p = findPlayer(guide.name);
-	if (!p || guide.step >= GUIDE_LINES) {
-		// Готово (или игрок вышел) — обратно на место
-		if (!busyModes.includes(state.mode)) run(bot, `tp @s ${guide.back.x} ${guide.back.y} ${guide.back.z}`);
-		guide = undefined;
-		return;
+	if (!p || guide.step >= GUIDE_LINES) guide.returning = true;
+	if (guide.returning) {
+		if (dist(bot.location, guide.back) <= 1.5) { guide = undefined; motion = undefined; return; }
+		walkTo(bot, guide.back); return;
 	}
+	walkTo(bot, p.location, { target: p, near: 2.8 });
+	if (dist(bot.location, p.location) > 4 || tick < guide.at) return;
 	guide.step++;
 	safe(() => bot.lookAtEntity(p));
 	const rawtext = [{ text: ' §8[' }, { translate: 'role.tag.bot' }, { text: `§r§8]§r §f${bot.name}  §f` },
 		{ translate: `bot.guide.${guide.step}`, with: [p.name, bot.name] }];
-	run(p, `tellraw @s ${JSON.stringify({ rawtext })}`);
-	run(p, 'playsound random.pop @s');
+	run(p, `tellraw @s ${JSON.stringify({ rawtext })}`); run(p, 'playsound random.pop @s');
 	guide.at = tick + GUIDE_STEP_TICKS;
 }
