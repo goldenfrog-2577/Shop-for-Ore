@@ -61,6 +61,7 @@ const back = (run) => backButton(run, '%admin.common.back', BACK_ICON);
 export function admin_menu(player) {
 	const items = [
 		{ text: '%admin.main.button.players' + OPEN, icon: 'textures/ui/FriendsIcon', run: () => playersMenu(player) },
+		{ text: '%admin.main.button.money' + OPEN, icon: 'textures/items/gold_ingot', run: () => moneyPlayers(player) },
 		{ text: '%admin.main.button.boosts' + OPEN, icon: 'textures/items/experience_bottle', run: () => boostsMenu(player) },
 		{ text: '%admin.main.button.server' + OPEN, icon: 'textures/ui/icon_setting', run: () => serverMenu(player) },
 		{ text: '%admin.main.button.gamemode' + OPEN, icon: 'textures/ui/heart_new', run: () => gamemodes(player) },
@@ -363,7 +364,7 @@ function playerColor(player, target) {
 	}, () => playerActions(player, target));
 }
 
-function playerMoney(player, target) {
+function playerMoney(player, target, back = () => playerActions(player, target)) {
 	const actions = ['add', 'take', 'set'];
 	const form = modal('%admin.players.money.title')
 		.dropdown(`%admin.players.body.money ${getScore(target, 'money')} ${COIN_GLYPH}\n%admin.players.body.vip_coins ${getScore(target, 'vip_coins')} ${COIN_GLYPH}\n\n%admin.players.money.currency`, ['%admin.players.money.normal', '%admin.players.money.vip'], 0)
@@ -374,7 +375,7 @@ function playerMoney(player, target) {
 		const online = findPlayer(target.name);
 		if (!online) return tell(player, 'chat.cmd.error.offline', target.name);
 		return setMoney(player, online, actions[values[1]], String(values[2] ?? '').trim(), values[0] === 1 ? 'vip_coins' : 'money');
-	}, () => playerActions(player, target));
+	}, back);
 }
 
 // Мут, тюрьма, бан: срок из списка (как у команд: минуты, 'permanent') и причина по желанию
@@ -688,4 +689,15 @@ function botSay(player) {
 		if (text.length > 200) return tell(player, 'chat.error.too_long');
 		sendChatMessage(bot, text);
 	}, () => botMenu(player));
+}
+function moneyPlayers(player) {
+	if (!hasRole(player, 'admin')) return tell(player, 'chat.cmd.error.no_permission');
+	const names = orderedPlayers(player).map(p => p.name);
+	if (!names.length) return tell(player, 'chat.admin.error.no_players');
+	const form = modal('%admin.main.button.money').dropdown('%admin.players.choose', names, 0);
+	showModal(player, form, ([i]) => {
+		const target = findPlayer(names[i]);
+		if (!target) return tell(player, 'chat.cmd.error.offline', names[i]);
+		playerMoney(player, target, () => moneyPlayers(player));
+	}, () => admin_menu(player));
 }

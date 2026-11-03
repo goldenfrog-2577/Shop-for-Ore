@@ -1041,6 +1041,7 @@ admin.main.button.announce=§8Anuncios
 admin.main.button.wipe=§8Wipe
 admin.main.button.bot=§8Bot
 admin.main.button.players=§8Jugadores
+admin.main.button.money=Monedas
 admin.main.button.boosts=§8Potenciadores y eventos
 admin.main.button.server=§8Servidor
 admin.gamemode.title=§l§8Admin » Modo de juego

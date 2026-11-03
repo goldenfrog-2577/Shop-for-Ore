@@ -1040,6 +1040,7 @@ admin.main.button.announce=§8Объявления
 admin.main.button.wipe=§8Вайп
 admin.main.button.bot=§8Бот
 admin.main.button.players=§8Игроки
+admin.main.button.money=Монеты
 admin.main.button.boosts=§8Бусты и ивенты
 admin.main.button.server=§8Сервер
 admin.gamemode.title=§l§8Меню админа » Режим игры
