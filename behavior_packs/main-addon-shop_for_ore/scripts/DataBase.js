@@ -94,6 +94,7 @@ export const beginMenuAction = p => menuActions.set(p.name, toldErrorCount(p));
 export const endMenuAction = p => menuActions.delete(p.name);
 world.events.playerLeave.subscribe(e => { for (const map of [pendingCommands, menuActions, commandTotals, soundTotals, failedTotals, told, toldErrors]) map.delete(e.playerName); });
 /** Дождаться команд действия, включая команды из их обработчиков .then. */
+export const hasPendingCommands = entity => (pendingCommands.get(entity.name)?.size ?? 0) > 0;
 export async function settleCommands(entity) {
 	for (let i = 0; i < 16; i++) {
 		const pending = pendingCommands.get(entity.name);

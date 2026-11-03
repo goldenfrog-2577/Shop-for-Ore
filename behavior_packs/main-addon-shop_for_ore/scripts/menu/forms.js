@@ -14,7 +14,7 @@
 // Покупки через функции (.mcfunction) пишут в чат сами, скрипт этих сообщений не видит — после них окно закрывается.
 
 import { ActionFormData, ModalFormData, MessageFormData } from '@minecraft/server-ui';
-import { closedByPlayer, showWhenFree, toldCount, toldErrorCount, settleCommands, menuFeedback, menuCommandCount, menuSoundCount, failedCommandCount, beginMenuAction, endMenuAction } from '../DataBase.js';
+import { closedByPlayer, showWhenFree, toldCount, toldErrorCount, settleCommands, hasPendingCommands, menuFeedback, menuCommandCount, menuSoundCount, failedCommandCount, beginMenuAction, endMenuAction } from '../DataBase.js';
 
 // Ник → { told, errors } до нажатия и opened — действие уже открыло форму после сообщения
 const acting = new Map();
@@ -53,12 +53,11 @@ function allowed(player) {
 	return true;
 }
 // null — форма не показана (обработчики ничего не делают, «Назад» тоже не срабатывает)
-const show = async (player, form) => {
+const show = (player, form) => {
 	const state = acting.get(player.name);
-	if (!allowed(player)) return null;
-	await settleCommands(player);
-	if (state && toldErrorCount(player) > state.errors) return null;
-	return showWhenFree(player, typeof form === 'function' ? form() : form);
+	if (!allowed(player)) return Promise.resolve(null);
+	const open = () => state && toldErrorCount(player) > state.errors ? null : showWhenFree(player, typeof form === 'function' ? form() : form);
+	return hasPendingCommands(player) ? settleCommands(player).then(open) : Promise.resolve(open());
 };
 
 /**

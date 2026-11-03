@@ -152,8 +152,8 @@ function settings(player) {
 		{ text: '%menu.settings.button.particles', icon: 'textures/items/emerald', run: () => tagSetting(player, 'particles', 'player:particle', again) },
 		{ text: '%menu.settings.button.sounds', icon: 'textures/blocks/noteblock', run: () => tagSetting(player, 'sounds', 'player:sound', again) },
 		{ text: '%menu.settings.button.music', icon: 'textures/items/record_cat', run: () => musicSetting(player, again) },
-		{ text: '%menu.settings.button.menu_sounds', icon: 'textures/blocks/noteblock', run: () => menuSounds(player, again) },
 		{ text: '%menu.settings.button.password', icon: 'textures/ui/icon_lock', run: () => ChangePasswordUI(player, again) },
+		{ text: '%menu.settings.button.menu_sounds', icon: 'textures/blocks/noteblock', run: () => menuSounds(player, again) },
 		backButton(back)
 	], back);
 }

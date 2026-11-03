@@ -9,7 +9,7 @@ class Form {
 	title(v){this.t=v;return this;} body(v){this.b=v;return this;}
 	button(v){this.buttons.push(v);return this;} button1(v){return this.button(v);} button2(v){return this.button(v);}
 }
-const context={menuCommandCount:()=>0,menuSoundCount:()=>0,failedCommandCount:()=>0,beginMenuAction(){},endMenuAction(){},ActionFormData:Form,ModalFormData:Form,MessageFormData:Form,
+const context={hasPendingCommands:()=>pending.length>0,menuCommandCount:()=>0,menuSoundCount:()=>0,failedCommandCount:()=>0,beginMenuAction(){},endMenuAction(){},ActionFormData:Form,ModalFormData:Form,MessageFormData:Form,
 	closedByPlayer:r=>r.canceled&&r.cancelationReason!=='userBusy',toldCount:()=>told,toldErrorCount:()=>errors,
 	settleCommands:async()=>{while(pending.length)await Promise.all(pending.splice(0));},menuFeedback:(_,error)=>sounds.push(error),
 	showWhenFree:(_,form)=>new Promise(resolve=>shown.push({form,resolve}))};
