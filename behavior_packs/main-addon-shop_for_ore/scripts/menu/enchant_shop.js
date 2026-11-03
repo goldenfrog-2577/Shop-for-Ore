@@ -59,7 +59,7 @@ export function enchantableItems(player) {
 const shortId = (typeId) => typeId.replace('minecraft:', '');
 // Ключ названия предмета: item.<id>.name, кроме ванильных исключений (удочка с морковью — item.carrotOnAStick.name)
 const NAME_KEYS = { carrot_on_a_stick: 'carrotOnAStick' };
-const nameKey = (typeId) => `item.${NAME_KEYS[shortId(typeId)] ?? shortId(typeId)}.name`;
+export const nameKey = (typeId) => `item.${NAME_KEYS[shortId(typeId)] ?? shortId(typeId)}.name`;
 // Иконка предмета: textures/items/<id>, у золотых, деревянных, лука, арбалета и удочки в ванили другие имена файлов.
 // У щита отдельной иконки предмета в ванили нет — кнопка без значка
 const itemIcon = (typeId) => shortId(typeId) === 'shield' ? undefined
