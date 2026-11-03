@@ -1,0 +1,8 @@
+# Repository blobs use LF; .lang checkouts use CRLF as required by the packs.
+*.js text eol=lf
+*.mjs text eol=lf
+*.mcfunction text eol=lf
+*.json text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.lang text eol=crlf

@@ -1,0 +1,6 @@
+[*.lang]
+charset = utf-8
+end_of_line = crlf
+
+[**/{uk_UA,es_ES}.lang]
+charset = utf-8-bom
