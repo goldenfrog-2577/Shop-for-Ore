@@ -226,7 +226,7 @@ function rules(player) {
 
 // Промокоды: список, условия и награды — system/promo.js
 function promocodes(player) {
-	const form = modal('%menu.promo.title').textField('%menu.promo.body\n\n%menu.promo.hint', '%menu.promo.placeholder');
+	const form = modal('%menu.promo.title').textField('%menu.promo.body\n\n%menu.promo.hint\n\n%menu.promo.book', '%menu.promo.placeholder');
 	showModal(player, form, ([code]) => redeemPromo(player, code), () => menu(player));
 }
 

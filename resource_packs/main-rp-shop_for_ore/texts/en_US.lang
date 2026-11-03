@@ -609,10 +609,12 @@ menu.rules.line.11=§r§l11.§r§7 No arguing with staff decisions in chat — s
 menu.promo.title=§l§8Server Menu »  Promo Codes
 menu.promo.body=§7Promo codes can be found anywhere. They're marked on signs in §2this§7 color.
 menu.promo.hint=§7If you find one, enter it below — upper or lower case doesn't matter.
+menu.promo.book=If menus stop working: rename a book to the lowercase promo code and drop it next to you. No other players may be within two blocks. Success consumes it; on error you can pick it up.
 menu.promo.placeholder=§7Enter promo code...
 chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7You have already activated this §epromo code
 chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Invalid promo code
 chat.promo.reward=§r §aPromo §8» §f%1$s§r§7 activated a promo code and got %2$s
+chat.promo.book.hint=§r §aPromo §8» §7If menus stop working: rename a book to the lowercase promo code and drop it next to you. No other players may be within two blocks. Success consumes it; on error you can pick it up.
 chat.promo.error.vip=§r⩕ §l§cERROR!§r §8» §7This promo code is for §eVIP§7 only
 chat.promo.error.level=§r⩕ §l§cERROR!§r §8» §7This promo code works from level §e%1$s
 
