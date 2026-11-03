@@ -7,6 +7,7 @@
 // Остаются: роль, пароль, баны, наказания, настройки игрока (панель, частицы, звуки, музыка).
 
 import { world, DynamicPropertiesDefinition } from '@minecraft/server';
+import { syncResetEpoch } from './reset_history.js';
 import { run, tell } from '../DataBase.js';
 import { STATS } from './achievements.js';
 
@@ -65,6 +66,7 @@ world.events.tick.subscribe(() => {
 	const id = wipeId();
 	for (const player of world.getPlayers()) {
 		if (!joined.delete(player.name)) continue;
+		syncResetEpoch(player);
 		if (id > 0 && !player.hasTag(WIPE_TAG + id)) {
 			wipePlayer(player, id);
 			tell(player, 'chat.server.wiped.offline');

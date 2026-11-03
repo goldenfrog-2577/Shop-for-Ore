@@ -86,12 +86,46 @@ export function isErrorMessage(command) {
  * @param {Entity} entity
  * @param {string} command
  */
+const pendingCommands = new Map(), menuActions = new Map(), commandTotals = new Map(), soundTotals = new Map(), failedTotals = new Map();
+export const menuCommandCount = p => commandTotals.get(p.name) ?? 0;
+export const menuSoundCount = p => soundTotals.get(p.name) ?? 0;
+export const failedCommandCount = p => failedTotals.get(p.name) ?? 0;
+export const beginMenuAction = p => menuActions.set(p.name, toldErrorCount(p));
+export const endMenuAction = p => menuActions.delete(p.name);
+world.events.playerLeave.subscribe(e => { for (const map of [pendingCommands, menuActions, commandTotals, soundTotals, failedTotals, told, toldErrors]) map.delete(e.playerName); });
+/** Дождаться команд действия, включая команды из их обработчиков .then. */
+export async function settleCommands(entity) {
+	for (let i = 0; i < 16; i++) {
+		const pending = pendingCommands.get(entity.name);
+		if (!pending?.size) return;
+		await Promise.all([...pending]);
+	}
+}
+/** Звуки результата действия меню; настройки хранятся у каждого игрока отдельно. */
+export function menuFeedback(player, error = false) {
+	if (player.hasTag(error ? 'player:menu_error_off' : 'player:menu_success_off')) return;
+	return run(player, `playsound ${error ? 'note.bass' : 'random.orb'} @s`);
+}
+
 export function run(entity, command) {
+	if (entity.name && menuActions.has(entity.name) && command.startsWith('playsound ')) {
+		const error = toldErrorCount(entity) > menuActions.get(entity.name);
+		if (entity.hasTag(error ? 'player:menu_error_off' : 'player:menu_success_off')) return Promise.resolve({});
+		soundTotals.set(entity.name, menuSoundCount(entity) + 1);
+	}
+	if (entity.name && !/^(function |playsound |tellraw )/.test(command)) commandTotals.set(entity.name, menuCommandCount(entity) + 1);
 	if (command.startsWith('tellraw @s ')) {
 		told.set(entity.name, toldCount(entity) + 1);
 		if (isErrorMessage(command)) toldErrors.set(entity.name, toldErrorCount(entity) + 1);
 	}
-	return entity.runCommandAsync(command).then((r) => r ?? {}, () => undefined);
+	const task = entity.runCommandAsync(command).then((r) => r ?? {}, () => { if (entity.name) failedTotals.set(entity.name, failedCommandCount(entity) + 1); return undefined; });
+	if (entity.name) {
+		let pending = pendingCommands.get(entity.name);
+		if (!pending) pendingCommands.set(entity.name, pending = new Set());
+		pending.add(task);
+		task.then(() => { pending.delete(task); if (!pending.size && pendingCommands.get(entity.name) === pending) pendingCommands.delete(entity.name); });
+	}
+	return task;
 }
 
 /**
@@ -789,3 +823,6 @@ export const commandsList = [
 		role: 'owner'
 	}
 ];
+
+/** Описание магазина с текущим балансом обычных монет. */
+export const shopBalance = (player, description) => `${description}\n\n%menu.shop.balance ${getScore(player, 'money')} \ue152`;

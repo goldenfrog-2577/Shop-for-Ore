@@ -8,6 +8,7 @@
 // пароля (register/system.js вызывает applyOfflineReset первым делом).
 
 import { world, DynamicPropertiesDefinition } from '@minecraft/server';
+import { syncResetEpoch, markResetEpoch } from './reset_history.js';
 import { run, tell } from '../DataBase.js';
 
 const RESET_ID = 'shop:offline_reset_id';
@@ -36,6 +37,7 @@ export function offlineCounts() {
 
 /** Отметить игрока текущими номерами сброса и вайпа (чтобы wipe.js не сбросил его повторно). */
 function mark(player, id) {
+	markResetEpoch(player);
 	for (const t of player.getTags()) if (t.startsWith(RESET_TAG)) player.removeTag(t);
 	player.addTag(RESET_TAG + id);
 	const wipe = prop(WIPE_ID);
@@ -80,6 +82,7 @@ export function resetOffline(by) {
  * @returns {boolean} теги сняты
  */
 export function applyOfflineReset(player) {
+	syncResetEpoch(player);
 	const id = prop(RESET_ID);
 	if (id <= 0 || player.hasTag(RESET_TAG + id)) return false;
 	const tags = player.getTags();

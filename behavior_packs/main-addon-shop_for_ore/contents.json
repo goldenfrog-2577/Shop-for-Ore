@@ -383,6 +383,21 @@
 		},
 		{
 			"path" : "loot_tables/achievements/sniper_bow.json"
+		},
+		{
+			"path" : "functions/ui/menu_error.mcfunction"
+		},
+		{
+			"path" : "functions/ui/menu_success.mcfunction"
+		},
+		{
+			"path" : "scripts/system/playtime.js"
+		},
+		{
+			"path" : "scripts/system/reset_history.js"
+		},
+		{
+			"path" : "scripts/menu/admin_enchant.js"
 		}],
 	"version" : 1
 }

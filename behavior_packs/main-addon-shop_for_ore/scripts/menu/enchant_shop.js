@@ -8,7 +8,7 @@
 // функции shop/enchants/*, цены и максимумы — там же (здесь только для показа).
 
 import { MinecraftEnchantmentTypes, Enchantment } from '@minecraft/server';
-import { getScore, metricNumbers, run, tell } from '../DataBase.js';
+import { getScore, shopBalance, metricNumbers, run, tell } from '../DataBase.js';
 import { showMenu, backButton } from './forms.js';
 
 // id — ключ в MinecraftEnchantmentTypes, name — ванильный ключ перевода (переводится на языке игрока)
@@ -132,7 +132,7 @@ const buyButton = (name, current, max, price) => current >= max
 export function enchantsMenu(player, back) {
 	const again = () => enchantsMenu(player, back);
 	const pick = PICKAXE_ENCHANTS.map(e => `%${e.name} §8${Math.min(getScore(player, e.id), e.max)}/${e.max}`).join(' §8· ');
-	showMenu(player, '%menu.shop.enchants.title', '%menu.shop.enchants.body\n%menu.shop.enchants.body2', [
+	showMenu(player, '%menu.shop.enchants.title', () => shopBalance(player, '%menu.shop.enchants.body\n%menu.shop.enchants.body2'), [
 		{ text: `%menu.shop.enchants.button.pickaxe\n${pick}`, icon: 'textures/items/diamond_pickaxe', run: () => pickaxeMenu(player, again) },
 		...enchantableItems(player).map(({ slot, item }) => ({
 			text: `%${nameKey(item.typeId)}\n${currentEnchantsText(item, 2)}`, icon: itemIcon(item.typeId), run: () => itemEnchantMenu(player, slot, again)
@@ -155,7 +155,7 @@ function currentEnchantsText(item, limit = 99) {
 /** Экран кирки уровня. back — к выбору. На уровне 1 вместо кирки палка — зачаровать её нельзя. */
 function pickaxeMenu(player, back) {
 	const stick = getScore(player, 'lvl') < 2;
-	showMenu(player, '%menu.shop.enchants.pickaxe.title', `%menu.shop.enchants.pickaxe.body${stick ? '\n\n%menu.shop.enchants.pickaxe.stick' : ''}`, [
+	showMenu(player, '%menu.shop.enchants.pickaxe.title', () => shopBalance(player, `%menu.shop.enchants.pickaxe.body${stick ? '\n\n%menu.shop.enchants.pickaxe.stick' : ''}`), [
 		...PICKAXE_ENCHANTS.map(e => ({
 			text: buyButton(e.name, getScore(player, e.id), e.max, e.price), icon: 'textures/items/book_enchanted',
 			// Покупка — функцией shop/enchants/* (проверки палки, денег и максимума, сообщение в чат); меню закрывается
@@ -172,7 +172,7 @@ function itemEnchantMenu(player, slot, back) {
 	if (!options.length) return back();
 	const typeId = held.item.typeId;
 	const body = `%menu.shop.item_enchants.item %${nameKey(typeId)}\n%menu.shop.item_enchants.current ${currentEnchantsText(held.item)}\n\n%menu.shop.item_enchants.body`;
-	showMenu(player, '%menu.shop.enchants.title', body, [
+	showMenu(player, '%menu.shop.enchants.title', () => shopBalance(player, body), [
 		...options.map(o => ({
 			text: buyButton(o.e.name, o.level, o.e.max, priceFor(o.e, Math.min(o.level + 1, o.e.max))), icon: 'textures/items/book_enchanted',
 			// Покупка или ошибка — сообщение в чат, меню закрывается (menu/forms.js)

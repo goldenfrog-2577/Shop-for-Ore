@@ -5,6 +5,7 @@
 # Слот проверяем по самому предмету набора: был в слоте до покупки (sys:kit_had) или не встал после неё —
 # значит, слот занят, и предмет выдаётся через give.
 execute as @s[scores={money=..34999}] run tellraw @s {"rawtext":[{"translate":"chat.error.no_money"}]}
+execute as @s[scores={money=..34999}] run function ui/menu_error
 tag @s[scores={money=35000..}] add sys:buy_ok
 scoreboard players remove @s[tag=sys:buy_ok] money 35000
 
@@ -34,4 +35,5 @@ tag @s remove sys:kit_had
 
 give @s[tag=sys:buy_ok] diamond_sword
 execute as @s[tag=sys:buy_ok] run tellraw @s {"rawtext":[{"translate":"chat.shop.kit.diamond"}]}
+execute as @s[tag=sys:buy_ok] run function ui/menu_success
 tag @s remove sys:buy_ok

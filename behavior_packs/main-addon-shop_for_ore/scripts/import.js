@@ -59,3 +59,5 @@ system.run(() => {
 		if (hasRole(player, 'admin')) tell(player, 'chat.cmd.reload.done');
 	}
 });
+import './system/playtime.js'; // Суммарное время в мире
+import './system/reset_history.js'; // Очистка служебных номеров без повторного вайпа

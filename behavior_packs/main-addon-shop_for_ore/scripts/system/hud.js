@@ -21,12 +21,12 @@ const line = (text) => ({ text: `\n${text}` });
 const nextLevel = (n) => NEXT_LEVEL_COLOR[n] ? `${NEXT_LEVEL_COLOR[n]}${n}§f` : String(n);
 
 /** Строки панели «только значки». */
-function iconsRawtext(coins) {
+function iconsRawtext(vip, coins) {
 	return [
 		{ text: '§l\ue101 ➠ §r' }, { selector: '@s' },
 		line('§l\ue152 ➠ '), score(coins),
-		line('\ue154 ➠ '), score('xp'),
-		line('\ue153 ➠ '), score('lvl'),
+		line('\ue154 ➠ '), vip ? { text: '\ue128' } : score('xp'),
+		line('\ue153 ➠ '), vip ? { text: 'VIP' } : score('lvl'),
 		{ text: ' \n\ue116 ➠ ' }, score('rebirth'),
 		line('\ue110 ➠ '), score('online')
 	];
@@ -38,8 +38,8 @@ function fullRawtext(vip, coins, level, need) {
 	return [
 		{ translate: 'hud.profile' }, { selector: '@s' },
 		line(''), { translate: vip ? 'hud.vip_coins' : 'hud.money' }, score(coins),
-		line(''), { translate: 'hud.xp' }, score('xp'), ...(last || need <= 0 ? [] : [{ text: `/${metricNumbers(need)}` }]),
-		line(''), { translate: 'hud.lvl' }, score('lvl'), ...(last ? [{ text: ' >> ' }, { translate: 'hud.lvl.max' }] : [{ text: ` >> ${nextLevel(level + 1)}` }]),
+		line(''), { translate: 'hud.xp' }, ...(vip ? [{ text: '\ue128' }] : [score('xp'), ...(last || need <= 0 ? [] : [{ text: `/${metricNumbers(need)}` }])]),
+		line(''), { translate: 'hud.lvl' }, ...(vip ? [{ text: 'VIP' }] : [score('lvl'), ...(last ? [{ text: ' >> ' }, { translate: 'hud.lvl.max' }] : [{ text: ` >> ${nextLevel(level + 1)}` }])]),
 		line(''), { translate: 'hud.rebirth' }, score('rebirth'),
 		line(''), { translate: 'hud.online' }, score('online')
 	];
@@ -51,12 +51,12 @@ function viewOf(player) {
 	const coins = vip ? 'vip_coins' : 'money';
 	const icons = player.hasTag(ICONS_TAG);
 	const level = getScore(player, 'lvl');
-	if (!icons && level < 1) return undefined;
+	if (!vip && !icons && level < 1) return undefined;
 	const need = !icons && level < MAX_LEVEL ? getScore(player, 'xp_need') : 0;
 	return { vip, coins, icons, level, need };
 }
 
-const rawtextOf = (view) => view.icons ? iconsRawtext(view.coins) : fullRawtext(view.vip, view.coins, view.level, view.need);
+const rawtextOf = (view) => view.icons ? iconsRawtext(view.vip, view.coins) : fullRawtext(view.vip, view.coins, view.level, view.need);
 
 /** rawtext панели игрока или undefined — панель выключена или уровня ещё нет. */
 export function hudRawtext(player) {
