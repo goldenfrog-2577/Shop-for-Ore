@@ -2,6 +2,7 @@
 import * as GT from '@minecraft/server-gametest';
 import { world, system, BlockLocation, DynamicPropertiesDefinition } from '@minecraft/server';
 import { run } from '../DataBase.js';
+import { ensureFunctionLimits } from './player_scores.js';
 
 const BOT_NAME_PROPERTY = 'shop:bot_name';
 export const BOT_DEFAULT_NAME = 'Bot';
@@ -62,12 +63,17 @@ export function spawnBot(summoner, at) {
 			if (!dim.getBlock(new BlockLocation(1000000, -60, 1000000))) return;
 		} catch { return; }
 		request.started = true;
-		run(dim, 'function system/spawnbot').then(result => {
-			if (result === undefined) finish(undefined, 'system/spawnbot command failed');
+		Promise.resolve().then(() => dim.runCommandAsync('function system/spawnbot')).catch(error => {
+			finish(undefined, 'function system/spawnbot: ' + (error?.message ?? error));
 		});
 	}, 1);
 	// Четыре чанка вокруг площадки; остаются загружены, пока живёт GameTest.
-	run(dim, 'tickingarea add 999984 -64 999984 1000015 0 1000015 shop_bot true').then(() => { request.areaReady = true; });
+	ensureFunctionLimits().then(async ready => {
+		if (pending !== request) return;
+		if (!ready) { finish(undefined, 'function command limits could not be restored'); return; }
+		await run(dim, 'tickingarea add 999984 -64 999984 1000015 0 1000015 shop_bot true');
+		request.areaReady = true;
+	}).catch(error => finish(undefined, error?.message ?? error));
 	return request.promise;
 }
 

@@ -23,7 +23,7 @@ const run=async(p,cmd)=>{
 	}
 	return {};
 };
-const ctx={world,run,console,Number,getScore:(p,k)=>Number.isFinite(p.scores[k])?p.scores[k]:0};
+const ctx={world,run,console,Number,system:{run(){}},DynamicPropertiesDefinition:class{},getScore:(p,k)=>Number.isFinite(p.scores[k])?p.scores[k]:0};
 vm.runInNewContext(source('scripts/system/player_scores.js')+'\nglobalThis.ensure=ensurePlayerScores;',ctx);
 const task=ctx.ensure(player);assert.equal(ctx.ensure(player),task,'one pending repair per player');await task;
 for(const k of ['xp','rebirth','efficiency','fortune','pick','magnet'])assert.equal(player.scores[k],0,k+' explicitly initialized');

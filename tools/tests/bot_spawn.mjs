@@ -4,10 +4,10 @@ const src=fs.readFileSync(file,'utf8').replace(/^import .*;\r?\n/gm,'').replace(
 const flush=async()=>{for(let i=0;i<12;i++)await Promise.resolve();};
 function fixture(){
 	let registered,ready=false,mode='success',calls=0,players=[];const schedules=new Map(),commands=[],warnings=[];
-	const dimension={id:'overworld',getBlock:()=>ready?{}:undefined};
+	const dimension={id:'overworld',getBlock:()=>ready?{}:undefined,runCommandAsync:async cmd=>{if(mode==='command-fail')throw Error('native command budget is zero');return context.run(dimension,cmd);}};
 	const bot={name:'Bot',tags:new Set(),hasTag:t=>bot.tags.has(t),addTag:t=>bot.tags.add(t),removeTag:t=>bot.tags.delete(t),kill:()=>{players=[];}};
 	const test={spawnSimulatedPlayer(){if(mode==='throw')throw Error('engine spawn failure');players.push(bot);return bot;},removeSimulatedPlayer(){players=[];}};
-	const context={console:{warn:s=>warnings.push(s)},world:{events:{worldInitialize:{subscribe(){}}},getDynamicProperty(){},getDimension:id=>{assert.equal(id,'overworld');return dimension;},getPlayers:()=>players.values()},
+	const context={ensureFunctionLimits:async()=>true,console:{warn:s=>warnings.push(s)},world:{events:{worldInitialize:{subscribe(){}}},getDynamicProperty(){},getDimension:id=>{assert.equal(id,'overworld');return dimension;},getPlayers:()=>players.values()},
 		system:{runSchedule:fn=>{schedules.set(++calls,fn);return calls;},clearRunSchedule:id=>schedules.delete(id)},BlockLocation:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},DynamicPropertiesDefinition:class{},
 		GT:{register(a,b,fn){registered=fn;return {maxTicks(){return this;},structureName(){return this;}};}},
 		run:async(entity,cmd)=>{commands.push([entity,cmd]);if(cmd==='function system/spawnbot'){
@@ -26,7 +26,7 @@ f.setReady(true);await f.tick();assert.equal(await a,f.bot);assert.equal(spawned
 assert.ok(f.commands.some(([p,c])=>p===f.summoner&&c==='tp "Bot" @s'),'teleports to summoner including dimension');
 assert.equal(f.commands.filter(([,c])=>c==='function system/spawnbot').length,1);assert.equal(f.api.removeBot(),true);assert.ok(f.commands.some(([,c])=>c==='tickingarea remove shop_bot'));
 for(const mode of ['command-fail','throw','timeout']){
-	f=fixture();f.setMode(mode);f.setReady(true);let result=f.api.spawnBot(f.summoner);await f.tick(101);assert.equal(await result,undefined,mode);assert.equal(f.api.getBot(),undefined);assert.ok(f.warnings.length);assert.ok(f.commands.some(([,c])=>c==='tickingarea remove shop_bot'));f.late();assert.equal(f.api.getBot(),undefined,'late callback cannot create a ghost bot');
+	f=fixture();f.setMode(mode);f.setReady(true);let result=f.api.spawnBot(f.summoner);await f.tick(101);assert.equal(await result,undefined,mode);assert.equal(f.api.getBot(),undefined);assert.ok(f.warnings.length);if(mode==='command-fail')assert.ok(f.warnings.some(s=>s.includes('native command budget is zero')),'native error must not be suppressed');assert.ok(f.commands.some(([,c])=>c==='tickingarea remove shop_bot'));f.late();assert.equal(f.api.getBot(),undefined,'late callback cannot create a ghost bot');
 }
 f=fixture();let waiting=f.api.spawnBot(f.summoner);f.api.removeBot();assert.equal(await waiting,undefined,'cancel pending spawn');
 console.log('PASS: loaded overworld area, delayed readiness, single concurrent spawn, confirmed appearance/teleport, native failure, timeout, cleanup and cancellation.');
