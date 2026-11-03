@@ -208,7 +208,7 @@
 			"path" : "scripts/system/spawnbot.js"
 		},
 		{
-			"path" : "scripts/system/bot_ai.js"
+			"path" : "scripts/system/bot.js"
 		},
 		{
 			"path" : "structures/server/bot.mcstructure"

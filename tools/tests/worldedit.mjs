@@ -1,25 +1,26 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
 const source=fs.readFileSync(new URL('../../behavior_packs/main-addon-shop_for_ore/scripts/system/worldedit.js',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'').replace(/\bexport (?=(?:async )?function|const)/g,'');
-const blocks=new Map(),structures=new Map(),areas=new Set(),log=[],messages=[],warnings=[],handlers={};let scheduler,tick=0,people=[],failure;
+const blocks=new Map(),structures=new Map(),areas=new Set(),log=[],messages=[],warnings=[],handlers={};let scheduler,tick=0,people=[],failure,loadedWindow;
 const key=(x,y,z)=>`${x},${y},${z}`,clone=x=>JSON.parse(JSON.stringify(x));
 const get=(x,y,z)=>blocks.get(key(x,y,z))??{id:'minecraft:air',data:0};
+function inWindow(x,z,X,Z){assert(loadedWindow,'chunk window exists');for(const [n,a,b]of [[x,loadedWindow.x,loadedWindow.X],[X,loadedWindow.x,loadedWindow.X],[z,loadedWindow.z,loadedWindow.Z],[Z,loadedWindow.z,loadedWindow.Z]])assert(Math.floor(n/16)>=Math.floor(a/16)&&Math.floor(n/16)<=Math.floor(b/16),'command stays in loaded chunks');}
 function put(x,y,z,block){if(block.id==='minecraft:air')blocks.delete(key(x,y,z));else blocks.set(key(x,y,z),clone(block));}
 const dim={id:'minecraft:overworld',runCommandAsync:async cmd=>{
 	log.push({tick,cmd});if(failure?.(cmd)){failure=undefined;throw Error('synthetic command failure');}
 	const a=cmd.split(' ');
-	if(a[0]==='tickingarea'){if(a[1]==='add')areas.add(a[8]);else areas.delete(a[2]);return{};}
+	if(a[0]==='tickingarea'){if(a[1]==='add'){assert.equal(areas.size,0);const [x,,z,X,,Z]=a.slice(2,8).map(Number);assert((Math.floor(X/16)-Math.floor(x/16)+1)*(Math.floor(Z/16)-Math.floor(z/16)+1)<=4);loadedWindow={x,z,X,Z};areas.add(a[8]);}else{areas.delete(a[2]);if(!areas.size)loadedWindow=undefined;}return{};}
 	if(a[0]==='structure'){
 		const name=a[2];assert.ok(name.startsWith('shop_we_'),'only owned structures');
 		if(a[1]==='delete'){structures.delete(name);return{};}
 		if(a[1]==='save'){
-			assert.deepEqual(a.slice(9),['false','memory','true']);const [x,y,z,X,Y,Z]=a.slice(3,9).map(Number),saved=[];
+			assert.deepEqual(a.slice(9),['false','memory','true']);const [x,y,z,X,Y,Z]=a.slice(3,9).map(Number),saved=[];inWindow(x,z,X,Z);
 			for(let by=y;by<=Y;by++)for(let bz=z;bz<=Z;bz++)for(let bx=x;bx<=X;bx++)saved.push([bx-x,by-y,bz-z,clone(get(bx,by,bz))]);
 			assert.ok(saved.length<=512);structures.set(name,saved);return{};
 		}
-		if(a[1]==='load'){const saved=structures.get(name);assert.ok(saved,'saved structure exists');const [x,y,z]=a.slice(3,6).map(Number);for(const [dx,dy,dz,b]of saved)put(x+dx,y+dy,z+dz,b);return{};}
+		if(a[1]==='load'){const saved=structures.get(name);assert.ok(saved,'saved structure exists');const [x,y,z]=a.slice(3,6).map(Number);inWindow(x,z,x+Math.max(...saved.map(p=>p[0])),z+Math.max(...saved.map(p=>p[2])));for(const [dx,dy,dz,b]of saved)put(x+dx,y+dy,z+dz,b);return{};}
 	}
 	if(a[0]==='fill'){
-		const [x,y,z,X,Y,Z]=a.slice(1,7).map(Number),id=a[7],data=Number(a[8]),filter=a[10];assert.equal(a[9],'replace');let changed=0;
+		const [x,y,z,X,Y,Z]=a.slice(1,7).map(Number),id=a[7],data=Number(a[8]),filter=a[10];assert.equal(a[9],'replace');inWindow(x,z,X,Z);let changed=0;
 		for(let by=y;by<=Y;by++)for(let bz=z;bz<=Z;bz++)for(let bx=x;bx<=X;bx++)if(!filter||get(bx,by,bz).id===filter){if(get(bx,by,bz).id!==id||get(bx,by,bz).data!==data)changed++;put(bx,by,bz,{id,data});}
 		if(!changed)throw Error('commands.fill.failed');return{successCount:changed};
 	}
@@ -30,12 +31,13 @@ const ctx={world:{getPlayers:()=>people.values(),events:{playerLeave:{subscribe:
 vm.runInNewContext(source+'\nglobalThis.we={worldEditCommand,bounds,chunks,coordinates,active:()=>active};',ctx);
 const command=(...args)=>ctx.we.worldEditCommand(owner,args);
 const step=async()=>{tick++;scheduler();for(let i=0;i<8;i++)await Promise.resolve();};
-async function drain(){for(let i=0;i<5000;i++){if(!ctx.we.active())return;await step();}throw Error('job stuck');}
+async function drain(){for(let i=0;i<100000;i++){if(!ctx.we.active())return;await step();}throw Error('job stuck');}
 const select=(a,b)=>{command('pos1',...a.map(String));command('pos2',...b.map(String));};
 const snapshot=()=>JSON.stringify([...blocks].sort((a,b)=>a[0].localeCompare(b[0])));
 const max=ctx.we.bounds({x:0,y:0,z:0},{x:127,y:3,z:127},dim.id);assert.equal(max.volume,65536);
-assert.equal(ctx.we.chunks(max).reduce((n,p)=>n+(p.to.x-p.from.x+1)*(p.to.y-p.from.y+1)*(p.to.z-p.from.z+1),0),65536);
-assert.throws(()=>ctx.we.bounds({x:0,y:0,z:0},{x:128,y:0,z:0},dim.id),/limit/);
+assert.equal(Array.from(ctx.we.chunks(max)).reduce((n,p)=>n+(p.to.x-p.from.x+1)*(p.to.y-p.from.y+1)*(p.to.z-p.from.z+1),0),65536);
+assert.equal(ctx.we.bounds({x:0,y:0,z:0},{x:128,y:0,z:0},dim.id).volume,129);
+const huge=ctx.we.bounds({x:-29999984,y:-64,z:-29999984},{x:29999984,y:319,z:29999984},dim.id);const lazy=ctx.we.chunks(huge);assert.equal(typeof lazy.next,'function');assert(!lazy.next().done);assert(!lazy.next().done);assert.throws(()=>ctx.we.bounds({x:0,y:-65,z:0},{x:1,y:0,z:0},dim.id),/bounds/);
 assert.deepEqual(JSON.parse(JSON.stringify(ctx.we.coordinates(['~1','~','~-2'],{x:1.9,y:2.1,z:3.2}))),{x:2,y:2,z:1});
 assert.throws(()=>ctx.we.coordinates(['0','bad','0'],owner.location),/args/);
 ctx.we.worldEditCommand({...owner,role:'player'},['set','stone']);assert.equal(messages.at(-1)[0],'chat.cmd.error.no_permission');assert.equal(log.length,0);
@@ -53,7 +55,10 @@ select([0,0,0],[15,1,15]);const beforeCancel=snapshot();command('set','stone');w
 let fills=0;failure=cmd=>cmd.startsWith('fill ')&&++fills===2;command('set','dirt');await drain();assert.equal(messages.at(-1)[0],'chat.cmd.worldedit.error.failed');command('undo');await drain();assert.equal(snapshot(),beforeCancel);
 // Leaving during a job cleans the ticking area and releases the queue.
 command('set','stone');await step();people=[];handlers.leave({playerName:owner.name});await drain();assert.equal(areas.size,0);people=[owner];
-const calls=log.length;command('pos1','0','0','0');command('pos2','999','0','0');command('set','stone');assert.equal(messages.at(-1)[0],'chat.cmd.worldedit.error.limit');assert.equal(log.length,calls);
+// A field above both former limits succeeds across more than 100 world chunks.
+const beforeLarge=snapshot();select([0,0,0],[128,0,512]);command('set','stone');await drain();assert.equal(get(128,0,512).id,'minecraft:stone');assert.equal(messages.at(-1)[0],'chat.cmd.worldedit.done');assert.equal(areas.size,0);command('undo');await drain();assert.equal(snapshot(),beforeLarge);
+// Cancelling an enormous selection never materializes its full chunk list.
+select([-29999984,-64,-29999984],[29999984,319,29999984]);command('set','stone');await step();command('cancel');await drain();assert.equal(areas.size,0);assert.equal(snapshot(),beforeLarge);const calls=log.length;
 select([0,0,0],[1,1,1]);command('set','stone;kill');assert.equal(messages.at(-1)[0],'chat.cmd.worldedit.error.block');assert.equal(log.length,calls);
 const byTick=new Map();for(const e of log)byTick.set(e.tick,(byTick.get(e.tick)??0)+1);assert.ok([...byTick.values()].every(n=>n<=1),'one native command per tick');
-console.log('PASS: owner-only selection, bounds/IDs, per-tick budget, container-safe undo, replace, clipboard offsets, cancel/error recovery and disconnect cleanup.');
+console.log('PASS: 66,177-block set/undo beyond old limits, lazy enormous selection, 4-chunk loading windows, one command per tick, containers/cancel/error/leave recovery.');

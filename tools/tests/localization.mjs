@@ -40,7 +40,9 @@ for(let l=0;l<4;l++){
 		ctx.api.playerActions(owner,target);
 		assert.equal(colorAt(captured.body,'12345'),'e','ordinary coins');
 		assert.equal(colorAt(captured.body,'\ue152'),'r','ordinary coin glyph');
-		assert.equal(colorAt(captured.body,'/3'),'e','warning denominator');
+		const warningLine=captured.body.split('\n').find(s=>s.startsWith(maps[l].get('admin.players.body.warns')));
+		assert.equal(colorAt(warningLine,'/'),'7','warning slash');
+		assert.equal(colorAt(warningLine,'3'),'f','warning denominator');
 		if(vip){assert.equal(colorAt(captured.body,'67890'),'g');assert.equal(colorAt(captured.body,'\ue186'),'r');}else assert.ok(!captured.body.includes('67890'));
 		const muteLine=captured.body.split('\n').find(s=>s.startsWith(maps[l].get('admin.players.body.mute')));
 		assert.ok(muteLine);assert.ok(!muteLine.includes('%'));

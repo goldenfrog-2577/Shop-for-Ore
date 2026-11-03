@@ -9,13 +9,13 @@ const calls=[],commands=[],props={},clock={now:()=>1000};
 for(const method of ['navigateToEntity','navigateToLocation','lookAtEntity','stopMoving','stopBreakingBlock','attackEntity','jump','setRotation'])bot[method]=(...args)=>calls.push([method,...args]);
 bot.getComponent=()=>({current:20,resetToMaxValue(){}});
 const ctx={world:{events,getPlayers:()=>[bot,human].values(),getDynamicProperty:k=>props[k],setDynamicProperty:(k,v)=>props[k]=v},Location:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},BlockLocation:class{},DynamicPropertiesDefinition:class{},Date:clock,
-	getBot:()=>bot,isBot:p=>p.hasTag('sys:bot')||p.hasTag('role:bot'),isPending:()=>false,getScore:()=>10,findPlayer:n=>n===human.name?human:undefined,
+	isAir:id=>!id||id==='minecraft:air',isSolid:id=>id==='minecraft:stone',getBot:()=>bot,isBot:p=>p.hasTag('sys:bot')||p.hasTag('role:bot'),isPending:()=>false,getScore:()=>10,findPlayer:n=>n===human.name?human:undefined,
 	run:(p,c)=>commands.push(c),onBotSpawned(){},onBotRemoved(){},freezePlayer(){},unfreezePlayer(){},showHudLine(){},getGame(){},gameOf(){},leaveGame(){},joinGame(){return true;},teleportToArena:p=>p.addTag('player:pvp')};
-vm.runInNewContext(load('scripts/system/bot_ai.js')+'\nglobalThis.botApi={setBotMode};',ctx);
+vm.runInNewContext(load('scripts/system/bot.js')+'\nglobalThis.botApi={setBotMode};',ctx);
 const tick=n=>{for(let i=0;i<n;i++)for(const fn of events.tick.handlers)fn();};
 ctx.botApi.setBotMode('follow',{target:'Human'});tick(20);assert.ok(calls.some(c=>c[0]==='navigateToEntity'));assert.ok(!commands.some(c=>c.startsWith('tp ')),'distant target starts with walking');
 for(let i=0;i<10;i++){bot.location.x+=0.5;tick(10);}assert.ok(!commands.some(c=>c.startsWith('tp ')),'progress avoids teleport');
-tick(220);assert.ok(commands.some(c=>c.startsWith('tp ')),'stuck recovery eventually works');
+tick(220);assert.ok(commands.some(c=>c.startsWith('tp ')),'stuck recovery eventually works');assert.ok(!calls.some(c=>c[0]==='jump'),'flat stuck follow never jumps');
 human.location.x=bot.location.x+2;ctx.botApi.setBotMode('spar',{level:4});calls.length=0;tick(40);assert.ok(calls.filter(c=>c[0]==='attackEntity').length>=15);assert.ok(calls.some(c=>c[0]==='jump'));assert.ok(calls.some(c=>c[0]==='navigateToLocation'),'hardest bot circles its target');
 // Dummy HUD blocks lower-priority arena updates for its lease, then releases them.
 let now=1000;const hud={world:{events:{playerLeave:event()}},Date:{now:()=>now},run:(p,c)=>commands.push(c)};
@@ -38,6 +38,6 @@ const message=chatCommands.at(-1);assert.ok(message.includes('role.tag.bot'));as
 let present=true,menu;const ui={world:{events:{beforeItemUse:event()}},getBot:()=>present?bot:undefined,getBotName:()=>bot.name,botState:()=>({mode:'follow',sit:false,totem:true,returnOnLoad:true}),showMenu:(p,t,b,items)=>menu={body:typeof b==='function'?b():b,items},backButton:run=>({text:'%admin.common.back',run})};
 vm.runInNewContext(load('scripts/menu/admin_menu.js')+'\nglobalThis.menu=botMenu;',ui);ui.menu(human);
 const slots=menu.items.findIndex(i=>i.text==='%admin.bot.button.slots'),sit=menu.items.findIndex(i=>i.text.startsWith('%admin.bot.button.sit'));
-assert.equal(sit,slots+1);assert.ok(menu.items[sit].text.includes('[ '));assert.ok(menu.body.includes('%admin.bot.status %admin.bot.present'));
+assert.equal(sit,slots+1);assert.ok(menu.items[sit].text.replace(/§./g,'').includes('[ '));assert.ok(menu.body.includes('%admin.bot.status %admin.bot.present'));
 present=false;ui.menu(human);assert.ok(!menu.items.some(i=>i.text.startsWith('%admin.bot.button.sit')));assert.ok(menu.body.includes('%admin.bot.absent'));
 console.log('PASS: walk before teleport, stuck recovery, fast jumping/circling sparring, dummy HUD priority and late bot entry.');

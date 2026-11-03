@@ -19,7 +19,7 @@ import { getBot, getBotName, setBotName, spawnBot, removeBot } from '../system/s
 import { wipeAll, wipeCounts } from '../system/wipe.js';
 import { resetOffline, offlineCounts } from '../system/offline_reset.js';
 import { canTeleport, listGames } from '../system/minigames.js';
-import { setBotMode, toggleBot, rememberBotItem, botState, SPAR_LEVELS } from '../system/bot_ai.js';
+import { setBotMode, toggleBot, rememberBotItem, botState, SPAR_LEVELS } from '../system/bot.js';
 
 const BACK_ICON = 'textures/ui/icon_import';
 // Кружки цвета роли из шрифта карты: серый, синий, красный
@@ -320,7 +320,7 @@ function playerActions(player, target) {
 		`%admin.players.body.role %role.${getRole(target)}`,
 		`%admin.players.body.lvl ${getScore(target, 'lvl')}`,
 		`%admin.players.body.money ${getScore(target, 'money')} §r${COIN_GLYPH}`,
-		`%admin.players.body.warns ${getWarns(target)}§e/3§r`,
+		`%admin.players.body.warns ${getWarns(target)}§7/§f3§r`,
 		...(isVip(target) ? [`%admin.players.body.vip_coins ${getScore(target, 'vip_coins')} §r${VIP_COIN_GLYPH}`] : []),
 		`%admin.players.body.mute ${muteMinutesLeft(target) === Infinity ? '%chat.term.permanent' : muteMinutesLeft(target) > 0 ? muteMinutesLeft(target) + ' %admin.common.min' : '%admin.players.mute.none'}`,
 		// В тюрьме — сколько осталось
@@ -505,6 +505,8 @@ function serverMenu(player) {
 			return `%admin.server.boost ${type} §8— ${active ? '%admin.server.on %admin.server.left ' + active.minutes + ' %admin.common.min' : '%admin.server.off'}`;
 		}),
 		'',
+		`%admin.server.magnets §f${players.filter(p => p.hasTag('boost:magnet')).map(p => p.name).sort((a,b) => a.localeCompare(b)).join('§7, §f') || '%admin.server.none'}`,
+		'',
 		'%admin.server.auto',
 		...EVENTS.map(ev => `§8• %chat.cmd.event.name.${ev} §8— ${getSetting(ev) === 1 ? '%admin.server.on' : '%admin.server.off'}`)
 	];
@@ -526,7 +528,7 @@ function serverMenu(player) {
 
 export function botMenu(player) {
 	const bot = getBot(), name = getBotName(), st = botState();
-	const status = (title, value) => `${title}\n§8[ §r ${value} §8]`;
+	const status = (title, value) => `${title}\n§8[§7 ${value} §8]`;
 	const toggle = (key, label, icon) => ({
 		text: status(`%admin.bot.button.${label}`, key === 'sit'
 			? st.sit ? '%admin.bot.sit.sneaking' : '%admin.bot.sit.standing'
@@ -542,15 +544,15 @@ export function botMenu(player) {
 		toggle('sit', 'sit', 'textures/ui/sneak_button_default'),
 		{ text: '%admin.main.button.effects', icon: 'textures/items/potion_bottle_confusion', run: () => botEffects(player) },
 		{ text: '%admin.bot.button.clear_effects', icon: 'textures/items/bucket_milk', run: () => { run(bot, 'effect @s clear'); tell(player, 'chat.admin.bot.effect.cleared', bot.name); } },
-		{ text: '%admin.bot.game.title', icon: 'textures/items/diamond_shovel', run: () => botGame(player) },
-		{ text: '%admin.bot.button.remove', icon: 'textures/ui/cancel', run: () => { if (removeBot()) tell(player, 'chat.admin.bot.removed', name); botMenu(player); } }
 	] : [{ text: '%admin.bot.button.spawn', icon: 'textures/server_icons/steve', run: async () => { const bot = await spawnBot(player); tell(player, bot ? 'chat.admin.bot.spawned' : 'chat.admin.bot.error.spawn', name); if (bot) botMenu(player); } }];
 	items.push(toggle('totem', 'totem', 'textures/items/totem'), toggle('returnOnLoad', 'return', 'textures/ui/refresh_light'),
-		{ text: '%admin.bot.button.rename', icon: 'textures/items/name_tag', run: () => botRename(player) }, back(() => admin_menu(player)));
+		{ text: '%admin.bot.button.rename', icon: 'textures/items/name_tag', run: () => botRename(player) },
+		{ text: '%admin.bot.button.remove', icon: 'textures/ui/cancel', run: () => { if (removeBot()) tell(player, 'chat.admin.bot.removed', name); botMenu(player); } },
+		back(() => admin_menu(player)));
 	showMenu(player, '%admin.bot.title', () => `%admin.bot.name §f${getBotName()}\n%admin.bot.status ${getBot() ? '%admin.bot.present' : '%admin.bot.absent'}`, items, () => admin_menu(player));
 }
 
-// Режим бота (system/bot_ai.js): за мной и «повторяй» — за тем, кто открыл меню
+// Режим бота (system/bot.js): за мной и «повторяй» — за тем, кто открыл меню
 function botModeMenu(player) {
 	const name = getBotName();
 	const done = (mode, opts) => {
@@ -669,7 +671,7 @@ function botSlots(player) {
 		run(player, `${target} ${parsed.id} ${parsed.count} ${parsed.data}`).then(r => {
 			if (r === undefined) tell(player, 'chat.admin.item.error.unknown', parsed.id);
 			else {
-				// Запомнить — после перезахода в мир бот получит предмет заново (system/bot_ai.js)
+				// Запомнить — после перезахода в мир бот получит предмет заново (system/bot.js)
 				rememberBotItem(slot.slot, `${parsed.id} ${parsed.count} ${parsed.data}`);
 				tell(player, 'chat.admin.bot.slots.set', bot.name, parsed.id);
 			}
@@ -695,7 +697,7 @@ function moneyPlayers(player) {
 	if (!hasRole(player, 'admin')) return tell(player, 'chat.cmd.error.no_permission');
 	const names = orderedPlayers(player).map(p => p.name);
 	if (!names.length) return tell(player, 'chat.admin.error.no_players');
-	const form = modal('%admin.main.button.money').dropdown('%admin.players.choose', names, 0);
+	const form = modal('%admin.players.money.title').dropdown('%admin.players.choose', names, 0);
 	showModal(player, form, ([i]) => {
 		const target = findPlayer(names[i]);
 		if (!target) return tell(player, 'chat.cmd.error.offline', names[i]);

@@ -2,7 +2,7 @@
 import { world, system, MinecraftBlockTypes } from '@minecraft/server';
 import { hasRole, tell } from '../DataBase.js';
 
-export const MAX_BLOCKS = 65536, MAX_EDGE = 128, CHUNK = 8;
+export const CHUNK = 8;
 const selections = new Map(), clipboards = new Map(), undos = new Map(), queue = [];
 let active, executing = false, serial = 0;
 const SESSION = Date.now().toString(36);
@@ -15,15 +15,13 @@ export function bounds(a, b, dimension) {
 	const min = {}, max = {}, size = {};
 	for (const k of ['x','y','z']) { min[k] = Math.min(a[k],b[k]); max[k] = Math.max(a[k],b[k]); size[k] = max[k]-min[k]+1; }
 	const volume = size.x * size.y * size.z, [low,high] = height(dimension);
-	if (Object.values(size).some(n=>n>MAX_EDGE) || volume>MAX_BLOCKS) fail('limit');
+	if ([...Object.values(min),...Object.values(max)].some(n=>!Number.isSafeInteger(n))) fail('bounds');
 	if (min.y<low || max.y>high || Math.max(Math.abs(min.x),Math.abs(max.x),Math.abs(min.z),Math.abs(max.z))>29999984) fail('bounds');
 	return {min,max,size,volume};
 }
-export function chunks(box) {
-	const out=[];
+export function* chunks(box) {
 	for(let y=box.min.y;y<=box.max.y;y+=CHUNK) for(let z=box.min.z;z<=box.max.z;z+=CHUNK) for(let x=box.min.x;x<=box.max.x;x+=CHUNK)
-		out.push({from:{x,y,z},to:{x:Math.min(x+CHUNK-1,box.max.x),y:Math.min(y+CHUNK-1,box.max.y),z:Math.min(z+CHUNK-1,box.max.z)}});
-	return out;
+		yield {from:{x,y,z},to:{x:Math.min(x+CHUNK-1,box.max.x),y:Math.min(y+CHUNK-1,box.max.y),z:Math.min(z+CHUNK-1,box.max.z)}};
 }
 export function coordinates(args, at) {
 	if (!args.length) return point(at);
@@ -73,13 +71,32 @@ system.runSchedule(()=>{
 	}catch(error){executing=false;task.cleanup?task.resolve(undefined):task.reject(error);}
 },1);
 
+async function loadPart(job, part) {
+	const key = [Math.floor(part.from.x/16),Math.floor(part.to.x/16),Math.floor(part.from.z/16),Math.floor(part.to.z/16)].join(',');
+	if (job.loaded === key) return;
+	if (job.loaded !== undefined) {
+		await command(job,`tickingarea remove ${job.area}`,true);
+		job.loaded = undefined;
+	}
+	await command(job,`tickingarea add ${part.from.x} 0 ${part.from.z} ${part.to.x} 0 ${part.to.z} ${job.area} true`);
+	job.loaded = key;
+	await waitTicks(job,10);
+}
+
+async function loadStructure(job, part, at = part.at) {
+	const to = {x:at.x+part.to.x-part.at.x,y:at.y+part.to.y-part.at.y,z:at.z+part.to.z-part.at.z};
+	await loadPart(job,{from:at,to});
+	await command(job,`structure load ${part.name} ${xyz(at)}`,false,true);
+}
+
 async function snapshot(job, box, kind) {
 	const parts=[];
 	for(const part of chunks(box)) {
+		await loadPart(job,part);
 		const name=`shop_we_${SESSION}_${job.id}_${kind}_${parts.length}`;
 		job.garbage.add(name);
 		await command(job,`structure save ${name} ${xyz(part.from)} ${xyz(part.to)} false memory true`);
-		parts.push({name,at:part.from});
+		parts.push({name,at:part.from,to:part.to});
 	}
 	return parts;
 }
@@ -89,11 +106,10 @@ async function runJob(player, kind, box, work) {
 	const job={id:++serial,owner:player.name,dimension:player.dimension,cancelled:false,garbage:new Set(),changed:false,backup:undefined};
 	active=job;
 	const area=`shop_we_${SESSION}_${job.id}`;
+	job.area=area;
 	let outcome='chat.cmd.worldedit.done';
 	notify(job,'chat.cmd.worldedit.started',kind);
 	try {
-		await command(job,`tickingarea add ${box.min.x} 0 ${box.min.z} ${box.max.x} 0 ${box.max.z} ${area} true`);
-		await waitTicks(job,10);
 		await work(job);
 	}catch(error){
 		if(job.cancelled)outcome=job.changed?'chat.cmd.worldedit.cancelled_undo':'chat.cmd.worldedit.cancelled';
@@ -150,14 +166,14 @@ export function worldEditCommand(player,args=[]) {
 			const box=bounds(min,{x:min.x+clip.box.size.x-1,y:min.y+clip.box.size.y-1,z:min.z+clip.box.size.z-1},player.dimension.id);
 			begin(player,action,box,async job=>{
 				await prepareUndo(job,box);
-				for(const part of clip.parts)await command(job,`structure load ${part.name} ${xyz(atOffset(box.min,part.at,clip.box.min))}`,false,true);
+				for(const part of clip.parts)await loadStructure(job,part,atOffset(box.min,part.at,clip.box.min));
 			});return;
 		}
 		if(action==='undo'){
 			if(rest.length)fail('args');const frame=undos.get(player.name);if(!frame)fail('undo');
 			if(frame.dimension!==player.dimension.id)fail('dimension');
 			begin(player,action,frame.box,async job=>{
-				for(const part of frame.parts)await command(job,`structure load ${part.name} ${xyz(part.at)}`,false,true);
+				for(const part of frame.parts)await loadStructure(job,part);
 				undos.delete(job.owner);dispose(job,frame);
 			});return;
 		}
@@ -168,11 +184,12 @@ export function worldEditCommand(player,args=[]) {
 			begin(player,action,box,async job=>{
 				await prepareUndo(job,box);
 				for(const part of chunks(box)){
+					await loadPart(job,part);
 					await command(job,`fill ${xyz(part.from)} ${xyz(part.to)} ${target.id} ${target.data} replace${filter?' '+filter.id+' -1':''}`,false,true);
 				}
 			});return;
 		}
 		fail('args');
-	}catch(error){const key=String(error.message);tell(player,'chat.cmd.worldedit.error.'+(['limit','bounds','selection','dimension','block','busy','clipboard','undo','idle','args'].includes(key)?key:'failed'));}
+	}catch(error){const key=String(error.message);tell(player,'chat.cmd.worldedit.error.'+(['bounds','selection','dimension','block','busy','clipboard','undo','idle','args'].includes(key)?key:'failed'));}
 }
 world.events.playerLeave.subscribe(e=>{selections.delete(e.playerName);if(active?.owner===e.playerName)active.cancelled=true;});
