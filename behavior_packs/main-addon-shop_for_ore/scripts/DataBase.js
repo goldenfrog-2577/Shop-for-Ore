@@ -38,7 +38,8 @@ export const RULES_COUNT = 11;
  */
 export function getScore(entity, objective) {
 	try {
-		return world.scoreboard.getObjective(objective).getScore(entity.scoreboard);
+		const value = world.scoreboard.getObjective(objective).getScore(entity.scoreboard);
+		return Number.isFinite(value) ? value : 0;
 	} catch (error) {
 		return 0;
 	}

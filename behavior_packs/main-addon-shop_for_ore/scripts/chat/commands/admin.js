@@ -132,7 +132,7 @@ export const ADMIN_COMMANDS = {
 		if (target.name !== player.name) tell(player, `chat.cmd.fly.other.${on ? 'on' : 'off'}`, target.name);
 	},
 
-	bot(player, args) {
+	async bot(player, args) {
 		// !bot settings — окно управления ботом (как в меню администратора); откроется после закрытия чата
 		if ((args[0] || '').toLowerCase() === 'settings') {
 			tell(player, 'chat.cmd.bot.settings');
@@ -145,8 +145,8 @@ export const ADMIN_COMMANDS = {
 			tell(player, 'chat.admin.bot.error.present', bot.name);
 			return;
 		}
-		spawnBot(player);
-		tell(player, 'chat.admin.bot.spawned', getBotName());
+		const spawned = await spawnBot(player);
+		tell(player, spawned ? 'chat.admin.bot.spawned' : 'chat.admin.bot.error.spawn', getBotName());
 	},
 
 	stick(player, args) {

@@ -1338,6 +1338,7 @@ chat.admin.bot.effect.added=§r §7CMD §8» §7Боту §f%1$s§r§7 нал
 chat.admin.bot.effect.cleared=§r §7CMD §8» §7С бота §f%1$s§r§7 сняты все эффекты
 chat.admin.bot.error.name=§r⩕ §l§cERROR!§r §8» §7Имя бота: от 3 до 16 символов — латинские буквы, цифры, _ и пробел
 chat.admin.bot.error.absent=§r⩕ §l§cERROR!§r §8» §7Бота нет в мире
+chat.admin.bot.error.spawn=§r⩕ §l§cERROR!§r §8» §7Не удалось призвать бота. Подробности ошибки — в ContentLog.
 chat.admin.bot.error.present=§r⩕ §l§cERROR!§r §8» §7Бот §f%1$s§r§7 уже в мире. Управление ботом — в меню админа
 chat.cmd.bot.settings=§r §7CMD §8» §7Закрой чат — откроется окно управления ботом
 admin.bot.button.mode=§8Режим бота

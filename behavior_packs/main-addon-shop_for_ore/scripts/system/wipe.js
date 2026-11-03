@@ -8,6 +8,7 @@
 
 import { world, DynamicPropertiesDefinition } from '@minecraft/server';
 import { syncResetEpoch } from './reset_history.js';
+import { ensurePlayerScores } from './player_scores.js';
 import { run, tell } from '../DataBase.js';
 import { STATS } from './achievements.js';
 
@@ -28,13 +29,20 @@ world.events.worldInitialize.subscribe((e) => {
 const wipeId = () => { try { return world.getDynamicProperty(WIPE_ID) ?? 0; } catch { return 0; } };
 
 /** Сбросить одного игрока (теги — сразу, счета — командами). */
-function wipePlayer(player, id) {
+async function wipePlayer(player, id) {
 	for (const tag of player.getTags()) {
 		if (WIPE_TAGS.some(w => w.endsWith(':') ? tag.startsWith(w) : tag === w)) player.removeTag(tag);
 	}
-	for (const objective of WIPE_OBJECTIVES) run(player, `scoreboard players reset @s ${objective}`);
-	// Без тега player system/system выдаст стартовые счета, как новому игроку
+	for (const objective of WIPE_OBJECTIVES) {
+		if (!world.scoreboard.getObjective(objective)) continue;
+		// У игрока в сети оставляем явные нули: reset удалял запись и ломал отображение.
+		if (await run(player, `scoreboard players set @s ${objective} ${objective === 'lvl' ? 1 : objective === 'xp_need' ? 100 : 0}`) === undefined) return false;
+	}
+	await ensurePlayerScores(player);
+	player.addTag('player');
+	// Счета уже инициализированы: повторная инициализация новичка не нужна
 	player.addTag(WIPE_TAG + id);
+	return true;
 }
 
 /** Сколько игроков затронет вайп: в табло money (все, кто играл) и сейчас в сети. */
@@ -46,12 +54,14 @@ export function wipeCounts() {
 }
 
 /** Вайп: новый номер, счета всем, теги — тем, кто в сети (остальным — при входе). */
-export function wipeAll(by) {
+export async function wipeAll(by) {
 	const id = wipeId() + 1;
 	world.setDynamicProperty(WIPE_ID, id);
-	for (const objective of WIPE_OBJECTIVES) run(by, `scoreboard players reset * ${objective}`);
+	for (const objective of WIPE_OBJECTIVES) {
+		if (world.scoreboard.getObjective(objective)) await run(by, `scoreboard players reset * ${objective}`);
+	}
 	run(by, 'playsound random.levelup @s');
-	for (const player of world.getPlayers()) wipePlayer(player, id);
+	for (const player of world.getPlayers()) await wipePlayer(player, id);
 	return id;
 }
 
@@ -68,8 +78,7 @@ world.events.tick.subscribe(() => {
 		if (!joined.delete(player.name)) continue;
 		syncResetEpoch(player);
 		if (id > 0 && !player.hasTag(WIPE_TAG + id)) {
-			wipePlayer(player, id);
-			tell(player, 'chat.server.wiped.offline');
+			wipePlayer(player, id).then(done => { if (done) tell(player, 'chat.server.wiped.offline'); }).catch(error => console.warn('[Shop for Ore] Wipe recovery: ' + error));
 		}
 	}
 });

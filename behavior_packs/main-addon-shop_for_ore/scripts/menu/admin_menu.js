@@ -544,7 +544,7 @@ export function botMenu(player) {
 		{ text: '%admin.bot.button.clear_effects', icon: 'textures/items/bucket_milk', run: () => { run(bot, 'effect @s clear'); tell(player, 'chat.admin.bot.effect.cleared', bot.name); } },
 		{ text: '%admin.bot.game.title', icon: 'textures/items/diamond_shovel', run: () => botGame(player) },
 		{ text: '%admin.bot.button.remove', icon: 'textures/ui/cancel', run: () => { if (removeBot()) tell(player, 'chat.admin.bot.removed', name); botMenu(player); } }
-	] : [{ text: '%admin.bot.button.spawn', icon: 'textures/server_icons/steve', run: () => { spawnBot(player); tell(player, 'chat.admin.bot.spawned', name); } }];
+	] : [{ text: '%admin.bot.button.spawn', icon: 'textures/server_icons/steve', run: async () => { const bot = await spawnBot(player); tell(player, bot ? 'chat.admin.bot.spawned' : 'chat.admin.bot.error.spawn', name); if (bot) botMenu(player); } }];
 	items.push(toggle('totem', 'totem', 'textures/items/totem'), toggle('returnOnLoad', 'return', 'textures/ui/refresh_light'),
 		{ text: '%admin.bot.button.rename', icon: 'textures/items/name_tag', run: () => botRename(player) }, back(() => admin_menu(player)));
 	showMenu(player, '%admin.bot.title', () => `%admin.bot.name §f${getBotName()}\n%admin.bot.status ${getBot() ? '%admin.bot.present' : '%admin.bot.absent'}`, items, () => admin_menu(player));
@@ -596,10 +596,10 @@ function botGame(player) {
 function botRename(player) {
 	const form = modal('%admin.bot.rename.title')
 		.textField('%admin.bot.rename.body', getBotName(), getBotName());
-	showModal(player, form, (values) => {
+	showModal(player, form, async (values) => {
 		const name = String(values[0] ?? '').trim();
 		if (!setBotName(name)) return tell(player, 'chat.admin.bot.error.name');
-		if (removeBot()) spawnBot(player);
+		if (removeBot() && !await spawnBot(player)) return tell(player, 'chat.admin.bot.error.spawn');
 		tell(player, 'chat.admin.bot.renamed', name);
 	}, () => botMenu(player));
 }

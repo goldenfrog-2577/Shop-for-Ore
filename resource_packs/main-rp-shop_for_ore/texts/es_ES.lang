@@ -1339,6 +1339,7 @@ chat.admin.bot.effect.added=§r §7CMD §8» §7El bot §f%1$s§r§7 recibió
 chat.admin.bot.effect.cleared=§r §7CMD §8» §7Se quitaron todos los efectos al bot §f%1$s
 chat.admin.bot.error.name=§r⩕ §l§cERROR!§r §8» §7Nombre del bot: de 3 a 16 caracteres — letras latinas, números, _ y espacio
 chat.admin.bot.error.absent=§r⩕ §l§cERROR!§r §8» §7El bot no está en el mundo
+chat.admin.bot.error.spawn=§r⩕ §l§cERROR!§r §8» §7No se pudo invocar al bot. Consulta ContentLog para ver el error.
 chat.admin.bot.error.present=§r⩕ §l§cERROR!§r §8» §7El bot §f%1$s§r§7 ya está en el mundo. Gestiónalo desde el menú de admin
 chat.cmd.bot.settings=§r §7CMD §8» §7Cierra el chat: se abrirá la ventana de control del bot
 admin.bot.button.mode=§8Modo del bot
