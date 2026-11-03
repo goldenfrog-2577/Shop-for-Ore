@@ -1041,6 +1041,7 @@ admin.main.button.announce=§8Оголошення
 admin.main.button.wipe=§8Вайп
 admin.main.button.bot=§8Бот
 admin.main.button.players=§8Гравці
+admin.main.button.money=Монети
 admin.main.button.boosts=§8Бусти та івенти
 admin.main.button.server=§8Сервер
 admin.gamemode.title=§l§8Меню адміна » Режим гри
