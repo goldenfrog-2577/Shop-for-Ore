@@ -29,7 +29,13 @@ LANGS = ['ru_RU', 'en_US', 'es_ES', 'uk_UA']
 MAIN = 'ru_RU'
 HEADER = re.compile(r'^## --- (.+) ---$')
 PATTERNS = re.compile(r'^##\s{2,}(\S.*)$')
-PARAM = re.compile(r'%(\d+\$)?s')
+PARAM = re.compile(r'%(?:\d+\$)?[sdif]')
+
+
+def parameters(value):
+	tokens = PARAM.findall(value)
+	return (sorted(t for t in tokens if re.match(r'%\d+\$', t)),
+	        [t for t in tokens if not re.match(r'%\d+\$', t)])
 GLYPH = re.compile('[-]')
 
 
@@ -158,7 +164,7 @@ def check():
 			if key not in values[lang]:
 				continue
 			a, b = values[MAIN][key], values[lang][key]
-			if sorted(PARAM.findall(a)) != sorted(PARAM.findall(b)):
+			if parameters(a) != parameters(b):
 				errors.append(f'{lang}: {key} — параметры %…s не как в {MAIN}')
 			if sorted(GLYPH.findall(a)) != sorted(GLYPH.findall(b)):
 				errors.append(f'{lang}: {key} — значки шрифта не как в {MAIN}')
