@@ -211,6 +211,11 @@ function promocodes(player) {
 function warps(player) {
 	const back = () => menu(player);
 	const list = WARPS.filter(w => w.role === 'player' && warpAllowed(player, w));
+	const vipIndex = list.findIndex(w => w.id === 'vip');
+	if (vipIndex !== -1) {
+		const [vip] = list.splice(vipIndex, 1);
+		list.splice(list.findIndex(w => w.id === 'mine') + 1, 0, vip);
+	}
 	showMenu(player, '%menu.warps.title', '%menu.warps.body', [
 		...list.map(w => ({ text: `\ue179 %menu.warps.button.${w.id}`, run: () => runChatCommand(player, 'warp', [w.id]) })),
 		backButton(back)
