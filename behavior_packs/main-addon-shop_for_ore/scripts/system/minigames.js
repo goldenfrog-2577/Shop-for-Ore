@@ -9,7 +9,7 @@
 
 import { isJailed, jailMinutesLeft } from './jail.js';
 import { world, system } from '@minecraft/server';
-import { run, rawTranslateRich, isPending, findPlayer, tell } from '../DataBase.js';
+import { run, rawTranslateRich, isPending, isBot, findPlayer, tell } from '../DataBase.js';
 import { teleportToArena, combatSecondsLeft } from './pvp.js';
 import { showTitle } from './toast.js';
 
@@ -78,7 +78,7 @@ export function joinGame(player, id, { allowBot = false } = {}) {
 	const g = getGame(id);
 	const fail = (key, ...a) => { tell(player, key, ...a); return false; };
 	if (!g) return fail('chat.cmd.error.not_found', String(id ?? ''), '!game');
-	if (isPending(player) || (player.hasTag('role:bot') && !allowBot)) return false;
+	if (isPending(player) || (isBot(player) && !allowBot)) return false;
 	if (gameOf(player)) return fail('chat.game.error.already', gameName(gameOf(player)));
 	// Зритель игры с запретом телепорта не может уйти в другую игру, пока та идёт
 	if (teleportLock(player)) return fail('chat.game.error.teleport', gameName(teleportLock(player)));
@@ -86,10 +86,17 @@ export function joinGame(player, id, { allowBot = false } = {}) {
 	if (isJailed(player)) return fail(jailMinutesLeft(player) === Infinity ? 'chat.jail.active.permanent' : 'chat.jail.active', String(jailMinutesLeft(player)));
 	// Бот после спарринга «в бою», но сбегать ему не от кого
 	if (!allowBot && combatSecondsLeft(player) > 0) return fail('chat.pvp.combat', combatSecondsLeft(player));
-	if (g.phase === 'running') return fail('chat.game.error.running', gameName(g));
+	if (g.phase === 'running' && !(allowBot && isBot(player))) return fail('chat.game.error.running', gameName(g));
 	if (g.players.size >= g.def.maxPlayers) return fail('chat.game.error.full', gameName(g));
 	g.players.add(player.name);
 	player.addTag(GAME_TAG + g.def.id);
+	if (g.phase === 'running') {
+		g.alive.add(player.name);
+		if (!g.joinedAt) g.joinedAt = new Map();
+		g.joinedAt.set(player.name, g.seconds);
+		g.startedWith = Math.max(g.startedWith, g.players.size);
+		g.def.start(player, g.players.size - 1, g.players.size);
+	}
 	tellGame(g, 'chat.game.joined', player.name, gameName(g), String(g.players.size), String(g.def.maxPlayers));
 	if (g.phase === 'waiting' && g.players.size >= g.def.minPlayers) startCountdown(g);
 	else if (g.phase === 'waiting') tell(player, 'chat.game.waiting', String(g.def.minPlayers - g.players.size));
@@ -163,6 +170,7 @@ export function startGame(g) {
 	g.phase = 'running';
 	g.seconds = 0;
 	g.alive = new Set(g.players);
+	g.joinedAt = new Map([...g.players].map(name => [name, 0]));
 	g.watchers.clear();
 	g.startedWith = g.players.size;
 	// Награда и статистика — только если играли хотя бы двое живых: бот добирает игроков, но победа над ним одним не в счёт
@@ -220,6 +228,7 @@ export function endGame(g, winner, reason = 'end') {
 	}
 	g.players.clear();
 	g.alive.clear();
+	g.joinedAt?.clear();
 	g.watchers.clear();
 	g.phase = 'waiting';
 	g.def.onEnd?.(g);
@@ -248,7 +257,7 @@ system.runSchedule(() => {
 			g.seconds++;
 			for (const name of [...g.alive]) {
 				const p = findPlayer(name);
-				if (p && g.def.isOut?.(p, g.seconds)) {
+				if (p && g.def.isOut?.(p, g.seconds - (g.joinedAt?.get(p.name) ?? 0))) {
 					g.alive.delete(name);
 					g.players.delete(name);
 					p.removeTag(GAME_TAG + g.def.id);

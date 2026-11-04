@@ -11,7 +11,7 @@ import { adminEnchantMenu } from './admin_enchant.js';
 import { boostSeconds } from '../system/boosts.js';
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed, jailMinutesLeft } from '../system/jail.js';
-import { isPending, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS, isVip, VIP_TAG } from '../DataBase.js';
+import { isPending, isBot, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS, isVip, VIP_TAG } from '../DataBase.js';
 import { showMenu, showModal, modal, backButton, confirm, wipeConfirm, WARN_TITLE } from './forms.js';
 import { runChatCommand, setMoney } from '../chat/commands.js';
 import { sendChatMessage } from '../chat/chat.js';
@@ -243,7 +243,7 @@ function wipe(player) {
 
 // Выбор игрока из тех, кто в сети
 export function orderedPlayers(viewer, players = [...world.getPlayers()], random = Math.random) {
-	const kind = p => getRole(p) === 'owner' ? 2 : p.hasTag('role:bot') ? 1 : 0;
+	const kind = p => isBot(p) ? 1 : getRole(p) === 'owner' ? 2 : 0;
 	const sorted = players.slice().sort((a, b) => kind(a) - kind(b) || a.name.localeCompare(b.name));
 	const candidates = sorted.filter(p => kind(p) === 0 && p.name !== viewer.name);
 	if (candidates.length) {
@@ -524,48 +524,29 @@ function serverMenu(player) {
 // ===== Бот =====
 
 export function botMenu(player) {
-	const bot = getBot();
-	const name = getBotName();
-	const items = [];
-	if (bot) {
-		items.push(
-			{ text: '%admin.bot.button.tp_here', icon: 'textures/items/ender_pearl', run: () => run(player, `tp "${bot.name}" @s`) },
-			{ text: '%admin.bot.button.tp_to', icon: 'textures/items/ender_pearl', run: () => run(player, `tp @s "${bot.name}"`) },
-			{ text: `%admin.bot.button.mode\n§8%admin.bot.mode.${botState().mode}`, icon: 'textures/items/compass_item', run: () => botModeMenu(player) },
-			{ text: '%admin.bot.button.say', icon: 'textures/ui/comment', run: () => botSay(player) },
-			{ text: '%admin.bot.button.slots', icon: 'textures/items/iron_chestplate', run: () => botSlots(player) },
-			{ text: '%admin.main.button.effects', icon: 'textures/items/potion_bottle_splash_heal', run: () => botEffects(player) },
-			{ text: '%admin.bot.button.clear_effects', icon: 'textures/items/bucket_milk', run: () => {
-				run(bot, 'effect @s clear');
-				tell(player, 'chat.admin.bot.effect.cleared', bot.name);
-			} },
-			{ text: '%admin.bot.button.remove', icon: 'textures/ui/cancel', run: () => {
-				if (removeBot()) tell(player, 'chat.admin.bot.removed', name);
-			} }
-		);
-	} else {
-		items.push({ text: '%admin.bot.button.spawn', icon: 'textures/server_icons/steve', run: () => {
-			spawnBot(player);
-			tell(player, 'chat.admin.bot.spawned', name);
-		} });
-	}
-	const st = botState();
+	const bot = getBot(), name = getBotName(), st = botState();
+	const status = (title, value) => `${title}\n§8[ §r${value} §8]`;
 	const toggle = (key, label, icon) => ({
-		text: `%admin.bot.button.${label}\n${st[key] ? '%menu.settings.state.on' : '%menu.settings.state.off'}`, icon,
-		run: () => {
-			const on = toggleBot(key);
-			tell(player, `chat.admin.bot.${label}.${on ? 'on' : 'off'}`, name);
-			botMenu(player);
-		}
+		text: status(`%admin.bot.button.${label}`, key === 'sit'
+			? st.sit ? '%admin.bot.sit.sneaking' : '%admin.bot.sit.standing'
+			: st[key] ? '%menu.settings.state.on' : '%menu.settings.state.off'), icon,
+		run: () => { const on = toggleBot(key); tell(player, `chat.admin.bot.${label}.${on ? 'on' : 'off'}`, name); botMenu(player); }
 	});
-	items.push(
+	const items = bot ? [
+		{ text: '%admin.bot.button.tp_here', icon: 'textures/items/ender_pearl', run: () => run(player, `tp "${bot.name}" @s`) },
+		{ text: '%admin.bot.button.tp_to', icon: 'textures/items/ender_pearl', run: () => run(player, `tp @s "${bot.name}"`) },
+		{ text: status('%admin.bot.button.mode', `%admin.bot.mode.${st.mode}`), icon: 'textures/items/compass_item', run: () => botModeMenu(player) },
+		{ text: '%admin.bot.button.say', icon: 'textures/ui/comment', run: () => botSay(player) },
+		{ text: '%admin.bot.button.slots', icon: 'textures/items/iron_chestplate', run: () => botSlots(player) },
 		toggle('sit', 'sit', 'textures/ui/sneak_button_default'),
-		toggle('totem', 'totem', 'textures/items/totem'),
-		toggle('returnOnLoad', 'return', 'textures/ui/refresh_light'),
-		{ text: '%admin.bot.button.rename', icon: 'textures/items/name_tag', run: () => botRename(player) },
-		back(() => admin_menu(player))
-	);
-	showMenu(player, '%admin.bot.title', `%admin.bot.name §f${name}\n${bot ? '%admin.bot.present' : '%admin.bot.absent'}`, items, () => admin_menu(player));
+		{ text: '%admin.main.button.effects', icon: 'textures/items/potion_bottle_confusion', run: () => botEffects(player) },
+		{ text: '%admin.bot.button.clear_effects', icon: 'textures/items/bucket_milk', run: () => { run(bot, 'effect @s clear'); tell(player, 'chat.admin.bot.effect.cleared', bot.name); } },
+		{ text: '%admin.bot.game.title', icon: 'textures/items/diamond_shovel', run: () => botGame(player) },
+		{ text: '%admin.bot.button.remove', icon: 'textures/ui/cancel', run: () => { if (removeBot()) tell(player, 'chat.admin.bot.removed', name); botMenu(player); } }
+	] : [{ text: '%admin.bot.button.spawn', icon: 'textures/server_icons/steve', run: () => { spawnBot(player); tell(player, 'chat.admin.bot.spawned', name); } }];
+	items.push(toggle('totem', 'totem', 'textures/items/totem'), toggle('returnOnLoad', 'return', 'textures/ui/refresh_light'),
+		{ text: '%admin.bot.button.rename', icon: 'textures/items/name_tag', run: () => botRename(player) }, back(() => admin_menu(player)));
+	showMenu(player, '%admin.bot.title', () => `%admin.bot.name §f${getBotName()}\n%admin.bot.status ${getBot() ? '%admin.bot.present' : '%admin.bot.absent'}`, items, () => admin_menu(player));
 }
 
 // Режим бота (system/bot_ai.js): за мной и «повторяй» — за тем, кто открыл меню

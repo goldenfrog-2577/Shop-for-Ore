@@ -6,15 +6,15 @@ execute as @a[x=0,y=1,z=-20,r=3,scores={lvl=1..15}] at @s run tp @s 0 5 0
 execute as @a[x=0,y=1,z=-56,r=3,scores={lvl=1..25}] at @s run tp @s 0 5 -33
 # VIP-остров (x −86…−34, z −70…−43: VIP-шахта и лавка торговца) — только VIP (тег player:vip) и персоналу.
 # Попасть туда — !warp vip или Меню сервера → Телепортации (scripts/DataBase.js, WARPS)
-execute as @a[x=-87,y=-8,z=-71,dx=54,dy=30,dz=29,tag=!player:vip,tag=!role:owner,tag=!role:admin,tag=!role:moder,tag=!role:helper,tag=!role:bot] at @s run tp @s 0 5 0
+execute as @a[x=-87,y=-8,z=-71,dx=54,dy=30,dz=29,tag=!player:vip,tag=!role:owner,tag=!role:admin,tag=!role:moder,tag=!role:helper,tag=!role:bot,tag=!sys:bot] at @s run tp @s 0 5 0
 # Зона командных блоков — владельцу, администраторам и боту (тег role:bot, scripts/system/spawnbot.js)
-execute as @a[x=50,y=0,z=50,r=25,tag=!role:owner,tag=!role:admin,tag=!role:bot] at @s run tp @s 0 5 0
+execute as @a[x=50,y=0,z=50,r=25,tag=!role:owner,tag=!role:admin,tag=!role:bot,tag=!sys:bot] at @s run tp @s 0 5 0
 
 ## --- Телепорты-площадки ---
 # Тёмные дубовые доски — на спавн; багровые и искажённые — в адскую шахту
-execute as @a at @s if block ~~~ planks 5 run tp @s 0 5 0
-execute as @a at @s if block ~~~ crimson_planks run tp @s 0 5 -33
-execute as @a at @s if block ~~~ warped_planks run tp @s 0 5 -33
+execute as @a[tag=!role:bot,tag=!sys:bot] at @s if block ~~~ planks 5 run tp @s 0 5 0
+execute as @a[tag=!role:bot,tag=!sys:bot] at @s if block ~~~ crimson_planks run tp @s 0 5 -33
+execute as @a[tag=!role:bot,tag=!sys:bot] at @s if block ~~~ warped_planks run tp @s 0 5 -33
 # Порталы мини-игр. PvP-арена: случайную точку площадки выбирает scripts/system/pvp.js по тегу sys:warp_pvp
 tag @a[x=-103,y=0,z=-51,r=1,tag=!sys:warp_pvp] add sys:warp_pvp
 # Сплиф — белый портал, тир — зелёный (рамка из зелёного бетона x −111…−107)

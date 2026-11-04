@@ -211,7 +211,10 @@ export function findPlayer(name) {
  * @param {Player} player
  * @returns {boolean}
  */
+export const isBot = player => player.hasTag('sys:bot') || player.hasTag('role:bot');
+
 export function isPending(player) {
+	if (isBot(player)) return false;
 	return player.hasTag('auth:login') || player.hasTag('auth:register');
 }
 
@@ -308,7 +311,7 @@ export const BOT_COLOR = '§f';
  */
 export function getRole(player) {
 	// Бот карты (тег bot) — всегда без роли: прав у него нет, в чате у него свой префикс «Бот»
-	if (player.hasTag('role:bot')) return 'player';
+	if (isBot(player)) return 'player';
 	if (player.hasTag('role:owner')) return 'owner';
 	if (player.hasTag('role:admin')) return 'admin';
 	if (player.hasTag('role:moder')) return 'moder';
