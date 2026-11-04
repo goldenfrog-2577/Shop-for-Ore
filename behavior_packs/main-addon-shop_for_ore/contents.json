@@ -178,13 +178,7 @@
 			"path" : "scripts/menu/admin_menu.js"
 		},
 		{
-			"path" : "scripts/menu/bank_menu.js"
-		},
-		{
 			"path" : "scripts/menu/main_menu.js"
-		},
-		{
-			"path" : "scripts/register/loadScript.js"
 		},
 		{
 			"path" : "scripts/register/login.js"
@@ -316,9 +310,6 @@
 			"path" : "scripts/menu/cosmetics_shop.js"
 		},
 		{
-			"path" : "scripts/system/reload.js"
-		},
-		{
 			"path" : "scripts/system/toast.js"
 		},
 		{
@@ -335,9 +326,6 @@
 		},
 		{
 			"path" : "scripts/menu/achievements_menu.js"
-		},
-		{
-			"path" : "scripts/menu/minigames_menu.js"
 		},
 		{
 			"path" : "scripts/menu/forms.js"

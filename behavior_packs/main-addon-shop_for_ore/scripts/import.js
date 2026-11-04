@@ -8,6 +8,9 @@
 *   (╮°-°)╮┳━┳      (╯°□°)╯︵ ┻━┻
 */
 
+import { world, system } from '@minecraft/server';
+import { hasRole, tell } from './DataBase.js';
+
 // Лог о запуске скриптов аддона
 console.log('[Shop for Ore] Addon scripts is working');
 
@@ -30,7 +33,6 @@ import './system/mythic.js';      // Ивент «Мистик»: сундук �
 import './system/freeze.js';      // Заморозка: игрок застывает на месте
 import './system/ban.js';         // Бан по номеру игрока в мире и нику
 import './system/migrate.js';     // Старые названия тегов → новые (0.3.0)
-import './system/reload.js';      // «Скрипты загружены» администраторам после /reload
 import './system/achievements.js'; // Достижения и испытания, счётчики stat_*
 import './system/minigames.js';   // Основа мини-игр (PvP «Последний выживший»)
 import './system/spleef.js';      // Мини-игра «Сплиф»
@@ -48,5 +50,12 @@ import './system/ranks.js';       // Префикс уровня в чате (ra
 import './system/hud.js';         // Панель слева (actionbar)
 import './system/fallback.js';    // Пульс скриптов: без него включается запасное меню на NPC
 
-// Импорт загрузчика скриптов
-import './register/loadScript.js';
+// Вход и регистрация
+import './register/system.js';
+
+// После загрузки уведомить администраторов в сети.
+system.run(() => {
+	for (const player of world.getPlayers()) {
+		if (hasRole(player, 'admin')) tell(player, 'chat.cmd.reload.done');
+	}
+});

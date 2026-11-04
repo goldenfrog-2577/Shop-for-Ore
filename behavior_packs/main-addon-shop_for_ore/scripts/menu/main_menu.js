@@ -4,13 +4,12 @@
 
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed } from '../system/jail.js';
-import { isPending, tellText, tell, run, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed } from '../DataBase.js';
+import { isPending, tellText, tell, run, getScore, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed } from '../DataBase.js';
 import { showMenu, showModal, modal, backButton, toggleMenu } from './forms.js';
-import { bank } from './bank_menu.js';
 import { enchantsMenu } from './enchant_shop.js';
 import { cosmeticsMenu } from './cosmetics_shop.js';
 import { achievementsMenu } from './achievements_menu.js';
-import { minigamesMenu } from './minigames_menu.js';
+import { listGames, gameOf, joinGame, leaveGame } from '../system/minigames.js';
 import { runChatCommand } from '../chat/commands.js';
 import { MUSIC_OFF } from '../system/music.js';
 import { ChangePasswordUI } from '../register/change.js';
@@ -188,6 +187,30 @@ function boardSetting(player, back) {
 		{ text: ' %menu.settings.button.enable', run: pick('scoreboard_on', '%chat.settings.enabled') },
 		{ text: ' %menu.settings.button.icons_only', run: pick('scoreboard_icons', '%chat.settings.icons_only') },
 		{ text: ' %menu.settings.button.disable', run: pick('scoreboard_off', '%chat.settings.disabled') },
+		backButton(back)
+	], back);
+}
+
+// ===== Банк и мини-игры =====
+
+export function bank(player) {
+	// Получатели — игроки в сети, кроме себя и бота (себе перевести нельзя, у бота денег нет)
+	const names = [...world.getPlayers()].filter(p => p.name !== player.name && !p.hasTag('role:bot')).map(p => p.name);
+	if (!names.length) return tell(player, 'chat.bank.error.no_players');
+	const form = modal('%menu.bank.title')
+		.dropdown(`\n%menu.bank.balance §e${getScore(player, 'money')} §f\ue152\n%menu.bank.player`, names, 0)
+		.textField('%menu.bank.amount', '%menu.bank.amount_placeholder');
+	showModal(player, form, ([target, amount]) => transferMoney(player, names[target], amount), () => menu(player));
+}
+
+const gameStateLine = (g) => `§8%menu.games.phase.${g.phase} §7(${g.players.size}/${g.def.maxPlayers})`;
+
+export function minigamesMenu(player, back) {
+	const mine = gameOf(player);
+	showMenu(player, '%menu.games.title', mine ? '%menu.games.body.in_game' : '%menu.games.body', [
+		...listGames().map(g => g === mine
+			? { text: `§2%minigame.${g.def.id}.name\n§2%menu.games.leave`, run: () => leaveGame(player) }
+			: { text: `§8%minigame.${g.def.id}.name\n${gameStateLine(g)}`, run: () => joinGame(player, g.def.id) }),
 		backButton(back)
 	], back);
 }
