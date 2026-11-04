@@ -22,7 +22,7 @@ export const ITEM_ENCHANTS = [
 	{ id: 'power', name: 'enchantment.arrowDamage', max: 5, price: 4000 },
 	{ id: 'punch', name: 'enchantment.arrowKnockback', max: 2, price: 4000 },
 	{ id: 'infinity', name: 'enchantment.arrowInfinite', max: 1, price: 30000 },
-	// Трезубец (с «Громовержцем» попадание в игрока бьёт молнией — system/trident.js) и арбалет.
+	// Трезубец (с «Громовержцем» попадание в игрока бьёт молнией — system/combat/trident.js) и арбалет.
 	// Несовместимые (тягун с верностью и громовержцем, тройной выстрел с пронзанием) отсекает canAddEnchantment
 	{ id: 'loyalty', name: 'enchantment.tridentLoyalty', max: 3, price: 6000 },
 	{ id: 'impaling', name: 'enchantment.tridentImpaling', max: 5, price: 5000 },

@@ -11,7 +11,7 @@ bot.getComponent=()=>({current:20,resetToMaxValue(){}});
 const ctx={world:{events,getPlayers:()=>[bot,human].values(),getDynamicProperty:k=>props[k],setDynamicProperty:(k,v)=>props[k]=v},Location:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},BlockLocation:class{},DynamicPropertiesDefinition:class{},Date:clock,
 	isAir:id=>!id||id==='minecraft:air',isSolid:id=>id==='minecraft:stone',getBot:()=>bot,isBot:p=>p.hasTag('sys:bot')||p.hasTag('role:bot'),isPending:()=>false,getScore:()=>10,findPlayer:n=>n===human.name?human:undefined,
 	run:(p,c)=>commands.push(c),onBotSpawned(){},onBotRemoved(){},freezePlayer(){},unfreezePlayer(){},showHudLine(){},getGame(){},gameOf(){},leaveGame(){},joinGame(){return true;},teleportToArena:p=>p.addTag('player:pvp')};
-vm.runInNewContext(load('scripts/system/bot.js')+'\nglobalThis.botApi={setBotMode};',ctx);
+vm.runInNewContext(load('scripts/system/bot/bot.js')+'\nglobalThis.botApi={setBotMode};',ctx);
 const tick=n=>{for(let i=0;i<n;i++)for(const fn of events.tick.handlers)fn();};
 ctx.botApi.setBotMode('follow',{target:'Human'});tick(20);assert.ok(calls.some(c=>c[0]==='navigateToEntity'));assert.ok(!commands.some(c=>c.startsWith('tp ')),'distant target starts with walking');
 for(let i=0;i<10;i++){bot.location.x+=0.5;tick(10);}assert.ok(!commands.some(c=>c.startsWith('tp ')),'progress avoids teleport');
@@ -19,13 +19,13 @@ tick(220);assert.ok(commands.some(c=>c.startsWith('tp ')),'stuck recovery eventu
 human.location.x=bot.location.x+2;ctx.botApi.setBotMode('spar',{level:4});calls.length=0;tick(40);assert.ok(calls.filter(c=>c[0]==='attackEntity').length>=15);assert.ok(calls.some(c=>c[0]==='jump'));assert.ok(calls.some(c=>c[0]==='navigateToLocation'),'hardest bot circles its target');
 // Dummy HUD blocks lower-priority arena updates for its lease, then releases them.
 let now=1000;const hud={world:{events:{playerLeave:event()}},Date:{now:()=>now},run:(p,c)=>commands.push(c)};
-vm.runInNewContext(load('scripts/system/toast.js')+'\nglobalThis.line=showHudLine;',hud);
+vm.runInNewContext(load('scripts/system/ui/toast.js')+'\nglobalThis.line=showHudLine;',hud);
 assert.equal(hud.line(human,[],{priority:10,source:'dummy'}),true);assert.equal(hud.line(human,[]),false);now+=2001;assert.equal(hud.line(human,[]),true);
 // Join a running game as an additional participant; humans still cannot join late.
 const miniEvents=new Proxy({}, {get:(o,k)=>o[k]??(o[k]=event())});let starts=0;
 const mini={world:{events:miniEvents,getPlayers:()=>[bot,human].values()},system:{runSchedule(){},run(){}},run(){},tell(){},rawTranslateRich:()=> '{}',isPending:()=>false,isBot:ctx.isBot,findPlayer:n=>n===bot.name?bot:human,
 	isJailed:()=>false,jailMinutesLeft:()=>0,combatSecondsLeft:()=>0,teleportToArena:()=>starts++,showTitle(){}};
-vm.runInNewContext(load('scripts/system/minigames.js')+'\nglobalThis.games={getGame,joinGame};',mini);
+vm.runInNewContext(load('scripts/system/minigames/minigames.js')+'\nglobalThis.games={getGame,joinGame};',mini);
 const g=mini.games.getGame('pvp_ffa');g.phase='running';g.seconds=40;g.players.add(human.name);g.alive.add(human.name);
 assert.equal(mini.games.joinGame(bot,'pvp_ffa',{allowBot:true}),true);assert.ok(g.alive.has(bot.name));assert.equal(g.joinedAt.get(bot.name),40);assert.equal(starts,1);
 const third=mk('Third');assert.equal(mini.games.joinGame(third,'pvp_ffa'),false);

@@ -14,7 +14,7 @@ import { unlockPlayer } from './system.js';
 export function RegisterUI(player) {
 	const register = modal('%account.register.title')
 		// В форме у ключей нет параметров: ник — в начале («Ник, приветствую…»), так порядок слов верен во всех языках
-		.textField(`\n§b${player.name}§7, %account.login.intro`, '%account.login.placeholder')
+		.textField(`\n§f${player.name}§r§7, %account.login.intro`, '%account.login.placeholder')
 		.toggle('%account.register.agree', false);
 	return register.show(player).then(r => {
 		// Форма закрыта — через ~2 с она покажется снова

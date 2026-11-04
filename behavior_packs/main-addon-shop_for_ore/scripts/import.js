@@ -23,32 +23,32 @@ import './chat/chat.js';         // Чат-функционал
 import './chat/commands.js';     // Команды чата
 
 // Импорт других вспомогательных модулей
-import './system/anticheat.js';   // Античит: очки нарушений, сигналы персоналу, проверка инвентаря
-import './system/anticheat_checks.js';   // Античит: скорость, полёт, сквозь блоки, дальность и направление удара, копание
-import './system/spawnbot.js';    // Спавн бота
-import './system/bot.js';      // Поведение бота: режимы, груша, спарринг, мини-игры, возврат, гид
-import './system/tools.js';       // Неразрушаемая кирка уровня
-import './system/pvp.js';         // PvP-арена: случайная точка входа и режим боя
-import './system/mythic.js';      // Ивент «Мистик»: сундук с лутом в центре арены
-import './system/freeze.js';      // Заморозка: игрок застывает на месте
-import './system/ban.js';         // Бан по номеру игрока в мире и нику
-import './system/migrate.js';     // Старые названия тегов → новые (0.3.0)
-import './system/achievements.js'; // Достижения и испытания, счётчики stat_*
-import './system/minigames.js';   // Основа мини-игр (PvP «Последний выживший»)
-import './system/spleef.js';      // Мини-игра «Сплиф»
-import './system/cps.js';         // Проверка CPS против автокликеров
-import './system/boosts.js';      // Бусты, выданные администратором: запись и отключение
-import './system/jail.js';        // Тюрьма (!jail): камера у спавна, срок или навсегда
-import './system/tir.js';         // Тир: стрельба по мишеням за монеты, кирка убирается на время
-import './system/trader.js';      // Лавка странствующего торговца: кнопки, VIP-коины, товары-структуры
-import './system/music.js';       // Выключатель музыки (Настройки)
-import './system/wipe.js';        // Вайп: номер вайпа, сброс игроков не в сети при входе
-import './system/offline_reset.js'; // !resetoffline: всё сбросить игрокам не в сети
-import './system/trident.js';     // Трезубец с «Громовержцем»: молния в поражённого игрока
-import './system/void.js';        // Бездна: упал ниже мира — на спавн
-import './system/ranks.js';       // Префикс уровня в чате (rank:§rN, у VIP — rank:§aVIP)
-import './system/hud.js';         // Панель слева (actionbar)
-import './system/fallback.js';    // Пульс скриптов: без него включается запасное меню на NPC
+import './system/security/anticheat.js';   // Античит: очки нарушений, сигналы персоналу, проверка инвентаря
+import './system/security/anticheat_checks.js';   // Античит: скорость, полёт, сквозь блоки, дальность и направление удара, копание
+import './system/bot/spawnbot.js';    // Спавн бота
+import './system/bot/bot.js';      // Поведение бота: режимы, груша, спарринг, мини-игры, возврат, гид
+import './system/player/tools.js';       // Неразрушаемая кирка уровня
+import './system/combat/pvp.js';         // PvP-арена: случайная точка входа и режим боя
+import './system/combat/mythic.js';      // Ивент «Мистик»: сундук с лутом в центре арены
+import './system/security/freeze.js';      // Заморозка: игрок застывает на месте
+import './system/security/ban.js';         // Бан по номеру игрока в мире и нику
+import './system/core/migrate.js';     // Старые названия тегов → новые (0.3.0)
+import './system/player/achievements.js'; // Достижения и испытания, счётчики stat_*
+import './system/minigames/minigames.js';   // Основа мини-игр (PvP «Последний выживший»)
+import './system/minigames/spleef.js';      // Мини-игра «Сплиф»
+import './system/security/cps.js';         // Проверка CPS против автокликеров
+import './system/economy/boosts.js';      // Бусты, выданные администратором: запись и отключение
+import './system/security/jail.js';        // Тюрьма (!jail): камера у спавна, срок или навсегда
+import './system/minigames/tir.js';         // Тир: стрельба по мишеням за монеты, кирка убирается на время
+import './system/economy/trader.js';      // Лавка странствующего торговца: кнопки, VIP-коины, товары-структуры
+import './system/ui/music.js';       // Выключатель музыки (Настройки)
+import './system/core/wipe.js';        // Вайп: номер вайпа, сброс игроков не в сети при входе
+import './system/core/offline_reset.js'; // !resetoffline: всё сбросить игрокам не в сети
+import './system/combat/trident.js';     // Трезубец с «Громовержцем»: молния в поражённого игрока
+import './system/player/void.js';        // Бездна: упал ниже мира — на спавн
+import './system/player/ranks.js';       // Префикс уровня в чате (rank:§rN, у VIP — rank:§aVIP)
+import './system/ui/hud.js';         // Панель слева (actionbar)
+import './system/core/fallback.js';    // Пульс скриптов: без него включается запасное меню на NPC
 
 // Вход и регистрация
 import './register/system.js';
@@ -59,6 +59,6 @@ system.run(() => {
 		if (hasRole(player, 'admin')) tell(player, 'chat.cmd.reload.done');
 	}
 });
-import './system/playtime.js'; // Суммарное время в мире
-import './system/reset_history.js'; // Очистка служебных номеров без повторного вайпа
-import './system/player_scores.js'; // Восстановление отсутствующих счетов после сброса
+import './system/player/playtime.js'; // Суммарное время в мире
+import './system/core/reset_history.js'; // Очистка служебных номеров без повторного вайпа
+import './system/core/player_scores.js'; // Восстановление отсутствующих счетов после сброса

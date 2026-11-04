@@ -1,6 +1,6 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
 const bp=new URL('../../behavior_packs/main-addon-shop_for_ore/',import.meta.url);
-const src=fs.readFileSync(new URL('scripts/system/player_scores.js',bp),'utf8').replace(/^import .*;\r?\n/gm,'').replace(/\bexport (?=(?:async )?function|const)/g,'');
+const src=fs.readFileSync(new URL('scripts/system/core/player_scores.js',bp),'utf8').replace(/^import .*;\r?\n/gm,'').replace(/\bexport (?=(?:async )?function|const)/g,'');
 const rules={functioncommandlimit:0,maxcommandchainlength:0,commandblocksenabled:false},props={},commands=[],warnings=[];
 const player={name:'P',scores:{lvl:1,money:250100,vip_coins:80,play_seconds:24615},tags:new Set(['role:owner','auth:done','sys:wipe:1']),getTags:()=>[...player.tags],hasTag:t=>player.tags.has(t),addTag:t=>player.tags.add(t)};player.scoreboard=player;
 const objectives=new Map();

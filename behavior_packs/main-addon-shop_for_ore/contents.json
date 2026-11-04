@@ -196,16 +196,16 @@
 			"path" : "scripts/register/system.js"
 		},
 		{
-			"path" : "scripts/system/anticheat.js"
+			"path" : "scripts/system/security/anticheat.js"
 		},
 		{
-			"path" : "scripts/system/anticheat_checks.js"
+			"path" : "scripts/system/security/anticheat_checks.js"
 		},
 		{
-			"path" : "scripts/system/spawnbot.js"
+			"path" : "scripts/system/bot/spawnbot.js"
 		},
 		{
-			"path" : "scripts/system/bot.js"
+			"path" : "scripts/system/bot/bot.js"
 		},
 		{
 			"path" : "structures/server/bot.mcstructure"
@@ -235,7 +235,7 @@
 			"path" : "functions/fallback/warp_vip.mcfunction"
 		},
 		{
-			"path" : "scripts/system/fallback.js"
+			"path" : "scripts/system/core/fallback.js"
 		},
 		{
 			"path" : "structures/trader/wither_skull.mcstructure"
@@ -292,40 +292,40 @@
 			"path" : "scripts/register/change.js"
 		},
 		{
-			"path" : "scripts/system/mythic.js"
+			"path" : "scripts/system/combat/mythic.js"
 		},
 		{
-			"path" : "scripts/system/pvp.js"
+			"path" : "scripts/system/combat/pvp.js"
 		},
 		{
-			"path" : "scripts/system/tools.js"
+			"path" : "scripts/system/player/tools.js"
 		},
 		{
-			"path" : "scripts/system/freeze.js"
+			"path" : "scripts/system/security/freeze.js"
 		},
 		{
-			"path" : "scripts/system/ban.js"
+			"path" : "scripts/system/security/ban.js"
 		},
 		{
-			"path" : "scripts/system/migrate.js"
+			"path" : "scripts/system/core/migrate.js"
 		},
 		{
 			"path" : "scripts/menu/cosmetics_shop.js"
 		},
 		{
-			"path" : "scripts/system/toast.js"
+			"path" : "scripts/system/ui/toast.js"
 		},
 		{
-			"path" : "scripts/system/achievements.js"
+			"path" : "scripts/system/player/achievements.js"
 		},
 		{
-			"path" : "scripts/system/minigames.js"
+			"path" : "scripts/system/minigames/minigames.js"
 		},
 		{
-			"path" : "scripts/system/cps.js"
+			"path" : "scripts/system/security/cps.js"
 		},
 		{
-			"path" : "scripts/system/music.js"
+			"path" : "scripts/system/ui/music.js"
 		},
 		{
 			"path" : "scripts/menu/achievements_menu.js"
@@ -334,25 +334,25 @@
 			"path" : "scripts/menu/forms.js"
 		},
 		{
-			"path" : "scripts/system/wipe.js"
+			"path" : "scripts/system/core/wipe.js"
 		},
 		{
-			"path" : "scripts/system/offline_reset.js"
+			"path" : "scripts/system/core/offline_reset.js"
 		},
 		{
-			"path" : "scripts/system/trident.js"
+			"path" : "scripts/system/combat/trident.js"
 		},
 		{
-			"path" : "scripts/system/void.js"
+			"path" : "scripts/system/player/void.js"
 		},
 		{
-			"path" : "scripts/system/ranks.js"
+			"path" : "scripts/system/player/ranks.js"
 		},
 		{
-			"path" : "scripts/system/hud.js"
+			"path" : "scripts/system/ui/hud.js"
 		},
 		{
-			"path" : "scripts/system/spleef.js"
+			"path" : "scripts/system/minigames/spleef.js"
 		},
 		{
 			"path" : "items/weapons/portable_ender_crystal.json"
@@ -361,22 +361,22 @@
 			"path" : "entities/thrown_ender_crystal.json"
 		},
 		{
-			"path" : "scripts/system/boosts.js"
+			"path" : "scripts/system/economy/boosts.js"
 		},
 		{
-			"path" : "scripts/system/error_keys.js"
+			"path" : "scripts/system/ui/error_keys.js"
 		},
 		{
-			"path" : "scripts/system/jail.js"
+			"path" : "scripts/system/security/jail.js"
 		},
 		{
-			"path" : "scripts/system/tir.js"
+			"path" : "scripts/system/minigames/tir.js"
 		},
 		{
-			"path" : "scripts/system/trader.js"
+			"path" : "scripts/system/economy/trader.js"
 		},
 		{
-			"path" : "scripts/system/promo.js"
+			"path" : "scripts/system/economy/promo.js"
 		},
 		{
 			"path" : "loot_tables/achievements/sniper_bow.json"
@@ -388,10 +388,10 @@
 			"path" : "functions/ui/menu_success.mcfunction"
 		},
 		{
-			"path" : "scripts/system/playtime.js"
+			"path" : "scripts/system/player/playtime.js"
 		},
 		{
-			"path" : "scripts/system/reset_history.js"
+			"path" : "scripts/system/core/reset_history.js"
 		},
 		{
 			"path" : "scripts/menu/admin_enchant.js"
@@ -451,7 +451,7 @@
 			"path" : "scripts/system/worldedit.js"
 		},
 		{
-			"path" : "scripts/system/player_scores.js"
+			"path" : "scripts/system/core/player_scores.js"
 		}],
 	"version" : 1
 }

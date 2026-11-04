@@ -2,16 +2,16 @@
 // Обработчик: имя команды без «!» → (player, args, command). Права (роль из commandsList) проверяет
 // runChatCommand в chat/commands.js; return — команда выполнена или отказ уже сообщён игроку.
 
-import { playtimeRawtext } from '../../system/playtime.js';
+import { playtimeRawtext } from '../../system/player/playtime.js';
 import { world } from '@minecraft/server';
 import { run, tell, findPlayer, setChatColor, CHAT_COLORS, colorAllowed, impersonatedRole, hasRole, rawTranslate, emotes, parseTerm, rawTranslateRich, termText, getScore, getRole } from '../../DataBase.js';
 import { botMenu } from '../../menu/admin_menu.js';
-import { getBot, spawnBot, getBotName } from '../../system/spawnbot.js';
-import { LEVEL_RANK_RE } from '../../system/ranks.js';
-import { startMythic } from '../../system/mythic.js';
-import { stopAdminBoosts, markAdminBoost, MAGNET_ADMIN_TAG, BOOST_TIMERS, boostSeconds, boostTimersReady } from '../../system/boosts.js';
-import { ACHIEVEMENTS, has as hasAchievement, findAchievement, unlock, revoke } from '../../system/achievements.js';
-import { addBan, kickBanned, findBan, removeBan, getBans, banActive, banMinutesLeft } from '../../system/ban.js';
+import { getBot, spawnBot, getBotName } from '../../system/bot/spawnbot.js';
+import { LEVEL_RANK_RE } from '../../system/player/ranks.js';
+import { startMythic } from '../../system/combat/mythic.js';
+import { stopAdminBoosts, markAdminBoost, MAGNET_ADMIN_TAG, BOOST_TIMERS, boostSeconds, boostTimersReady } from '../../system/economy/boosts.js';
+import { ACHIEVEMENTS, has as hasAchievement, findAchievement, unlock, revoke } from '../../system/player/achievements.js';
+import { addBan, kickBanned, findBan, removeBan, getBans, banActive, banMinutesLeft } from '../../system/security/ban.js';
 import { resolveTarget, tellList, canPunish } from './common.js';
 
 // Отказ: цвет, префикс или тег выдают игрока за роль, которой у него нет (role — owner/admin/moder/bot)
@@ -44,9 +44,9 @@ export function debugLines(target) {
 	const lines = [
 		{ translate: 'chat.cmd.stats.role', with: { rawtext: [{ translate: `role.${getRole(target)}` }] } },
 		{ translate: 'chat.cmd.debug.pos', with: [`${Math.floor(x)} ${Math.floor(y)} ${Math.floor(z)}`, target.dimension.id.replace('minecraft:', '')] },
+		{ rawtext: [{ translate: 'admin.players.body.playtime' }, { text: ' ' }, ...playtimeRawtext(target)] },
 		{ translate: 'chat.cmd.debug.scores', with: [scores] },
-		{ translate: 'chat.cmd.debug.tags', with: [String(tags.length)] },
-		{ rawtext: [{ translate: 'admin.players.body.playtime' }, { text: ' ' }, ...playtimeRawtext(target)] }
+		{ translate: 'chat.cmd.debug.tags', with: [String(tags.length)] }
 	];
 	// Группы по алфавиту, теги без «:» — последними («прочие»)
 	const names = [...groups.keys()].filter(g => g).sort((a, b) => a.localeCompare(b));
@@ -88,7 +88,7 @@ export async function setMoney(player, target, action, raw, currency = 'money') 
 export function giveOreMagnet(player, target, minutes) {
 	run(target, `scoreboard players set @s magnet ${minutes * 60}`);
 	target.addTag('boost:magnet');
-	// Выдан администратором — снимается кнопкой «Отключить выданные бусты» (system/boosts.js)
+	// Выдан администратором — снимается кнопкой «Отключить выданные бусты» (system/economy/boosts.js)
 	target.addTag(MAGNET_ADMIN_TAG);
 	tell(target, 'chat.cmd.boost.magnet.received', player.name, String(minutes));
 	run(target, 'playsound note.bell @s');
@@ -218,7 +218,7 @@ export const ADMIN_COMMANDS = {
 				tell(player, 'chat.cmd.error.offline', prefixPlayer);
 				return;
 			}
-			// Служебные префиксы — уровень и VIP (system/ranks.js) — не показываем и не снимаем
+			// Служебные префиксы — уровень и VIP (system/player/ranks.js) — не показываем и не снимаем
 			const prefixes = target.getTags().filter(t => t.startsWith('rank:') && !LEVEL_RANK_RE.test(t));
 			if (prefixAction === 'list') {
 				tell(player, 'chat.cmd.prefix.list', target.name, prefixes.length ? prefixes.map(t => t.slice(5)).join('§r§7, ') : '—');
@@ -365,7 +365,7 @@ export const ADMIN_COMMANDS = {
 	event(player, args) {
 		// Запустить ивент сразу (по таймеру они идут, только если включены в settings)
 		const ev = (args[0] || '').toLowerCase();
-		// «Мистик» — скрипт (system/mythic.js): наполняет сундук в центре PvP-арены
+		// «Мистик» — скрипт (system/combat/mythic.js): наполняет сундук в центре PvP-арены
 		if (ev === 'mythic') {
 			if (!startMythic()) {
 				tell(player, 'chat.cmd.event.error.no_chest');
@@ -478,7 +478,7 @@ export const ADMIN_COMMANDS = {
 	},
 
 	ban(player, args) {
-		// Бан: по номеру игрока в мире и нику (system/ban.js). Игрока в сети — сразу выгоняет.
+		// Бан: по номеру игрока в мире и нику (system/security/ban.js). Игрока в сети — сразу выгоняет.
 		// !ban <ник> [срок|permanent] [причина]: без срока — навсегда, как раньше
 		if (!args[0]) {
 			tell(player, 'chat.cmd.ban.use');
@@ -524,7 +524,7 @@ export const ADMIN_COMMANDS = {
 	},
 
 	banlist(player, args) {
-		// Только действующие баны; номер — тот же, что принимает !unban <номер> (system/ban.js, removeBan)
+		// Только действующие баны; номер — тот же, что принимает !unban <номер> (system/security/ban.js, removeBan)
 		const bans = getBans().filter(b => banActive(b));
 		const rawtext = [{ translate: 'chat.cmd.banlist.header' }];
 		if (!bans.length) rawtext.push({ text: '\n' }, { translate: 'chat.cmd.banlist.empty' });

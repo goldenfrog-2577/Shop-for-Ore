@@ -10,8 +10,8 @@ import { PLAYER_COMMANDS } from './commands/player.js';
 import { MODERATION_COMMANDS } from './commands/moderation.js';
 import { ADMIN_COMMANDS } from './commands/admin.js';
 import { worldEditCommand } from '../system/worldedit.js';
-import { resetOffline, offlineCounts } from '../system/offline_reset.js';
-import { wipeAll, wipeCounts } from '../system/wipe.js';
+import { resetOffline, offlineCounts } from '../system/core/offline_reset.js';
+import { wipeAll, wipeCounts } from '../system/core/wipe.js';
 import { resetPassword } from '../register/change.js';
 
 // Помощники, которые нужны меню администратора и тестам

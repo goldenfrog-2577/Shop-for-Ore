@@ -3,17 +3,17 @@
 // Прокачка, Достижения, Мини-игры. Формы строит menu/forms.js: крестик закрывает окно, возврат — кнопкой «Назад».
 
 import { world } from '@minecraft/server';
-import { isJailed, tellJailed } from '../system/jail.js';
+import { isJailed, tellJailed } from '../system/security/jail.js';
 import { isPending, tellText, tell, run, getScore, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed, shopBalance } from '../DataBase.js';
 import { showMenu, showModal, modal, backButton, toggleMenu } from './forms.js';
 import { enchantsMenu } from './enchant_shop.js';
 import { cosmeticsMenu } from './cosmetics_shop.js';
 import { achievementsMenu } from './achievements_menu.js';
-import { listGames, gameOf, joinGame, leaveGame } from '../system/minigames.js';
+import { listGames, gameOf, joinGame, leaveGame } from '../system/minigames/minigames.js';
 import { runChatCommand } from '../chat/commands.js';
-import { MUSIC_OFF } from '../system/music.js';
+import { MUSIC_OFF } from '../system/ui/music.js';
 import { ChangePasswordUI } from '../register/change.js';
-import { redeemPromo } from '../system/promo.js';
+import { redeemPromo } from '../system/economy/promo.js';
 
 const OPEN = '\n%menu.common.tap_to_open';
 const COIN = '', LVL = '';
@@ -151,9 +151,9 @@ function settings(player) {
 		{ text: '%menu.settings.button.board', icon: 'textures/items/sign', run: () => boardSetting(player, again) },
 		{ text: '%menu.settings.button.particles', icon: 'textures/items/emerald', run: () => tagSetting(player, 'particles', 'player:particle', again) },
 		{ text: '%menu.settings.button.sounds', icon: 'textures/blocks/noteblock', run: () => tagSetting(player, 'sounds', 'player:sound', again) },
+		{ text: '%menu.settings.button.menu_sounds', icon: 'textures/blocks/noteblock', run: () => menuSounds(player, again) },
 		{ text: '%menu.settings.button.music', icon: 'textures/items/record_cat', run: () => musicSetting(player, again) },
 		{ text: '%menu.settings.button.password', icon: 'textures/ui/icon_lock', run: () => ChangePasswordUI(player, again) },
-		{ text: '%menu.settings.button.menu_sounds', icon: 'textures/blocks/noteblock', run: () => menuSounds(player, again) },
 		backButton(back)
 	], back);
 }
@@ -168,7 +168,7 @@ function tagSetting(player, kind, tag, back) {
 	}, back);
 }
 
-// Музыка: выключена, пока есть тег player:music_off (system/music.js)
+// Музыка: выключена, пока есть тег player:music_off (system/ui/music.js)
 function musicSetting(player, back) {
 	toggleMenu(player, '%menu.settings.music.title', '%menu.settings.music.body', !player.hasTag(MUSIC_OFF), (on) => {
 		if (on) player.removeTag(MUSIC_OFF);
@@ -224,7 +224,7 @@ function rules(player) {
 	textPage(player, '%menu.rules.title', `%menu.rules.header\n\n${lines('menu.rules.line', RULES_COUNT)}\n\n%menu.rules.footer`, () => menu(player));
 }
 
-// Промокоды: список, условия и награды — system/promo.js
+// Промокоды: список, условия и награды — system/economy/promo.js
 function promocodes(player) {
 	const form = modal('%menu.promo.title').textField('%menu.promo.body\n\n%menu.promo.hint\n\n%menu.promo.book', '%menu.promo.placeholder');
 	showModal(player, form, ([code]) => redeemPromo(player, code), () => menu(player));

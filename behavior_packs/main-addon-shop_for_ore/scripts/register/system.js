@@ -6,8 +6,8 @@ import { world } from '@minecraft/server';
 import { LoginUI, loginLockSeconds } from './login.js';
 import { RegisterUI } from './register.js';
 import { hasPassword } from './password.js';
-import { migratePlayer } from '../system/migrate.js';
-import { applyOfflineReset } from '../system/offline_reset.js';
+import { migratePlayer } from '../system/core/migrate.js';
+import { applyOfflineReset } from '../system/core/offline_reset.js';
 
 // Через сколько тиков после входа показывать форму (и повторять, пока игрок не вошёл)
 const FORM_DELAY_TICKS = 40;

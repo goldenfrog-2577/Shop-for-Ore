@@ -1,7 +1,7 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
 const bp=new URL('../../behavior_packs/main-addon-shop_for_ore/',import.meta.url);
 const read=p=>fs.readFileSync(new URL(p,bp),'utf8');
-const source=read('scripts/system/promo.js').replace(/^import .*;\r?\n/gm,'').replace(/\bexport (?=(?:async )?function|const)/g,'');
+const source=read('scripts/system/economy/promo.js').replace(/^import .*;\r?\n/gm,'').replace(/\bexport (?=(?:async )?function|const)/g,'');
 const codes=vm.runInNewContext('('+source.match(/const PROMOCODES = (\[[\s\S]*?\n\]);/)[1]+')');
 const make=()=>({tags:new Set(),scores:{lvl:40,money:0,vip_coins:0,xp:0},items:[],hasTag(t){return this.tags.has(t);},addTag(t){this.tags.add(t);},removeTag(t){this.tags.delete(t);}});
 const match=(value,range)=>{if(value===undefined)return false;if(!range.includes('..'))return value===Number(range);const [lo,hi]=range.split('..');return(!lo||value>=Number(lo))&&(!hi||value<=Number(hi));};

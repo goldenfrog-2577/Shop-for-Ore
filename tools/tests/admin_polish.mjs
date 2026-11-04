@@ -4,7 +4,7 @@ const load=p=>fs.readFileSync(new URL(p,bp),'utf8').replace(/^import .*;\r?\n/gm
 const event=()=>({handlers:[],subscribe(fn){this.handlers.push(fn);}});
 let seconds=0,scheduled;const timeCommands=[],timePlayer={scoreboard:{},hasTag:()=>false};let historical=120;
 const time={world:{scoreboard:{getObjective:()=>({getScore:()=>seconds})},getPlayers:()=>[timePlayer].values(),getDimension:()=>({})},system:{runSchedule:f=>scheduled=f},getScore:()=>historical,isPending:()=>false,run:(p,c)=>timeCommands.push(c)};
-vm.runInNewContext(load('scripts/system/playtime.js')+'\nglobalThis.api={playedSeconds,durationParts,playtimeText,playtimeRawtext};',time);
+vm.runInNewContext(load('scripts/system/player/playtime.js')+'\nglobalThis.api={playedSeconds,durationParts,playtimeText,playtimeRawtext};',time);
 const text=()=>time.api.playtimeText(timePlayer);
 assert.equal(text(),'0 %menu.common.time.hour 0 %menu.common.time.minute 0 %menu.common.time.second');
 seconds=3661.99;assert.equal(text(),'1 %menu.common.time.hour 1 %menu.common.time.minute 1 %menu.common.time.second');
@@ -35,7 +35,7 @@ const human={name:'Human',id:'human',dimension:dim,typeId:'minecraft:player',loc
 for(const f of ['navigateToEntity','navigateToLocation','stopMoving','stopBreakingBlock','lookAtEntity','setRotation','jump','attackEntity'])sim[f]=(...a)=>calls.push([f,...a]);
 const ai={world:{events,getPlayers:()=>[sim,human].values(),getDynamicProperty(){},setDynamicProperty(){}},Location:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},BlockLocation:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},DynamicPropertiesDefinition:class{},
  getBot:()=>sim,isBot:p=>p===sim,isPending:()=>false,getScore:()=>10,findPlayer:n=>n===human.name?human:undefined,run(){},onBotSpawned(){},onBotRemoved(){},freezePlayer(){},unfreezePlayer(){},showHudLine(){},getGame(){},gameOf(){},leaveGame(){},joinGame:()=>true,teleportToArena(){},isAir:id=>!id||id==='minecraft:air',isSolid:id=>id==='minecraft:stone'};
-vm.runInNewContext(load('scripts/system/bot.js')+'\nglobalThis.api={setBotMode,toggleBot,jumpableObstacle};',ai);
+vm.runInNewContext(load('scripts/system/bot/bot.js')+'\nglobalThis.api={setBotMode,toggleBot,jumpableObstacle};',ai);
 const tick=n=>{for(let i=0;i<n;i++)for(const fn of events.tick.handlers)fn();},jumps=()=>calls.filter(c=>c[0]==='jump').length;
 ai.api.setBotMode('follow',{target:'Human'});tick(240);assert.equal(jumps(),0,'stuck on a flat floor does not cause jumps');
 blocks.set('1,1,0','minecraft:stone');assert(ai.api.jumpableObstacle(sim,human.location));sim.velocity.z=.2;assert(!ai.api.jumpableObstacle(sim,human.location),'follow the actual movement direction, not a wall beside the path');sim.velocity.z=0;calls.length=0;tick(10);assert(jumps()>0,'one-block obstacle causes a jump');
