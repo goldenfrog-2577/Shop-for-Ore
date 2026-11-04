@@ -59,12 +59,15 @@ export function buy(player, product) {
 	pending.add(player.name);
 	run(player, product.effect ?? structureCommand(product.id)).then((result) => {
 		pending.delete(player.name);
-		if (!result) { tell(player, 'chat.trader.error.give'); return; }
+		if (!result || result.successCount === 0) { tell(player, 'chat.trader.error.give'); return; }
 		run(player, `scoreboard players remove @s vip_coins ${product.price}`);
 		tell(player, 'chat.trader.bought', { translate: `trader.item.${product.id}` }, String(product.price));
 		// Для достижений «У торговца» и «Коллекционер голов» (system/achievements.js)
 		player.addTag('stat:trader');
 		if (TRADER_HEADS.includes(product.id)) player.addTag(`stat:head:${product.id}`);
+		// Отметка только после успешной выдачи; любая из трёх кирок закрывает одно испытание.
+		if (product.id === 'kit_diamond' || product.id === 'kit_netherite') player.addTag(`stat:trader:${product.id}`);
+		if (['pickaxe_1', 'pickaxe_2', 'pickaxe_3'].includes(product.id)) player.addTag('stat:trader:pickaxe');
 		run(player, 'playsound random.levelup @s ~ ~ ~ 0.6 1.2');
 	});
 	return 'ok';
