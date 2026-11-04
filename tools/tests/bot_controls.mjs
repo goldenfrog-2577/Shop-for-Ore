@@ -36,7 +36,7 @@ const chat={world:{events,getDimension:()=>({})},system:{runSchedule(){}},getSco
 vm.runInNewContext(load('scripts/chat/chat.js')+'\nglobalThis.chat=sendChatMessage;',chat);chat.chat(bot,'hello');
 const message=chatCommands.at(-1);assert.ok(message.includes('role.tag.bot'));assert.ok(message.includes('§4Bot'));assert.ok(message.includes('7'));assert.ok(!message.includes('Fake'));assert.ok(!message.includes('role.tag.owner'));
 let present=true,menu;const ui={world:{events:{beforeItemUse:event()}},getBot:()=>present?bot:undefined,getBotName:()=>bot.name,botState:()=>({mode:'follow',sit:false,totem:true,returnOnLoad:true}),showMenu:(p,t,b,items)=>menu={body:typeof b==='function'?b():b,items},backButton:run=>({text:'%admin.common.back',run})};
-vm.runInNewContext(load('scripts/menu/admin_menu.js')+'\nglobalThis.menu=botMenu;',ui);ui.menu(human);
+vm.runInNewContext(load('scripts/menu/admin/admin_menu.js')+'\nglobalThis.menu=botMenu;',ui);ui.menu(human);
 const slots=menu.items.findIndex(i=>i.text==='%admin.bot.button.slots'),sit=menu.items.findIndex(i=>i.text.startsWith('%admin.bot.button.sit'));
 assert.equal(sit,slots+1);assert.ok(menu.items[sit].text.replace(/§./g,'').includes('[ '));assert.ok(menu.body.includes('%admin.bot.status %admin.bot.present'));
 present=false;ui.menu(human);assert.ok(!menu.items.some(i=>i.text.startsWith('%admin.bot.button.sit')));assert.ok(menu.body.includes('%admin.bot.absent'));

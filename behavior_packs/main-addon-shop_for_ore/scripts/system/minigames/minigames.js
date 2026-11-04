@@ -298,7 +298,7 @@ const clearStale = (p) => p.getTags().filter(t => t.startsWith(GAME_TAG)).forEac
 system.run(() => { for (const p of world.getPlayers()) clearStale(p); });
 // При входе — сразу в обработчике: в 1.19.50 e.player доступен только в момент события, а в system.run
 // падал («Native object bound to prototype does not exist»), и try молча глушил ошибку — тег не снимался.
-// Теги при входе так же снимает register/system.js
+// Теги при входе так же снимает registration/system.js
 world.events.playerJoin.subscribe((e) => clearStale(e.player));
 
 // ===== Мини-игры =====

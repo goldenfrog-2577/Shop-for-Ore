@@ -1,7 +1,7 @@
 {
 	"values": [
 		"system/system",
-		"system/levelup_check",
+		"system/level_up_check",
 		"system/timers"
 	]
 }

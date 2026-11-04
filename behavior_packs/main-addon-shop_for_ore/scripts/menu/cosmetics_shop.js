@@ -8,7 +8,7 @@
 
 import { world, BlockLocation } from '@minecraft/server';
 import { CHAT_COLORS, getChatColor, setChatColor, colorAllowed, getScore, metricNumbers, run, tell, isVip } from '../DataBase.js';
-import { showMenu, backButton } from './forms.js';
+import { showMenu, backButton } from './common/forms.js';
 
 const VIP_COIN = '';
 
@@ -113,7 +113,7 @@ const state = (selected, owned, cost) => selected ? '%menu.shop.cosmetics.select
 const body = (player, kind) => `%menu.shop.cosmetics.${kind}.body\n%menu.shop.cosmetics.balance ${price(coins(player))}`;
 
 // --- Цвет ника / текста ---
-// После покупки, выбора или ошибки в чат приходит сообщение — и меню закрывается (menu/forms.js)
+// После покупки, выбора или ошибки в чат приходит сообщение — и меню закрывается (menu/common/forms.js)
 function colorMenu(player, kind, back) {
 	// Цвета ролей — только своей роли и ниже (как у !color); текст сообщений — любым цветом
 	const ids = Object.keys(CHAT_COLORS).filter(id => kind === 'text' || colorAllowed(player, CHAT_COLORS[id]));

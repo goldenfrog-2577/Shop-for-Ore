@@ -66,7 +66,7 @@ export function metricNumbers(value) {
 // ======== Команды и сообщения игроку: run, tell, tellText, rawTranslate ========
 
 // Сколько сообщений (tellraw @s — через tell, tellText и run) получил игрок и сколько из них — ошибки
-// (ключ из system/ui/error_keys.js). menu/forms.js по ним решает, что делать с окнами после нажатия:
+// (ключ из system/ui/error_keys.js). menu/common/forms.js по ним решает, что делать с окнами после нажатия:
 // ошибка — закрыть всю цепочку, успех — оставить открытым последнее окно.
 const told = new Map();
 const toldErrors = new Map();
@@ -535,10 +535,10 @@ export const WARPS = [
 /** Может ли игрок пользоваться точкой: роль не ниже точки, точка VIP — только VIP и персоналу. */
 export const warpAllowed = (player, warp) => hasRole(player, warp.role) && (!warp.vip || isVip(player) || hasRole(player, 'helper'));
 
-// ======== Список команд чата: имя, описание (ключ .lang), роль — !help, chat/commands.js ========
+// ======== Список команд чата: имя, описание (ключ .lang), роль — !help, chat/commands/commands.js ========
 
 // Список команд: описание для !help и минимальная роль (см. ROLES). Обработчик — метод в объекте своей роли
-// в chat/commands/: player.js, moderation.js (хелпер, модератор), admin.js; команды владельца — в chat/commands.js.
+// в chat/commands/: player.js, moderation.js (хелпер, модератор), admin.js; команды владельца — в chat/commands/commands.js.
 // Порядок = порядок в !help: по ролям (игрок → владелец), внутри роли — по смыслу
 export const commandsList = [
 	// ===== Игрок: справка и общение =====

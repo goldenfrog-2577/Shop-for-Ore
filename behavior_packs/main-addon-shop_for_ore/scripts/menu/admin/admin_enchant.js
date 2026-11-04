@@ -1,8 +1,8 @@
 // Зачарование предмета из инвентаря без магазина; доступны только персоналу с правами администратора.
 import { MinecraftEnchantmentTypes, Enchantment } from '@minecraft/server';
-import { hasRole, tell } from '../DataBase.js';
-import { showMenu, showModal, modal, backButton } from './forms.js';
-import { ITEM_ENCHANTS, PICKAXE_ENCHANTS, nameKey } from './enchant_shop.js';
+import { hasRole, tell } from '../../DataBase.js';
+import { showMenu, showModal, modal, backButton } from '../common/forms.js';
+import { ITEM_ENCHANTS, PICKAXE_ENCHANTS, nameKey } from '../enchant_shop.js';
 
 const EXTRA = [
 	['aquaAffinity', 'enchantment.waterWorker', 1], ['respiration', 'enchantment.oxygen', 3],

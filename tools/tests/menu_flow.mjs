@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
-const source=fs.readFileSync(new URL('../../behavior_packs/main-addon-shop_for_ore/scripts/menu/forms.js',import.meta.url),'utf8').replace(/^import .*$/gm,'').replaceAll('export ','');
+const source=fs.readFileSync(new URL('../../behavior_packs/main-addon-shop_for_ore/scripts/menu/common/forms.js',import.meta.url),'utf8').replace(/^import .*$/gm,'').replaceAll('export ','');
 const shown=[], sounds=[], pending=[];
 let told=0,errors=0;
 class Form {

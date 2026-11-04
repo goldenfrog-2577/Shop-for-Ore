@@ -77,7 +77,7 @@ class Engine {
 		this.events.push(line);
 	}
 	run(name, self) {
-		if (!/^(system\/(setup|timers|migrate_stand_timers|apply_stand_timers)|boost\/|events\/rain_|timers\/ticks_(20|40|80|6000)$)/.test(name)) return;
+		if (!/^(system\/(setup|timers|migrate_timers|apply_timers)|boost\/|events\/rain_|timers\/ticks_(20|40|80|6000)$)/.test(name)) return;
 		const file = bp + `functions/${name}.mcfunction`;
 		if (!functionSource.has(name)) {
 			assert.ok(fs.existsSync(file), name);
@@ -107,7 +107,7 @@ delayed.run('boost/x2_boost', buyer); delayed.run('boost/x4_boost', buyer); asse
 assert.ok(delayed.events.some(s => s.includes('chat.boost.error.loading')));
 delayed.loadStands(123, 0, 17); delayed.advance(1);
 assert.equal(delayed.get('stand_timers_migrated'), 1); assert.equal(delayed.get('boost_x2'), 123); assert.equal(delayed.get('rain_event'), 17);
-delayed.set('boost_x2', 122); delayed.run('system/apply_stand_timers'); assert.equal(delayed.get('boost_x2'), 122, 'idempotent migration');
+delayed.set('boost_x2', 122); delayed.run('system/apply_timers'); assert.equal(delayed.get('boost_x2'), 122, 'idempotent migration');
 
 const e = empty; e.stands = []; const player = e.entity('Shopper'), joined = e.entity('Joined'); e.set(player, 20000, 'money'); e.set(joined, 60000, 'money');
 e.run('boost/x2_boost', player); assert.equal(e.get(player, 'money'), 10000); assert.equal(e.get('boost_x2'), 300);
@@ -146,5 +146,5 @@ vm.runInNewContext(withoutImports(bp + 'scripts/system/core/offline_reset.js') +
 context.resetOfflineForTest(player);
 assert.equal(e.get('boost_x2'), 47); assert.equal(e.get('rain_event'), 12); assert.equal(e.get('stand_timers_migrated'), 1);
 
-for (const file of ['scripts/chat/commands/admin.js', 'scripts/menu/admin_menu.js', 'scripts/system/economy/boosts.js']) assert.ok(!/X2Boost|X4Boost|rainEvent|\$\{stand\}/.test(fs.readFileSync(bp + file, 'utf8')), file);
+for (const file of ['scripts/chat/commands/admin.js', 'scripts/menu/admin/admin_menu.js', 'scripts/system/economy/boosts.js']) assert.ok(!/X2Boost|X4Boost|rainEvent|\$\{stand\}/.test(fs.readFileSync(bp + file, 'utf8')), file);
 console.log('PASS: missing scores, delayed/partial loading, active transfer, idempotency, no-stand purchases/countdown/expiry/rain, join tags, mutual exclusion, admin stop ownership, offline-reset preservation.');

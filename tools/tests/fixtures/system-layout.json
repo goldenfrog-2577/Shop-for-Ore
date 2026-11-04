@@ -31,14 +31,24 @@
 		"system/mythic.js": "system/combat/mythic.js",
 		"system/minigames.js": "system/minigames/minigames.js",
 		"system/spleef.js": "system/minigames/spleef.js",
-		"system/tir.js": "system/minigames/tir.js"
+		"system/tir.js": "system/minigames/tir.js",
+		"chat/commands/moderation.js": "chat/commands/moderator.js",
+		"chat/commands.js": "chat/commands/commands.js",
+		"menu/admin_enchant.js": "menu/admin/admin_enchant.js",
+		"menu/admin_menu.js": "menu/admin/admin_menu.js",
+		"menu/forms.js": "menu/common/forms.js",
+		"register/change.js": "registration/change.js",
+		"register/login.js": "registration/login.js",
+		"register/password.js": "registration/password.js",
+		"register/register.js": "registration/register.js",
+		"register/system.js": "registration/system.js"
 	},
 	"startup": {
 		"evaluation": [
 			"system/ui/error_keys.js",
 			"DataBase.js",
 			"system/security/jail.js",
-			"menu/forms.js",
+			"menu/common/forms.js",
 			"menu/enchant_shop.js",
 			"menu/cosmetics_shop.js",
 			"system/ui/toast.js",
@@ -47,17 +57,17 @@
 			"menu/achievements_menu.js",
 			"system/combat/pvp.js",
 			"system/minigames/minigames.js",
-			"register/password.js",
-			"register/change.js",
+			"registration/password.js",
+			"registration/change.js",
 			"chat/commands/common.js",
 			"chat/commands/player.js",
 			"system/security/freeze.js",
 			"system/security/cps.js",
 			"system/security/anticheat.js",
-			"chat/commands/moderation.js",
+			"chat/commands/moderator.js",
 			"system/player/playtime.js",
 			"system/core/reset_history.js",
-			"menu/admin_enchant.js",
+			"menu/admin/admin_enchant.js",
 			"system/economy/boosts.js",
 			"chat/chat.js",
 			"system/core/player_scores.js",
@@ -66,13 +76,13 @@
 			"system/core/offline_reset.js",
 			"system/security/anticheat_checks.js",
 			"system/bot/bot.js",
-			"menu/admin_menu.js",
+			"menu/admin/admin_menu.js",
 			"system/player/ranks.js",
 			"system/combat/mythic.js",
 			"system/security/ban.js",
 			"chat/commands/admin.js",
 			"system/worldedit.js",
-			"chat/commands.js",
+			"chat/commands/commands.js",
 			"system/ui/music.js",
 			"menu/main_menu.js",
 			"system/player/tools.js",
@@ -84,9 +94,9 @@
 			"system/player/void.js",
 			"system/ui/hud.js",
 			"system/core/fallback.js",
-			"register/login.js",
-			"register/register.js",
-			"register/system.js",
+			"registration/login.js",
+			"registration/register.js",
+			"registration/system.js",
 			"import.js"
 		],
 		"subscriptions": [
@@ -259,7 +269,7 @@
 				"tick"
 			],
 			[
-				"menu/admin_menu.js",
+				"menu/admin/admin_menu.js",
 				"beforeItemUse"
 			],
 			[
@@ -287,11 +297,11 @@
 				"playerLeave"
 			],
 			[
-				"chat/commands.js",
+				"chat/commands/commands.js",
 				"playerLeave"
 			],
 			[
-				"chat/commands.js",
+				"chat/commands/commands.js",
 				"beforeChat"
 			],
 			[
@@ -343,15 +353,15 @@
 				"tick"
 			],
 			[
-				"register/system.js",
+				"registration/system.js",
 				"playerJoin"
 			],
 			[
-				"register/system.js",
+				"registration/system.js",
 				"playerLeave"
 			],
 			[
-				"register/system.js",
+				"registration/system.js",
 				"tick"
 			]
 		],

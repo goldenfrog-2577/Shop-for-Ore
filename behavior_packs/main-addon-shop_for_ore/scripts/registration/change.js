@@ -6,7 +6,7 @@
 
 import { world } from '@minecraft/server';
 import { tellText, run, tell } from '../DataBase.js';
-import { showModal, modal } from '../menu/forms.js';
+import { showModal, modal } from '../menu/common/forms.js';
 import { PASSWORD_MIN, PASSWORD_MAX, setPassword, checkPassword, clearPassword } from './password.js';
 
 // После 3 неверных старых паролей подряд — пауза, чтобы не подбирать пароль через эту форму
@@ -56,7 +56,7 @@ export function ChangePasswordUI(player, onBack) {
 
 /**
  * Сброс пароля игроку в сети (владелец). Пароль стирается, игрок сразу получает форму регистрации
- * (register/system.js по тегу auth:register). Прогресс, роль и предметы не трогаются.
+ * (registration/system.js по тегу auth:register). Прогресс, роль и предметы не трогаются.
  * @returns {boolean}
  */
 export function resetPassword(owner, target) {

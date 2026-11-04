@@ -5,7 +5,7 @@
 // и служебные записи (в том числе boost_x2, boost_x4 и rain_event в system) возвращаются как были. Теги у игрока не в сети командой не снять,
 // поэтому у сброса есть номер (свойство мира shop:offline_reset_id): игрок с отметкой
 // sys:offline_reset:<номер> уже в порядке, у остальных теги снимаются при входе — раньше проверки
-// пароля (register/system.js вызывает applyOfflineReset первым делом).
+// пароля (registration/system.js вызывает applyOfflineReset первым делом).
 
 import { world, DynamicPropertiesDefinition } from '@minecraft/server';
 import { syncResetEpoch, markResetEpoch } from './reset_history.js';
@@ -78,7 +78,7 @@ export function resetOffline(by) {
 
 /**
  * Вход игрока: если его не было в сети во время сброса — снять все теги.
- * Вызывается из register/system.js в момент события playerJoin, до выбора логина или регистрации.
+ * Вызывается из registration/system.js в момент события playerJoin, до выбора логина или регистрации.
  * @returns {boolean} теги сняты
  */
 export function applyOfflineReset(player) {

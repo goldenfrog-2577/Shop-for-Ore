@@ -1,11 +1,11 @@
 // --- Команды администратора: режим игры (!gm6 — с хелпера), полёт, время, ивенты, бусты, бан, табло, теги, цвет, префикс, бот, достижения ---
 // Обработчик: имя команды без «!» → (player, args, command). Права (роль из commandsList) проверяет
-// runChatCommand в chat/commands.js; return — команда выполнена или отказ уже сообщён игроку.
+// runChatCommand в chat/commands/commands.js; return — команда выполнена или отказ уже сообщён игроку.
 
 import { playtimeRawtext } from '../../system/player/playtime.js';
 import { world } from '@minecraft/server';
 import { run, tell, findPlayer, setChatColor, CHAT_COLORS, colorAllowed, impersonatedRole, hasRole, rawTranslate, emotes, parseTerm, rawTranslateRich, termText, getScore, getRole } from '../../DataBase.js';
-import { botMenu } from '../../menu/admin_menu.js';
+import { botMenu } from '../../menu/admin/admin_menu.js';
 import { getBot, spawnBot, getBotName } from '../../system/bot/spawnbot.js';
 import { LEVEL_RANK_RE } from '../../system/player/ranks.js';
 import { startMythic } from '../../system/combat/mythic.js';

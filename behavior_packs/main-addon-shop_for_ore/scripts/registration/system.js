@@ -105,7 +105,7 @@ world.events.tick.subscribe(() => {
 		// Через 40 тиков показываем форму; если игрок не вошёл — покажем снова ещё через 40
 		if (waited >= FORM_DELAY_TICKS) {
 			waitTicks.set(player.name, 0);
-			// После 5 неверных паролей подряд — минута паузы (register/login.js): форма входа не показывается
+			// После 5 неверных паролей подряд — минута паузы (registration/login.js): форма входа не показывается
 			if (!formOpen.has(player.name) && !(canLogin(player) && loginLockSeconds(player) > 0)) {
 				// Форма выбирается по состоянию аккаунта, а не по тегу: даже если остались оба тега,
 				// показывается одна форма
