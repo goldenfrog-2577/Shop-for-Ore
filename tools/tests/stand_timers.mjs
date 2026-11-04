@@ -127,7 +127,7 @@ const context = {
 	world: { events: { worldInitialize: { subscribe() {} } }, getPlayers: () => e.players.values(), getDimension: () => ({}), scoreboard: { getObjective: () => ({ getScores: scores }) }, getDynamicProperty: key => e.props[key], setDynamicProperty: (key,value) => e.props[key] = value },
 	DynamicPropertiesDefinition: class { defineString() {} }, Date: { now: () => 1000 }, run: (who, cmd) => { e.command(cmd, who?.key ? who : undefined); return Promise.resolve({}); }
 };
-vm.runInNewContext(withoutImports(bp + 'scripts/system/boosts.js') + '\nglobalThis.api={boostTimersReady,boostSeconds,markAdminBoost,adminBoost,stopAdminBoosts};', context);
+vm.runInNewContext(withoutImports(bp + 'scripts/system/economy/boosts.js') + '\nglobalThis.api={boostTimersReady,boostSeconds,markAdminBoost,adminBoost,stopAdminBoosts};', context);
 assert.equal(context.api.boostTimersReady(), true); assert.equal(context.api.boostSeconds('x4'), 300);
 context.api.stopAdminBoosts(); assert.equal(e.get('boost_x4'), 300, 'purchased boost survives admin stop');
 context.api.markAdminBoost('x4', 5); assert.equal(context.api.adminBoost(), 'x4'); context.api.stopAdminBoosts(); assert.equal(e.get('boost_x4'), 1);
@@ -140,11 +140,11 @@ context.world.scoreboard.getObjectives = () => [{ id: 'system', getScores: score
 context.tell = () => {};
 context.hasRole = () => true;
 context.isBot = p => p.hasTag('role:bot');
-vm.runInNewContext(withoutImports(bp + 'scripts/system/reset_history.js'), context);
+vm.runInNewContext(withoutImports(bp + 'scripts/system/core/reset_history.js'), context);
 e.set('boost_x2', 47); e.set('rain_event', 12);
-vm.runInNewContext(withoutImports(bp + 'scripts/system/offline_reset.js') + '\nglobalThis.resetOfflineForTest=resetOffline;', context);
+vm.runInNewContext(withoutImports(bp + 'scripts/system/core/offline_reset.js') + '\nglobalThis.resetOfflineForTest=resetOffline;', context);
 context.resetOfflineForTest(player);
 assert.equal(e.get('boost_x2'), 47); assert.equal(e.get('rain_event'), 12); assert.equal(e.get('stand_timers_migrated'), 1);
 
-for (const file of ['scripts/chat/commands/admin.js', 'scripts/menu/admin_menu.js', 'scripts/system/boosts.js']) assert.ok(!/X2Boost|X4Boost|rainEvent|\$\{stand\}/.test(fs.readFileSync(bp + file, 'utf8')), file);
+for (const file of ['scripts/chat/commands/admin.js', 'scripts/menu/admin_menu.js', 'scripts/system/economy/boosts.js']) assert.ok(!/X2Boost|X4Boost|rainEvent|\$\{stand\}/.test(fs.readFileSync(bp + file, 'utf8')), file);
 console.log('PASS: missing scores, delayed/partial loading, active transfer, idempotency, no-stand purchases/countdown/expiry/rain, join tags, mutual exclusion, admin stop ownership, offline-reset preservation.');

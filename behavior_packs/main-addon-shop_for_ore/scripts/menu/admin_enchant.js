@@ -52,7 +52,7 @@ function choose(player, slot, typeId, back) {
 	const item = inventory(player).getItem(slot);
 	if (!item || item.typeId !== typeId) return tell(player, 'chat.shop.item_enchant.error.changed');
 	const options = adminEnchantOptions(item);
-	const form = modal('%admin.enchant.title').dropdown('%admin.enchant.choose', options.map(e => '%' + e.name + ' §8(0–' + e.max + ')'), 0)
+	const form = modal('%admin.enchant.title').dropdown('%admin.enchant.choose', options.map(e => '%' + e.name + ' §f(0–' + e.max + ')'), 0)
 		.textField('%admin.enchant.level', '1', '1');
 	showModal(player, form, ([i,level]) => applyAdminEnchant(player, slot, typeId, options[i]?.id, level), back);
 }

@@ -4,9 +4,9 @@
 
 import { world } from '@minecraft/server';
 import { commandsList, tell, hasRole, run, WARPS, warpAllowed, tellText, muteMinutesLeft, getScore, isVip, transferMoney, findPlayer, getRole, getWarns, ROLES, RULES_COUNT, emotesList, emotes } from '../../DataBase.js';
-import { isJailed, tellJailed } from '../../system/jail.js';
-import { combatSecondsLeft, teleportToArena } from '../../system/pvp.js';
-import { canTeleport, listGames, joinGame, leaveGame, getGame, startGame, endGame } from '../../system/minigames.js';
+import { isJailed, tellJailed } from '../../system/security/jail.js';
+import { combatSecondsLeft, teleportToArena } from '../../system/combat/pvp.js';
+import { canTeleport, listGames, joinGame, leaveGame, getGame, startGame, endGame } from '../../system/minigames/minigames.js';
 import { ChangePasswordUI } from '../../register/change.js';
 import { resolveTarget, tellList } from './common.js';
 

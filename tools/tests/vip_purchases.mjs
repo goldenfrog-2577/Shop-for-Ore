@@ -10,7 +10,7 @@ const context={world:{events,getPlayers:()=>people.values()},system:{runSchedule
  tell:(p,k)=>messages.push({p,k}),metricNumbers:String,backButton:fn=>({text:'BACK',run:fn}),showMenu:(p,title,body,items)=>{capture={title,body,items};},
  run:(p,c)=>{commands.push({p,c});if(c.startsWith('structure load ')||c.startsWith('effect '))return new Promise(resolve=>p.finish=resolve);const m=c.match(/^scoreboard players (add|remove) @s (\w+) (\d+)$/);if(m)p.scores[m[2]]=(p.scores[m[2]]??0)+(m[1]==='add'?1:-1)*Number(m[3]);return Promise.resolve({});}
 };
-vm.runInNewContext(load('system/achievements.js')+'\n'+load('system/trader.js')+'\n'+load('menu/achievements_menu.js')+'\nglobalThis.api={ACHIEVEMENTS,PRODUCTS,buy,unlock,has,findAchievement,achievementsMenu};',context);
+vm.runInNewContext(load('system/player/achievements.js')+'\n'+load('system/economy/trader.js')+'\n'+load('menu/achievements_menu.js')+'\nglobalThis.api={ACHIEVEMENTS,PRODUCTS,buy,unlock,has,findAchievement,achievementsMenu};',context);
 const a=context.api,ids=['vip_diamond_kit','vip_netherite_kit','vip_pickaxe'];
 assert.equal(a.ACHIEVEMENTS.length,39);assert.equal(a.ACHIEVEMENTS.filter(x=>x.type==='task').length,23);assert.equal(a.ACHIEVEMENTS.filter(x=>x.type==='challenge').length,16);
 assert.deepEqual(Array.from(a.ACHIEVEMENTS.slice(-3),x=>x.id),ids,'old 36-entry award queue stays ahead of new purchases');
@@ -38,5 +38,5 @@ const all=mk('Menu');a.achievementsMenu(all,()=>{});const menuIds=capture.items.
 const kinds=menuIds.map(id=>a.findAchievement(id).type);assert.ok(kinds.slice(0,23).every(k=>k==='task'));assert.ok(kinds.slice(23).every(k=>k==='challenge'));
 assert.equal(menuIds.indexOf(ids[0]),menuIds.indexOf('vip')+1);assert.equal(menuIds.indexOf(ids[2]),menuIds.indexOf(ids[1])+1);assert.ok(menuIds.indexOf(ids[2])<menuIds.indexOf('amethyst_500'),'challenges stay in the VIP theme');
 for(const l of ['ru_RU','en_US','uk_UA','es_ES']){const text=fs.readFileSync(new URL('resource_packs/main-rp-shop_for_ore/texts/'+l+'.lang',repo),'utf8');for(const id of ids)for(const part of ['name','desc'])assert.ok(text.includes('ach.'+id+'.'+part+'='));}
-const wipe=load('system/wipe.js');assert.ok(wipe.includes("'stat:'"),'purchase proof uses existing full-wipe prefix');
+const wipe=load('system/core/wipe.js');assert.ok(wipe.includes("'stat:'"),'purchase proof uses existing full-wipe prefix');
 console.log('PASS: 39 entries, approved types/rewards, source-player purchase proof, all three picks, rejected/pending/failed/repeated purchases, no inventory backfill, VIP menu order and 4 locales.');

@@ -1,5 +1,5 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
-const file=new URL('../../behavior_packs/main-addon-shop_for_ore/scripts/system/spawnbot.js',import.meta.url);
+const file=new URL('../../behavior_packs/main-addon-shop_for_ore/scripts/system/bot/spawnbot.js',import.meta.url);
 const src=fs.readFileSync(file,'utf8').replace(/^import .*;\r?\n/gm,'').replace(/\bexport (?=(?:async )?function|const)/g,'');
 const flush=async()=>{for(let i=0;i<12;i++)await Promise.resolve();};
 function fixture(){

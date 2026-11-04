@@ -5,21 +5,21 @@
 // В 1.19.50 формы принимают только строки: ключи перевода пишутся как «%ключ», после ключа — пробел или перенос
 // (сразу после ключа не ставим ни скобок, ни §-кодов).
 
-import { playtimeText } from '../system/playtime.js';
-import { clearResetHistory } from '../system/reset_history.js';
+import { playtimeText } from '../system/player/playtime.js';
+import { clearResetHistory } from '../system/core/reset_history.js';
 import { adminEnchantMenu } from './admin_enchant.js';
-import { boostSeconds } from '../system/boosts.js';
+import { boostSeconds } from '../system/economy/boosts.js';
 import { world } from '@minecraft/server';
-import { isJailed, tellJailed, jailMinutesLeft } from '../system/jail.js';
+import { isJailed, tellJailed, jailMinutesLeft } from '../system/security/jail.js';
 import { isPending, isBot, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS, isVip, VIP_TAG } from '../DataBase.js';
 import { showMenu, showModal, modal, backButton, confirm, wipeConfirm, WARN_TITLE } from './forms.js';
 import { runChatCommand, setMoney } from '../chat/commands.js';
 import { sendChatMessage } from '../chat/chat.js';
-import { getBot, getBotName, setBotName, spawnBot, removeBot } from '../system/spawnbot.js';
-import { wipeAll, wipeCounts } from '../system/wipe.js';
-import { resetOffline, offlineCounts } from '../system/offline_reset.js';
-import { canTeleport, listGames } from '../system/minigames.js';
-import { setBotMode, toggleBot, rememberBotItem, botState, SPAR_LEVELS } from '../system/bot.js';
+import { getBot, getBotName, setBotName, spawnBot, removeBot } from '../system/bot/spawnbot.js';
+import { wipeAll, wipeCounts } from '../system/core/wipe.js';
+import { resetOffline, offlineCounts } from '../system/core/offline_reset.js';
+import { canTeleport, listGames } from '../system/minigames/minigames.js';
+import { setBotMode, toggleBot, rememberBotItem, botState, SPAR_LEVELS } from '../system/bot/bot.js';
 
 const BACK_ICON = 'textures/ui/icon_import';
 // Кружки цвета роли из шрифта карты: серый, синий, красный
@@ -31,7 +31,7 @@ const COIN_GLYPH = '\ue152';
 const VIP_COIN_GLYPH = "";
 const OPEN = '\n%menu.common.tap_to_open';
 const EVENTS = ['haste', 'rain', 'gift', 'mythic'];
-// Как часто срабатывают ивенты по таймеру (минуты): timers/ticks_3600, ticks_6000, ticks_4800, мистик — system/mythic.js
+// Как часто срабатывают ивенты по таймеру (минуты): timers/ticks_3600, ticks_6000, ticks_4800, мистик — system/combat/mythic.js
 const EVENT_PERIOD = { haste: 3, rain: 5, gift: 4, mythic: 10 };
 
 // --- Открытие админ-меню по использованию специального предмета ---
@@ -552,7 +552,7 @@ export function botMenu(player) {
 	showMenu(player, '%admin.bot.title', () => `%admin.bot.name §f${getBotName()}\n%admin.bot.status ${getBot() ? '%admin.bot.present' : '%admin.bot.absent'}`, items, () => admin_menu(player));
 }
 
-// Режим бота (system/bot.js): за мной и «повторяй» — за тем, кто открыл меню
+// Режим бота (system/bot/bot.js): за мной и «повторяй» — за тем, кто открыл меню
 function botModeMenu(player) {
 	const name = getBotName();
 	const done = (mode, opts) => {
@@ -671,7 +671,7 @@ function botSlots(player) {
 		run(player, `${target} ${parsed.id} ${parsed.count} ${parsed.data}`).then(r => {
 			if (r === undefined) tell(player, 'chat.admin.item.error.unknown', parsed.id);
 			else {
-				// Запомнить — после перезахода в мир бот получит предмет заново (system/bot.js)
+				// Запомнить — после перезахода в мир бот получит предмет заново (system/bot/bot.js)
 				rememberBotItem(slot.slot, `${parsed.id} ${parsed.count} ${parsed.data}`);
 				tell(player, 'chat.admin.bot.slots.set', bot.name, parsed.id);
 			}

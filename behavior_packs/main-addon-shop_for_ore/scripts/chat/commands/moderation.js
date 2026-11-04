@@ -3,11 +3,11 @@
 // runChatCommand в chat/commands.js; return — команда выполнена или отказ уже сообщён игроку.
 
 import { tell, run, findPlayer, getRole, hasRole, parseTerm, muteMinutesLeft, canLift, setIssuer, rawTranslateRich, termText, rawTranslate, clearIssuer, getWarns } from '../../DataBase.js';
-import { isJailed, jail, release, tellJailed } from '../../system/jail.js';
-import { leaveGame, canTeleport } from '../../system/minigames.js';
-import { freezePlayer, unfreezePlayer } from '../../system/freeze.js';
-import { cpsOf, cpsLimit } from '../../system/cps.js';
-import { MODE, modeName, clearViolations, flaggedPlayers, acMode, violationsOf, CHECKS } from '../../system/anticheat.js';
+import { isJailed, jail, release, tellJailed } from '../../system/security/jail.js';
+import { leaveGame, canTeleport } from '../../system/minigames/minigames.js';
+import { freezePlayer, unfreezePlayer } from '../../system/security/freeze.js';
+import { cpsOf, cpsLimit } from '../../system/security/cps.js';
+import { MODE, modeName, clearViolations, flaggedPlayers, acMode, violationsOf, CHECKS } from '../../system/security/anticheat.js';
 import { canPunish, tellList } from './common.js';
 
 /** Координата для !tp: число (можно с дробью и минусом) или относительная ~ / ~-3.5. */
@@ -82,7 +82,7 @@ export const MODERATION_COMMANDS = {
 	},
 
 	jail(player, args) {
-		// Тюрьма (system/jail.js): срок (30, 30m, 2h, 1d — до 30 дней) или permanent — до !unjail. Хелпер и выше
+		// Тюрьма (system/security/jail.js): срок (30, 30m, 2h, 1d — до 30 дней) или permanent — до !unjail. Хелпер и выше
 		const target = args[0] ? findPlayer(args[0]) : undefined;
 		const minutes = parseTerm(args[1]);
 		if (!args[0] || minutes === undefined) {
@@ -222,7 +222,7 @@ export const MODERATION_COMMANDS = {
 			tell(player, 'chat.cmd.freeze.error.already', target.name);
 			return;
 		}
-		// Игрок застывает там, где стоит (в том числе в воздухе): system/freeze.js возвращает его на место каждый тик
+		// Игрок застывает там, где стоит (в том числе в воздухе): system/security/freeze.js возвращает его на место каждый тик
 		freezePlayer(target);
 		setIssuer(target, 'frozen', getRole(player));
 		tell(player, 'chat.cmd.freeze.on', target.name);

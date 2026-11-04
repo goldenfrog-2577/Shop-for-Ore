@@ -4,7 +4,7 @@
 
 import { metricNumbers } from '../DataBase.js';
 import { showMenu, backButton } from './forms.js';
-import { ACHIEVEMENTS, GLYPH, has, progressOf, countOf, rewardText } from '../system/achievements.js';
+import { ACHIEVEMENTS, GLYPH, has, progressOf, countOf, rewardText } from '../system/player/achievements.js';
 
 const color = (a) => a.type === 'challenge' ? '§5' : '§2';
 const num = (n) => n >= 10000 ? metricNumbers(n) : String(n);

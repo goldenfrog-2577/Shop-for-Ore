@@ -49,18 +49,18 @@ function toolsRuntime(path) {
 	return { calls, scans, commands };
 }
 
-const idle = hudRuntime(scripts + 'system/hud.js');
+const idle = hudRuntime(scripts + 'system/ui/hud.js');
 await idle.advance(1000);
 assert.equal(idle.commands.length, 400, 'idle HUD: one command per second per player');
 for (const player of idle.players) {
 	const ticks = idle.commands.filter(c => c.player === player.name).map(c => c.tick);
 	assert.ok(ticks.every((tick, i) => !i || tick - ticks[i - 1] <= 20), 'keepalive prevents gaps longer than one second');
 }
-const active = hudRuntime(scripts + 'system/hud.js');
+const active = hudRuntime(scripts + 'system/ui/hud.js');
 await active.advance(1000, tick => { if (tick % 5 === 0) active.players.forEach(p => p.scores.money++); });
 assert.equal(active.commands.length, 1600, 'changing scores retain five-tick refresh');
 
-const modes = hudRuntime(scripts + 'system/hud.js', 1), p = modes.players[0];
+const modes = hudRuntime(scripts + 'system/ui/hud.js', 1), p = modes.players[0];
 await modes.advance(5);
 for (const key of ['money', 'xp', 'xp_need', 'lvl', 'rebirth', 'online']) {
 	const before = modes.commands.length;
@@ -97,7 +97,7 @@ modes.fail = false;
 await modes.advance(5);
 assert.equal(modes.commands.length, failure + 1, 'failed send retries after five ticks');
 
-const tools = toolsRuntime(scripts + 'system/tools.js');
+const tools = toolsRuntime(scripts + 'system/player/tools.js');
 assert.equal(tools.calls, 50);
 assert.equal(tools.scans, 50);
 assert.deepEqual(tools.commands.map(c => c.tick), Array.from({ length: 50 }, (_, i) => (i + 1) * 20));

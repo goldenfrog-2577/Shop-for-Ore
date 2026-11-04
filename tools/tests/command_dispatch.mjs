@@ -15,8 +15,8 @@ const stubs={
  './commands/moderation.js':{MODERATION_COMMANDS:{},isCoord:()=>true},
  './commands/admin.js':{ADMIN_COMMANDS:{},debugLines:()=>[],giveOreMagnet:()=>true,setMoney:()=>true},
  '../system/worldedit.js':{worldEditCommand:(p,a)=>delegated.push([p,Array.from(a)])},
- '../system/offline_reset.js':{resetOffline:()=>resets++,offlineCounts:()=>({offline:2,online:4})},
- '../system/wipe.js':{wipeAll:async()=>wipes++,wipeCounts:()=>({all:6,online:4})},
+ '../system/core/offline_reset.js':{resetOffline:()=>resets++,offlineCounts:()=>({offline:2,online:4})},
+ '../system/core/wipe.js':{wipeAll:async()=>wipes++,wipeCounts:()=>({all:6,online:4})},
  '../register/change.js':{resetPassword:(p,t)=>passwords.push(t)}
 };
 const context=vm.createContext({Date:{now:()=>now}}),cache=new Map(),mod=new vm.SourceTextModule(source,{context,identifier:new URL('scripts/chat/commands.js',bp).href});

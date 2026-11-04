@@ -24,7 +24,7 @@ const run=async(p,cmd)=>{
 	return {};
 };
 const ctx={world,run,console,Number,system:{run(){}},DynamicPropertiesDefinition:class{},getScore:(p,k)=>Number.isFinite(p.scores[k])?p.scores[k]:0};
-vm.runInNewContext(source('scripts/system/player_scores.js')+'\nglobalThis.ensure=ensurePlayerScores;',ctx);
+vm.runInNewContext(source('scripts/system/core/player_scores.js')+'\nglobalThis.ensure=ensurePlayerScores;',ctx);
 const task=ctx.ensure(player);assert.equal(ctx.ensure(player),task,'one pending repair per player');await task;
 for(const k of ['xp','rebirth','efficiency','fortune','pick','magnet'])assert.equal(player.scores[k],0,k+' explicitly initialized');
 assert.equal(player.scores.xp_need,100);assert.equal(player.scores.online,1);assert.equal(player.scores.money,250100);assert.equal(player.scores.vip_coins,80);assert.equal(player.scores.play_seconds,24615);assert.ok(player.hasTag('player'));
@@ -34,13 +34,13 @@ player.scores.lvl=33;delete player.scores.xp_need;await ctx.ensure(player);asser
 objectives.delete('fortune');delete player.scores.fortune;await ctx.ensure(player);assert.equal(player.scores.fortune,0,'missing objective recreated');
 // HUD now has every referenced score, without replacing current money or VIP balance.
 const hud={world,getScore:ctx.getScore,isVip:()=>false,MAX_LEVEL:40,metricNumbers:String,run:async()=>({})};
-vm.runInNewContext(source('scripts/system/hud.js')+'\nglobalThis.hud=hudRawtext;',hud);
+vm.runInNewContext(source('scripts/system/ui/hud.js')+'\nglobalThis.hud=hudRawtext;',hud);
 for(const part of hud.hud(player))if(part.score)assert.ok(Number.isFinite(player.scores[part.score.objective]),'HUD score exists: '+part.score.objective);
 player.scores.lvl=25;player.tags.delete('player');await ctx.ensure(player);assert.ok(!player.hasTag('player'),'rebirth signal must remain until the function resets progress');player.tags.add('player');
 // Full wipe runs asynchronously in order; offline scores stay removed and online scores are explicit.
 offline.scores={money:900,xp:50,lvl:8};player.tags.add('player:vip');player.tags.add('ach:first');player.scores.stat_mined=100;
 const wipe={...ctx,ensurePlayerScores:ctx.ensure,STATS:['stat_mined'],tell(){},syncResetEpoch(){},DynamicPropertiesDefinition:class{defineNumber(){}}};
-vm.runInNewContext(source('scripts/system/wipe.js')+'\nglobalThis.wipe=wipeAll;',wipe);
+vm.runInNewContext(source('scripts/system/core/wipe.js')+'\nglobalThis.wipe=wipeAll;',wipe);
 await wipe.wipe(player);
 assert.equal(player.scores.lvl,1);assert.equal(player.scores.money,0);assert.equal(player.scores.vip_coins,0);assert.equal(player.scores.xp,0);assert.equal(player.scores.rebirth,0);assert.equal(player.scores.xp_need,100);
 assert.equal(offline.scores.money,undefined);assert.ok(player.hasTag('role:owner'));assert.ok(player.hasTag('auth:done'));assert.ok(player.hasTag('player:board'));assert.ok(player.hasTag('player'));assert.ok(player.hasTag('sys:wipe:1'));assert.ok(!player.hasTag('player:vip'));assert.ok(!player.hasTag('ach:first'));

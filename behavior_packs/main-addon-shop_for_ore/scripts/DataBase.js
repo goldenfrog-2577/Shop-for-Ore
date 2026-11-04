@@ -15,7 +15,7 @@
 //   13. Список команд чата
 
 import { world, system } from '@minecraft/server';
-import { ERROR_KEYS } from './system/error_keys.js';
+import { ERROR_KEYS } from './system/ui/error_keys.js';
 
 // ======== Константы игры ========
 
@@ -66,7 +66,7 @@ export function metricNumbers(value) {
 // ======== Команды и сообщения игроку: run, tell, tellText, rawTranslate ========
 
 // Сколько сообщений (tellraw @s — через tell, tellText и run) получил игрок и сколько из них — ошибки
-// (ключ из system/error_keys.js). menu/forms.js по ним решает, что делать с окнами после нажатия:
+// (ключ из system/ui/error_keys.js). menu/forms.js по ним решает, что делать с окнами после нажатия:
 // ошибка — закрыть всю цепочку, успех — оставить открытым последнее окно.
 const told = new Map();
 const toldErrors = new Map();
@@ -283,7 +283,7 @@ export function transferMoney(player, targetName, rawAmount) {
 	run(player, `scoreboard players remove @s money ${amount}`).then((res) => {
 		if (res === undefined) return;
 		run(target, `scoreboard players add @s money ${amount}`);
-		player.addTag('stat:paid');   // достижение «Щедрая душа» (system/achievements.js)
+		player.addTag('stat:paid');   // достижение «Щедрая душа» (system/player/achievements.js)
 		run(player, `tellraw @s ${rawTranslate('chat.bank.sent', target.name, amount)}`);
 		run(target, `tellraw @s ${rawTranslate('chat.bank.received', player.name, amount)}`);
 		run(player, 'playsound note.bell @s');
@@ -394,7 +394,7 @@ export function impersonatedRole(player, text) {
 }
 
 // ======== Наказания: мут, предупреждения, заморозка, тюрьма (хранятся тегами — переживают перезаход) ========
-// state:mute:<время окончания в мс | permanent>, state:warn:<1|2>, state:frozen, state:jail:<… | permanent> (system/jail.js)
+// state:mute:<время окончания в мс | permanent>, state:warn:<1|2>, state:frozen, state:jail:<… | permanent> (system/security/jail.js)
 
 // Самый длинный срок числом — 30 дней (мут, тюрьма, бан); дольше — permanent
 export const MAX_TERM_MINUTES = 30 * 24 * 60;
@@ -522,7 +522,7 @@ export const WARPS = [
 		return [0, 5, 0];
 	} },
 	{ id: 'minigames', role: 'player', pos: [-109, 5, -60] },
-	// Арена: случайная точка площадки (system/pvp.js), чтобы игроки не появлялись друг у друга
+	// Арена: случайная точка площадки (system/combat/pvp.js), чтобы игроки не появлялись друг у друга
 	{ id: 'pvp', role: 'player', arena: true },
 	{ id: 'spleef', role: 'player', pos: [500, 3, 500] },
 	{ id: 'tir', role: 'player', pos: [435, -45, 338] },

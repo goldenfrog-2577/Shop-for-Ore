@@ -1,0 +1,416 @@
+{
+	"relocations": {
+		"system/migrate.js": "system/core/migrate.js",
+		"system/player_scores.js": "system/core/player_scores.js",
+		"system/reset_history.js": "system/core/reset_history.js",
+		"system/wipe.js": "system/core/wipe.js",
+		"system/offline_reset.js": "system/core/offline_reset.js",
+		"system/fallback.js": "system/core/fallback.js",
+		"system/achievements.js": "system/player/achievements.js",
+		"system/playtime.js": "system/player/playtime.js",
+		"system/ranks.js": "system/player/ranks.js",
+		"system/tools.js": "system/player/tools.js",
+		"system/void.js": "system/player/void.js",
+		"system/hud.js": "system/ui/hud.js",
+		"system/toast.js": "system/ui/toast.js",
+		"system/music.js": "system/ui/music.js",
+		"system/error_keys.js": "system/ui/error_keys.js",
+		"system/boosts.js": "system/economy/boosts.js",
+		"system/promo.js": "system/economy/promo.js",
+		"system/trader.js": "system/economy/trader.js",
+		"system/anticheat.js": "system/security/anticheat.js",
+		"system/anticheat_checks.js": "system/security/anticheat_checks.js",
+		"system/ban.js": "system/security/ban.js",
+		"system/cps.js": "system/security/cps.js",
+		"system/freeze.js": "system/security/freeze.js",
+		"system/jail.js": "system/security/jail.js",
+		"system/spawnbot.js": "system/bot/spawnbot.js",
+		"system/bot.js": "system/bot/bot.js",
+		"system/pvp.js": "system/combat/pvp.js",
+		"system/trident.js": "system/combat/trident.js",
+		"system/mythic.js": "system/combat/mythic.js",
+		"system/minigames.js": "system/minigames/minigames.js",
+		"system/spleef.js": "system/minigames/spleef.js",
+		"system/tir.js": "system/minigames/tir.js"
+	},
+	"startup": {
+		"evaluation": [
+			"system/ui/error_keys.js",
+			"DataBase.js",
+			"system/security/jail.js",
+			"menu/forms.js",
+			"menu/enchant_shop.js",
+			"menu/cosmetics_shop.js",
+			"system/ui/toast.js",
+			"system/economy/promo.js",
+			"system/player/achievements.js",
+			"menu/achievements_menu.js",
+			"system/combat/pvp.js",
+			"system/minigames/minigames.js",
+			"register/password.js",
+			"register/change.js",
+			"chat/commands/common.js",
+			"chat/commands/player.js",
+			"system/security/freeze.js",
+			"system/security/cps.js",
+			"system/security/anticheat.js",
+			"chat/commands/moderation.js",
+			"system/player/playtime.js",
+			"system/core/reset_history.js",
+			"menu/admin_enchant.js",
+			"system/economy/boosts.js",
+			"chat/chat.js",
+			"system/core/player_scores.js",
+			"system/bot/spawnbot.js",
+			"system/core/wipe.js",
+			"system/core/offline_reset.js",
+			"system/security/anticheat_checks.js",
+			"system/bot/bot.js",
+			"menu/admin_menu.js",
+			"system/player/ranks.js",
+			"system/combat/mythic.js",
+			"system/security/ban.js",
+			"chat/commands/admin.js",
+			"system/worldedit.js",
+			"chat/commands.js",
+			"system/ui/music.js",
+			"menu/main_menu.js",
+			"system/player/tools.js",
+			"system/core/migrate.js",
+			"system/minigames/spleef.js",
+			"system/minigames/tir.js",
+			"system/economy/trader.js",
+			"system/combat/trident.js",
+			"system/player/void.js",
+			"system/ui/hud.js",
+			"system/core/fallback.js",
+			"register/login.js",
+			"register/register.js",
+			"register/system.js",
+			"import.js"
+		],
+		"subscriptions": [
+			[
+				"DataBase.js",
+				"playerLeave"
+			],
+			[
+				"system/security/jail.js",
+				"tick"
+			],
+			[
+				"menu/cosmetics_shop.js",
+				"tick"
+			],
+			[
+				"menu/cosmetics_shop.js",
+				"playerLeave"
+			],
+			[
+				"menu/cosmetics_shop.js",
+				"entityHurt"
+			],
+			[
+				"system/ui/toast.js",
+				"playerLeave"
+			],
+			[
+				"system/player/achievements.js",
+				"tick"
+			],
+			[
+				"system/player/achievements.js",
+				"blockBreak"
+			],
+			[
+				"system/player/achievements.js",
+				"entityHurt"
+			],
+			[
+				"system/combat/pvp.js",
+				"beforeItemUse"
+			],
+			[
+				"system/combat/pvp.js",
+				"tick"
+			],
+			[
+				"system/combat/pvp.js",
+				"entityHurt"
+			],
+			[
+				"system/combat/pvp.js",
+				"playerLeave"
+			],
+			[
+				"system/minigames/minigames.js",
+				"entityHurt"
+			],
+			[
+				"system/minigames/minigames.js",
+				"playerJoin"
+			],
+			[
+				"chat/commands/player.js",
+				"playerLeave"
+			],
+			[
+				"system/security/freeze.js",
+				"tick"
+			],
+			[
+				"system/security/cps.js",
+				"entityHit"
+			],
+			[
+				"system/security/cps.js",
+				"entityHurt"
+			],
+			[
+				"system/security/cps.js",
+				"tick"
+			],
+			[
+				"system/security/cps.js",
+				"playerLeave"
+			],
+			[
+				"system/core/reset_history.js",
+				"worldInitialize"
+			],
+			[
+				"system/economy/boosts.js",
+				"worldInitialize"
+			],
+			[
+				"chat/chat.js",
+				"playerLeave"
+			],
+			[
+				"chat/chat.js",
+				"beforeChat"
+			],
+			[
+				"chat/chat.js",
+				"tick"
+			],
+			[
+				"system/core/player_scores.js",
+				"tick"
+			],
+			[
+				"system/core/player_scores.js",
+				"worldInitialize"
+			],
+			[
+				"system/bot/spawnbot.js",
+				"worldInitialize"
+			],
+			[
+				"system/core/wipe.js",
+				"worldInitialize"
+			],
+			[
+				"system/core/wipe.js",
+				"playerJoin"
+			],
+			[
+				"system/core/wipe.js",
+				"playerLeave"
+			],
+			[
+				"system/core/wipe.js",
+				"tick"
+			],
+			[
+				"system/core/offline_reset.js",
+				"worldInitialize"
+			],
+			[
+				"system/security/anticheat_checks.js",
+				"entityHurt"
+			],
+			[
+				"system/security/anticheat_checks.js",
+				"blockBreak"
+			],
+			[
+				"system/security/anticheat_checks.js",
+				"tick"
+			],
+			[
+				"system/security/anticheat_checks.js",
+				"playerLeave"
+			],
+			[
+				"system/bot/bot.js",
+				"worldInitialize"
+			],
+			[
+				"system/bot/bot.js",
+				"entityHurt"
+			],
+			[
+				"system/bot/bot.js",
+				"playerLeave"
+			],
+			[
+				"system/bot/bot.js",
+				"tick"
+			],
+			[
+				"menu/admin_menu.js",
+				"beforeItemUse"
+			],
+			[
+				"system/player/ranks.js",
+				"tick"
+			],
+			[
+				"system/combat/mythic.js",
+				"tick"
+			],
+			[
+				"system/security/ban.js",
+				"worldInitialize"
+			],
+			[
+				"system/security/ban.js",
+				"playerJoin"
+			],
+			[
+				"system/security/ban.js",
+				"tick"
+			],
+			[
+				"system/worldedit.js",
+				"playerLeave"
+			],
+			[
+				"chat/commands.js",
+				"playerLeave"
+			],
+			[
+				"chat/commands.js",
+				"beforeChat"
+			],
+			[
+				"menu/main_menu.js",
+				"beforeItemUse"
+			],
+			[
+				"system/minigames/spleef.js",
+				"tick"
+			],
+			[
+				"system/minigames/spleef.js",
+				"blockBreak"
+			],
+			[
+				"system/minigames/tir.js",
+				"projectileHit"
+			],
+			[
+				"system/minigames/tir.js",
+				"tick"
+			],
+			[
+				"system/economy/trader.js",
+				"buttonPush"
+			],
+			[
+				"system/combat/trident.js",
+				"tick"
+			],
+			[
+				"system/combat/trident.js",
+				"entityHurt"
+			],
+			[
+				"system/combat/trident.js",
+				"playerLeave"
+			],
+			[
+				"system/player/void.js",
+				"tick"
+			],
+			[
+				"system/ui/hud.js",
+				"playerLeave"
+			],
+			[
+				"system/ui/hud.js",
+				"tick"
+			],
+			[
+				"register/system.js",
+				"playerJoin"
+			],
+			[
+				"register/system.js",
+				"playerLeave"
+			],
+			[
+				"register/system.js",
+				"tick"
+			]
+		],
+		"timers": [
+			[
+				"system/player/achievements.js",
+				20
+			],
+			[
+				"system/player/achievements.js",
+				1200
+			],
+			[
+				"system/minigames/minigames.js",
+				20
+			],
+			[
+				"system/minigames/minigames.js",
+				100
+			],
+			[
+				"system/security/anticheat.js",
+				1
+			],
+			[
+				"system/player/playtime.js",
+				20
+			],
+			[
+				"chat/chat.js",
+				20
+			],
+			[
+				"system/worldedit.js",
+				1
+			],
+			[
+				"system/ui/music.js",
+				40
+			],
+			[
+				"system/player/tools.js",
+				20
+			],
+			[
+				"system/core/migrate.js",
+				20
+			],
+			[
+				"system/core/fallback.js",
+				20
+			]
+		],
+		"oneShots": 3,
+		"games": [
+			[
+				"server",
+				"spawnbot"
+			]
+		]
+	}
+}
