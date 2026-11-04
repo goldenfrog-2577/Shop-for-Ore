@@ -66,6 +66,7 @@ export const ERROR_KEYS = new Set([
 	'chat.cmd.worldedit.error.busy',
 	'chat.cmd.worldedit.error.clipboard',
 	'chat.cmd.worldedit.error.dimension',
+	'chat.cmd.worldedit.error.detail',
 	'chat.cmd.worldedit.error.failed',
 	'chat.cmd.worldedit.error.idle',
 	'chat.cmd.worldedit.error.selection',
