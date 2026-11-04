@@ -28,6 +28,7 @@ const ROLE_GLYPHS = { player: '\ue137', helper: '\ue135', moder: '\ue131', admin
 const XP_GLYPH = '\ue154';
 // Значок монеты (как в балансе на панели слева)
 const COIN_GLYPH = '\ue152';
+const VIP_COIN_GLYPH = "";
 const OPEN = '\n%menu.common.tap_to_open';
 const EVENTS = ['haste', 'rain', 'gift', 'mythic'];
 // Как часто срабатывают ивенты по таймеру (минуты): timers/ticks_3600, ticks_6000, ticks_4800, мистик — system/mythic.js
@@ -174,7 +175,7 @@ function tools(player) {
 		{ text: '%admin.tools.button.admin_stick', icon: 'textures/items/stick', run: give('server:admin_stick') },
 		{ text: '%admin.tools.button.portable_ender_crystal', icon: 'textures/items/end_crystal', run: give('server:portable_ender_crystal 16') },
 		{ text: '%admin.tools.button.by_id', icon: 'textures/ui/magnifyingGlass', run: () => itemById(player, 'give @s', () => tools(player)) },
-		{ text: '%admin.enchant.title', icon: 'textures/items/book_enchanted', run: () => adminEnchantMenu(player, () => tools(player)) },
+		{ text: '%admin.tools.button.enchant', icon: 'textures/items/book_enchanted', run: () => adminEnchantMenu(player, () => tools(player)) },
 		// Очистка всего инвентаря — с подтверждением
 		{ text: '%admin.tools.button.clear_inventory', icon: 'textures/ui/cancel', run: () => confirm(player, WARN_TITLE, '%admin.tools.clear.body', () => run(player, 'clear @s'), () => tools(player)) },
 		back(() => admin_menu(player))
@@ -318,9 +319,9 @@ function playerActions(player, target) {
 		`%admin.players.body.playtime ${playtimeText(target)}`,
 		`%admin.players.body.role %role.${getRole(target)}`,
 		`%admin.players.body.lvl ${getScore(target, 'lvl')}`,
-		`%admin.players.body.money ${getScore(target, 'money')} ${COIN_GLYPH}`,
+		`%admin.players.body.money ${getScore(target, 'money')} §r${COIN_GLYPH}`,
 		`%admin.players.body.warns ${getWarns(target)}§e/3§r`,
-		...(isVip(target) ? [`%admin.players.body.vip_coins ${getScore(target, 'vip_coins')} ${COIN_GLYPH}`] : []),
+		...(isVip(target) ? [`%admin.players.body.vip_coins ${getScore(target, 'vip_coins')} §r${VIP_COIN_GLYPH}`] : []),
 		`%admin.players.body.mute ${muteMinutesLeft(target) === Infinity ? '%chat.term.permanent' : muteMinutesLeft(target) > 0 ? muteMinutesLeft(target) + ' %admin.common.min' : '%admin.players.mute.none'}`,
 		// В тюрьме — сколько осталось
 		...(isJailed(target) ? [`%admin.players.body.jail ${jailMinutesLeft(target) === Infinity ? '%chat.term.permanent' : `${jailMinutesLeft(target)} %admin.common.min`}`] : [])
@@ -367,7 +368,7 @@ function playerColor(player, target) {
 function playerMoney(player, target, back = () => playerActions(player, target)) {
 	const actions = ['add', 'take', 'set'];
 	const form = modal('%admin.players.money.title')
-		.dropdown(`%admin.players.body.money ${getScore(target, 'money')} ${COIN_GLYPH}\n%admin.players.body.vip_coins ${getScore(target, 'vip_coins')} ${COIN_GLYPH}\n\n%admin.players.money.currency`, ['%admin.players.money.normal', '%admin.players.money.vip'], 0)
+		.dropdown(`%admin.players.body.money ${getScore(target, 'money')} §r${COIN_GLYPH}\n%admin.players.body.vip_coins ${getScore(target, 'vip_coins')} §r${VIP_COIN_GLYPH}\n\n%admin.players.money.currency`, ['%admin.players.money.normal', '%admin.players.money.vip'], 0)
 		.dropdown('%admin.players.money.action', actions.map(a => `%admin.players.money.${a}`), 0)
 		.textField('%admin.players.money.amount', '%menu.bank.amount_placeholder');
 	showModal(player, form, (values) => {
@@ -525,7 +526,7 @@ function serverMenu(player) {
 
 export function botMenu(player) {
 	const bot = getBot(), name = getBotName(), st = botState();
-	const status = (title, value) => `${title}\n§8[ §r${value} §8]`;
+	const status = (title, value) => `${title}\n§8[ §r ${value} §8]`;
 	const toggle = (key, label, icon) => ({
 		text: status(`%admin.bot.button.${label}`, key === 'sit'
 			? st.sit ? '%admin.bot.sit.sneaking' : '%admin.bot.sit.standing'
@@ -557,15 +558,15 @@ function botModeMenu(player) {
 		if (error) return tell(player, error, ...(opts?.game ? [{ translate: `minigame.${opts.game}.name` }] : []));
 		tell(player, 'chat.admin.bot.mode', name, { translate: `admin.bot.mode.${mode}` });
 	};
-	const mode = (id, icon, opts) => ({ text: `§8%admin.bot.mode.${id}\n%admin.bot.mode.${id}.desc`, icon, run: () => done(id, opts) });
-	showMenu(player, '%admin.bot.mode.title', `%admin.bot.mode.now §f%admin.bot.mode.${botState().mode}`, [
+	const mode = (id, icon, opts) => ({ text: `§8 %admin.bot.mode.${id}\n%admin.bot.mode.${id}.desc`, icon, run: () => done(id, opts) });
+	showMenu(player, '%admin.bot.mode.title', `%admin.bot.mode.now §f %admin.bot.mode.${botState().mode}`, [
 		mode('idle', 'textures/server_icons/steve'),
 		mode('dummy', 'textures/items/armor_stand'),
 		mode('follow', 'textures/items/lead', { target: player.name }),
 		mode('stay', 'textures/blocks/barrier'),
 		mode('mirror', 'textures/items/mirror_glass', { target: player.name }),
-		{ text: '§8%admin.bot.mode.spar\n%admin.bot.mode.spar.desc', icon: 'textures/items/diamond_sword', run: () => botSpar(player) },
-		{ text: '§8%admin.bot.mode.game\n%admin.bot.mode.game.desc', icon: 'textures/items/diamond_shovel', run: () => botGame(player) },
+		{ text: '§8 %admin.bot.mode.spar\n%admin.bot.mode.spar.desc', icon: 'textures/items/diamond_sword', run: () => botSpar(player) },
+		{ text: '§8 %admin.bot.mode.game\n%admin.bot.mode.game.desc', icon: 'textures/items/diamond_shovel', run: () => botGame(player) },
 		back(() => botMenu(player))
 	], () => botMenu(player));
 }
@@ -582,7 +583,7 @@ function botSpar(player) {
 
 function botGame(player) {
 	showMenu(player, '%admin.bot.game.title', '%admin.bot.game.body', [
-		...listGames().map(g => ({ text: `§8%minigame.${g.def.id}.name\n§8%menu.games.phase.${g.phase} §7(${g.players.size}/${g.def.maxPlayers})`, run: () => {
+		...listGames().map(g => ({ text: `§8 %minigame.${g.def.id}.name\n§8 %menu.games.phase.${g.phase} §7(${g.players.size}/${g.def.maxPlayers})`, run: () => {
 			const error = setBotMode('game', { game: g.def.id });
 			if (error) return tell(player, error, { translate: `minigame.${g.def.id}.name` });
 			tell(player, 'chat.admin.bot.mode', getBotName(), { translate: 'admin.bot.mode.game' });

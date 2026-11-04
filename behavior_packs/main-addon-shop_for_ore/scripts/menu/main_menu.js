@@ -83,7 +83,7 @@ const HOWTOPLAY = ['\ue101 ' + lines('menu.howtoplay.line', 5), '\ue152 ' + line
 	...Array.from({ length: 8 }, (_, i) => `%menu.howtoplay.line.${14 + i}`)].join('\n\n');
 // Строк «что нового» в .lang: menu.version.line.3…VERSION_LINES
 const VERSION_LINES = 26;
-const VERSION = `%menu.version.line.1\n\n§r%menu.version.label §a${BUILD}§r\n%menu.version.line.2\n\n${lines('menu.version.line', VERSION_LINES, 3)}`;
+const VERSION = `%menu.version.line.1\n\n§r %menu.version.label §a${BUILD}§r\n%menu.version.line.2\n\n${lines('menu.version.line', VERSION_LINES, 3)}`;
 
 /** Страница текста с одной кнопкой «Назад». */
 function textPage(player, title, body, back) {
@@ -204,14 +204,14 @@ export function bank(player) {
 	showModal(player, form, ([target, amount]) => transferMoney(player, names[target], amount), () => menu(player));
 }
 
-const gameStateLine = (g) => `§8%menu.games.phase.${g.phase} §7(${g.players.size}/${g.def.maxPlayers})`;
+const gameStateLine = (g) => `§8 %menu.games.phase.${g.phase} §7(${g.players.size}/${g.def.maxPlayers})`;
 
 export function minigamesMenu(player, back) {
 	const mine = gameOf(player);
 	showMenu(player, '%menu.games.title', mine ? '%menu.games.body.in_game' : '%menu.games.body', [
 		...listGames().map(g => g === mine
-			? { text: `§2%minigame.${g.def.id}.name\n§2%menu.games.leave`, run: () => leaveGame(player) }
-			: { text: `§8%minigame.${g.def.id}.name\n${gameStateLine(g)}`, run: () => joinGame(player, g.def.id) }),
+			? { text: `§2 %minigame.${g.def.id}.name\n§2 %menu.games.leave`, run: () => leaveGame(player) }
+			: { text: `§8 %minigame.${g.def.id}.name\n${gameStateLine(g)}`, run: () => joinGame(player, g.def.id) }),
 		backButton(back)
 	], back);
 }
@@ -256,13 +256,13 @@ function upgrading(player) {
 }
 
 function menuSounds(player, back) {
-	const toggle = (kind) => toggleMenu(player, '%menu.settings.menu_sounds.' + kind,
+	const toggle = (kind) => toggleMenu(player, '%menu.settings.menu_sounds.' + kind + '.title',
 		'%menu.settings.menu_sounds.body', !player.hasTag('player:menu_' + kind + '_off'), on => {
 			if (on) player.removeTag('player:menu_' + kind + '_off'); else player.addTag('player:menu_' + kind + '_off');
 			tell(player, on ? 'chat.settings.enabled' : 'chat.settings.disabled');
 			menuSounds(player, back);
 		}, () => menuSounds(player, back));
-	showMenu(player, '%menu.settings.button.menu_sounds', '%menu.settings.menu_sounds.body', [
+	showMenu(player, '%menu.settings.menu_sounds.title', '%menu.settings.menu_sounds.body', [
 		{ text: '%menu.settings.menu_sounds.success', run: () => toggle('success') },
 		{ text: '%menu.settings.menu_sounds.error', run: () => toggle('error') },
 		backButton(back)

@@ -2,7 +2,7 @@
 import { MinecraftEnchantmentTypes, Enchantment } from '@minecraft/server';
 import { hasRole, tell } from '../DataBase.js';
 import { showMenu, showModal, modal, backButton } from './forms.js';
-import { ITEM_ENCHANTS, PICKAXE_ENCHANTS } from './enchant_shop.js';
+import { ITEM_ENCHANTS, PICKAXE_ENCHANTS, nameKey } from './enchant_shop.js';
 
 const EXTRA = [
 	['aquaAffinity', 'enchantment.waterWorker', 1], ['respiration', 'enchantment.oxygen', 3],
@@ -44,7 +44,7 @@ export function adminEnchantMenu(player, back) {
 	for (let slot = 0; slot < container.size; slot++) {
 		const item = container.getItem(slot);
 		if (!adminEnchantOptions(item).length) continue;
-		items.push({ text: `${item.nameTag || item.typeId}\n%admin.enchant.slot ${slot + 1}`, icon: 'textures/items/book_enchanted', run: () => choose(player, slot, item.typeId, () => adminEnchantMenu(player, back)) });
+		items.push({ text: `${item.nameTag || '%' + nameKey(item.typeId)}\n%admin.enchant.slot ${slot + 1}`, icon: 'textures/items/book_enchanted', run: () => choose(player, slot, item.typeId, () => adminEnchantMenu(player, back)) });
 	}
 	showMenu(player, '%admin.enchant.title', items.length ? '%admin.enchant.body' : '%admin.enchant.empty', [...items, backButton(back)], back);
 }
@@ -52,7 +52,7 @@ function choose(player, slot, typeId, back) {
 	const item = inventory(player).getItem(slot);
 	if (!item || item.typeId !== typeId) return tell(player, 'chat.shop.item_enchant.error.changed');
 	const options = adminEnchantOptions(item);
-	const form = modal('%admin.enchant.title').dropdown('%admin.enchant.choose', options.map(e => '%' + e.name), 0)
-		.textField('%admin.enchant.level', '0–5', '1');
+	const form = modal('%admin.enchant.title').dropdown('%admin.enchant.choose', options.map(e => '%' + e.name + ' §8(0–' + e.max + ')'), 0)
+		.textField('%admin.enchant.level', '1', '1');
 	showModal(player, form, ([i,level]) => applyAdminEnchant(player, slot, typeId, options[i]?.id, level), back);
 }
