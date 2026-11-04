@@ -802,6 +802,11 @@ export const commandsList = [
 
 	// ===== Владелец =====
 	{
+		command: '!worldedit §7[§faction§7]',
+		description: '%chat.help.worldedit',
+		role: 'owner'
+	},
+	{
 		command: '!role §7<§fplayer§7> <§fplayer§8/§fhelper§8/§fmoder§8/§fadmin§7>',
 		description: '%chat.help.role',
 		role: 'owner'

@@ -449,6 +449,9 @@
 		},
 		{
 			"path" : "functions/promo/books_scan.mcfunction"
+		},
+		{
+			"path" : "scripts/system/worldedit.js"
 		}],
 	"version" : 1
 }

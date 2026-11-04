@@ -2,6 +2,7 @@
 // Обработчик: имя команды без «!» → (player, args, command). Права (роль из commandsList) проверяет
 // runChatCommand в chat/commands.js; return — команда выполнена или отказ уже сообщён игроку.
 
+import { worldEditCommand } from '../../system/worldedit.js';
 import { world } from '@minecraft/server';
 import { tell, findPlayer, getRole, ROLES, run } from '../../DataBase.js';
 import { resetOffline, offlineCounts } from '../../system/offline_reset.js';
@@ -21,6 +22,7 @@ world.events.playerLeave.subscribe((data) => {
 });
 
 export const OWNER_COMMANDS = {
+	worldedit: (player, args) => worldEditCommand(player, args),
 	resetoffline(player, args) {
 		// Как !wipe: сводка, выполнение — только «!resetoffline confirm» в течение 30 секунд
 		const asked = resetRequests.get(player.name);
