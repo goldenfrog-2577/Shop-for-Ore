@@ -175,9 +175,6 @@
 			"path" : "scripts/chat/commands/admin.js"
 		},
 		{
-			"path" : "scripts/chat/commands/owner.js"
-		},
-		{
 			"path" : "scripts/import.js"
 		},
 		{
