@@ -1339,6 +1339,7 @@ chat.admin.bot.effect.added=§r §7CMD §8» §7Bot §f%1$s§r§7 got the eff
 chat.admin.bot.effect.cleared=§r §7CMD §8» §7All effects cleared from bot §f%1$s
 chat.admin.bot.error.name=§r⩕ §l§cERROR!§r §8» §7Bot name: 3 to 16 characters — Latin letters, digits, _ and space
 chat.admin.bot.error.absent=§r⩕ §l§cERROR!§r §8» §7The bot is not in the world
+chat.admin.bot.error.spawn=§r⩕ §l§cERROR!§r §8» §7Could not spawn the bot. Check ContentLog for details.
 chat.admin.bot.error.present=§r⩕ §l§cERROR!§r §8» §7Bot §f%1$s§r§7 is already in the world. Manage it from the admin menu
 chat.cmd.bot.settings=§r §7CMD §8» §7Close the chat — the bot control window will open
 admin.bot.button.mode=§8Bot mode

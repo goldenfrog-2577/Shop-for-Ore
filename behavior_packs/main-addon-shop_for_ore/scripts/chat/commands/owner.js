@@ -41,7 +41,7 @@ export const OWNER_COMMANDS = {
 		}
 	},
 
-	wipe(player, args) {
+	async wipe(player, args) {
 		// Самая опасная команда: сначала предупреждение, выполнение — только «!wipe confirm» в течение 30 секунд
 		const asked = wipeRequests.get(player.name);
 		if ((args[0] || '').toLowerCase() === 'confirm') {
@@ -50,7 +50,7 @@ export const OWNER_COMMANDS = {
 				tell(player, 'chat.cmd.error.confirm_expired', '!wipe');
 				return;
 			}
-			wipeAll(player);
+			await wipeAll(player);
 		} else {
 			// Сводка: что сбросится, что останется и скольких игроков затронет
 			wipeRequests.set(player.name, Date.now());

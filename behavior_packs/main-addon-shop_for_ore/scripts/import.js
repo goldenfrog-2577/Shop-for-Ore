@@ -61,3 +61,4 @@ system.run(() => {
 });
 import './system/playtime.js'; // Суммарное время в мире
 import './system/reset_history.js'; // Очистка служебных номеров без повторного вайпа
+import './system/player_scores.js'; // Восстановление отсутствующих счетов после сброса
