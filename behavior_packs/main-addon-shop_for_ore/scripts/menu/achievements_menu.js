@@ -17,7 +17,7 @@ const MENU_ORDER = [
 	'rebirth_1', 'rebirth_5', // Перерождения
 	'enchant', 'mined_1k', 'mined_10k', 'mined_100k', // Добыча и кирка
 	'pay', 'rich_100k', 'rich_1m', // Деньги
-	'vip', 'amethyst_500', 'vip_coins_1k', // VIP
+	'vip', 'vip_diamond_kit', 'vip_netherite_kit', 'vip_pickaxe', 'amethyst_500', 'vip_coins_1k', // VIP
 	'cosmetic', 'all_trails', // Косметика
 	'trader', 'all_heads', // Торговец
 	'pvp_kill', 'pvp_kills_25', // PvP

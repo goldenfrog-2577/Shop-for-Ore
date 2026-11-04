@@ -1,0 +1,213 @@
+{
+	"version": "Minecraft Bedrock 1.19.50 (bedrock-samples v1.19.50.2)",
+	"source": "https://github.com/Mojang/bedrock-samples/blob/v1.19.50.2/resource_pack/texts/en_US.lang",
+	"entries": {
+		"death.attack.anvil": [
+			"%1$s"
+		],
+		"death.attack.arrow": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.arrow.item": [
+			"%1$s",
+			"%2$s",
+			"%3$s"
+		],
+		"death.attack.bullet": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.cactus": [
+			"%1$s"
+		],
+		"death.attack.cactus.player": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.drown": [
+			"%1$s"
+		],
+		"death.attack.drown.player": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.explosion": [
+			"%1$s"
+		],
+		"death.attack.explosion.player": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.fall": [
+			"%1$s"
+		],
+		"death.attack.fallingBlock": [
+			"%1$s"
+		],
+		"death.attack.fireball": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.fireball.item": [
+			"%1$s",
+			"%2$s",
+			"%3$s"
+		],
+		"death.attack.fireworks": [
+			"%1$s"
+		],
+		"death.attack.flyIntoWall": [
+			"%1$s"
+		],
+		"death.attack.generic": [
+			"%1$s"
+		],
+		"death.attack.indirectMagic": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.indirectMagic.item": [
+			"%1$s",
+			"%2$s",
+			"%3$s"
+		],
+		"death.attack.inFire": [
+			"%1$s"
+		],
+		"death.attack.inFire.player": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.inWall": [
+			"%1$s"
+		],
+		"death.attack.lava": [
+			"%1$s"
+		],
+		"death.attack.lava.player": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.lightningBolt": [
+			"%1$s"
+		],
+		"death.attack.magic": [
+			"%1$s"
+		],
+		"death.attack.magma": [
+			"%1$s"
+		],
+		"death.attack.magma.player": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.mob": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.mob.item": [
+			"%1$s",
+			"%2$s",
+			"%3$s"
+		],
+		"death.attack.onFire": [
+			"%1$s"
+		],
+		"death.attack.onFire.player": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.outOfWorld": [
+			"%1$s"
+		],
+		"death.attack.player": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.player.item": [
+			"%1$s",
+			"%2$s",
+			"%3$s"
+		],
+		"death.attack.spit": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.starve": [
+			"%1$s"
+		],
+		"death.attack.sweetBerry": [
+			"%1$s"
+		],
+		"death.attack.thorns": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.thrown": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.thrown.item": [
+			"%1$s",
+			"%2$s",
+			"%3$s"
+		],
+		"death.attack.trident": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.wither": [
+			"%1$s"
+		],
+		"death.attack.freeze": [
+			"%1$s"
+		],
+		"death.attack.sonicBoom": [
+			"%1$s"
+		],
+		"death.attack.sonicBoom.player": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.attack.stalactite": [
+			"%1$s"
+		],
+		"death.attack.stalagmite": [
+			"%1$s"
+		],
+		"death.fell.accident.generic": [
+			"%1$s"
+		],
+		"death.fell.accident.ladder": [
+			"%1$s"
+		],
+		"death.fell.accident.vines": [
+			"%1$s"
+		],
+		"death.fell.accident.water": [
+			"%1$s"
+		],
+		"death.fell.assist": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.fell.assist.item": [
+			"%1$s",
+			"%2$s",
+			"%3$s"
+		],
+		"death.fell.finish": [
+			"%1$s",
+			"%2$s"
+		],
+		"death.fell.finish.item": [
+			"%1$s",
+			"%2$s",
+			"%3$s"
+		],
+		"death.fell.killer": [
+			"%1$s"
+		]
+	}
+}

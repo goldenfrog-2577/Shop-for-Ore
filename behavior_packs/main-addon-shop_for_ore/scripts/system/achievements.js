@@ -6,6 +6,7 @@
 // stat_amethyst (продано осколков аметиста, functions/system/autosale), stat_tir_hits (оплаченные попадания в тире, tir.js).
 // Отметки-теги: stat:paid (перевод денег, DataBase.transferMoney), stat:tir_bullseye (меткость 90 % с 30+ блоков, tir.js),
 // stat:trader и stat:head:<id> (покупки в лавке торговца, trader.js), stat:void (падение в бездну, void.js).
+// stat:trader:kit_diamond / kit_netherite / pickaxe — успешные покупки наборов и любой VIP-кирки.
 // Промокоды — теги promo:<код> (promo.js).
 // Проверка раз в секунду; за раз игроку выдаётся не больше одного достижения, следующее — когда
 // погаснет плашка (иначе старый игрок при первом входе получил бы десяток сразу).
@@ -72,7 +73,11 @@ export const ACHIEVEMENTS = [
 	{ id: 'spleef_5', type: 'challenge', ...score('stat_win_spleef', 5), reward: { vip_coins: 50 } },
 	{ id: 'all_heads', type: 'challenge', progress: (p) => TRADER_HEADS.filter(h => p.hasTag(`stat:head:${h}`)).length, goal: TRADER_HEADS.length, reward: { vip_coins: 150 } },
 	// goal — геттер: promo.js импортирует этот файл (rewardText), и при загрузке PROMOCODES ещё может быть не готов
-	{ id: 'all_promos', type: 'challenge', progress: (p) => PROMOCODES.filter(c => usedPromo(p, c)).length, get goal() { return PROMOCODES.length; }, reward: { money: 25000 } }
+	{ id: 'all_promos', type: 'challenge', progress: (p) => PROMOCODES.filter(c => usedPromo(p, c)).length, get goal() { return PROMOCODES.length; }, reward: { money: 25000 } },
+	// Новые покупки VIP-локации — в конце очереди, прежний порядок выдачи сохранён.
+	{ id: 'vip_diamond_kit', type: 'task', done: (p) => p.hasTag('stat:trader:kit_diamond'), reward: { vip_coins: 25 } },
+	{ id: 'vip_netherite_kit', type: 'challenge', done: (p) => p.hasTag('stat:trader:kit_netherite'), reward: { vip_coins: 50 } },
+	{ id: 'vip_pickaxe', type: 'challenge', done: (p) => p.hasTag('stat:trader:pickaxe'), reward: { vip_coins: 50 } }
 ];
 const BY_ID = new Map(ACHIEVEMENTS.map(a => [a.id, a]));
 
