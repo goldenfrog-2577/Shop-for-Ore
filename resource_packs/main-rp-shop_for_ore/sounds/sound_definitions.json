@@ -1,68 +1,44 @@
 {
 	"minecraft.challenge.complete": {
 		"category": "neutral",
-		"sounds": [{
-			"name": "sounds/minecraft/challenge.complete",
-			"volume": 1.0
-		}]
+		"sounds": [
+			{
+				"name": "sounds/minecraft/challenge.complete",
+				"volume": 1
+			}
+		]
 	},
 	"minecraft.tnt.explode": {
 		"category": "neutral",
-		"sounds": [{
-			"name": "sounds/minecraft/tnt.explode",
-			"volume": 1.0
-		}]
+		"sounds": [
+			{
+				"name": "sounds/minecraft/tnt.explode",
+				"volume": 1
+			}
+		]
 	},
 	"minecraft.glass.broke": {
 		"category": "neutral",
-		"sounds": [{
-			"name": "sounds/minecraft/glass.broke",
-			"volume": 1.0
-		}]
+		"sounds": [
+			{
+				"name": "sounds/minecraft/glass.broke",
+				"volume": 1
+			}
+		]
 	},
 	"music.game": {
 		"category": "music",
-		"sounds": [{
-			"name": "sounds/music/main.theme",
-			"stream": true,
-			"volume": 0.4,
-			"load_on_low_memory": true
-		},
-		{
-			"name": "sounds/music/comforting_memories",
-			"stream": true,
-			"volume": 0.4,
-			"load_on_low_memory": true
-		},
-		{
-			"name": "sounds/music/endless",
-			"stream": true,
-			"volume": 0.4,
-			"load_on_low_memory": true
-		},
-		{
-			"name": "sounds/music/fireflies",
-			"stream": true,
-			"volume": 0.4,
-			"load_on_low_memory": true
-		},
-		{
-			"name": "sounds/music/floating_dream",
-			"stream": true,
-			"volume": 0.4,
-			"load_on_low_memory": true
-		},
-		{
-			"name": "sounds/music/home",
-			"stream": true,
-			"volume": 0.4,
-			"load_on_low_memory": true
-		},
-		{
-			"name": "sounds/music/os_piano",
-			"stream": true,
-			"volume": 0.4,
-			"load_on_low_memory": true
-		}]
+		"sounds": [
+			{
+				"name": "sounds/music/main.theme",
+				"stream": true,
+				"volume": 0.4,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"ambient.cave": {
+		"category": "ambient",
+		"sounds": []
 	}
 }

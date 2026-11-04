@@ -2,6 +2,7 @@
 // Обработчик: имя команды без «!» → (player, args, command). Права (роль из commandsList) проверяет
 // runChatCommand в chat/commands.js; return — команда выполнена или отказ уже сообщён игроку.
 
+import { playtimeRawtext } from '../../system/playtime.js';
 import { world } from '@minecraft/server';
 import { run, tell, findPlayer, setChatColor, CHAT_COLORS, colorAllowed, impersonatedRole, hasRole, rawTranslate, emotes, parseTerm, rawTranslateRich, termText, getScore, getRole } from '../../DataBase.js';
 import { botMenu } from '../../menu/admin_menu.js';
@@ -44,7 +45,8 @@ export function debugLines(target) {
 		{ translate: 'chat.cmd.stats.role', with: { rawtext: [{ translate: `role.${getRole(target)}` }] } },
 		{ translate: 'chat.cmd.debug.pos', with: [`${Math.floor(x)} ${Math.floor(y)} ${Math.floor(z)}`, target.dimension.id.replace('minecraft:', '')] },
 		{ translate: 'chat.cmd.debug.scores', with: [scores] },
-		{ translate: 'chat.cmd.debug.tags', with: [String(tags.length)] }
+		{ translate: 'chat.cmd.debug.tags', with: [String(tags.length)] },
+		{ rawtext: [{ translate: 'admin.players.body.playtime' }, { text: ' ' }, ...playtimeRawtext(target)] }
 	];
 	// Группы по алфавиту, теги без «:» — последними («прочие»)
 	const names = [...groups.keys()].filter(g => g).sort((a, b) => a.localeCompare(b));
@@ -61,17 +63,20 @@ export function debugLines(target) {
  * Изменить баланс игрока: add / take / set (меню администратора → Игроки → Деньги).
  * Снять больше, чем есть, нельзя — баланс станет 0. @returns {boolean} изменено
  */
-export function setMoney(player, target, action, raw) {
+export async function setMoney(player, target, action, raw, currency = 'money') {
+	if (!hasRole(player, 'admin')) { tell(player, 'chat.cmd.error.no_permission'); return false; }
+	if (!['money', 'vip_coins'].includes(currency)) return false;
 	const amount = Number(raw);
 	if (!['add', 'take', 'set'].includes(action) || !/^\d+$/.test(raw) || amount > 2147483647) {
 		tell(player, 'chat.cmd.error.number', raw || '—', 0, 2147483647);
 		return false;
 	}
-	const before = getScore(target, 'money');
+	const before = getScore(target, currency);
 	const after = action === 'add' ? Math.min(before + amount, 2147483647) : action === 'take' ? Math.max(before - amount, 0) : amount;
-	run(target, `scoreboard players set @s money ${after}`);
-	tell(player, 'chat.cmd.money.done', target.name, String(after));
-	if (target.name !== player.name) tell(target, 'chat.cmd.money.received', String(after));
+	const result = await run(target, `scoreboard players set @s ${currency} ${after}`);
+	if (!result) { tell(player, 'chat.cmd.error.offline', target.name); return false; }
+	tell(player, currency === 'vip_coins' ? 'chat.cmd.money.vip.done' : 'chat.cmd.money.done', target.name, String(after));
+	if (target.name !== player.name) tell(target, currency === 'vip_coins' ? 'chat.cmd.money.vip.received' : 'chat.cmd.money.received', String(after));
 	return true;
 }
 

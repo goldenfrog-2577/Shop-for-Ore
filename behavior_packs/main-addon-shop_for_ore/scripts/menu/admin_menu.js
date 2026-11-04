@@ -5,6 +5,9 @@
 // В 1.19.50 формы принимают только строки: ключи перевода пишутся как «%ключ», после ключа — пробел или перенос
 // (сразу после ключа не ставим ни скобок, ни §-кодов).
 
+import { playtimeText } from '../system/playtime.js';
+import { clearResetHistory } from '../system/reset_history.js';
+import { adminEnchantMenu } from './admin_enchant.js';
 import { boostSeconds } from '../system/boosts.js';
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed, jailMinutesLeft } from '../system/jail.js';
@@ -58,6 +61,7 @@ const back = (run) => backButton(run, '%admin.common.back', BACK_ICON);
 export function admin_menu(player) {
 	const items = [
 		{ text: '%admin.main.button.players' + OPEN, icon: 'textures/ui/FriendsIcon', run: () => playersMenu(player) },
+		{ text: '%admin.main.button.money' + OPEN, icon: 'textures/items/gold_ingot', run: () => moneyPlayers(player) },
 		{ text: '%admin.main.button.boosts' + OPEN, icon: 'textures/items/experience_bottle', run: () => boostsMenu(player) },
 		{ text: '%admin.main.button.server' + OPEN, icon: 'textures/ui/icon_setting', run: () => serverMenu(player) },
 		{ text: '%admin.main.button.gamemode' + OPEN, icon: 'textures/ui/heart_new', run: () => gamemodes(player) },
@@ -170,7 +174,8 @@ function tools(player) {
 		{ text: '%admin.tools.button.admin_stick', icon: 'textures/items/stick', run: give('server:admin_stick') },
 		{ text: '%admin.tools.button.portable_ender_crystal', icon: 'textures/items/end_crystal', run: give('server:portable_ender_crystal 16') },
 		{ text: '%admin.tools.button.by_id', icon: 'textures/ui/magnifyingGlass', run: () => itemById(player, 'give @s', () => tools(player)) },
-		// Очистка всего инвентаря — теперь с подтверждением
+		{ text: '%admin.enchant.title', icon: 'textures/items/book_enchanted', run: () => adminEnchantMenu(player, () => tools(player)) },
+		// Очистка всего инвентаря — с подтверждением
 		{ text: '%admin.tools.button.clear_inventory', icon: 'textures/ui/cancel', run: () => confirm(player, WARN_TITLE, '%admin.tools.clear.body', () => run(player, 'clear @s'), () => tools(player)) },
 		back(() => admin_menu(player))
 	], () => admin_menu(player));
@@ -229,6 +234,7 @@ function wipe(player) {
 			const { offline, online } = offlineCounts();
 			wipeConfirm(player, `%admin.wipe.offline.body\n\n%admin.wipe.offline.count §e${offline}§7 (%admin.wipe.online §e${online}§7)`, () => resetOffline(player), again);
 		} },
+		{ text: '%admin.wipe.history.title', icon: 'textures/ui/refresh_light', run: () => confirm(player, WARN_TITLE, '%admin.wipe.history.body', () => clearResetHistory(player), again) },
 		back(() => admin_menu(player))
 	], () => admin_menu(player));
 }
@@ -236,10 +242,21 @@ function wipe(player) {
 // ===== Игроки =====
 
 // Выбор игрока из тех, кто в сети
+export function orderedPlayers(viewer, players = [...world.getPlayers()], random = Math.random) {
+	const kind = p => getRole(p) === 'owner' ? 2 : p.hasTag('role:bot') ? 1 : 0;
+	const sorted = players.slice().sort((a, b) => kind(a) - kind(b) || a.name.localeCompare(b.name));
+	const candidates = sorted.filter(p => kind(p) === 0 && p.name !== viewer.name);
+	if (candidates.length) {
+		const chosen = candidates[Math.min(candidates.length - 1, Math.floor(random() * candidates.length))];
+		sorted.splice(sorted.indexOf(chosen), 1); sorted.unshift(chosen);
+	}
+	return sorted;
+}
 function playersMenu(player) {
-	const names = [...world.getPlayers()].map(p => p.name);
+	const names = orderedPlayers(player).map(p => p.name);
+	if (!names.length) return tell(player, 'chat.admin.error.no_players');
 	const form = modal('%admin.players.title')
-		.dropdown('%admin.players.choose', names, Math.max(0, names.indexOf(player.name)));
+		.dropdown('%admin.players.choose', names, 0);
 	showModal(player, form, (values) => {
 		const name = names[values[0]];
 		const target = findPlayer(name);
@@ -287,21 +304,24 @@ function playerActions(player, target) {
 		// Роль меняет только владелец, и не самому себе
 		if (hasRole(player, 'owner') && !target.hasTag('role:owner') && !target.hasTag('role:bot')) {
 			items.push({ text: '%admin.players.button.role', icon: 'textures/ui/permissions_op_crown', run: () => playerRole(player, target) });
-			// VIP — тег player:vip: выдать (например, в подарок) или снять — только владелец
-			items.push(isVip(target)
-				? { text: '%admin.players.button.vip_take', icon: 'textures/items/amethyst_shard', run: () => setVip(player, target, false) }
-				: { text: '%admin.players.button.vip_give', icon: 'textures/items/amethyst_shard', run: () => setVip(player, target, true) });
+
 			// Сброс забытого пароля — с подтверждением (команда !resetpass)
 			items.push({ text: '%admin.players.button.resetpass', icon: 'textures/ui/icon_lock', run: () => confirm(player, WARN_TITLE, '%admin.players.resetpass.body', () => runChatCommand(player, 'resetpass', [target.name]), () => playerActions(player, target)) });
 		}
 	}
+	if (hasRole(player, 'owner')) items.push(isVip(target)
+		? { text: '%admin.players.button.vip_take', icon: 'textures/items/amethyst_shard', run: () => setVip(player, target, false) }
+		: { text: '%admin.players.button.vip_give', icon: 'textures/items/amethyst_shard', run: () => setVip(player, target, true) });
 	items.push(back(() => playersMenu(player)));
 	const body = [
 		`%admin.players.body.name ${name}`,
+		`%admin.players.body.playtime ${playtimeText(target)}`,
 		`%admin.players.body.role %role.${getRole(target)}`,
 		`%admin.players.body.lvl ${getScore(target, 'lvl')}`,
 		`%admin.players.body.money ${getScore(target, 'money')} ${COIN_GLYPH}`,
-		`%admin.players.body.warns ${getWarns(target)}/3`,
+		`%admin.players.body.warns ${getWarns(target)}§e/3§r`,
+		...(isVip(target) ? [`%admin.players.body.vip_coins ${getScore(target, 'vip_coins')} ${COIN_GLYPH}`] : []),
+		`%admin.players.body.mute ${muteMinutesLeft(target) === Infinity ? '%chat.term.permanent' : muteMinutesLeft(target) > 0 ? muteMinutesLeft(target) + ' %admin.common.min' : '%admin.players.mute.none'}`,
 		// В тюрьме — сколько осталось
 		...(isJailed(target) ? [`%admin.players.body.jail ${jailMinutesLeft(target) === Infinity ? '%chat.term.permanent' : `${jailMinutesLeft(target)} %admin.common.min`}`] : [])
 	].join('\n');
@@ -310,6 +330,7 @@ function playerActions(player, target) {
 
 /** Выдать или снять VIP (тег player:vip). Игрок мог выйти, пока окно было открыто. */
 function setVip(player, target, on) {
+	if (!hasRole(player, 'owner')) return tell(player, 'chat.cmd.error.no_permission');
 	const online = findPlayer(target.name);
 	if (!online) return tell(player, 'chat.cmd.error.offline', target.name);
 	if (on) {
@@ -317,6 +338,7 @@ function setVip(player, target, on) {
 		tell(online, 'chat.vip.welcome');
 	} else online.removeTag(VIP_TAG);
 	tell(player, on ? 'chat.admin.vip.given' : 'chat.admin.vip.taken', online.name);
+	playerActions(player, online);
 }
 
 function playerGamemode(player, target) {
@@ -342,17 +364,18 @@ function playerColor(player, target) {
 	}, () => playerActions(player, target));
 }
 
-function playerMoney(player, target) {
+function playerMoney(player, target, back = () => playerActions(player, target)) {
 	const actions = ['add', 'take', 'set'];
 	const form = modal('%admin.players.money.title')
-		.dropdown(`%admin.players.body.money ${getScore(target, 'money')} ${COIN_GLYPH}\n\n%admin.players.money.action`, actions.map(a => `%admin.players.money.${a}`), 0)
+		.dropdown(`%admin.players.body.money ${getScore(target, 'money')} ${COIN_GLYPH}\n%admin.players.body.vip_coins ${getScore(target, 'vip_coins')} ${COIN_GLYPH}\n\n%admin.players.money.currency`, ['%admin.players.money.normal', '%admin.players.money.vip'], 0)
+		.dropdown('%admin.players.money.action', actions.map(a => `%admin.players.money.${a}`), 0)
 		.textField('%admin.players.money.amount', '%menu.bank.amount_placeholder');
 	showModal(player, form, (values) => {
 		// Игрок мог выйти, пока окно было открыто
 		const online = findPlayer(target.name);
 		if (!online) return tell(player, 'chat.cmd.error.offline', target.name);
-		setMoney(player, online, actions[values[0]], String(values[1] ?? '').trim());
-	}, () => playerActions(player, target));
+		return setMoney(player, online, actions[values[1]], String(values[2] ?? '').trim(), values[0] === 1 ? 'vip_coins' : 'money');
+	}, back);
 }
 
 // Мут, тюрьма, бан: срок из списка (как у команд: минуты, 'permanent') и причина по желанию
@@ -476,9 +499,10 @@ function serverMenu(player) {
 		`%admin.server.moders §f${count('moder')}`,
 		`%admin.server.helpers §f${count('helper')}`,
 		'',
-		boosts.length
-			? boosts.map(b => `%admin.server.boost §a${b.type} §8— %admin.server.left ${b.minutes} %admin.common.min`).join('\n')
-			: '%admin.server.boost §8—',
+		...['x2', 'x4'].map(type => {
+			const active = boosts.find(b => b.type === type);
+			return `%admin.server.boost ${type} §8— ${active ? '%admin.server.on %admin.server.left ' + active.minutes + ' %admin.common.min' : '%admin.server.off'}`;
+		}),
 		'',
 		'%admin.server.auto',
 		...EVENTS.map(ev => `§8• %chat.cmd.event.name.${ev} §8— ${getSetting(ev) === 1 ? '%admin.server.on' : '%admin.server.off'}`)
@@ -684,4 +708,15 @@ function botSay(player) {
 		if (text.length > 200) return tell(player, 'chat.error.too_long');
 		sendChatMessage(bot, text);
 	}, () => botMenu(player));
+}
+function moneyPlayers(player) {
+	if (!hasRole(player, 'admin')) return tell(player, 'chat.cmd.error.no_permission');
+	const names = orderedPlayers(player).map(p => p.name);
+	if (!names.length) return tell(player, 'chat.admin.error.no_players');
+	const form = modal('%admin.main.button.money').dropdown('%admin.players.choose', names, 0);
+	showModal(player, form, ([i]) => {
+		const target = findPlayer(names[i]);
+		if (!target) return tell(player, 'chat.cmd.error.offline', names[i]);
+		playerMoney(player, target, () => moneyPlayers(player));
+	}, () => admin_menu(player));
 }

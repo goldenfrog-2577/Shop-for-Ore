@@ -1,6 +1,6 @@
 // --- Формы: один способ строить меню во всех скриптах ---
 // Меню — список пунктов { text, icon, run }: номер нажатой кнопки сам находит действие, поэтому
-// пункты можно показывать не всем. Крестик (закрыл сам игрок) — onBack, как кнопка «Назад».
+// пункты можно показывать не всем. Крестик закрывает окно; возврат — отдельной кнопкой (кроме формы с полями).
 // Если форма не открылась из-за открытого чата (userBusy), она покажется, когда чат закроют.
 // В 1.19.50 формы принимают только строки: ключи перевода пишутся как «%ключ», после ключа —
 // пробел или перенос строки (сразу после ключа не ставим ни скобок, ни §-кодов). Параметров
@@ -14,7 +14,7 @@
 // Покупки через функции (.mcfunction) пишут в чат сами, скрипт этих сообщений не видит — после них окно закрывается.
 
 import { ActionFormData, ModalFormData, MessageFormData } from '@minecraft/server-ui';
-import { closedByPlayer, showWhenFree, toldCount, toldErrorCount } from '../DataBase.js';
+import { closedByPlayer, showWhenFree, toldCount, toldErrorCount, settleCommands, hasPendingCommands, menuFeedback, menuCommandCount, menuSoundCount, failedCommandCount, beginMenuAction, endMenuAction } from '../DataBase.js';
 
 // Ник → { told, errors } до нажатия и opened — действие уже открыло форму после сообщения
 const acting = new Map();
@@ -24,15 +24,20 @@ const acting = new Map();
  * @param {() => void} fn
  * @param {() => void} [reopen] — что открыть, если пришло сообщение об успехе, а действие само ничего не открыло
  */
-function act(player, fn, reopen) {
-	const state = { told: toldCount(player), errors: toldErrorCount(player), opened: false };
+async function act(player, fn, reopen) {
+	const state = { told: toldCount(player), errors: toldErrorCount(player), commands: menuCommandCount(player), sounds: menuSoundCount(player), failed: failedCommandCount(player), opened: false };
 	acting.set(player.name, state);
+	beginMenuAction(player);
 	try {
-		fn?.();
+		const result = fn?.();
+		if (!state.opened && result?.then) await result;
+		await settleCommands(player);
 	} finally {
-		acting.delete(player.name);
+		if (acting.get(player.name) === state) { acting.delete(player.name); endMenuAction(player); }
 	}
-	const success = toldCount(player) > state.told && toldErrorCount(player) === state.errors;
+	const error = toldErrorCount(player) > state.errors || failedCommandCount(player) > state.failed;
+	const success = (toldCount(player) > state.told || menuCommandCount(player) > state.commands) && !error;
+	if ((error || success) && menuSoundCount(player) === state.sounds) menuFeedback(player, error);
 	if (success && !state.opened && reopen) reopen();
 }
 /**
@@ -43,14 +48,17 @@ function allowed(player) {
 	const state = acting.get(player.name);
 	if (!state) return true;
 	if (toldErrorCount(player) > state.errors) return false;
-	if (toldCount(player) > state.told) {
-		if (state.opened) return false;
-		state.opened = true;
-	}
+	if (state.opened) return false;
+	state.opened = true;
 	return true;
 }
 // null — форма не показана (обработчики ничего не делают, «Назад» тоже не срабатывает)
-const show = (player, form) => allowed(player) ? showWhenFree(player, form) : Promise.resolve(null);
+const show = (player, form) => {
+	const state = acting.get(player.name);
+	if (!allowed(player)) return Promise.resolve(null);
+	const open = () => state && toldErrorCount(player) > state.errors ? null : showWhenFree(player, typeof form === 'function' ? form() : form);
+	return hasPendingCommands(player) ? settleCommands(player).then(open) : Promise.resolve(open());
+};
 
 /**
  * Кнопка «Назад».
@@ -66,15 +74,19 @@ export const backButton = (run, text = '%menu.common.back', icon) => ({ text, ic
  * @param {string} title
  * @param {string} body
  * @param {({ text: string, icon?: string, run: () => void } | false | null | undefined)[]} items — ложные пропускаются
- * @param {() => void} [onBack] — крестик; в главном меню не задаётся (просто закрыть)
+ * @param {() => void} [onBack] — кнопка «Назад»; в главном меню не задаётся
  */
 export function showMenu(player, title, body, items, onBack) {
 	const list = items.filter(Boolean);
-	const form = new ActionFormData().title(title).body(body);
-	for (const item of list) form.button(item.text, item.icon);
+	if (onBack && !list.some(item => /%[a-z._]*\.back(?:\s|$)/.test(item.text))) list.push(backButton(onBack));
+	const form = () => {
+		const result = new ActionFormData().title(title).body(typeof body === 'function' ? body() : body);
+		for (const item of list) result.button(item.text, item.icon);
+		return result;
+	};
 	return show(player, form).then(r => {
 		if (!r) return;
-		if (closedByPlayer(r)) return act(player, onBack);
+		if (closedByPlayer(r)) return;
 		if (r.canceled || r.selection === undefined) return;
 		act(player, list[r.selection]?.run, () => showMenu(player, title, body, items, onBack));
 	});
@@ -104,7 +116,7 @@ export const modal = (title) => new ModalFormData().title(title);
  * @param {string} title
  * @param {string} body
  * @param {() => void} onYes
- * @param {() => void} [onNo] — «Нет» и крестик
+ * @param {() => void} [onNo] — кнопка «Нет»
  */
 export function confirm(player, title, body, onYes, onNo) {
 	const form = new MessageFormData()
@@ -115,7 +127,7 @@ export function confirm(player, title, body, onYes, onNo) {
 	return show(player, form).then(r => {
 		if (!r) return;
 		if (r.selection === 1) act(player, onYes, onNo);
-		else if (onNo && (r.selection === 0 || closedByPlayer(r))) act(player, onNo);
+		else if (!r.canceled && onNo && r.selection === 0) act(player, onNo);
 	});
 }
 

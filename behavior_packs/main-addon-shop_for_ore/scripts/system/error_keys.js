@@ -14,11 +14,13 @@ export const ERROR_KEYS = new Set([
 	'chat.admin.bot.error.game',
 	'chat.admin.bot.error.name',
 	'chat.admin.bot.error.present',
+	'chat.admin.enchant.error',
 	'chat.admin.error.no_players',
 	'chat.admin.item.error.id',
 	'chat.admin.item.error.unknown',
 	'chat.bank.error.no_players',
 	'chat.boost.error.active',
+	'chat.boost.error.loading',
 	'chat.cmd.achievement.error.has',
 	'chat.cmd.achievement.error.missing',
 	'chat.cmd.ban.error.full',
@@ -87,5 +89,5 @@ export const ERROR_KEYS = new Set([
 	'chat.trader.error.give',
 	'chat.trader.error.vip',
 	'chat.vip.error.owned',
-	'chat.vip.error.requirements'
+	'chat.vip.error.requirements',
 ]);

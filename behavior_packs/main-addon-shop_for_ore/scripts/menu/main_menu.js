@@ -1,10 +1,10 @@
 // --- Меню сервера (предмет server:menu в 9-м слоте) ---
 // Главное меню и разделы: О карте, Магазин, Настройки, Банк, Правила, Промокоды, Телепортации,
-// Прокачка, Достижения, Мини-игры. Формы строит menu/forms.js: крестик — на уровень вверх.
+// Прокачка, Достижения, Мини-игры. Формы строит menu/forms.js: крестик закрывает окно, возврат — кнопкой «Назад».
 
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed } from '../system/jail.js';
-import { isPending, tellText, tell, run, getScore, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed } from '../DataBase.js';
+import { isPending, tellText, tell, run, getScore, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed, shopBalance } from '../DataBase.js';
 import { showMenu, showModal, modal, backButton, toggleMenu } from './forms.js';
 import { enchantsMenu } from './enchant_shop.js';
 import { cosmeticsMenu } from './cosmetics_shop.js';
@@ -108,7 +108,7 @@ function creators(player) {
 
 function shop(player) {
 	const back = () => menu(player);
-	showMenu(player, '%menu.shop.title', '%menu.shop.body', [
+	showMenu(player, '%menu.shop.title', () => shopBalance(player, '%menu.shop.body'), [
 		{ text: '%menu.shop.button.enchants', icon: 'textures/items/book_enchanted', run: () => enchantsMenu(player, () => shop(player)) },
 		{ text: '%menu.shop.button.kits', icon: 'textures/items/diamond_chestplate', run: () => pvpKits(player) },
 		{ text: '%menu.shop.button.boosts', icon: 'textures/items/experience_bottle', run: () => boosts(player) },
@@ -122,7 +122,7 @@ const product = (player, text, price, glyph, fn, icon) => ({ text: `${text}\n§8
 
 function pvpKits(player) {
 	const back = () => shop(player);
-	showMenu(player, '%menu.shop.kits.title', '%menu.shop.kits.body', [
+	showMenu(player, '%menu.shop.kits.title', () => shopBalance(player, '%menu.shop.kits.body'), [
 		product(player, '%menu.shop.kits.button.iron', '15.0K', COIN, 'shop/pvp_kits/iron', 'textures/items/iron_chestplate'),
 		product(player, '%menu.shop.kits.button.diamond', '35.0K', COIN, 'shop/pvp_kits/diamond', 'textures/items/diamond_chestplate'),
 		product(player, '%menu.shop.kits.button.netherite', '50.0K', COIN, 'shop/pvp_kits/netherite', 'textures/items/netherite_chestplate'),
@@ -132,7 +132,7 @@ function pvpKits(player) {
 
 function boosts(player) {
 	const back = () => shop(player);
-	showMenu(player, '%menu.shop.boosts.title', '%menu.shop.boosts.body\n\n%menu.shop.boosts.x2\n%menu.shop.boosts.x4\n%menu.shop.boosts.magnet', [
+	showMenu(player, '%menu.shop.boosts.title', () => shopBalance(player, '%menu.shop.boosts.body\n\n%menu.shop.boosts.x2\n%menu.shop.boosts.x4\n%menu.shop.boosts.magnet'), [
 		product(player, '%menu.shop.boosts.button.x2', '10.0K', COIN, 'boost/x2_boost'),
 		product(player, '%menu.shop.boosts.button.x4', '50.0K', COIN, 'boost/x4_boost'),
 		// «Магнит руды» — личный, на 5 минут
@@ -153,6 +153,7 @@ function settings(player) {
 		{ text: '%menu.settings.button.sounds', icon: 'textures/blocks/noteblock', run: () => tagSetting(player, 'sounds', 'player:sound', again) },
 		{ text: '%menu.settings.button.music', icon: 'textures/items/record_cat', run: () => musicSetting(player, again) },
 		{ text: '%menu.settings.button.password', icon: 'textures/ui/icon_lock', run: () => ChangePasswordUI(player, again) },
+		{ text: '%menu.settings.button.menu_sounds', icon: 'textures/blocks/noteblock', run: () => menuSounds(player, again) },
 		backButton(back)
 	], back);
 }
@@ -250,6 +251,20 @@ function upgrading(player) {
 	showMenu(player, '%menu.upgrades.title', '%menu.upgrades.body', [
 		product(player, '%menu.upgrades.button.vip', '125.0K', COIN, 'upgrade/upgrade_vip'),
 		product(player, '%menu.upgrades.button.rebirth', `25 - ${MAX_LEVEL}`, LVL, 'upgrade/upgrade_rebirth'),
+		backButton(back)
+	], back);
+}
+
+function menuSounds(player, back) {
+	const toggle = (kind) => toggleMenu(player, '%menu.settings.menu_sounds.' + kind,
+		'%menu.settings.menu_sounds.body', !player.hasTag('player:menu_' + kind + '_off'), on => {
+			if (on) player.removeTag('player:menu_' + kind + '_off'); else player.addTag('player:menu_' + kind + '_off');
+			tell(player, on ? 'chat.settings.enabled' : 'chat.settings.disabled');
+			menuSounds(player, back);
+		}, () => menuSounds(player, back));
+	showMenu(player, '%menu.settings.button.menu_sounds', '%menu.settings.menu_sounds.body', [
+		{ text: '%menu.settings.menu_sounds.success', run: () => toggle('success') },
+		{ text: '%menu.settings.menu_sounds.error', run: () => toggle('error') },
 		backButton(back)
 	], back);
 }

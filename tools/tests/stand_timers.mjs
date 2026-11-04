@@ -138,6 +138,8 @@ context.world.scoreboard.getObjectives = () => [{ id: 'system', getScores: score
 	const value = e.get(p); if (value === undefined) throw new Error('No score'); return value;
 } }];
 context.tell = () => {};
+context.hasRole = () => true;
+vm.runInNewContext(withoutImports(bp + 'scripts/system/reset_history.js'), context);
 e.set('boost_x2', 47); e.set('rain_event', 12);
 vm.runInNewContext(withoutImports(bp + 'scripts/system/offline_reset.js') + '\nglobalThis.resetOfflineForTest=resetOffline;', context);
 context.resetOfflineForTest(player);
