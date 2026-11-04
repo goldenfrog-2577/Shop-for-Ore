@@ -9,7 +9,7 @@
 
 import { MinecraftEnchantmentTypes, Enchantment } from '@minecraft/server';
 import { getScore, shopBalance, metricNumbers, run, tell } from '../DataBase.js';
-import { showMenu, backButton } from './forms.js';
+import { showMenu, backButton } from './common/forms.js';
 
 // id — ключ в MinecraftEnchantmentTypes, name — ванильный ключ перевода (переводится на языке игрока)
 export const ITEM_ENCHANTS = [
@@ -175,7 +175,7 @@ function itemEnchantMenu(player, slot, back) {
 	showMenu(player, '%menu.shop.enchants.title', () => shopBalance(player, body), [
 		...options.map(o => ({
 			text: buyButton(o.e.name, o.level, o.e.max, priceFor(o.e, Math.min(o.level + 1, o.e.max))), icon: 'textures/items/book_enchanted',
-			// Покупка или ошибка — сообщение в чат, меню закрывается (menu/forms.js)
+			// Покупка или ошибка — сообщение в чат, меню закрывается (menu/common/forms.js)
 			run: () => buyEnchant(player, slot, typeId, o.e.id)
 		})),
 		backButton(back)

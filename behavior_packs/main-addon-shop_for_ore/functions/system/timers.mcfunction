@@ -6,7 +6,7 @@ scoreboard players add setup system 0
 execute if score setup system matches ..7 run function system/setup
 
 # Стойки нужны только до завершения разовой миграции.
-execute if score stand_timers_migrated system matches 0 run function system/migrate_stand_timers
+execute if score stand_timers_migrated system matches 0 run function system/migrate_timers
 
 # Каждый тик: конец «золотого дождя»
 execute if score stand_timers_migrated system matches 1 if score rain_event system matches 0 run function events/rain_end

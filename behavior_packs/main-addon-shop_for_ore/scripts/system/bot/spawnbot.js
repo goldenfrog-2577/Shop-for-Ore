@@ -63,8 +63,8 @@ export function spawnBot(summoner, at) {
 			if (!dim.getBlock(new BlockLocation(1000000, -60, 1000000))) return;
 		} catch { return; }
 		request.started = true;
-		Promise.resolve().then(() => dim.runCommandAsync('function system/spawnbot')).catch(error => {
-			finish(undefined, 'function system/spawnbot: ' + (error?.message ?? error));
+		Promise.resolve().then(() => dim.runCommandAsync('function system/spawn_bot')).catch(error => {
+			finish(undefined, 'function system/spawn_bot: ' + (error?.message ?? error));
 		});
 	}, 1);
 	// Четыре чанка вокруг площадки; остаются загружены, пока живёт GameTest.

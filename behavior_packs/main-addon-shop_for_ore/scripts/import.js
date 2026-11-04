@@ -16,11 +16,11 @@ console.log('[Shop for Ore] Addon scripts is working');
 
 // Импорт модулей меню
 import './menu/main_menu.js';         // Основное меню магазина
-import './menu/admin_menu.js';   // Админ-меню
+import './menu/admin/admin_menu.js';   // Админ-меню
 
 // Импорт модулей чата
 import './chat/chat.js';         // Чат-функционал
-import './chat/commands.js';     // Команды чата
+import './chat/commands/commands.js';     // Команды чата
 
 // Импорт других вспомогательных модулей
 import './system/security/anticheat.js';   // Античит: очки нарушений, сигналы персоналу, проверка инвентаря
@@ -51,7 +51,7 @@ import './system/ui/hud.js';         // Панель слева (actionbar)
 import './system/core/fallback.js';    // Пульс скриптов: без него включается запасное меню на NPC
 
 // Вход и регистрация
-import './register/system.js';
+import './registration/system.js';
 
 // После загрузки уведомить администраторов в сети.
 system.run(() => {

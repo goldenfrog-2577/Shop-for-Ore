@@ -5,19 +5,19 @@
 // Новая команда: строка в commandsList и метод в объекте своей роли (имя — без «!»).
 
 import { world } from '@minecraft/server';
-import { commandsList, isPending, tell, hasRole, findPlayer, getRole, ROLES, run } from '../DataBase.js';
-import { PLAYER_COMMANDS } from './commands/player.js';
-import { MODERATION_COMMANDS } from './commands/moderation.js';
-import { ADMIN_COMMANDS } from './commands/admin.js';
-import { worldEditCommand } from '../system/worldedit.js';
-import { resetOffline, offlineCounts } from '../system/core/offline_reset.js';
-import { wipeAll, wipeCounts } from '../system/core/wipe.js';
-import { resetPassword } from '../register/change.js';
+import { commandsList, isPending, tell, hasRole, findPlayer, getRole, ROLES, run } from '../../DataBase.js';
+import { PLAYER_COMMANDS } from './player.js';
+import { MODERATION_COMMANDS } from './moderator.js';
+import { ADMIN_COMMANDS } from './admin.js';
+import { worldEditCommand } from '../../system/worldedit.js';
+import { resetOffline, offlineCounts } from '../../system/core/offline_reset.js';
+import { wipeAll, wipeCounts } from '../../system/core/wipe.js';
+import { resetPassword } from '../../registration/change.js';
 
 // Помощники, которые нужны меню администратора и тестам
-export { textWidth, emoteGrid } from './commands/player.js';
-export { isCoord } from './commands/moderation.js';
-export { debugLines, giveOreMagnet, setMoney } from './commands/admin.js';
+export { textWidth, emoteGrid } from './player.js';
+export { isCoord } from './moderator.js';
+export { debugLines, giveOreMagnet, setMoney } from './admin.js';
 
 // --- Команды владельца и подтверждения сбросов ---
 // Запросы на вайп, ждущие «!wipe confirm»: имя → время запроса

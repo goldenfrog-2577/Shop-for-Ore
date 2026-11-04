@@ -1,13 +1,13 @@
 // --- Команды игрока (роль player): справка, точки, ЛС, деньги, топ, статистика, жалобы, мини-игры ---
 // Обработчик: имя команды без «!» → (player, args, command). Права (роль из commandsList) проверяет
-// runChatCommand в chat/commands.js; return — команда выполнена или отказ уже сообщён игроку.
+// runChatCommand в chat/commands/commands.js; return — команда выполнена или отказ уже сообщён игроку.
 
 import { world } from '@minecraft/server';
 import { commandsList, tell, hasRole, run, WARPS, warpAllowed, tellText, muteMinutesLeft, getScore, isVip, transferMoney, findPlayer, getRole, getWarns, ROLES, RULES_COUNT, emotesList, emotes } from '../../DataBase.js';
 import { isJailed, tellJailed } from '../../system/security/jail.js';
 import { combatSecondsLeft, teleportToArena } from '../../system/combat/pvp.js';
 import { canTeleport, listGames, joinGame, leaveGame, getGame, startGame, endGame } from '../../system/minigames/minigames.js';
-import { ChangePasswordUI } from '../../register/change.js';
+import { ChangePasswordUI } from '../../registration/change.js';
 import { resolveTarget, tellList } from './common.js';
 
 // С кем игрок последним переписывался в ЛС (для !r): имя → имя собеседника
@@ -365,7 +365,7 @@ export const PLAYER_COMMANDS = {
 	},
 
 	password(player, args) {
-		// Смена пароля: форма откроется, как только игрок закроет чат (register/change.js) — подсказываем
+		// Смена пароля: форма откроется, как только игрок закроет чат (registration/change.js) — подсказываем
 		tell(player, 'chat.account.change.close_chat');
 		ChangePasswordUI(player);
 	}

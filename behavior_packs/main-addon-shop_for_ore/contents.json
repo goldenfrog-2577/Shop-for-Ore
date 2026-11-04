@@ -73,10 +73,10 @@
 			"path" : "functions/system/clear_items.mcfunction"
 		},
 		{
-			"path" : "functions/system/levelup_check.mcfunction"
+			"path" : "functions/system/level_up_check.mcfunction"
 		},
 		{
-			"path" : "functions/system/levelup_apply.mcfunction"
+			"path" : "functions/system/level_up_apply.mcfunction"
 		},
 		{
 			"path" : "functions/system/pickaxe_lvl.mcfunction"
@@ -88,13 +88,13 @@
 			"path" : "functions/system/setup.mcfunction"
 		},
 		{
-			"path" : "functions/system/migrate_stand_timers.mcfunction"
+			"path" : "functions/system/migrate_timers.mcfunction"
 		},
 		{
-			"path" : "functions/system/apply_stand_timers.mcfunction"
+			"path" : "functions/system/apply_timers.mcfunction"
 		},
 		{
-			"path" : "functions/system/spawnbot.mcfunction"
+			"path" : "functions/system/spawn_bot.mcfunction"
 		},
 		{
 			"path" : "functions/system/system.mcfunction"
@@ -160,7 +160,7 @@
 			"path" : "scripts/chat/chat.js"
 		},
 		{
-			"path" : "scripts/chat/commands.js"
+			"path" : "scripts/chat/commands/commands.js"
 		},
 		{
 			"path" : "scripts/chat/commands/common.js"
@@ -169,7 +169,7 @@
 			"path" : "scripts/chat/commands/player.js"
 		},
 		{
-			"path" : "scripts/chat/commands/moderation.js"
+			"path" : "scripts/chat/commands/moderator.js"
 		},
 		{
 			"path" : "scripts/chat/commands/admin.js"
@@ -178,22 +178,22 @@
 			"path" : "scripts/import.js"
 		},
 		{
-			"path" : "scripts/menu/admin_menu.js"
+			"path" : "scripts/menu/admin/admin_menu.js"
 		},
 		{
 			"path" : "scripts/menu/main_menu.js"
 		},
 		{
-			"path" : "scripts/register/login.js"
+			"path" : "scripts/registration/login.js"
 		},
 		{
-			"path" : "scripts/register/password.js"
+			"path" : "scripts/registration/password.js"
 		},
 		{
-			"path" : "scripts/register/register.js"
+			"path" : "scripts/registration/register.js"
 		},
 		{
-			"path" : "scripts/register/system.js"
+			"path" : "scripts/registration/system.js"
 		},
 		{
 			"path" : "scripts/system/security/anticheat.js"
@@ -289,7 +289,7 @@
 			"path" : "scripts/menu/enchant_shop.js"
 		},
 		{
-			"path" : "scripts/register/change.js"
+			"path" : "scripts/registration/change.js"
 		},
 		{
 			"path" : "scripts/system/combat/mythic.js"
@@ -331,7 +331,7 @@
 			"path" : "scripts/menu/achievements_menu.js"
 		},
 		{
-			"path" : "scripts/menu/forms.js"
+			"path" : "scripts/menu/common/forms.js"
 		},
 		{
 			"path" : "scripts/system/core/wipe.js"
@@ -394,7 +394,7 @@
 			"path" : "scripts/system/core/reset_history.js"
 		},
 		{
-			"path" : "scripts/menu/admin_enchant.js"
+			"path" : "scripts/menu/admin/admin_enchant.js"
 		},
 		{
 			"path" : "functions/promo/redeem_kapycta.mcfunction"

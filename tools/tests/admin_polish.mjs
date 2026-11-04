@@ -21,7 +21,7 @@ const admin={world:{events:{beforeItemUse:event()},getPlayers:()=>people.values(
  getScore:(p,k)=>p.scores[k]??0,getWarns:()=>2,muteMinutesLeft:()=>0,playtimeText:time.api.playtimeText,findPlayer:n=>people.find(p=>p.name===n),
  showMenu:(p,title,body,items)=>capture={title,body,items},showModal:(p,form)=>capture={title:form.title},modal:title=>({title,dropdown(){return this;}}),backButton:run=>({text:'back',run}),
  boostSeconds:()=>0,getBot:()=>bot,getBotName:()=>bot.name,botState:()=>({mode:'follow',sit:false,totem:true,returnOnLoad:true}),SPAR_LEVELS:[1,2,3,4]};
-vm.runInNewContext(load('scripts/menu/admin_menu.js')+'\nglobalThis.api={serverMenu,moneyPlayers,playerActions,botMenu};',admin);
+vm.runInNewContext(load('scripts/menu/admin/admin_menu.js')+'\nglobalThis.api={serverMenu,moneyPlayers,playerActions,botMenu};',admin);
 admin.api.moneyPlayers(owner);assert.equal(capture.title,'%admin.players.money.title');
 admin.api.playerActions(owner,alice);assert(capture.body.includes('2§7/§f3§r'));assert(!capture.body.includes('§e/3'));
 admin.api.serverMenu(owner);assert(capture.body.includes('%admin.server.magnets §fAlice§7, §fBob'));

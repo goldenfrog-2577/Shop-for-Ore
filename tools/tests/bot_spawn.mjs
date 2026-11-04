@@ -10,7 +10,7 @@ function fixture(){
 	const context={ensureFunctionLimits:async()=>true,console:{warn:s=>warnings.push(s)},world:{events:{worldInitialize:{subscribe(){}}},getDynamicProperty(){},getDimension:id=>{assert.equal(id,'overworld');return dimension;},getPlayers:()=>players.values()},
 		system:{runSchedule:fn=>{schedules.set(++calls,fn);return calls;},clearRunSchedule:id=>schedules.delete(id)},BlockLocation:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},DynamicPropertiesDefinition:class{},
 		GT:{register(a,b,fn){registered=fn;return {maxTicks(){return this;},structureName(){return this;}};}},
-		run:async(entity,cmd)=>{commands.push([entity,cmd]);if(cmd==='function system/spawnbot'){
+		run:async(entity,cmd)=>{commands.push([entity,cmd]);if(cmd==='function system/spawn_bot'){
 			assert.equal(entity,dimension,'GameTest always in overworld');
 			if(mode==='command-fail')return undefined;
 			if(mode!=='timeout')registered(test);
@@ -21,10 +21,10 @@ function fixture(){
 }
 let f=fixture(),spawned=0;f.api.onBotSpawned(()=>spawned++);
 const a=f.api.spawnBot(f.summoner),b=f.api.spawnBot(f.summoner);assert.equal(a,b,'deduplicated spawn request');
-await f.tick(4);assert.equal(f.commands.filter(([,c])=>c==='function system/spawnbot').length,0,'waits for loaded area');
+await f.tick(4);assert.equal(f.commands.filter(([,c])=>c==='function system/spawn_bot').length,0,'waits for loaded area');
 f.setReady(true);await f.tick();assert.equal(await a,f.bot);assert.equal(spawned,1);assert.ok(f.bot.hasTag('role:bot'));assert.ok(f.bot.hasTag('auth:done'));
 assert.ok(f.commands.some(([p,c])=>p===f.summoner&&c==='tp "Bot" @s'),'teleports to summoner including dimension');
-assert.equal(f.commands.filter(([,c])=>c==='function system/spawnbot').length,1);assert.equal(f.api.removeBot(),true);assert.ok(f.commands.some(([,c])=>c==='tickingarea remove shop_bot'));
+assert.equal(f.commands.filter(([,c])=>c==='function system/spawn_bot').length,1);assert.equal(f.api.removeBot(),true);assert.ok(f.commands.some(([,c])=>c==='tickingarea remove shop_bot'));
 for(const mode of ['command-fail','throw','timeout']){
 	f=fixture();f.setMode(mode);f.setReady(true);let result=f.api.spawnBot(f.summoner);await f.tick(101);assert.equal(await result,undefined,mode);assert.equal(f.api.getBot(),undefined);assert.ok(f.warnings.length);if(mode==='command-fail')assert.ok(f.warnings.some(s=>s.includes('native command budget is zero')),'native error must not be suppressed');assert.ok(f.commands.some(([,c])=>c==='tickingarea remove shop_bot'));f.late();assert.equal(f.api.getBot(),undefined,'late callback cannot create a ghost bot');
 }

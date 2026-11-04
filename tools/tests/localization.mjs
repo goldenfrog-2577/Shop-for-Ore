@@ -16,8 +16,8 @@ for(let i=0;i<4;i++){
 	}
 }
 const load=p=>fs.readFileSync(new URL(p,bp),'utf8').replace(/^import .*;\r?\n/gm,'').replace(/\bexport (?=(?:async )?function|const)/g,'');
-const source=load('scripts/menu/admin_menu.js');
-for(const p of ['scripts/menu/admin_menu.js','scripts/menu/main_menu.js','scripts/menu/achievements_menu.js']){
+const source=load('scripts/menu/admin/admin_menu.js');
+for(const p of ['scripts/menu/admin/admin_menu.js','scripts/menu/main_menu.js','scripts/menu/achievements_menu.js']){
 	const s=load(p);assert.ok(!/§[0-9a-gr]%[a-z_]/i.test(s),p+' adjacent formatting/translation');
 	assert.ok(!/\$\{color\(a\)\}%/.test(s),p+' adjacent dynamic color/translation');
 }

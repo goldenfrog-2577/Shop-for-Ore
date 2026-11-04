@@ -1,18 +1,18 @@
 // --- Меню сервера (предмет server:menu в 9-м слоте) ---
 // Главное меню и разделы: О карте, Магазин, Настройки, Банк, Правила, Промокоды, Телепортации,
-// Прокачка, Достижения, Мини-игры. Формы строит menu/forms.js: крестик закрывает окно, возврат — кнопкой «Назад».
+// Прокачка, Достижения, Мини-игры. Формы строит menu/common/forms.js: крестик закрывает окно, возврат — кнопкой «Назад».
 
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed } from '../system/security/jail.js';
 import { isPending, tellText, tell, run, getScore, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed, shopBalance } from '../DataBase.js';
-import { showMenu, showModal, modal, backButton, toggleMenu } from './forms.js';
+import { showMenu, showModal, modal, backButton, toggleMenu } from './common/forms.js';
 import { enchantsMenu } from './enchant_shop.js';
 import { cosmeticsMenu } from './cosmetics_shop.js';
 import { achievementsMenu } from './achievements_menu.js';
 import { listGames, gameOf, joinGame, leaveGame } from '../system/minigames/minigames.js';
-import { runChatCommand } from '../chat/commands.js';
+import { runChatCommand } from '../chat/commands/commands.js';
 import { MUSIC_OFF } from '../system/ui/music.js';
-import { ChangePasswordUI } from '../register/change.js';
+import { ChangePasswordUI } from '../registration/change.js';
 import { redeemPromo } from '../system/economy/promo.js';
 
 const OPEN = '\n%menu.common.tap_to_open';

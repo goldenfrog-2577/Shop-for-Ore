@@ -20,6 +20,6 @@ const comp={enchantments:{hasEnchantment:()=>0,canAddEnchantment:()=>true,addEnc
 const item={typeId:'minecraft:diamond_sword',getComponent:()=>comp};let writes=0;
 const ench={MinecraftEnchantmentTypes:{sharpness:{}},Enchantment:class{constructor(type,level){this.level=level;}},ITEM_ENCHANTS:[{id:'sharpness',name:'enchantment.damage.all',max:5}],PICKAXE_ENCHANTS:[],hasRole:p=>p.admin,tell(){},};
 const admin={admin:true,getComponent:()=>({container:{getItem:()=>item,setItem:()=>writes++}})};
-vm.runInNewContext(load('scripts/menu/admin_enchant.js')+'\nglobalThis.apply=applyAdminEnchant;',ench);
+vm.runInNewContext(load('scripts/menu/admin/admin_enchant.js')+'\nglobalThis.apply=applyAdminEnchant;',ench);
 ench.apply(admin,0,item.typeId,'sharpness',3);assert.equal(writes,1);ench.apply(admin,0,item.typeId,'sharpness',99);assert.equal(writes,1);ench.apply({...admin,admin:false},0,item.typeId,'sharpness',1);assert.equal(writes,1);
 console.log('PASS: VIP HUD in both modes, historical minutes, duration formatting, batched seconds and enchantment limits/rights.');

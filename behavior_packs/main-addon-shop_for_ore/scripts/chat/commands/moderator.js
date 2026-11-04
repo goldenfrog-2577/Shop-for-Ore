@@ -1,6 +1,6 @@
 // --- Команды хелпера и модератора: мут, тюрьма, предупреждения, заморозка, кик, телепорт, CPS, античит ---
 // Обработчик: имя команды без «!» → (player, args, command). Права (роль из commandsList) проверяет
-// runChatCommand в chat/commands.js; return — команда выполнена или отказ уже сообщён игроку.
+// runChatCommand в chat/commands/commands.js; return — команда выполнена или отказ уже сообщён игроку.
 
 import { tell, run, findPlayer, getRole, hasRole, parseTerm, muteMinutesLeft, canLift, setIssuer, rawTranslateRich, termText, rawTranslate, clearIssuer, getWarns } from '../../DataBase.js';
 import { isJailed, jail, release, tellJailed } from '../../system/security/jail.js';

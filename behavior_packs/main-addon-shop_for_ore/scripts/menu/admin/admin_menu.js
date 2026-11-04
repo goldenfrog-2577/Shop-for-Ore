@@ -1,25 +1,25 @@
 // --- Админ-меню для Shop for Ore ---
 // Открывается предметом server:admin_menu у администратора и владельца.
 // Действия над игроками, бусты, ивенты и режимы выполняются теми же командами, что и в чате
-// (runChatCommand из chat/commands.js): одни и те же проверки прав и сообщения.
+// (runChatCommand из chat/commands/commands.js): одни и те же проверки прав и сообщения.
 // В 1.19.50 формы принимают только строки: ключи перевода пишутся как «%ключ», после ключа — пробел или перенос
 // (сразу после ключа не ставим ни скобок, ни §-кодов).
 
-import { playtimeText } from '../system/player/playtime.js';
-import { clearResetHistory } from '../system/core/reset_history.js';
+import { playtimeText } from '../../system/player/playtime.js';
+import { clearResetHistory } from '../../system/core/reset_history.js';
 import { adminEnchantMenu } from './admin_enchant.js';
-import { boostSeconds } from '../system/economy/boosts.js';
+import { boostSeconds } from '../../system/economy/boosts.js';
 import { world } from '@minecraft/server';
-import { isJailed, tellJailed, jailMinutesLeft } from '../system/security/jail.js';
-import { isPending, isBot, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS, isVip, VIP_TAG } from '../DataBase.js';
-import { showMenu, showModal, modal, backButton, confirm, wipeConfirm, WARN_TITLE } from './forms.js';
-import { runChatCommand, setMoney } from '../chat/commands.js';
-import { sendChatMessage } from '../chat/chat.js';
-import { getBot, getBotName, setBotName, spawnBot, removeBot } from '../system/bot/spawnbot.js';
-import { wipeAll, wipeCounts } from '../system/core/wipe.js';
-import { resetOffline, offlineCounts } from '../system/core/offline_reset.js';
-import { canTeleport, listGames } from '../system/minigames/minigames.js';
-import { setBotMode, toggleBot, rememberBotItem, botState, SPAR_LEVELS } from '../system/bot/bot.js';
+import { isJailed, tellJailed, jailMinutesLeft } from '../../system/security/jail.js';
+import { isPending, isBot, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS, isVip, VIP_TAG } from '../../DataBase.js';
+import { showMenu, showModal, modal, backButton, confirm, wipeConfirm, WARN_TITLE } from '../common/forms.js';
+import { runChatCommand, setMoney } from '../../chat/commands/commands.js';
+import { sendChatMessage } from '../../chat/chat.js';
+import { getBot, getBotName, setBotName, spawnBot, removeBot } from '../../system/bot/spawnbot.js';
+import { wipeAll, wipeCounts } from '../../system/core/wipe.js';
+import { resetOffline, offlineCounts } from '../../system/core/offline_reset.js';
+import { canTeleport, listGames } from '../../system/minigames/minigames.js';
+import { setBotMode, toggleBot, rememberBotItem, botState, SPAR_LEVELS } from '../../system/bot/bot.js';
 
 const BACK_ICON = 'textures/ui/icon_import';
 // Кружки цвета роли из шрифта карты: серый, синий, красный

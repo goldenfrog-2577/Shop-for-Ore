@@ -3,7 +3,7 @@
 // Нажатие — описание, прогресс и награда.
 
 import { metricNumbers } from '../DataBase.js';
-import { showMenu, backButton } from './forms.js';
+import { showMenu, backButton } from './common/forms.js';
 import { ACHIEVEMENTS, GLYPH, has, progressOf, countOf, rewardText } from '../system/player/achievements.js';
 
 const color = (a) => a.type === 'challenge' ? '§5' : '§2';

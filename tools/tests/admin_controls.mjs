@@ -7,7 +7,7 @@ const ctx={world:{events:{beforeItemUse:{subscribe(){}}},getPlayers:()=>[owner,b
 	showMenu:(p,title,body,items)=>{captured={title,body,items};},showModal(){},modal(){},backButton:fn=>({text:'%admin.common.back',run:fn}),
 	getScore:(p,k)=>p.scores[k]??0,getWarns:()=>2,findPlayer:n=>[owner,a,b,bot].find(p=>p.name===n),isVip:p=>p.hasTag('player:vip'),VIP_TAG:'player:vip',
 	isJailed:()=>false,muteMinutesLeft:()=>15,playtimeText:()=> '1 h',tell(){},getBot:()=>bot};
-vm.runInNewContext(load('scripts/menu/admin_menu.js')+'\nglobalThis.api={orderedPlayers,playerActions};',ctx);
+vm.runInNewContext(load('scripts/menu/admin/admin_menu.js')+'\nglobalThis.api={orderedPlayers,playerActions};',ctx);
 assert.deepEqual(Array.from(ctx.api.orderedPlayers(owner,[owner,bot,b,a],()=>0),p=>p.name),['Alice','Bob','Bot','Owner']);
 assert.equal(ctx.api.orderedPlayers(owner,[owner,bot,b,a],()=>0.9)[0].name,'Bob');
 ctx.api.playerActions(owner,owner);assert.ok(captured.items.some(i=>i.text==='%admin.players.button.vip_give'),'self VIP');
