@@ -457,6 +457,7 @@ menu.shop.boosts.button.ore_magnet=§6⩲ Imán de mineral
 chat.boost.x2_end=§r §bPotenciador §8» §7El §epotenciador x2§7 terminó. Compra otro en §eTienda → Potenciadores
 chat.boost.x4_end=§r §bPotenciador §8» §7El §epotenciador x4§7 terminó. Compra otro en §eTienda → Potenciadores
 chat.boost.error.active=§r⩕ §l§cERROR!§r §8» §7Ya hay un potenciador activo. ¡Espera a que termine!
+chat.boost.error.loading=§r⩕ §l§cERROR!§r §8» §7Los potenciadores aún no están disponibles. Inténtalo de nuevo en unos segundos.
 chat.boost.x2=§r §bPotenciador §8» §7¡§f%1$s§r§7 compró un §epotenciador x2§7 para todos durante §e5 minutos§7!
 chat.boost.x4=§r §bPotenciador §8» §7¡§f%1$s§r§7 compró un §epotenciador x4§7 para todos durante §e5 minutos§7!
 chat.ore_magnet.bought=§r §eTienda §8» §7El §eImán de mineral§7 está activo §e5 minutos§7: los objetos cercanos vuelan hacia ti

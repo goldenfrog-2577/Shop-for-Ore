@@ -22,15 +22,15 @@ execute as @a run scoreboard players add onlinecount system 1
 scoreboard players operation @a online = onlinecount system
 
 ## --- Общие бусты x2 / x4 ---
-# Таймер стойки X2Boost / X4Boost (секунды, boost/x2_tick, x4_tick)
-execute if entity @e[name="X2Boost",scores={system=1..}] run function boost/x2_tick
-execute if entity @e[name="X4Boost",scores={system=1..}] run function boost/x4_tick
+# Служебные записи boost_x2 / boost_x4 в system (секунды).
+execute if score stand_timers_migrated system matches 1 if score boost_x2 system matches 1.. run function boost/x2_tick
+execute if score stand_timers_migrated system matches 1 if score boost_x4 system matches 1.. run function boost/x4_tick
 # Пока таймер идёт, тег буста есть у всех в сети (и у зашедших позже), иначе снимается
 # (и у тех, кто был не в сети в момент окончания)
-execute if entity @e[name="X2Boost",scores={system=1..}] run tag @a[tag=!boost:x2] add boost:x2
-execute unless entity @e[name="X2Boost",scores={system=1..}] run tag @a[tag=boost:x2] remove boost:x2
-execute if entity @e[name="X4Boost",scores={system=1..}] run tag @a[tag=!boost:x4] add boost:x4
-execute unless entity @e[name="X4Boost",scores={system=1..}] run tag @a[tag=boost:x4] remove boost:x4
+execute if score stand_timers_migrated system matches 1 if score boost_x2 system matches 1.. run tag @a[tag=!boost:x2] add boost:x2
+execute if score stand_timers_migrated system matches 1 if score boost_x2 system matches ..0 run tag @a[tag=boost:x2] remove boost:x2
+execute if score stand_timers_migrated system matches 1 if score boost_x4 system matches 1.. run tag @a[tag=!boost:x4] add boost:x4
+execute if score stand_timers_migrated system matches 1 if score boost_x4 system matches ..0 run tag @a[tag=boost:x4] remove boost:x4
 
 ## --- «Магнит руды» (личный) ---
 # Секунды идут только в сети; по окончании — сообщение и снятие тега
@@ -41,10 +41,10 @@ tag @a[tag=boost:magnet,scores={magnet=..0}] remove boost:magnet
 tag @a[tag=boost:magnet_admin,scores={magnet=..0}] remove boost:magnet_admin
 
 ## --- Ивенты ---
-# «Золотой дождь»: таймер rainEvent (секунды) и погода
-scoreboard players remove @e[name="rainEvent",scores={system=1..30}] system 1
-execute as @e[name="rainEvent",scores={system=1..30}] run weather rain
-execute as @e[name="rainEvent",scores={system=-1..0}] run weather clear
+# «Золотой дождь»: служебная запись rain_event в system (секунды) и погода
+execute if score stand_timers_migrated system matches 1 if score rain_event system matches 1..30 run scoreboard players remove rain_event system 1
+execute if score stand_timers_migrated system matches 1 if score rain_event system matches 1..30 run weather rain
+execute if score stand_timers_migrated system matches 1 if score rain_event system matches -1..0 run weather clear
 # «Подарок» (events/gift_event): обратный отсчёт, пока его не подобрали
 execute if score gift system matches 1.. run scoreboard players remove gift system 1
 

@@ -88,6 +88,12 @@
 			"path" : "functions/system/setup.mcfunction"
 		},
 		{
+			"path" : "functions/system/migrate_stand_timers.mcfunction"
+		},
+		{
+			"path" : "functions/system/apply_stand_timers.mcfunction"
+		},
+		{
 			"path" : "functions/system/spawnbot.mcfunction"
 		},
 		{
