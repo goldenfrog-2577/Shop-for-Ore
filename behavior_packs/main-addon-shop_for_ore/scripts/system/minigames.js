@@ -73,7 +73,7 @@ const tellGame = (g, key, ...args) => {
 };
 const gameName = (g) => ({ translate: `minigame.${g.def.id}.name` });
 
-/** Записаться в игру. Бота (role:bot) — только с allowBot (меню администратора → Бот, system/bot_ai.js). @returns {boolean} */
+/** Записаться в игру. Бота (role:bot) — только с allowBot (меню администратора → Бот, system/bot.js). @returns {boolean} */
 export function joinGame(player, id, { allowBot = false } = {}) {
 	const g = getGame(id);
 	const fail = (key, ...a) => { tell(player, key, ...a); return false; };

@@ -5,7 +5,7 @@
 //            строкой над хотбаром (toast.js, showHudLine);
 //   follow — ходит за игроком, отстал больше чем на FOLLOW_TP блоков или в другом измерении — телепорт;
 //   stay   — держится точки, где включили режим (оттолкнули — возвращается);
-//   mirror — повторяет за игроком: поворот головы, присед, прыжки и перемещение (на том же расстоянии);
+//   mirror — повторяет за игроком: поворот головы, присед и перемещение (на том же расстоянии);
 //   spar   — спарринг на PvP-арене: бьёт ближайшего игрока на арене, сложность 1–4 (скорость ударов, дальность);
 //   game   — играет в мини-игре (добор игроков): PvP — как спарринг, сплиф — копает снег под соперниками.
 // Отдельно: присесть (sit), автототем (тотем во второй руке, если она пуста), возврат после перезахода.
@@ -16,6 +16,7 @@
 import { world, Location, BlockLocation, DynamicPropertiesDefinition, MinecraftEffectTypes } from '@minecraft/server';
 import { run, findPlayer, getScore, isPending, isBot } from '../DataBase.js';
 import { getBot, spawnBot, removeBot, onBotSpawned, onBotRemoved } from './spawnbot.js';
+import { isAir, isSolid } from './anticheat_checks.js';
 import { freezePlayer, unfreezePlayer } from './freeze.js';
 import { showHudLine } from './toast.js';
 import { teleportToArena } from './pvp.js';
@@ -71,6 +72,39 @@ const loc = (p) => new Location(p.x, p.y, p.z);
 const safe = (fn) => { try { return fn(); } catch { return undefined; } };
 
 // Перестраиваем путь раз в секунду. Телепорт — только между измерениями или после 10 с без движения.
+// Данные о форме столкновения в API 1.19.50 недоступны: используем полные известные блоки.
+const JUMP_BLOCKS = new Set(['planks','log','log2','wood','stonebrick','brick_block','wool','concrete','concretePowder',
+	'hardened_clay','stained_hardened_clay','glass','stained_glass','leaves','leaves2','sponge','melon_block',
+	'pumpkin','lit_pumpkin','hay_block','nether_wart_block','warped_wart_block','bone_block','dried_kelp_block',
+	'chest','trapped_chest','ender_chest','crafting_table','furnace','lit_furnace'].map(id => 'minecraft:' + id));
+const jumpBlock = id => isSolid(id) || JUMP_BLOCKS.has(id) || /^minecraft:double_.*slab/.test(id ?? '');
+const clearBlock = id => !!id && (isAir(id) || /^minecraft:(tallgrass|double_plant|yellow_flower|red_flower|deadbush|sapling|torch|redstone_torch|unlit_redstone_torch)$/.test(id));
+const blockId = (bot,x,y,z) => safe(() => bot.dimension.getBlock(new BlockLocation(Math.floor(x),Math.floor(y),Math.floor(z)))?.typeId);
+
+export function jumpableObstacle(bot, goal) {
+	const p = bot.location, v = safe(() => bot.velocity);
+	const moving = v && Number.isFinite(v.x) && Number.isFinite(v.z) && Math.hypot(v.x,v.z) > 0.05;
+	const dx = moving ? v.x : goal.x - p.x, dz = moving ? v.z : goal.z - p.z, length = Math.hypot(dx,dz);
+	if (length < 0.1) return false;
+	const y = Math.floor(p.y + 0.05);
+	// Подъём до полублока проходит шагом; неизвестные/незагруженные блоки не считаем опорой.
+	if (y + 1 - p.y <= 0.6001 || !jumpBlock(blockId(bot,p.x,p.y-0.05,p.z))) return false;
+	if (!clearBlock(blockId(bot,p.x,y+2,p.z))) return false;
+	const ux = dx / length, uz = dz / length;
+	for (const side of [0,-0.22,0.22]) {
+		const x = p.x + ux * 0.8 - uz * side, z = p.z + uz * 0.8 + ux * side;
+		if (jumpBlock(blockId(bot,x,y,z)) && clearBlock(blockId(bot,x,y+1,z)) && clearBlock(blockId(bot,x,y+2,z))) return true;
+	}
+	return false;
+}
+let lastJump = -100;
+function tryJump(bot, goal, runJump = false) {
+	if (bot.isSneaking || tick - lastJump < 8 || Math.abs(safe(() => bot.velocity.y) ?? 0) >= 0.03) return;
+	if (!runJump && !jumpableObstacle(bot,goal)) return;
+	lastJump = tick;
+	safe(() => bot.jump());
+}
+
 let motion;
 function walkTo(bot, goal, { target, speed = 1, near = 1.2, recover = true } = {}) {
 	if (tick % 10 !== 0) return;
@@ -83,7 +117,7 @@ function walkTo(bot, goal, { target, speed = 1, near = 1.2, recover = true } = {
 	if (!motion) motion = { last: { ...bot.location }, at: tick, pathAt: -100 };
 	if (dist(bot.location, motion.last) >= 0.35) { motion.last = { ...bot.location }; motion.at = tick; }
 	const stuck = tick - motion.at;
-	if (stuck >= 60 && stuck % 20 === 0) safe(() => bot.jump());
+	tryJump(bot,goal);
 	if (stuck >= 200 && recover && d > 6) {
 		if (target) run(bot, `tp @s "${target.name}"`); else run(bot, `tp @s ${goal.x} ${goal.y} ${goal.z}`);
 		motion = undefined; return;
@@ -239,7 +273,7 @@ function fight(bot, among) {
 		const angle = tick / 12, goal = { x: t.location.x + Math.cos(angle) * 2, y: t.location.y, z: t.location.z + Math.sin(angle) * 2 };
 		walkTo(bot, goal, { speed: cfg.speed, near: 0.4, recover: false });
 	} else walkTo(bot, t.location, { target: t, speed: cfg.speed, near: cfg.reach - 0.5, recover: false });
-	if (state.level === 4 && d > 1.5 && tick % 8 === 0) safe(() => bot.jump());
+	if (state.level === 4 && d > 1.5 && tick % 8 === 0) tryJump(bot,t.location,true);
 	if (d <= cfg.reach && tick - lastHit >= cfg.cooldown) {
 		lastHit = tick;
 		safe(() => bot.attackEntity(t));
@@ -325,7 +359,6 @@ world.events.tick.subscribe(() => {
 			walkTo(bot, goal, { speed: 1.1, near: 0.4 });
 			safe(() => bot.setRotation(t.rotation.x, t.rotation.y));
 			safe(() => { bot.isSneaking = t.isSneaking; });
-			if (t.velocity.y > 0.2 && tick % 4 === 0) safe(() => bot.jump());
 			break;
 		}
 		case 'spar':
