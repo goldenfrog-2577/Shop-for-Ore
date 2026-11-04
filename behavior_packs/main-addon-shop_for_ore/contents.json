@@ -398,6 +398,57 @@
 		},
 		{
 			"path" : "scripts/menu/admin_enchant.js"
+		},
+		{
+			"path" : "functions/promo/redeem_kapycta.mcfunction"
+		},
+		{
+			"path" : "functions/promo/book_kapycta.mcfunction"
+		},
+		{
+			"path" : "functions/promo/redeem_parkour.mcfunction"
+		},
+		{
+			"path" : "functions/promo/book_parkour.mcfunction"
+		},
+		{
+			"path" : "functions/promo/redeem_sweethome.mcfunction"
+		},
+		{
+			"path" : "functions/promo/book_sweethome.mcfunction"
+		},
+		{
+			"path" : "functions/promo/redeem_pvpfighter.mcfunction"
+		},
+		{
+			"path" : "functions/promo/book_pvpfighter.mcfunction"
+		},
+		{
+			"path" : "functions/promo/redeem_tir.mcfunction"
+		},
+		{
+			"path" : "functions/promo/book_tir.mcfunction"
+		},
+		{
+			"path" : "functions/promo/redeem_hellbonus.mcfunction"
+		},
+		{
+			"path" : "functions/promo/book_hellbonus.mcfunction"
+		},
+		{
+			"path" : "functions/promo/redeem_cavebonus.mcfunction"
+		},
+		{
+			"path" : "functions/promo/book_cavebonus.mcfunction"
+		},
+		{
+			"path" : "functions/promo/redeem_vipbonus.mcfunction"
+		},
+		{
+			"path" : "functions/promo/book_vipbonus.mcfunction"
+		},
+		{
+			"path" : "functions/promo/books_scan.mcfunction"
 		}],
 	"version" : 1
 }

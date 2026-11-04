@@ -73,3 +73,7 @@ event entity @a[tag=player:pvp] server:hunger_on
 
 ## --- Запасное меню на NPC (functions/fallback/*): включено ли, NPC на месте ---
 function fallback/check
+
+# Книга-промокод: работает без Script API. fallback/check считает секунды без heartbeat.
+execute if score scripts system matches 5.. run function promo/books_scan
+execute if score fallback_test settings matches 1 run function promo/books_scan

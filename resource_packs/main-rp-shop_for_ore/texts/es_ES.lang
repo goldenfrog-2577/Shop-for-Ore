@@ -609,10 +609,12 @@ menu.rules.line.11=§r§l11.§r§7 No discutir decisiones del personal en el cha
 menu.promo.title=§l§8Menú del servidor »  Códigos promocionales
 menu.promo.body=§7Los códigos promocionales pueden encontrarse en cualquier parte. Están marcados en carteles con este §2color§7.
 menu.promo.hint=§7Si encuentras uno, introdúcelo abajo; da igual si usas mayúsculas o minúsculas.
+menu.promo.book=Si el menú deja de funcionar: renombra un libro con el código en minúsculas y tíralo a tu lado. No debe haber otros jugadores a dos bloques. Si funciona, desaparece; si hay error, puedes recogerlo.
 menu.promo.placeholder=§7Introduce el código promocional...
 chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7Ya has activado este §ecódigo promocional
 chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Código promocional inválido
 chat.promo.reward=§r §aPromo §8» §f%1$s§r§7 activó un código promocional y obtuvo %2$s
+chat.promo.book.hint=§r §aPromo §8» §7Si el menú deja de funcionar: renombra un libro con el código en minúsculas y tíralo a tu lado. No debe haber otros jugadores a dos bloques. Si funciona, desaparece; si hay error, puedes recogerlo.
 chat.promo.error.vip=§r⩕ §l§cERROR!§r §8» §7Este código promocional es solo para §eVIP
 chat.promo.error.level=§r⩕ §l§cERROR!§r §8» §7Este código promocional funciona desde el nivel §e%1$s
 
