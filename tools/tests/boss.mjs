@@ -101,4 +101,8 @@ for (const f of walk(new URL('scripts/', bp)).filter(u => u.pathname.endsWith('.
 	assert.ok(!/getEntities\([^)]*\)\s*\.(filter|find|some|map|forEach|every|reduce|length)\b/.test(code), `итератор как массив: ${f.pathname.split('/scripts/')[1]}`);
 }
 
+// Портативный кристалл Энда разрешён участникам боя: тег в pvp.js совпадает с FIGHTER
+const pvp = fs.readFileSync(new URL('scripts/system/combat/pvp.js', bp), 'utf8');
+assert.ok(src.includes("export const FIGHTER = 'boss:fighter'") && pvp.includes("e.source.hasTag('boss:fighter')"));
+
 console.log('PASS: boss start rules, phases, minion waves, discs, spots, 4-locale keys, entity/sounds, warp level gate.');

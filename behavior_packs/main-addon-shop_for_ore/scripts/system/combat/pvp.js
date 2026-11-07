@@ -4,7 +4,8 @@
 //    Туда ведут !warp pvp и портал из мини-игр (system.mcfunction ставит тег sys:warp_pvp, телепорт делает этот файл).
 // 2) Кто получил или нанёс урон другому игроку на арене, 15 секунд не может уйти телепортом (!warp, меню).
 // 3) Портативный кристалл Энда (server:portable_ender_crystal, взрыв силы 6 без разрушения блоков) бросается
-//    только на арене: на спавне и в шахтах им можно было бы взорвать игроков, которые не в бою.
+//    только на арене и участниками боя с Хранителем (тег boss:fighter — FIGHTER в system/boss/boss.js):
+//    на спавне и в шахтах им можно было бы взорвать игроков, которые не в бою.
 
 import { world, BlockLocation } from '@minecraft/server';
 import { run, tell } from '../../DataBase.js';
@@ -12,7 +13,7 @@ import { run, tell } from '../../DataBase.js';
 export const PORTABLE_CRYSTAL = 'server:portable_ender_crystal';
 world.events.beforeItemUse.subscribe((e) => {
 	if (e.item?.typeId !== PORTABLE_CRYSTAL || e.source?.typeId !== 'minecraft:player') return;
-	if (e.source.hasTag('player:pvp')) return;
+	if (e.source.hasTag('player:pvp') || e.source.hasTag('boss:fighter')) return;
 	e.cancel = true;
 	tell(e.source, 'chat.pvp.crystal_arena_only');
 });

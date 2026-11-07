@@ -921,7 +921,7 @@ chat.game.no_reward_bot=§r §6Міні-ігри §8» §7Нагороди н
 ## --- PVP-АРЕНА І CPS ---
 ##   chat.pvp.*, hud.cps*, chat.cps.*, chat.cmd.cps.*
 chat.pvp.combat=§r⩕ §l§cERROR!§r §8» §7Ти в бою на PvP-арені: телепорт буде доступний через §e%1$s§7 с
-chat.pvp.crystal_arena_only=§r⩕ §l§cERROR!§r §8» §7Портативний кристал Енду можна кидати лише на PvP-арені
+chat.pvp.crystal_arena_only=§r⩕ §l§cERROR!§r §8» §7Портативний кристал Енду можна кидати лише на PvP-арені та в бою зі Стражем
 chat.cps.alert=§r §cAnti-Cheat §8» §7§f%1$s§r§7: §c%2$s CPS§7 %3$s с поспіль (межа §e%4$s§7) — можливий автоклікер
 hud.cps=§7CPS: %1$s §8• §f%2$s §7м/с
 hud.cps.hp=§7CPS: %1$s §8• §f%2$s §7м/с §8• §7HP: %3$s

@@ -921,7 +921,7 @@ chat.game.no_reward_bot=§r §6Мини-игры §8» §7Награды не
 ## --- PVP-АРЕНА И CPS ---
 ##   chat.pvp.*, hud.cps*, chat.cps.*, chat.cmd.cps.*
 chat.pvp.combat=§r⩕ §l§cERROR!§r §8» §7Ты в бою на PvP-арене: телепорт будет доступен через §e%1$s§7 сек.
-chat.pvp.crystal_arena_only=§r⩕ §l§cERROR!§r §8» §7Портативный кристалл Энда можно бросать только на PvP-арене
+chat.pvp.crystal_arena_only=§r⩕ §l§cERROR!§r §8» §7Портативный кристалл Энда можно бросать только на PvP-арене и в бою с Хранителем
 chat.cps.alert=§r §cAnti-Cheat §8» §7§f%1$s§r§7: §c%2$s CPS§7 %3$s с подряд (предел §e%4$s§7) — возможен автокликер
 hud.cps=§7CPS: %1$s §8• §f%2$s §7м/с
 hud.cps.hp=§7CPS: %1$s §8• §f%2$s §7м/с §8• §7HP: %3$s

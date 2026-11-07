@@ -921,7 +921,7 @@ chat.game.no_reward_bot=§r §6Minigames §8» §7No reward: the only other p
 ## --- PVP ARENA & CPS ---
 ##   chat.pvp.*, hud.cps*, chat.cps.*, chat.cmd.cps.*
 chat.pvp.combat=§r⩕ §l§cERROR!§r §8» §7You are in combat on the PvP arena: teleport will be available in §e%1$s§7 s
-chat.pvp.crystal_arena_only=§r⩕ §l§cERROR!§r §8» §7The Portable End Crystal can only be thrown on the PvP arena
+chat.pvp.crystal_arena_only=§r⩕ §l§cERROR!§r §8» §7The Portable End Crystal can only be thrown on the PvP arena and in the Warden fight
 chat.cps.alert=§r §cAnti-Cheat §8» §7§f%1$s§r§7: §c%2$s CPS§7 for %3$s s in a row (limit §e%4$s§7) — possible autoclicker
 hud.cps=§7CPS: %1$s §8• §f%2$s §7m/s
 hud.cps.hp=§7CPS: %1$s §8• §f%2$s §7m/s §8• §7HP: %3$s
