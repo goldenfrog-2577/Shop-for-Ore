@@ -930,18 +930,18 @@ chat.cmd.cps.info=§r §7CMD §8» §7CPS of §f%1$s§r§7: now §e%2$s§7, m
 
 ## --- BOSS: WARDEN ---
 ##   chat.boss.*
-chat.boss.hint=§r§3Warden §8» §7Step on the §fchiseled deepslate§7 in front of the portal to wake the Warden. Fight from level §e26§7, up to §e4§7 players.
-chat.boss.start=§r§3Warden §8» §7§cThe Warden awakens!§7 Fighters: §f%s§7. The sculk will consume the belongings of the fallen.
-chat.boss.kicked=§r§3Warden §8» §7A Warden fight has started — you are not a fighter and were moved to spawn.
-chat.boss.phase2=§r§3Warden §8» §7The sculk stirs: the Warden calls the dead.
-chat.boss.totem=§r§3Warden §8» §7§cThe Totem of Undying shattered — the Warden is enraged!
-chat.boss.victory=§r§3Warden §8» §7§aThe Warden is defeated!§7 Reward: §f%1$s§7 coins and §f%2$s§7 VIP coins.
-chat.boss.disc=§r§3Warden §8» §7A music disc was found among the ashes.
-chat.boss.defeat=§r§3Warden §8» §7All fighters are out — the Warden retreated into the darkness.
-chat.boss.timeout=§r§3Warden §8» §7Time is up — the Warden retreated into the darkness.
-chat.boss.abort=§r§3Warden §8» §7The fight was interrupted without a reward.
-chat.boss.died=§r§3Warden §8» §7You died and are out of the fight. The sculk consumed your belongings.
-chat.boss.left=§r§3Warden §8» §7You left the arena and are out of the fight.
+chat.boss.hint=§r §3Warden §8» §7Step on the §fchiseled deepslate§7 in front of the portal to wake the Warden. Fight from level §e26§7, up to §e4§7 players.
+chat.boss.start=§r §3Warden §8» §7§cThe Warden awakens!§7 Fighters: §f%s§7. The sculk will consume the belongings of the fallen.
+chat.boss.kicked=§r §3Warden §8» §7A Warden fight has started — you are not a fighter and were moved to spawn.
+chat.boss.phase2=§r §3Warden §8» §7The sculk stirs: the Warden calls the dead.
+chat.boss.totem=§r §3Warden §8» §7§cThe Totem of Undying shattered — the Warden is enraged!
+chat.boss.victory=§r §3Warden §8» §7§aThe Warden is defeated!§7 Reward: §f%1$s§7 coins and §f%2$s§7 VIP coins.
+chat.boss.disc=§r §3Warden §8» §7A music disc was found among the ashes.
+chat.boss.defeat=§r §3Warden §8» §7All fighters are out — the Warden retreated into the darkness.
+chat.boss.timeout=§r §3Warden §8» §7Time is up — the Warden retreated into the darkness.
+chat.boss.abort=§r §3Warden §8» §7The fight was interrupted without a reward.
+chat.boss.died=§r §3Warden §8» §7You died and are out of the fight. The sculk consumed your belongings.
+chat.boss.left=§r §3Warden §8» §7You left the arena and are out of the fight.
 chat.boss.busy=§r⩕ §l§cERROR!§r §8» §7A Warden fight is in progress — wait for it to end
 chat.boss.cooldown=§r⩕ §l§cERROR!§r §8» §7The Warden is asleep. It can be woken in §e%s§7 min.
 chat.boss.level=§r⩕ §l§cERROR!§r §8» §7The Warden can be fought from level §e%s

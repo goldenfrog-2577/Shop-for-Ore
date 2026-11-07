@@ -930,18 +930,18 @@ chat.cmd.cps.info=§r §7CMD §8» §7CPS de §f%1$s§r§7: ahora §e%2$s§7,
 
 ## --- JEFE: CUSTODIO ---
 ##   chat.boss.*
-chat.boss.hint=§r§3Custodio §8» §7Pisa la §fpizarra abismal cincelada§7 frente al portal para despertar al Custodio. Combate desde el nivel §e26§7, hasta §e4§7 jugadores.
-chat.boss.start=§r§3Custodio §8» §7§c¡El Custodio despierta!§7 Combatientes: §f%s§7. El sculk consumirá las pertenencias de los caídos.
-chat.boss.kicked=§r§3Custodio §8» §7Ha empezado un combate contra el Custodio: no participas y te hemos llevado al spawn.
-chat.boss.phase2=§r§3Custodio §8» §7El sculk se agita: el Custodio llama a los muertos.
-chat.boss.totem=§r§3Custodio §8» §7§cEl Tótem de la inmortalidad se ha roto: ¡el Custodio está furioso!
-chat.boss.victory=§r§3Custodio §8» §7§a¡El Custodio ha caído!§7 Recompensa: §f%1$s§7 monedas y §f%2$s§7 monedas VIP.
-chat.boss.disc=§r§3Custodio §8» §7Entre las cenizas había un disco.
-chat.boss.defeat=§r§3Custodio §8» §7Todos los combatientes han caído: el Custodio se ha retirado a la oscuridad.
-chat.boss.timeout=§r§3Custodio §8» §7Se acabó el tiempo: el Custodio se ha retirado a la oscuridad.
-chat.boss.abort=§r§3Custodio §8» §7El combate se ha interrumpido sin recompensa.
-chat.boss.died=§r§3Custodio §8» §7Has muerto y quedas fuera del combate. El sculk consumió tus pertenencias.
-chat.boss.left=§r§3Custodio §8» §7Has salido de la arena y quedas fuera del combate.
+chat.boss.hint=§r §3Custodio §8» §7Pisa la §fpizarra abismal cincelada§7 frente al portal para despertar al Custodio. Combate desde el nivel §e26§7, hasta §e4§7 jugadores.
+chat.boss.start=§r §3Custodio §8» §7§c¡El Custodio despierta!§7 Combatientes: §f%s§7. El sculk consumirá las pertenencias de los caídos.
+chat.boss.kicked=§r §3Custodio §8» §7Ha empezado un combate contra el Custodio: no participas y te hemos llevado al spawn.
+chat.boss.phase2=§r §3Custodio §8» §7El sculk se agita: el Custodio llama a los muertos.
+chat.boss.totem=§r §3Custodio §8» §7§cEl Tótem de la inmortalidad se ha roto: ¡el Custodio está furioso!
+chat.boss.victory=§r §3Custodio §8» §7§a¡El Custodio ha caído!§7 Recompensa: §f%1$s§7 monedas y §f%2$s§7 monedas VIP.
+chat.boss.disc=§r §3Custodio §8» §7Entre las cenizas había un disco.
+chat.boss.defeat=§r §3Custodio §8» §7Todos los combatientes han caído: el Custodio se ha retirado a la oscuridad.
+chat.boss.timeout=§r §3Custodio §8» §7Se acabó el tiempo: el Custodio se ha retirado a la oscuridad.
+chat.boss.abort=§r §3Custodio §8» §7El combate se ha interrumpido sin recompensa.
+chat.boss.died=§r §3Custodio §8» §7Has muerto y quedas fuera del combate. El sculk consumió tus pertenencias.
+chat.boss.left=§r §3Custodio §8» §7Has salido de la arena y quedas fuera del combate.
 chat.boss.busy=§r⩕ §l§cERROR!§r §8» §7Hay un combate contra el Custodio en curso: espera a que termine
 chat.boss.cooldown=§r⩕ §l§cERROR!§r §8» §7El Custodio duerme. Podrá despertarse en §e%s§7 min.
 chat.boss.level=§r⩕ §l§cERROR!§r §8» §7Puedes enfrentarte al Custodio desde el nivel §e%s
