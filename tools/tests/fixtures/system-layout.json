@@ -171,6 +171,10 @@
 				"tick"
 			],
 			[
+				"system/player/void.js",
+				"itemUse"
+			],
+			[
 				"system/boss/boss.js",
 				"entityHurt"
 			],
