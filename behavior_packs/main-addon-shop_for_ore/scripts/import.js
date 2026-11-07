@@ -46,6 +46,7 @@ import './system/core/wipe.js';        // Вайп: номер вайпа, сб�
 import './system/core/offline_reset.js'; // !resetoffline: всё сбросить игрокам не в сети
 import './system/combat/trident.js';     // Трезубец с «Громовержцем»: молния в поражённого игрока
 import './system/player/void.js';        // Бездна: упал ниже мира — на спавн
+import './system/boss/arena.js';         // Арена Хранителя: музыка (Ancestry, «5») и эмбиент Древнего города
 import './system/player/ranks.js';       // Префикс уровня в чате (rank:§rN, у VIP — rank:§aVIP)
 import './system/ui/hud.js';         // Панель слева (actionbar)
 import './system/core/fallback.js';    // Пульс скриптов: без него включается запасное меню на NPC
