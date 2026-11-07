@@ -16,93 +16,6 @@
 import { ActionFormData, ModalFormData, MessageFormData } from '@minecraft/server-ui';
 import { closedByPlayer, showWhenFree, toldCount, toldErrorCount, settleCommands, hasPendingCommands, menuFeedback, menuCommandCount, menuSoundCount, failedCommandCount, beginMenuAction, endMenuAction } from '../../DataBase.js';
 
-// Отдельные текстуры оформления кнопок; предметы и системный интерфейс используют свои ресурсы.
-const MENU_ICONS = new Set([
-	"textures/blocks/barrier",
-	"textures/blocks/iron_bars",
-	"textures/blocks/noteblock",
-	"textures/items/amethyst_shard",
-	"textures/items/apple_golden",
-	"textures/items/armor_stand",
-	"textures/items/blaze_powder",
-	"textures/items/book_enchanted",
-	"textures/items/book_writable",
-	"textures/items/bucket_lava",
-	"textures/items/bucket_milk",
-	"textures/items/compass_item",
-	"textures/items/diamond_chestplate",
-	"textures/items/diamond_pickaxe",
-	"textures/items/diamond_shovel",
-	"textures/items/diamond_sword",
-	"textures/items/dragons_breath",
-	"textures/items/dye_powder_pink",
-	"textures/items/echo_shard",
-	"textures/items/egg_npc",
-	"textures/items/emerald",
-	"textures/items/end_crystal",
-	"textures/items/ender_pearl",
-	"textures/items/experience_bottle",
-	"textures/items/feather",
-	"textures/items/iron_chestplate",
-	"textures/items/iron_sword",
-	"textures/items/lead",
-	"textures/items/light_block_15",
-	"textures/items/mirror_glass",
-	"textures/items/name_tag",
-	"textures/items/nether_star",
-	"textures/items/netherite_chestplate",
-	"textures/items/potion_bottle_confusion",
-	"textures/items/record_cat",
-	"textures/items/sign",
-	"textures/items/snowball",
-	"textures/items/stick",
-	"textures/items/totem",
-	"textures/ui/ErrorGlyph",
-	"textures/ui/FriendsIcon",
-	"textures/ui/WarningGlyph",
-	"textures/ui/World",
-	"textures/ui/absorption_heart",
-	"textures/ui/anvil_icon",
-	"textures/ui/cancel",
-	"textures/ui/check",
-	"textures/ui/comment",
-	"textures/ui/fire_resistance_effect",
-	"textures/ui/freeze_heart",
-	"textures/ui/friend_glyph_desaturated",
-	"textures/ui/haste_effect",
-	"textures/ui/health_boost_effect",
-	"textures/ui/heart_new",
-	"textures/ui/icon_import",
-	"textures/ui/icon_lock",
-	"textures/ui/icon_setting",
-	"textures/ui/icon_timer",
-	"textures/ui/invisibility_effect",
-	"textures/ui/jump_boost_effect",
-	"textures/ui/magnifyingGlass",
-	"textures/ui/mute_off",
-	"textures/ui/mute_on",
-	"textures/ui/night_vision_effect",
-	"textures/ui/permissions_op_crown",
-	"textures/ui/permissions_visitor_hand",
-	"textures/ui/refresh_light",
-	"textures/ui/regeneration_effect",
-	"textures/ui/resistance_effect",
-	"textures/ui/slow_falling_effect",
-	"textures/ui/sneak_button_default",
-	"textures/ui/speed_effect",
-	"textures/ui/strength_effect",
-	"textures/ui/time_1sunrise",
-	"textures/ui/time_2day",
-	"textures/ui/time_3noon",
-	"textures/ui/time_4sunset",
-	"textures/ui/time_5night",
-	"textures/ui/time_6midnight",
-	"textures/ui/water_breathing_effect"
-]);
-const menuIcon = icon => MENU_ICONS.has(icon)
-	? `textures/menu_icons/${icon.slice("textures/".length).replace(/\//g, "_")}`
-	: icon;
-
 // Ник → { told, errors } до нажатия и opened — действие уже открыло форму после сообщения
 const acting = new Map();
 /**
@@ -168,7 +81,7 @@ export function showMenu(player, title, body, items, onBack) {
 	if (onBack && !list.some(item => /%[a-z._]*\.back(?:\s|$)/.test(item.text))) list.push(backButton(onBack));
 	const form = () => {
 		const result = new ActionFormData().title(title).body(typeof body === 'function' ? body() : body);
-		for (const item of list) result.button(item.text, menuIcon(item.icon));
+		for (const item of list) result.button(item.text, item.icon);
 		return result;
 	};
 	return show(player, form).then(r => {

@@ -12,4 +12,4 @@ execute if score fallback system matches 0 run tag @a remove sys:fb_pre
 ## --- NPC меню: по одному на сцену, всегда на месте (под спавном, в своей ticking area) ---
 execute unless score fb_area system matches 1 run tickingarea add 0 -60 0 0 -60 0 fallback
 scoreboard players set fb_area system 1
-function fallback/npcs
+function fallback/npc_menu

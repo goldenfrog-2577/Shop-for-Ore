@@ -541,7 +541,7 @@ export function botMenu(player) {
 		{ text: status('%admin.bot.button.mode', `%admin.bot.mode.${st.mode}`), icon: 'textures/items/compass_item', run: () => botModeMenu(player) },
 		{ text: '%admin.bot.button.say', icon: 'textures/ui/comment', run: () => botSay(player) },
 		{ text: '%admin.bot.button.slots', icon: 'textures/items/iron_chestplate', run: () => botSlots(player) },
-		toggle('sit', 'sit', 'textures/ui/sneak_button_default'),
+		toggle('sit', 'sit', 'textures/ui/sneak'),
 		{ text: '%admin.main.button.effects', icon: 'textures/items/potion_bottle_confusion', run: () => botEffects(player) },
 		{ text: '%admin.bot.button.clear_effects', icon: 'textures/items/bucket_milk', run: () => { run(bot, 'effect @s clear'); tell(player, 'chat.admin.bot.effect.cleared', bot.name); } },
 	] : [{ text: '%admin.bot.button.spawn', icon: 'textures/server_icons/steve', run: async () => { const bot = await spawnBot(player); tell(player, bot ? 'chat.admin.bot.spawned' : 'chat.admin.bot.error.spawn', name); if (bot) botMenu(player); } }];
@@ -566,7 +566,7 @@ function botModeMenu(player) {
 		mode('dummy', 'textures/items/armor_stand'),
 		mode('follow', 'textures/items/lead', { target: player.name }),
 		mode('stay', 'textures/blocks/barrier'),
-		mode('mirror', 'textures/items/mirror_glass', { target: player.name }),
+		mode('mirror', 'textures/blocks/glass', { target: player.name }),
 		{ text: '§8 %admin.bot.mode.spar\n%admin.bot.mode.spar.desc', icon: 'textures/items/diamond_sword', run: () => botSpar(player) },
 		{ text: '§8 %admin.bot.mode.game\n%admin.bot.mode.game.desc', icon: 'textures/items/diamond_shovel', run: () => botGame(player) },
 		back(() => botMenu(player))

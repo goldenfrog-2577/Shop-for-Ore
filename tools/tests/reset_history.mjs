@@ -12,4 +12,13 @@ assert.equal(ctx.offline.applyOfflineReset(offline),false);assert.ok(offline.has
 // Новое событие №1 не совпадает со старой отметкой №1; настоящий сброс применяется ровно один раз.
 props['shop:offline_reset_id']=1;assert.equal(ctx.offline.applyOfflineReset(offline),true);assert.equal(ctx.offline.applyOfflineReset(offline),false);
 props['shop:wipe_id']=1;assert.ok(!offline.hasTag('sys:wipe:1'),'new wipe remains pending');
-console.log('PASS: owner-only clear, offline cleanup without data loss, counter reuse and no repeated reset.');
+props['shop:reset_epoch']=2;props['shop:offline_reset_id']=3;props['shop:wipe_id']=5;
+// Тот, кто действительно пропустил сброс №3, сбрасывается.
+const missed=mk('Missed',['auth:done','sys:reset_epoch:0','sys:offline_reset:2']);
+assert.equal(ctx.offline.applyOfflineReset(missed),true);assert.ok(!missed.hasTag('auth:done'));
+// Свойства не читаются — ничего не трогаем и не помечаем.
+const blind=mk('Blind',['role:owner','auth:done','sys:reset_epoch:0']);const get=ctx.world.getDynamicProperty;
+ctx.world.getDynamicProperty=()=>{throw new Error('Dynamic property is not defined');};
+assert.equal(ctx.offline.applyOfflineReset(blind),false);assert.deepEqual(blind.getTags(),['role:owner','auth:done','sys:reset_epoch:0']);
+ctx.world.getDynamicProperty=get;
+console.log('PASS: owner-only clear, offline cleanup without data loss, counter reuse, no repeated reset, unreadable properties are a no-op.');
