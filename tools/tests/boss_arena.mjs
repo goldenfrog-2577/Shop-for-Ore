@@ -16,7 +16,7 @@ const ctx = {
 	},
 	run: () => { throw Error('run() не используется'); }
 };
-vm.runInNewContext(src + '\nglobalThis.A={ARENA,TRACKS,TRACK_GAP,inArena,musicStep,ambientCommands,particleCommands,BRAZIERS,PORTAL};', ctx);
+vm.runInNewContext(src + '\nglobalThis.A={ARENA,TRACKS,TRACK_GAP,inArena,musicStep,ambientCommands,particleCommands,BRAZIERS,PORTAL,CENTER,MUSIC_VOLUME};', ctx);
 const A = ctx.A;
 
 // Границы: углы коробки и тоннель внутри, соседние блоки и другое измерение — снаружи
@@ -64,11 +64,15 @@ const PARTICLES = new Set(['minecraft:soul_particle', 'minecraft:sculk_soul_part
 let seed = 1; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 const seen = new Set();
 for (let i = 0; i < 4000; i++) {
-	for (const c of A.ambientCommands({ x: 528, y: -55, z: -70 }, rnd)) {
-		const [, id, target, x, y, z, vol, pitch] = c.split(' ');
+	const L = i % 2 ? { x: 528, y: -55, z: -70 } : { x: 490 + (i % 80), y: -59, z: -95 + (i % 90) };
+	for (const c of A.ambientCommands(L, rnd)) {
+		const [, id, target, x, y, z, vol, pitch, min] = c.split(' ');
 		assert.ok(SOUNDS.has(id), id); assert.equal(target, '@s'); seen.add(id);
-		assert.ok([x, y, z, vol, pitch].every(v => Number.isFinite(Number(v))), c);
-		assert.ok(Number(vol) > 0 && Number(pitch) > 0, c);
+		assert.ok([x, y, z, vol, pitch, min].every(v => Number.isFinite(Number(v))), c);
+		assert.ok(Number(vol) > 0 && Number(pitch) > 0 && Number(min) >= 0 && Number(min) <= 1, c);
+		// Bedrock: радиус слышимости /playsound = 16 × volume; дальше — только с minimumVolume > 0
+		const dist = Math.hypot(Number(x) - L.x, Number(y) - L.y, Number(z) - L.z);
+		assert.ok(dist <= 16 * Number(vol), `не слышно: ${c} на расстоянии ${dist.toFixed(1)}`);
 	}
 }
 for (const id of ['power.on.sculk_sensor', 'shriek.sculk_shrieker', 'mob.warden.heartbeat', 'ambient.soulsand_valley.mood', 'ambient.cave']) assert.ok(seen.has(id), id);
@@ -79,6 +83,10 @@ for (const c of A.particleCommands(rnd)) {
 	assert.ok(A.inArena({ x: Number(x), y: Number(y), z: Number(z) }), c);
 }
 assert.equal(A.BRAZIERS.length, 16);
+// Музыку из центра слышно во всей коробке и в тоннеле
+for (const x of [A.ARENA.min[0], A.ARENA.max[0]]) for (const y of [A.ARENA.min[1], A.ARENA.max[1]]) for (const z of [A.ARENA.min[2], A.ARENA.max[2]])
+	assert.ok(Math.hypot(x - A.CENTER[0], y - A.CENTER[1], z - A.CENTER[2]) <= 16 * A.MUSIC_VOLUME, `музыка не слышна в углу ${x} ${y} ${z}`);
+assert.match(A.musicStep(undefined, { inside: true, musicOff: false, now: 0 }).commands[1], / 5 1 0\.4$/);
 
 // Цикл: игрок на арене получает музыку и эмбиент, бот — ничего, игрок снаружи — ничего; частицы только при игроках
 const tags = (n, name) => ({ hasTag: t => n.includes(t), runCommandAsync: c => { ran.push([name, c]); return Promise.resolve(); } });

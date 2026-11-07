@@ -29,7 +29,9 @@ export const TRACKS = [
 	{ id: 'record.5', seconds: 178 }
 ];
 export const TRACK_GAP = 4;
-export const MUSIC_VOLUME = 5;                  // >1 — слышно дальше (центр → тоннель около 60 блоков)
+// В /playsound громкость задаёт радиус слышимости: 16 блоков × volume. Дальше звук слышен только с minimumVolume.
+export const MUSIC_VOLUME = 5;                  // 80 блоков: от центра до дальнего угла ~69, до конца тоннеля ~54
+export const MUSIC_MIN = 0.4;                   // у «5» в определении max_distance 64 — запас для углов
 export const CHECK_TICKS = 20;
 const HEART_RADIUS = 28;                        // сердцебиение слышно ближе этого расстояния до портала
 
@@ -55,7 +57,7 @@ export function musicStep(state, { inside, musicOff, now }) {
 	if (state && !state.muted && now < state.endsAt) return { state, commands };
 	const track = state && !state.muted ? (state.track + 1) % TRACKS.length : (state?.track >= 0 ? state.track : 0);
 	const t = TRACKS[track];
-	commands.push(`playsound ${t.id} @s ${CENTER.join(' ')} ${MUSIC_VOLUME} 1`);
+	commands.push(`playsound ${t.id} @s ${CENTER.join(' ')} ${MUSIC_VOLUME} 1 ${MUSIC_MIN}`);
 	return { state: { track, endsAt: now + t.seconds + TRACK_GAP, muted: false }, commands };
 }
 
@@ -65,17 +67,20 @@ function around(loc, r0, r1, random) {
 	return `${Math.round(loc.x + r * Math.cos(a))} -58 ${Math.round(loc.z + r * Math.sin(a))}`;
 }
 const pitch = (lo, hi, random) => (lo + (hi - lo) * random()).toFixed(2);
+/** Громкость, при которой точка на расстоянии до far блоков (с запасом на высоту) внутри радиуса слышимости. */
+export const reach = far => ((far + 4) / 16).toFixed(2);
 
-/** Звуки эмбиента для игрока на этой секунде (вероятности в секунду). */
+/** Звуки эмбиента для игрока на этой секунде (вероятности в секунду): «звук точка громкость тон minimumVolume». */
 export function ambientCommands(loc, random = Math.random) {
 	const out = [];
-	if (random() < 0.30) out.push(`playsound ${random() < 0.5 ? 'power.on.sculk_sensor' : 'power.off.sculk_sensor'} @s ${around(loc, 4, 14, random)} 0.6 ${pitch(0.8, 1.2, random)}`);
-	if (random() < 0.10) out.push(`playsound ${random() < 0.6 ? 'spread.sculk' : 'bloom.sculk_catalyst'} @s ${around(loc, 3, 10, random)} 0.7 ${pitch(0.8, 1.1, random)}`);
-	if (random() < 0.03) out.push(`playsound shriek.sculk_shrieker @s ${around(loc, 18, 30, random)} 0.8 ${pitch(0.85, 1, random)}`);
-	if (random() < 0.04) out.push(`playsound ambient.soulsand_valley.mood @s ${around(loc, 6, 12, random)} 1 ${pitch(0.5, 0.65, random)}`);
-	if (random() < 0.02) out.push(`playsound ambient.cave @s ${around(loc, 8, 16, random)} 0.8 ${pitch(0.7, 0.9, random)}`);
+	if (random() < 0.30) out.push(`playsound ${random() < 0.5 ? 'power.on.sculk_sensor' : 'power.off.sculk_sensor'} @s ${around(loc, 4, 14, random)} ${reach(14)} ${pitch(0.8, 1.2, random)} 0`);
+	if (random() < 0.10) out.push(`playsound ${random() < 0.6 ? 'spread.sculk' : 'bloom.sculk_catalyst'} @s ${around(loc, 3, 10, random)} ${reach(10)} ${pitch(0.8, 1.1, random)} 0`);
+	if (random() < 0.03) out.push(`playsound shriek.sculk_shrieker @s ${around(loc, 18, 30, random)} ${reach(30)} ${pitch(0.85, 1, random)} 0.15`);
+	if (random() < 0.04) out.push(`playsound ambient.soulsand_valley.mood @s ${around(loc, 6, 12, random)} ${reach(12)} ${pitch(0.5, 0.65, random)} 0`);
+	if (random() < 0.02) out.push(`playsound ambient.cave @s ${around(loc, 8, 16, random)} ${reach(16)} ${pitch(0.7, 0.9, random)} 0`);
 	const d = Math.hypot(loc.x - PORTAL[0], loc.y - PORTAL[1], loc.z - PORTAL[2]);
-	if (d < HEART_RADIUS && random() < 0.5) out.push(`playsound mob.warden.heartbeat @s ${PORTAL.join(' ')} ${(1.2 - d / HEART_RADIUS).toFixed(2)} 0.8`);
+	// у портала громко, к краю радиуса тише — затухание даёт сам радиус слышимости
+	if (d < HEART_RADIUS && random() < 0.5) out.push(`playsound mob.warden.heartbeat @s ${PORTAL.join(' ')} ${reach(HEART_RADIUS)} 0.8 0`);
 	return out;
 }
 
