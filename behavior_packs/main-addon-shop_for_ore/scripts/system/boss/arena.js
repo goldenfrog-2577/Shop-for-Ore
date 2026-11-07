@@ -6,7 +6,7 @@
 //    с громкостью MUSIC_VOLUME, чтобы его было слышно по всей пещере. Фоновую музыку игры (music.game)
 //    внутри глушим, иначе треки наложатся. Выход из арены или выключенная музыка (player:music_off) — /stopsound.
 // 2) Эмбиент — только ванильные звуки 1.19.50: щелчки скалка рядом, редкий далёкий визг крикуна,
-//    сердцебиение Хранителя у портала, низкий гул Долины душ на пониженном тоне, пещерные звуки.
+//    сердцебиение Хранителя у портала, низкий гул Долины душ на пониженном тоне.
 // 3) Частицы душ над жаровнями и скалковые души в проёме портала — пока на арене есть хоть один игрок.
 // Состояние только в памяти (Map по нику): после /reload музыка просто начнётся заново.
 
@@ -77,7 +77,7 @@ export function ambientCommands(loc, random = Math.random) {
 	if (random() < 0.10) out.push(`playsound ${random() < 0.6 ? 'spread.sculk' : 'bloom.sculk_catalyst'} @s ${around(loc, 3, 10, random)} ${reach(10)} ${pitch(0.8, 1.1, random)} 0`);
 	if (random() < 0.03) out.push(`playsound shriek.sculk_shrieker @s ${around(loc, 18, 30, random)} ${reach(30)} ${pitch(0.85, 1, random)} 0.15`);
 	if (random() < 0.04) out.push(`playsound ambient.soulsand_valley.mood @s ${around(loc, 6, 12, random)} ${reach(12)} ${pitch(0.5, 0.65, random)} 0`);
-	if (random() < 0.02) out.push(`playsound ambient.cave @s ${around(loc, 8, 16, random)} ${reach(16)} ${pitch(0.7, 0.9, random)} 0`);
+	// ambient.cave не используем: в ресурс-паке карты он намеренно пустой (пещерный фон отключён)
 	const d = Math.hypot(loc.x - PORTAL[0], loc.y - PORTAL[1], loc.z - PORTAL[2]);
 	// у портала громко, к краю радиуса тише — затухание даёт сам радиус слышимости
 	if (d < HEART_RADIUS && random() < 0.5) out.push(`playsound mob.warden.heartbeat @s ${PORTAL.join(' ')} ${reach(HEART_RADIUS)} 0.8 0`);

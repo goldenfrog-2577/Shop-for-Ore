@@ -59,7 +59,7 @@ assert.ok(!cmds.some(c => c.startsWith('playsound')));
 
 // Все ID звуков и частиц существуют в ванильном Bedrock 1.19.50 (официальный тег v1.19.50.2)
 const SOUNDS = new Set(['music.game.deep_dark', 'record.5', 'music.game', 'power.on.sculk_sensor', 'power.off.sculk_sensor',
-	'spread.sculk', 'bloom.sculk_catalyst', 'shriek.sculk_shrieker', 'ambient.soulsand_valley.mood', 'ambient.cave', 'mob.warden.heartbeat']);
+	'spread.sculk', 'bloom.sculk_catalyst', 'shriek.sculk_shrieker', 'ambient.soulsand_valley.mood', 'mob.warden.heartbeat']);
 const PARTICLES = new Set(['minecraft:soul_particle', 'minecraft:sculk_soul_particle']);
 let seed = 1; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 const seen = new Set();
@@ -75,7 +75,11 @@ for (let i = 0; i < 4000; i++) {
 		assert.ok(dist <= 16 * Number(vol), `не слышно: ${c} на расстоянии ${dist.toFixed(1)}`);
 	}
 }
-for (const id of ['power.on.sculk_sensor', 'shriek.sculk_shrieker', 'mob.warden.heartbeat', 'ambient.soulsand_valley.mood', 'ambient.cave']) assert.ok(seen.has(id), id);
+for (const id of ['power.on.sculk_sensor', 'shriek.sculk_shrieker', 'mob.warden.heartbeat', 'ambient.soulsand_valley.mood']) assert.ok(seen.has(id), id);
+// Ресурс-пак карты не должен глушить используемые звуки (например, ambient.cave там пустой)
+const rp = JSON.parse(fs.readFileSync(new URL('../../resource_packs/main-rp-shop_for_ore/sounds/sound_definitions.json', import.meta.url), 'utf8'));
+for (const id of [...seen, ...A.TRACKS.map(t => t.id)]) assert.ok(!rp[id] || rp[id].sounds?.length, `ресурс-пак глушит ${id}`);
+assert.ok(!src.includes('playsound ambient.cave'));
 assert.ok(!A.ambientCommands({ x: 528, y: -55, z: -5 }, () => 0.4).some(c => c.includes('heartbeat')));   // у входа сердца не слышно
 for (const c of A.particleCommands(rnd)) {
 	const [cmd, id, x, y, z] = c.split(' ');
