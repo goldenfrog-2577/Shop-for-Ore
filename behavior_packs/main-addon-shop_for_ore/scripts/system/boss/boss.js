@@ -97,7 +97,9 @@ function systemScore(name) {
 }
 const bosses = () => { try { return [...overworld().getEntities({ type: BOSS })]; } catch { return []; } };
 const minions = () => { try { return [...overworld().getEntities({ tags: [MINION] })]; } catch { return []; } };
-const findOnline = (name) => world.getPlayers().find(p => p.name === name);
+// getPlayers() в 1.19.50 — итератор (PlayerIterator), а не массив: без [...] у него нет find/filter
+const players = () => [...world.getPlayers()];
+const findOnline = (name) => players().find(p => p.name === name);
 
 let fight;                 // { fighters: Set, dead: Set, started, max, phase, nextWave }
 let until = 0;             // конец перезарядки (секунды Unix), читается из табло при загрузке
@@ -280,7 +282,7 @@ system.runSchedule(() => {
 	}
 	// тег участника мог остаться у того, кто вышел из игры посреди боя
 	for (const p of world.getPlayers()) if (p.hasTag(FIGHTER)) p.removeTag(FIGHTER);
-	const inside = world.getPlayers().filter(p => inArena(p.location, p.dimension?.id));
+	const inside = players().filter(p => inArena(p.location, p.dimension?.id));
 	for (const name of [...hinted]) if (!inside.some(p => p.name === name)) hinted.delete(name);
 	for (const p of inside) {
 		if (!hinted.has(p.name) && !p.hasTag('role:bot')) {

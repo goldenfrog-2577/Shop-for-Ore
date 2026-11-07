@@ -92,4 +92,13 @@ const warp = { id: 'boss', role: 'player', minLevel: 26 };
 assert.ok(!w({ role: 'player', lvl: 25 }, warp) && w({ role: 'player', lvl: 26 }, warp) && w({ role: 'helper', lvl: 1 }, warp));
 assert.match(fs.readFileSync(new URL('scripts/chat/commands/player.js', bp), 'utf8'), /warp\.id === 'boss' && bossBusy\(\)\) \{/);
 
+// world.getPlayers() в 1.19.50 возвращает PlayerIterator — методы массива на нём падают «not a function»
+// (так было в boss.js:283 — ошибка каждую секунду). Проверяем все скрипты.
+const walk = (u) => fs.readdirSync(u, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(new URL(e.name + '/', u)) : [new URL(e.name, u)]);
+for (const f of walk(new URL('scripts/', bp)).filter(u => u.pathname.endsWith('.js'))) {
+	const code = fs.readFileSync(f, 'utf8');
+	assert.ok(!/getPlayers\([^)]*\)\s*\.(filter|find|some|map|forEach|every|reduce|length)\b/.test(code), `итератор как массив: ${f.pathname.split('/scripts/')[1]}`);
+	assert.ok(!/getEntities\([^)]*\)\s*\.(filter|find|some|map|forEach|every|reduce|length)\b/.test(code), `итератор как массив: ${f.pathname.split('/scripts/')[1]}`);
+}
+
 console.log('PASS: boss start rules, phases, minion waves, discs, spots, 4-locale keys, entity/sounds, warp level gate.');
