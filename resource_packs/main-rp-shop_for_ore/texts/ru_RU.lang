@@ -46,6 +46,7 @@ item.server:admin_menu=§eМеню админа §7[Нажми, чтобы от�
 item.server:admin_stick=§cПалочка админа§r
 item.server:portable_ender_crystal.name=§eПортативный кристалл Энда
 item.spawn_egg.entity.server:floating_text.name=Яйцо призыва голограммы
+entity.server:warden_boss.name=Хранитель
 entity.server:floating_text.name=Голограмма
 container.shop.feedback=§lОтзыв класть сюда...
 container.shop.feedback_for_host=§lСундук для отзывов

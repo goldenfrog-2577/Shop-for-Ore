@@ -46,6 +46,7 @@ item.server:admin_menu=§eAdmin Menu §7[Press to open§7]§r
 item.server:admin_stick=§cAdmin Stick§r
 item.server:portable_ender_crystal.name=§ePortable End Crystal
 item.spawn_egg.entity.server:floating_text.name=Hologram Spawn Egg
+entity.server:warden_boss.name=Warden
 entity.server:floating_text.name=Hologram
 container.shop.feedback=§lPut your review here...
 container.shop.feedback_for_host=§lFeedback chest

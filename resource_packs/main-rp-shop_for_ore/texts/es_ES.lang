@@ -46,6 +46,7 @@ item.server:admin_menu=§eMenú de admin §7[Pulsa para abrir§7]§r
 item.server:admin_stick=§cVara de admin§r
 item.server:portable_ender_crystal.name=§eCristal del End portátil
 item.spawn_egg.entity.server:floating_text.name=Huevo de holograma
+entity.server:warden_boss.name=Custodio
 entity.server:floating_text.name=Holograma
 container.shop.feedback=§lDeja tu reseña aquí...
 container.shop.feedback_for_host=§lCofre de opiniones

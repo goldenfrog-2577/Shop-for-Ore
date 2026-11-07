@@ -364,6 +364,9 @@
 			"path" : "entities/thrown_ender_crystal.json"
 		},
 		{
+			"path" : "entities/warden_boss.json"
+		},
+		{
 			"path" : "scripts/system/economy/boosts.js"
 		},
 		{
