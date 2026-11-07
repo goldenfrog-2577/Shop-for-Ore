@@ -7,7 +7,9 @@
 //    внутри глушим, иначе треки наложатся. Выход из арены или выключенная музыка (player:music_off) — /stopsound.
 // 2) Эмбиент — только ванильные звуки 1.19.50: щелчки скалка рядом, редкий далёкий визг крикуна,
 //    сердцебиение Хранителя у портала, низкий гул Долины душ на пониженном тоне.
-// 3) Частицы душ над жаровнями и скалковые души в проёме портала — пока на арене есть хоть один игрок.
+// 3) Синее пламя душ над кострами и бирюзовые искры скалка в проёме портала — пока на арене есть хоть один игрок.
+//    soul_particle и sculk_soul_particle не подходят: им нужна variable.direction, которую /particle не передаёт
+//    (в ContentLog — ошибки Molang «variable.direction», «.x/.y/.z»).
 // Состояние только в памяти (Map по нику): после /reload музыка просто начнётся заново.
 
 import { system, world } from '@minecraft/server';
@@ -87,10 +89,10 @@ export function ambientCommands(loc, random = Math.random) {
 /** Частицы на арене за одну проверку (выполняются от имени измерения). */
 export function particleCommands(random = Math.random) {
 	const out = [];
-	for (const [x, y, z] of BRAZIERS) if (random() < 0.35) out.push(`particle minecraft:soul_particle ${x} ${y + 1} ${z}`);
+	for (const [x, y, z] of BRAZIERS) if (random() < 0.35) out.push(`particle minecraft:blue_flame_particle ${x} ${y + 1} ${z}`);
 	for (let i = 0; i < 3; i++) {
 		const x = PORTAL[0] - 7 + Math.round(14 * random()), y = -59 + Math.round(10 * random());
-		out.push(`particle minecraft:sculk_soul_particle ${x} ${y} ${PORTAL[2]}`);
+		out.push(`particle minecraft:sculk_sensor_redstone_particle ${x} ${y} ${PORTAL[2]}`);
 	}
 	return out;
 }

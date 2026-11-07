@@ -60,7 +60,8 @@ assert.ok(!cmds.some(c => c.startsWith('playsound')));
 // Все ID звуков и частиц существуют в ванильном Bedrock 1.19.50 (официальный тег v1.19.50.2)
 const SOUNDS = new Set(['music.game.deep_dark', 'record.5', 'music.game', 'power.on.sculk_sensor', 'power.off.sculk_sensor',
 	'spread.sculk', 'bloom.sculk_catalyst', 'shriek.sculk_shrieker', 'ambient.soulsand_valley.mood', 'mob.warden.heartbeat']);
-const PARTICLES = new Set(['minecraft:soul_particle', 'minecraft:sculk_soul_particle']);
+// Только частицы без variable.direction (её задаёт игра, /particle — нет): проверено по particles/*.json v1.19.50.2
+const PARTICLES = new Set(['minecraft:blue_flame_particle', 'minecraft:sculk_sensor_redstone_particle']);
 let seed = 1; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 const seen = new Set();
 for (let i = 0; i < 4000; i++) {
