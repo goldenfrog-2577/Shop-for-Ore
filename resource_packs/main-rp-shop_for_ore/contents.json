@@ -280,6 +280,9 @@
 			"path": "entity/warden_boss.entity.json"
 		},
 		{
+			"path": "sounds.json"
+		},
+		{
 			"path": "textures/ui/server/server_scoreboard_entry.png"
 		},
 		{
