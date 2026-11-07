@@ -22,7 +22,8 @@ world.events.worldInitialize.subscribe((e) => {
 	e.propertyRegistry.registerWorldDynamicProperties(def);
 });
 
-const prop = (id) => { try { return world.getDynamicProperty(id) ?? 0; } catch { return 0; } };
+// null — свойство не прочиталось: тогда ничего не сбрасываем и не помечаем
+const prop = (id) => { try { return world.getDynamicProperty(id) ?? 0; } catch { return null; } };
 
 /** Сколько игроков затронет сброс: записи-игроки в табло money, чьих ников нет среди игроков в сети. */
 export function offlineCounts() {
@@ -41,12 +42,14 @@ function mark(player, id) {
 	for (const t of player.getTags()) if (t.startsWith(RESET_TAG)) player.removeTag(t);
 	player.addTag(RESET_TAG + id);
 	const wipe = prop(WIPE_ID);
-	if (wipe > 0 && !player.hasTag(WIPE_TAG + wipe)) player.addTag(WIPE_TAG + wipe);
+	if (wipe !== null && wipe > 0 && !player.hasTag(WIPE_TAG + wipe)) player.addTag(WIPE_TAG + wipe);
 }
 
 /** Сброс: новый номер, счета — всем не в сети сразу, теги — при входе. */
 export function resetOffline(by) {
-	const id = prop(RESET_ID) + 1;
+	const current = prop(RESET_ID);
+	if (current === null) { tell(by, 'chat.cmd.error.storage'); return 0; }
+	const id = current + 1;
 	world.setDynamicProperty(RESET_ID, id);
 	const online = [...world.getPlayers()];
 	for (const p of online) mark(p, id);
@@ -85,7 +88,7 @@ export function applyOfflineReset(player) {
 	if (isBot(player)) return false;
 	syncResetEpoch(player);
 	const id = prop(RESET_ID);
-	if (id <= 0 || player.hasTag(RESET_TAG + id)) return false;
+	if (id === null || id <= 0 || player.hasTag(RESET_TAG + id)) return false;
 	const tags = player.getTags();
 	for (const t of tags) player.removeTag(t);
 	mark(player, id);

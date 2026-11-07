@@ -164,6 +164,7 @@ chat.cmd.error.self=§r⩕ §l§cERROR!§r §8» §7No puedes elegirte a ti mism
 chat.cmd.error.number=§r⩕ §l§cERROR!§r §8» §7§e%1$s§7 no sirve: hace falta un número entero de §e%2$s§7 a §e%3$s
 chat.cmd.error.confirm_expired=§r⩕ §l§cERROR!§r §8» §7No hay confirmación o ha caducado — escribe primero §e%1$s
 chat.cmd.error.not_found=§r⩕ §l§cERROR!§r §8» §7§e%1$s§7 — no encontrado. Lista: §e%2$s
+chat.cmd.error.storage=§r⩕ §l§cERROR!§r §8» §7No se pueden leer los datos del mundo: el reinicio se ha cancelado. Vuelve a entrar al mundo y revisa el registro de contenido
 chat.term.permanent=para siempre
 chat.term.minutes=min
 color.minecoin_gold=Oro de Minecoin
@@ -839,8 +840,8 @@ ach.item.bow=Arco
 ach.item.arrow=Flechas
 ach.item.feather=Pluma
 ach.item.sniper_bow=Arco «Poder III»
-chat.ach.task=§r §2 Logros §8» §7§f%1$s§r§7 ha conseguido el logro %2$s
-chat.ach.challenge=§r §5 Desafíos §8» §7§f%1$s§r§7 ha completado el desafío %2$s
+chat.ach.task=§r §2Logros §8» §7§f%1$s§r§7 ha conseguido el logro %2$s
+chat.ach.challenge=§r §5Desafíos §8» §7§f%1$s§r§7 ha completado el desafío %2$s
 chat.cmd.achievement.use=§r §7CMD §8» §7Uso: §e!achievement§7 <jugador> <list/grant/revoke> [id]
 chat.cmd.achievement.list=§8-----§f Logros de %1$s§r §8(%2$s/%3$s) -----§f
 chat.cmd.achievement.granted=§r §7CMD §8» §7Logro §e%2$s§7 dado a §f%1$s§r§7 (con recompensa)
@@ -885,21 +886,21 @@ menu.games.phase.running=En curso
 minigame.pvp_ffa.name= PvP: el último en pie
 minigame.spleef.name= Spleef
 title.game.go=¡Adelante!
-chat.game.joined=§r §6 Minijuegos §8» §7§f%1$s§r§7 se unió a %2$s (§e%3$s/%4$s§7)
-chat.game.waiting=§r §6 Minijuegos §8» §7Faltan jugadores: §e%1$s
-chat.game.countdown=§r §6 Minijuegos §8» §7%1$s empieza en §e%2$s§7 s
-chat.game.countdown_stopped=§r §6 Minijuegos §8» §7Faltan jugadores: la cuenta atrás de %1$s se ha detenido
-chat.game.started=§r §6 Minijuegos §8» §7¡%1$s ha empezado! Jugadores: §e%2$s
-chat.game.out=§r §6 Minijuegos §8» §7Has quedado fuera de %1$s
-chat.game.left=§r §6 Minijuegos §8» §7Has salido de %1$s
-chat.game.out_other=§r §6 Minijuegos §8» §7§f%1$s§r§7 ha quedado fuera. Quedan: §e%2$s
-chat.game.winner=§r §6 Minijuegos §8» §7¡§f%1$s§r§7 ha ganado %2$s!
-chat.game.reward=§r §6 Minijuegos §8» §7Recompensa: %1$s
-chat.game.draw=§r §6 Minijuegos §8» §7%1$s ha terminado sin ganador
-chat.game.stopped=§r §6 Minijuegos §8» §7Un administrador ha detenido %1$s
+chat.game.joined=§r §6Minijuegos §8» §7§f%1$s§r§7 se unió a %2$s (§e%3$s/%4$s§7)
+chat.game.waiting=§r §6Minijuegos §8» §7Faltan jugadores: §e%1$s
+chat.game.countdown=§r §6Minijuegos §8» §7%1$s empieza en §e%2$s§7 s
+chat.game.countdown_stopped=§r §6Minijuegos §8» §7Faltan jugadores: la cuenta atrás de %1$s se ha detenido
+chat.game.started=§r §6Minijuegos §8» §7¡%1$s ha empezado! Jugadores: §e%2$s
+chat.game.out=§r §6Minijuegos §8» §7Has quedado fuera de %1$s
+chat.game.left=§r §6Minijuegos §8» §7Has salido de %1$s
+chat.game.out_other=§r §6Minijuegos §8» §7§f%1$s§r§7 ha quedado fuera. Quedan: §e%2$s
+chat.game.winner=§r §6Minijuegos §8» §7¡§f%1$s§r§7 ha ganado %2$s!
+chat.game.reward=§r §6Minijuegos §8» §7Recompensa: %1$s
+chat.game.draw=§r §6Minijuegos §8» §7%1$s ha terminado sin ganador
+chat.game.stopped=§r §6Minijuegos §8» §7Un administrador ha detenido %1$s
 chat.game.error.teleport=§r⩕ §l§cERROR!§r §8» §7No puedes teletransportarte mientras dura %1$s§r§7 — espera a que termine
 chat.game.error.teleport_other=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 está en %2$s§r§7 — no se le puede teletransportar hasta que termine
-chat.game.spectate=§r §6 Minijuegos §8» §7Has quedado fuera: mira %1$s§r§7 desde el techo de la arena. Volverás al vestíbulo cuando termine la partida
+chat.game.spectate=§r §6Minijuegos §8» §7Has quedado fuera: mira %1$s§r§7 desde el techo de la arena. Volverás al vestíbulo cuando termine la partida
 chat.game.error.already=§r⩕ §l§cERROR!§r §8» §7Ya estás en %1$s. Sal con §e!game leave
 chat.game.error.running=§r⩕ §l§cERROR!§r §8» §7%1$s ya está en curso: espera al siguiente
 chat.game.error.full=§r⩕ §l§cERROR!§r §8» §7No quedan plazas en %1$s
@@ -909,8 +910,8 @@ chat.cmd.game.line=§e%1$s§8 — §f%2$s§8 · §7%3$s §8(%4$s/%5$s)
 chat.cmd.game.use=§r §7CMD §8» §7Uso: §e!game§7 [join <juego> / leave]; administrador: §e!game§7 start/stop <juego>
 chat.cmd.game.error.start=§r⩕ §l§cERROR!§r §8» §7No se puede empezar: el juego está en curso o no tiene jugadores
 chat.cmd.game.error.empty=§r⩕ §l§cERROR!§r §8» §7No hay nadie en este juego
-chat.game.winner_bot=§r §6 Minijuegos §8» §7¡El bot §f%1$s§r§7 ganó %2$s! Sin recompensa
-chat.game.no_reward_bot=§r §6 Minijuegos §8» §7Sin recompensa: aparte de ti, solo jugó el bot
+chat.game.winner_bot=§r §6Minijuegos §8» §7¡El bot §f%1$s§r§7 ganó %2$s! Sin recompensa
+chat.game.no_reward_bot=§r §6Minijuegos §8» §7Sin recompensa: aparte de ti, solo jugó el bot
 
 ## --- ARENA PVP Y CPS ---
 ##   chat.pvp.*, hud.cps*, chat.cps.*, chat.cmd.cps.*
@@ -926,7 +927,7 @@ chat.cmd.cps.info=§r §7CMD §8» §7CPS de §f%1$s§r§7: ahora §e%2$s§7,
 ##   chat.tir.*, hud.tir.*
 hud.tir.hit=§6 §a+%1$s  §8• §7precisión §f%2$s §8• §f%3$s §7bl.
 hud.tir.close=§cA menos de %1$s bloques no hay premio — aléjate
-chat.tir.enter=§r §6 Galería de tiro §8» §7Tu pico se guarda mientras disparas y vuelve al salir. Dispara a las dianas con tu propio arco: cuanto más cerca del centro y más lejos, más monedas.
+chat.tir.enter=§r §6Galería de tiro §8» §7Tu pico se guarda mientras disparas y vuelve al salir. Dispara a las dianas con tu propio arco: cuanto más cerca del centro y más lejos, más monedas.
 
 ## --- TIENDA DEL COMERCIANTE ERRANTE ---
 ##   chat.trader.*, trader.*

@@ -75,6 +75,9 @@ const NATIVE_MESSAGES={
 };
 const nativePatterns=Object.fromEntries(Object.entries(NATIVE_MESSAGES).map(([key,values])=>[key,values.map(s=>new RegExp(s.split(/%(?:\d+\$)?[sdif]/g).map(escapePattern).join('.*?'),'i'))]));
 const matches=(error,key)=>errorText(error).includes(key)||nativePatterns[key].some(re=>re.test(errorText(error)));
+// 1.19.5x отклоняет fill без изменённых блоков текстом commands.fill.success с числом 0 («Заполнено блоков: 0»).
+const ZERO_FILL=[/(^|\D)0 blocks filled/i,/Заполнено блоков: 0(\D|$)/i,/Заповнено 0 блоків/i,/(^|\D)0 bloques llenados/i];
+const zeroFill=error=>ZERO_FILL.some(re=>re.test(errorText(error)));
 function absent(task,error) {
 	if(task.text.startsWith('structure delete '))return matches(error,'commands.structure.notFound');
 	if(task.text==='tickingarea remove '+AREA)return matches(error,'commands.tickingarea-remove.byname.failure')||matches(error,'commands.tickingarea.noneExist.currentDimension');
@@ -168,7 +171,7 @@ system.runSchedule(()=>{
 	if(task.edit)task.job.changed=true;
 	task.job.lastCommand=task.text;executing=true;
 	const rejected=error=>{
-		if((task.cleanup&&absent(task,error))||(task.text.startsWith('fill ')&&matches(error,'commands.fill.failed')))task.resolve({successCount:0});
+		if((task.cleanup&&absent(task,error))||(task.text.startsWith('fill ')&&(matches(error,'commands.fill.failed')||zeroFill(error))))task.resolve({successCount:0});
 		else task.reject(failure(task.job,task.phase,task.text,error));
 	};
 	try {

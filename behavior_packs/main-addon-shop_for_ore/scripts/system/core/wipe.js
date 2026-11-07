@@ -26,7 +26,8 @@ world.events.worldInitialize.subscribe((e) => {
 	e.propertyRegistry.registerWorldDynamicProperties(def);
 });
 
-const wipeId = () => { try { return world.getDynamicProperty(WIPE_ID) ?? 0; } catch { return 0; } };
+// null — свойство не прочиталось: вайп при входе не применяем (ложный ноль сбрасывал бы прогресс)
+const wipeId = () => { try { return world.getDynamicProperty(WIPE_ID) ?? 0; } catch { return null; } };
 
 /** Сбросить одного игрока (теги — сразу, счета — командами). */
 async function wipePlayer(player, id) {
@@ -55,7 +56,9 @@ export function wipeCounts() {
 
 /** Вайп: новый номер, счета всем, теги — тем, кто в сети (остальным — при входе). */
 export async function wipeAll(by) {
-	const id = wipeId() + 1;
+	const current = wipeId();
+	if (current === null) { tell(by, 'chat.cmd.error.storage'); return 0; }
+	const id = current + 1;
 	world.setDynamicProperty(WIPE_ID, id);
 	for (const objective of WIPE_OBJECTIVES) {
 		if (world.scoreboard.getObjective(objective)) await run(by, `scoreboard players reset * ${objective}`);
@@ -77,7 +80,7 @@ world.events.tick.subscribe(() => {
 	for (const player of world.getPlayers()) {
 		if (!joined.delete(player.name)) continue;
 		syncResetEpoch(player);
-		if (id > 0 && !player.hasTag(WIPE_TAG + id)) {
+		if (id !== null && id > 0 && !player.hasTag(WIPE_TAG + id)) {
 			wipePlayer(player, id).then(done => { if (done) tell(player, 'chat.server.wiped.offline'); }).catch(error => console.warn('[Shop for Ore] Wipe recovery: ' + error));
 		}
 	}

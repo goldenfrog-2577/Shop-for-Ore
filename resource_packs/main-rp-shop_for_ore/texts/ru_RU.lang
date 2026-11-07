@@ -164,6 +164,7 @@ chat.cmd.error.self=§r⩕ §l§cERROR!§r §8» §7Нельзя выбрать 
 chat.cmd.error.number=§r⩕ §l§cERROR!§r §8» §7§e%1$s§7 — не подходит: нужно целое число от §e%2$s§7 до §e%3$s
 chat.cmd.error.confirm_expired=§r⩕ §l§cERROR!§r §8» §7Подтверждение не найдено или истекло — сначала напиши §e%1$s
 chat.cmd.error.not_found=§r⩕ §l§cERROR!§r §8» §7§e%1$s§7 — не найдено. Список — §e%2$s
+chat.cmd.error.storage=§r⩕ §l§cERROR!§r §8» §7Данные мира не читаются — сброс отменён. Перезайди в мир и проверь журнал содержимого
 chat.term.permanent=навсегда
 chat.term.minutes=мин
 color.minecoin_gold=Золото монет
@@ -839,8 +840,8 @@ ach.item.bow=Лук
 ach.item.arrow=Стрелы
 ach.item.feather=Перо
 ach.item.sniper_bow=Лук «Сила III»
-chat.ach.task=§r §2 Достижения §8» §7§f%1$s§r§7 получил(а) достижение %2$s
-chat.ach.challenge=§r §5 Испытания §8» §7§f%1$s§r§7 выполнил(а) испытание %2$s
+chat.ach.task=§r §2Достижения §8» §7§f%1$s§r§7 получил(а) достижение %2$s
+chat.ach.challenge=§r §5Испытания §8» §7§f%1$s§r§7 выполнил(а) испытание %2$s
 chat.cmd.achievement.use=§r §7CMD §8» §7Использование: §e!achievement§7 <игрок> <list/grant/revoke> [id]
 chat.cmd.achievement.list=§8-----§f Достижения %1$s§r §8(%2$s/%3$s) -----§f
 chat.cmd.achievement.granted=§r §7CMD §8» §7Достижение §e%2$s§7 выдано игроку §f%1$s§r§7 (с наградой)
@@ -885,21 +886,21 @@ menu.games.phase.running=Игра уже идёт
 minigame.pvp_ffa.name= PvP: последний выживший
 minigame.spleef.name= Сплиф
 title.game.go=Вперёд!
-chat.game.joined=§r §6 Мини-игры §8» §7§f%1$s§r§7 в игре %2$s (§e%3$s/%4$s§7)
-chat.game.waiting=§r §6 Мини-игры §8» §7Ждём ещё игроков: §e%1$s
-chat.game.countdown=§r §6 Мини-игры §8» §7%1$s начнётся через §e%2$s§7 с
-chat.game.countdown_stopped=§r §6 Мини-игры §8» §7Не хватает игроков — отсчёт %1$s остановлен
-chat.game.started=§r §6 Мини-игры §8» §7%1$s началась! Игроков: §e%2$s
-chat.game.out=§r §6 Мини-игры §8» §7Ты выбыл(а) из игры %1$s
-chat.game.left=§r §6 Мини-игры §8» §7Ты вышел(ла) из игры %1$s
-chat.game.out_other=§r §6 Мини-игры §8» §7§f%1$s§r§7 выбыл(а). Осталось: §e%2$s
-chat.game.winner=§r §6 Мини-игры §8» §7§f%1$s§r§7 победил(а) в игре %2$s!
-chat.game.reward=§r §6 Мини-игры §8» §7Награда: %1$s
-chat.game.draw=§r §6 Мини-игры §8» §7%1$s закончилась без победителя
-chat.game.stopped=§r §6 Мини-игры §8» §7%1$s остановлена администратором
+chat.game.joined=§r §6Мини-игры §8» §7§f%1$s§r§7 в игре %2$s (§e%3$s/%4$s§7)
+chat.game.waiting=§r §6Мини-игры §8» §7Ждём ещё игроков: §e%1$s
+chat.game.countdown=§r §6Мини-игры §8» §7%1$s начнётся через §e%2$s§7 с
+chat.game.countdown_stopped=§r §6Мини-игры §8» §7Не хватает игроков — отсчёт %1$s остановлен
+chat.game.started=§r §6Мини-игры §8» §7%1$s началась! Игроков: §e%2$s
+chat.game.out=§r §6Мини-игры §8» §7Ты выбыл(а) из игры %1$s
+chat.game.left=§r §6Мини-игры §8» §7Ты вышел(ла) из игры %1$s
+chat.game.out_other=§r §6Мини-игры §8» §7§f%1$s§r§7 выбыл(а). Осталось: §e%2$s
+chat.game.winner=§r §6Мини-игры §8» §7§f%1$s§r§7 победил(а) в игре %2$s!
+chat.game.reward=§r §6Мини-игры §8» §7Награда: %1$s
+chat.game.draw=§r §6Мини-игры §8» §7%1$s закончилась без победителя
+chat.game.stopped=§r §6Мини-игры §8» §7%1$s остановлена администратором
 chat.game.error.teleport=§r⩕ §l§cERROR!§r §8» §7Пока идёт %1$s§r§7, телепорт недоступен — дождись конца игры
 chat.game.error.teleport_other=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 сейчас в игре %2$s§r§7 — телепортировать его нельзя до её конца
-chat.game.spectate=§r §6 Мини-игры §8» §7Ты выбыл(а) — смотри %1$s§r§7 с крыши арены. Когда игра закончится, вернёшься в лобби
+chat.game.spectate=§r §6Мини-игры §8» §7Ты выбыл(а) — смотри %1$s§r§7 с крыши арены. Когда игра закончится, вернёшься в лобби
 chat.game.error.already=§r⩕ §l§cERROR!§r §8» §7Ты уже в игре %1$s. Выйти — §e!game leave
 chat.game.error.running=§r⩕ §l§cERROR!§r §8» §7%1$s уже идёт — дождись следующей
 chat.game.error.full=§r⩕ §l§cERROR!§r §8» §7В игре %1$s нет мест
@@ -909,8 +910,8 @@ chat.cmd.game.line=§e%1$s§8 — §f%2$s§8 · §7%3$s §8(%4$s/%5$s)
 chat.cmd.game.use=§r §7CMD §8» §7Использование: §e!game§7 [join <игра> / leave]; администратор: §e!game§7 start/stop <игра>
 chat.cmd.game.error.start=§r⩕ §l§cERROR!§r §8» §7Нельзя начать: игра уже идёт или в ней никого нет
 chat.cmd.game.error.empty=§r⩕ §l§cERROR!§r §8» §7В этой игре никого нет
-chat.game.winner_bot=§r §6 Мини-игры §8» §7Бот §f%1$s§r§7 победил в игре %2$s! Награды нет
-chat.game.no_reward_bot=§r §6 Мини-игры §8» §7Награды нет: кроме тебя, играл только бот
+chat.game.winner_bot=§r §6Мини-игры §8» §7Бот §f%1$s§r§7 победил в игре %2$s! Награды нет
+chat.game.no_reward_bot=§r §6Мини-игры §8» §7Награды нет: кроме тебя, играл только бот
 
 ## --- PVP-АРЕНА И CPS ---
 ##   chat.pvp.*, hud.cps*, chat.cps.*, chat.cmd.cps.*
@@ -926,7 +927,7 @@ chat.cmd.cps.info=§r §7CMD §8» §7CPS игрока §f%1$s§r§7: сей�
 ##   chat.tir.*, hud.tir.*
 hud.tir.hit=§6 §a+%1$s  §8• §7меткость §f%2$s §8• §f%3$s §7бл.
 hud.tir.close=§cБлиже %1$s блоков награды нет — отойди дальше
-chat.tir.enter=§r §6 Тир §8» §7Кирка убрана на время стрельбы и вернётся, когда выйдешь. Стреляй из своего лука по мишеням: чем ближе к центру и дальше от мишени — тем больше монет.
+chat.tir.enter=§r §6Тир §8» §7Кирка убрана на время стрельбы и вернётся, когда выйдешь. Стреляй из своего лука по мишеням: чем ближе к центру и дальше от мишени — тем больше монет.
 
 ## --- ЛАВКА СТРАНСТВУЮЩЕГО ТОРГОВЦА ---
 ##   chat.trader.*, trader.*
