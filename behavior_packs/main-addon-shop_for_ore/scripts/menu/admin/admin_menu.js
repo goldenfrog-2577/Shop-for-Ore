@@ -114,7 +114,7 @@ function warps(player) {
 		// Сплиф (второй портал из мини-игр: -115 0 -51)
 		{ text: '%menu.warps.button.spleef', icon: 'textures/ui/World', run: tp(500, 3, 500) },
 		{ text: '%menu.warps.button.tir', icon: 'textures/ui/World', run: tp(435, -45, 338) },
-		{ text: '%admin.warps.button.boss_zone', icon: 'textures/ui/World', run: tp(184, 11, 287) },
+		{ text: '%admin.warps.button.boss_zone', icon: 'textures/ui/World', run: tp(528, -55, -5) },
 		{ text: '%admin.warps.button.cmd_zone', icon: 'textures/ui/World', run: tp(50, 5, 50) },
 		{ text: '%admin.warps.button.random_player', icon: 'textures/ui/World', run: () => {
 			// Случайный игрок без роли; если таких нет — сообщение

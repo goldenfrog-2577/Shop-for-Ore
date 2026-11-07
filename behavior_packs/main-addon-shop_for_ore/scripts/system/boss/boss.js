@@ -1,0 +1,308 @@
+// --- Босс: Хранитель (server:warden_boss) на арене Древнего города ---
+// Старт: игрок встаёт на резной сланец перед порталом (START). Нужны: нет боя, прошла общая перезарядка
+// (COOLDOWN_SECONDS, отметка boss_until в табло system — секунды Unix), на арене 1–4 игрока с уровнем ≥ MIN_LEVEL.
+// Остальных с арены (ниже уровня, бот) в начале боя переносит на спавн.
+// Бой: решётка в тоннеле закрывается, участники получают тег boss:fighter (по нему босс выбирает цель),
+// Хранитель вылезает из портала; здоровье 500/750/1000/1250 по числу участников, в левой руке — тотем бессмертия
+// (у Хранителя рука не рисуется). Фазы: 1 — обычный бой; 2 (здоровье ≤ 60 %) — раз в WAVE_SECONDS «Тьма», визг
+// крикуна и 2 скелета; 3 — тотем сработал (у босса появилось Поглощение): ярость (server:rage), «Тьма» постоянно,
+// к скелетам добавляются скелеты-иссушители. Прислужников живых не больше MAX_MINIONS, иссушителей — MAX_WITHER.
+// Смерть участника: выпавшие вещи на арене уничтожаются, после возрождения инвентарь очищается (/clear —
+// остаётся только то, что было с keep_on_death; меню и кирку уровня функции мира выдают заново), игрок выбывает.
+// Ушёл с арены или вышел из игры — выбыл. Победа — босс погиб после тотема: каждому, кто дожил, монеты, VIP-монеты,
+// достижение (тег stat:boss) и пластинка: первая — случайная из двух, вторая — недостающая.
+// Поражение — выбыли все или прошло FIGHT_SECONDS: Хранитель уходит. В любом конце: решётка открыта, прислужники убраны.
+// После перезагрузки скриптов посреди боя (boss_state = 1 или босс в мире) бой отменяется без награды.
+
+import { system, world, Location, MinecraftEffectTypes } from '@minecraft/server';
+import { getScore, run, tell } from '../../DataBase.js';
+import { inArena } from './arena.js';
+import { SPAWN } from '../player/void.js';
+
+export const BOSS = 'server:warden_boss';
+export const FIGHTER = 'boss:fighter';
+export const MINION = 'boss:minion';
+export const MIN_LEVEL = 26;
+export const MAX_FIGHTERS = 4;
+export const HP = [500, 750, 1000, 1250];
+export const COOLDOWN_SECONDS = 30 * 60;
+export const FIGHT_SECONDS = 10 * 60;
+export const WAVE_SECONDS = 20;
+export const MAX_MINIONS = 4;
+export const MAX_WITHER = 2;
+export const REWARD = { money: 25000, vip_coins: 10 };
+export const DISCS = ['music_disc_5', 'music_disc_otherside'];
+
+export const START = [528, -60, -68];          // резной сланец перед порталом (стоять на нём — y −59)
+export const SUMMON = [528, -60, -73];         // проём портала
+export const BARS = [[526, -55, -12], [530, -51, -12]];   // решётка в тоннеле
+const ITEMS_BOX = 'x=480,y=-62,z=-104,dx=95,dy=42,dz=102';
+// Где появляются прислужники: круг радиусом 18 в утопленной площади (пол y −61, стоять — y −60)
+export const MINION_SPOTS = Array.from({ length: 8 }, (_, i) => {
+	const a = i * Math.PI / 4 + Math.PI / 8;
+	return [Math.round(528 + 18 * Math.cos(a)), -60, Math.round(-56 + 18 * Math.sin(a))];
+});
+
+// ======== Чистые правила (проверяются tools/tests/boss.mjs) ========
+
+/** Стоит ли игрок на плите старта. */
+export const onStart = (loc) => Math.floor(loc.x) === START[0] && Math.floor(loc.z) === START[2] && Math.floor(loc.y) === START[1] + 1;
+
+/**
+ * Можно ли начать бой. players — [{ name, level, bot }] на арене; now и until — секунды Unix.
+ * { ok: true, fighters, kick } или { ok: false, reason: 'busy'|'cooldown'|'too_many'|'level', minutes? }.
+ */
+export function checkStart({ busy, now, until, players, starter }) {
+	if (busy) return { ok: false, reason: 'busy' };
+	if (until > now) return { ok: false, reason: 'cooldown', minutes: Math.ceil((until - now) / 60) };
+	const fighters = players.filter(p => !p.bot && p.level >= MIN_LEVEL).map(p => p.name);
+	if (!fighters.includes(starter)) return { ok: false, reason: 'level' };
+	if (fighters.length > MAX_FIGHTERS) return { ok: false, reason: 'too_many' };
+	return { ok: true, fighters, kick: players.filter(p => !fighters.includes(p.name)).map(p => p.name) };
+}
+
+/** Фаза: 3 — тотем сработал; 2 — здоровье не выше 60 %; иначе 1. */
+export const phaseOf = ({ current, max, totem }) => totem ? 3 : current <= max * 0.6 ? 2 : 1;
+
+/** Кого призвать в волне: число и типы с учётом живых прислужников. */
+export function waveSpawns(phase, alive, aliveWither, random = Math.random) {
+	const out = [];
+	for (let i = 0; i < 2 && alive + out.length < MAX_MINIONS; i++) {
+		const wither = phase === 3 && aliveWither + out.filter(t => t === 'minecraft:wither_skeleton').length < MAX_WITHER && random() < 0.5;
+		out.push(wither ? 'minecraft:wither_skeleton' : 'minecraft:skeleton');
+	}
+	return out;
+}
+
+/** Какую пластинку выдать: первая победа — случайная, вторая — недостающая, дальше — никакой. */
+export function discFor(tags, random = Math.random) {
+	const missing = DISCS.filter(d => !tags.includes(`boss:disc:${d}`));
+	if (!missing.length) return undefined;
+	return missing.length === DISCS.length ? DISCS[random() < 0.5 ? 0 : 1] : missing[0];
+}
+
+// ======== Состояние ========
+
+const overworld = () => world.getDimension('overworld');
+const cmd = (c) => overworld().runCommandAsync(c).catch(() => {});
+const now = () => Math.floor(Date.now() / 1000);
+function systemScore(name) {
+	try { return world.scoreboard.getObjective('system').getScores().find(s => s.participant.displayName === name)?.score ?? 0; } catch { return 0; }
+}
+const bosses = () => { try { return [...overworld().getEntities({ type: BOSS })]; } catch { return []; } };
+const minions = () => { try { return [...overworld().getEntities({ tags: [MINION] })]; } catch { return []; } };
+const findOnline = (name) => world.getPlayers().find(p => p.name === name);
+
+let fight;                 // { fighters: Set, dead: Set, started, max, phase, nextWave }
+let until = 0;             // конец перезарядки (секунды Unix), читается из табло при загрузке
+let loaded = false;
+
+export const bossBusy = () => !!fight;
+
+function setBars(open) {
+	const [[x0, y0, z0], [x1, y1, z1]] = BARS;
+	cmd(`fill ${x0} ${y0} ${z0} ${x1} ${y1} ${z1} ${open ? 'air' : 'iron_bars'} 0`);
+}
+
+function clearArena() {
+	for (const e of minions()) { try { e.kill(); } catch {} }
+	cmd(`kill @e[type=item,${ITEMS_BOX}]`);
+}
+
+function startFight(fighters, kick) {
+	const n = fighters.length;
+	fight = { fighters: new Set(fighters), dead: new Set(), started: now(), max: HP[n - 1], phase: 1, nextWave: 0, totem: false };
+	cmd('scoreboard players set boss_state system 1');
+	for (const name of kick) {
+		const p = findOnline(name);
+		if (!p) continue;
+		run(p, `tp @s ${SPAWN.join(' ')}`);
+		tell(p, 'chat.boss.kicked');
+	}
+	setBars(false);
+	for (const name of fighters) {
+		const p = findOnline(name);
+		if (!p) continue;
+		p.addTag(FIGHTER);
+		run(p, 'effect @s darkness 8 0 true');
+		run(p, 'playsound mob.warden.emerge @s ~ ~ ~ 2 1');
+		tell(p, 'chat.boss.start', String(n));
+	}
+	cmd(`summon ${BOSS} ${SUMMON.join(' ')} server:spawn_emerging`);
+	// событие здоровья и тотем — тиком позже, когда сущность уже есть
+	system.run(() => {
+		cmd(`event entity @e[type=${BOSS}] server:hp_${n}`);
+		cmd(`replaceitem entity @e[type=${BOSS}] slot.weapon.offhand 0 totem_of_undying`);
+	});
+}
+
+function endFight(result) {
+	if (!fight) return;
+	const winners = result === 'victory' ? [...fight.fighters].filter(n => !fight.dead.has(n)) : [];
+	for (const name of fight.fighters) {
+		const p = findOnline(name);
+		if (!p) continue;
+		p.removeTag(FIGHTER);
+		if (winners.includes(name)) reward(p);
+		else tell(p, result === 'timeout' ? 'chat.boss.timeout' : result === 'abort' ? 'chat.boss.abort' : 'chat.boss.defeat');
+	}
+	for (const b of bosses()) {
+		// уход: звук закапывания и телепорт под мир (без анимации смерти и без добычи)
+		cmd(`playsound mob.warden.dig @a ${SUMMON.join(' ')} 4 1`);
+		try { b.teleport({ x: SUMMON[0], y: -200, z: SUMMON[2] }, overworld(), 0, 0); } catch {}
+	}
+	clearArena();
+	setBars(true);
+	until = now() + COOLDOWN_SECONDS;
+	cmd(`scoreboard players set boss_until system ${until}`);
+	cmd('scoreboard players set boss_state system 0');
+	fight = undefined;
+}
+
+function reward(p) {
+	run(p, `scoreboard players add @s money ${REWARD.money}`);
+	run(p, `scoreboard players add @s vip_coins ${REWARD.vip_coins}`);
+	p.addTag('stat:boss');
+	tell(p, 'chat.boss.victory', String(REWARD.money), String(REWARD.vip_coins));
+	const disc = discFor(p.getTags());
+	if (disc) {
+		p.addTag(`boss:disc:${disc}`);
+		run(p, `give @s ${disc} 1`);
+		tell(p, 'chat.boss.disc');
+	}
+}
+
+function knockOut(name, key) {
+	if (!fight?.fighters.has(name)) return;
+	fight.fighters.delete(name);
+	const p = findOnline(name);
+	if (p) {
+		p.removeTag(FIGHTER);
+		if (key) tell(p, key);
+	}
+}
+
+function wave(phase) {
+	const alive = minions();
+	const wither = alive.filter(e => e.typeId === 'minecraft:wither_skeleton').length;
+	for (const type of waveSpawns(phase, alive.length, wither)) {
+		const [x, y, z] = MINION_SPOTS[Math.floor(Math.random() * MINION_SPOTS.length)];
+		try { overworld().spawnEntity(type, new Location(x + 0.5, y, z + 0.5)).addTag(MINION); } catch {}
+	}
+	for (const name of fight.fighters) {
+		const p = findOnline(name);
+		if (!p) continue;
+		run(p, 'effect @s darkness 6 0 true');
+		run(p, `playsound shriek.sculk_shrieker @s ${SUMMON.join(' ')} 4 0.9 0.3`);
+	}
+}
+
+function fightStep() {
+	const t = now();
+	const [boss] = bosses();
+	// тотем: после него у босса Поглощение — других источников у Хранителя нет
+	if (boss && !fight.totem) {
+		try { fight.totem = !!boss.getEffect(MinecraftEffectTypes.absorption); } catch {}
+		if (fight.totem) {
+			boss.triggerEvent('server:rage');
+			for (const name of fight.fighters) { const p = findOnline(name); if (p) tell(p, 'chat.boss.totem'); }
+		}
+	}
+	if (!boss) return endFight(fight.totem ? 'victory' : 'abort');
+	let current = fight.max;
+	try { current = boss.getComponent('minecraft:health').current; } catch {}
+	const phase = phaseOf({ current, max: fight.max, totem: fight.totem });
+	if (phase === 2 && fight.phase === 1) {
+		for (const name of fight.fighters) { const p = findOnline(name); if (p) tell(p, 'chat.boss.phase2'); }
+	}
+	fight.phase = phase;
+	if (phase >= 2 && t >= fight.nextWave) {
+		wave(phase);
+		fight.nextWave = t + WAVE_SECONDS;
+	}
+	// участники: ушёл с арены — выбыл; погибший выбывает после возрождения (respawned)
+	for (const name of [...fight.fighters]) {
+		const p = findOnline(name);
+		if (!p) { knockOut(name); continue; }
+		if (fight.dead.has(name)) continue;
+		if (!inArena(p.location, p.dimension?.id)) knockOut(name, 'chat.boss.left');
+		else if (phase === 3) run(p, 'effect @s darkness 3 0 true');
+	}
+	cmd(`kill @e[type=item,${ITEMS_BOX}]`);
+	if (![...fight.fighters].some(n => !fight.dead.has(n))) return endFight('defeat');
+	if (t - fight.started >= FIGHT_SECONDS) endFight('timeout');
+}
+
+/** Погибший участник возродился: стереть оставшееся (keep_on_death) и вывести из боя. */
+function respawned(p) {
+	run(p, 'clear @s');
+	fight.dead.delete(p.name);
+	knockOut(p.name, 'chat.boss.died');
+}
+
+function load() {
+	loaded = true;
+	until = systemScore('boss_until');
+	if (systemScore('boss_state') === 1 || bosses().length) {
+		for (const b of bosses()) { try { b.teleport({ x: SUMMON[0], y: -200, z: SUMMON[2] }, overworld(), 0, 0); } catch {} }
+		clearArena();
+		cmd('scoreboard players set boss_state system 0');
+		for (const p of world.getPlayers()) p.removeTag(FIGHTER);
+	}
+	setBars(true);
+}
+
+const hinted = new Set();   // кому уже подсказали, как разбудить Хранителя (до выхода с арены)
+
+system.runSchedule(() => {
+	if (!loaded) return load();
+	if (fight) {
+		for (const p of world.getPlayers()) if (p.hasTag(FIGHTER) && !fight.fighters.has(p.name)) p.removeTag(FIGHTER);
+		for (const name of [...fight.dead]) {
+			const p = findOnline(name);
+			if (!p) { fight.dead.delete(name); knockOut(name); continue; }
+			let hp = 0;
+			try { hp = p.getComponent('minecraft:health').current; } catch {}
+			if (hp > 0) respawned(p);
+		}
+		return fightStep();
+	}
+	// тег участника мог остаться у того, кто вышел из игры посреди боя
+	for (const p of world.getPlayers()) if (p.hasTag(FIGHTER)) p.removeTag(FIGHTER);
+	const inside = world.getPlayers().filter(p => inArena(p.location, p.dimension?.id));
+	for (const name of [...hinted]) if (!inside.some(p => p.name === name)) hinted.delete(name);
+	for (const p of inside) {
+		if (!hinted.has(p.name) && !p.hasTag('role:bot')) {
+			hinted.add(p.name);
+			tell(p, 'chat.boss.hint');
+			// решётку открываем, когда рядом игрок: при загрузке скриптов чанк тоннеля может быть не загружен
+			setBars(true);
+		}
+	}
+	const starter = inside.find(p => onStart(p.location) && !p.hasTag('role:bot'));
+	if (!starter) return;
+	const check = checkStart({
+		busy: false, now: now(), until, starter: starter.name,
+		players: inside.map(p => ({ name: p.name, level: getScore(p, 'lvl'), bot: p.hasTag('role:bot') }))
+	});
+	if (check.ok) return startFight(check.fighters, check.kick);
+	// отказ: шаг назад с плиты, чтобы сообщение не повторялось каждую секунду
+	run(starter, `tp @s ${START[0] + 0.5} ${START[1] + 1} ${START[2] + 2.5}`);
+	tell(starter, `chat.boss.${check.reason}`, ...(check.minutes ? [String(check.minutes)] : check.reason === 'level' ? [String(MIN_LEVEL)] : check.reason === 'too_many' ? [String(MAX_FIGHTERS)] : []));
+}, 20);
+
+// Смерть участника: отметить; выпавшее уничтожится в fightStep, остальное — после возрождения
+world.events.entityHurt.subscribe((e) => {
+	if (!fight || e.hurtEntity?.typeId !== 'minecraft:player' || !fight.fighters.has(e.hurtEntity.name)) return;
+	let hp = 1;
+	try { hp = e.hurtEntity.getComponent('minecraft:health').current; } catch {}
+	if (hp <= 0) {
+		fight.dead.add(e.hurtEntity.name);
+		system.run(() => cmd(`kill @e[type=item,${ITEMS_BOX}]`));
+	}
+});
+
+world.events.playerLeave.subscribe((e) => {
+	hinted.delete(e.playerName);
+	if (fight?.fighters.has(e.playerName)) { fight.fighters.delete(e.playerName); fight.dead.delete(e.playerName); }
+});
