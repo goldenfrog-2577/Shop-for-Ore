@@ -23,12 +23,12 @@ export const BRAZIERS = [
 	[500, -48, -25], [510, -47, -88], [546, -47, -88], [556, -41, -25]
 ];
 
-// Длина треков в секундах (Ancestry 5:43 — саундтрек Caves & Cliffs, «5» 2:58) и пауза между ними
+// Длина треков в секундах (Ancestry 5:43 — саундтрек Caves & Cliffs, «5» 2:58) и пауза после каждого
 export const TRACKS = [
 	{ id: 'music.game.deep_dark', seconds: 343 },
 	{ id: 'record.5', seconds: 178 }
 ];
-export const TRACK_GAP = 4;
+export const TRACK_GAP = 120;                 // 2 минуты тишины между треками, чтобы музыка не играла без перерыва
 // В /playsound громкость задаёт радиус слышимости: 16 блоков × volume. Дальше звук слышен только с minimumVolume.
 export const MUSIC_VOLUME = 5;                  // 80 блоков: от центра до дальнего угла ~69, до конца тоннеля ~54
 export const MUSIC_MIN = 0.4;                   // у «5» в определении max_distance 64 — запас для углов
