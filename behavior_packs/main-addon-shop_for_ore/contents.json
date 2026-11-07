@@ -208,6 +208,9 @@
 			"path" : "scripts/system/bot/bot.js"
 		},
 		{
+			"path" : "scripts/system/boss/arena.js"
+		},
+		{
 			"path" : "structures/server/bot.mcstructure"
 		},
 		{

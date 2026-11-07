@@ -92,6 +92,7 @@
 			"system/economy/trader.js",
 			"system/combat/trident.js",
 			"system/player/void.js",
+			"system/boss/arena.js",
 			"system/ui/hud.js",
 			"system/core/fallback.js",
 			"registration/login.js",
@@ -349,6 +350,10 @@
 				"tick"
 			],
 			[
+				"system/boss/arena.js",
+				"playerLeave"
+			],
+			[
 				"system/ui/hud.js",
 				"playerLeave"
 			],
@@ -412,6 +417,10 @@
 			],
 			[
 				"system/core/migrate.js",
+				20
+			],
+			[
+				"system/boss/arena.js",
 				20
 			],
 			[
