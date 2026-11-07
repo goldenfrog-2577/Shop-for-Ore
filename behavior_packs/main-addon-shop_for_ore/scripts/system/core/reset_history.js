@@ -8,7 +8,6 @@ const OLD_TAGS = ['sys:offline_reset:', 'sys:wipe:'];
 // Свойство не прочиталось (например, мир превысил лимит динамических свойств) — null, а не 0:
 // с ложным нулём игроков помечало не той эпохой, и при следующем входе с них снимало все теги.
 const epoch = () => { try { return Number(world.getDynamicProperty(EPOCH) ?? 0); } catch { return null; } };
-const readId = id => { try { return Number(world.getDynamicProperty(id) ?? 0); } catch { return null; } };
 world.events.worldInitialize.subscribe(e => {
 	const def = new DynamicPropertiesDefinition(); def.defineNumber(EPOCH);
 	e.propertyRegistry.registerWorldDynamicProperties(def);
@@ -26,22 +25,17 @@ export function syncResetEpoch(player) {
 	const current = epoch();
 	if (current === null || player.hasTag(TAG + current)) return;
 	if (current > 0) {
-		// Отметку текущего номера оставляем: игрок с sys:offline_reset:<номер> уже прошёл этот сброс.
-		// Иначе после неудачного чтения эпохи сброс снимал роль и пароль у тех, кого никто не сбрасывал.
-		const ids = IDS.map(readId);
-		if (ids.includes(null)) return;
-		OLD_TAGS.forEach((prefix, i) => {
-			const keep = ids[i] > 0 && player.hasTag(prefix + ids[i]);
-			for (const t of player.getTags()) if (t.startsWith(prefix)) player.removeTag(t);
-			player.addTag(prefix + (keep ? ids[i] : 0));
-		});
+		for (const t of player.getTags()) if (OLD_TAGS.some(prefix => t.startsWith(prefix))) player.removeTag(t);
+		for (const prefix of OLD_TAGS) player.addTag(prefix + '0');
 	}
 	markResetEpoch(player);
 }
 export function clearResetHistory(by) {
 	if (!hasRole(by, 'owner')) { tell(by, 'chat.cmd.error.no_permission'); return false; }
+	const current = epoch();
+	if (current === null) { tell(by, 'chat.cmd.error.storage'); return false; }
 	for (const id of IDS) world.setDynamicProperty(id, 0);
-	world.setDynamicProperty(EPOCH, epoch() + 1);
+	world.setDynamicProperty(EPOCH, current + 1);
 	for (const player of world.getPlayers()) syncResetEpoch(player);
 	tell(by, 'chat.admin.reset_history.done');
 	return true;
