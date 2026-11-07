@@ -7,7 +7,7 @@ const selections = new Map(), clipboards = new Map(), undos = new Map(), queue =
 let active, executing = false, serial = 0, recovered = false, recoveryTask;
 const SESSION = Date.now().toString(36), AREA = 'shop_worldedit';
 const DIMENSIONS = ['minecraft:overworld', 'minecraft:nether', 'minecraft:the_end'];
-const LOAD_TICKS = 200, JOURNAL_PAGES = 8, JOURNAL_LENGTH = 1000;
+const LOAD_TICKS = 200, JOURNAL_PAGES = 2, JOURNAL_LENGTH = 1000;
 const pages = Array.from({length:JOURNAL_PAGES},()=>[]);
 const journalKey = i => 'shop:we_resources'+i;
 const canonical = id => id.includes('nether')?'minecraft:nether':id.includes('end')?'minecraft:the_end':'minecraft:overworld';

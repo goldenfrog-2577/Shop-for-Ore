@@ -39,7 +39,7 @@ export function RegisterUI(player) {
 		player.removeTag('auth:register');
 		unlockPlayer(player);
 		// В чате ник и пароль — параметры ключей (%1$s): где они стоят, решает перевод
-		tellText(player, '\n%account.register.greeting\n\n%account.register.welcome\n\n%account.register.info\n %account.register.password\n\n%account.register.remember\n ',
+		tellText(player, '\n%account.register.greeting\n\n%account.register.welcome\n\n%account.register.info\n%account.register.password\n\n%account.register.remember\n ',
 			{ 'account.register.greeting': [player.name], 'account.register.password': [password] });
 		run(player, 'playsound random.levelup @s');
 	});
