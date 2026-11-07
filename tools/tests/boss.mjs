@@ -7,7 +7,7 @@ const src = fs.readFileSync(new URL('scripts/system/boss/boss.js', bp), 'utf8');
 const pure = src.slice(0, src.indexOf('// ======== Состояние ========'))
 	.replace(/^import .*;\r?\n/gm, '').replace(/\bexport (?=(?:async )?function|const)/g, '');
 const ctx = { Math };
-vm.runInNewContext(pure + '\nglobalThis.B={onStart,checkStart,phaseOf,waveSpawns,discFor,MIN_LEVEL,MAX_FIGHTERS,HP,START,SUMMON,BARS,MINION_SPOTS,MAX_MINIONS,MAX_WITHER,DISCS};', ctx);
+vm.runInNewContext(pure + '\nglobalThis.B={inFight,CLEAR,onStart,checkStart,phaseOf,waveSpawns,discFor,DISCS:DISCS,MIN_LEVEL,MAX_FIGHTERS,HP,START,SUMMON,BARS,MINION_SPOTS,MAX_MINIONS,MAX_WITHER,DISCS};', ctx);
 const B = ctx.B;
 
 // Плита старта: стоять на резном сланце (528, −60, −68) — ноги на y −59
@@ -38,9 +38,21 @@ assert.deepEqual([...B.waveSpawns(3, 1, 2, () => 0)], ['minecraft:skeleton', 'mi
 assert.deepEqual([...B.waveSpawns(3, 0, 1, () => 0)], ['minecraft:wither_skeleton', 'minecraft:skeleton']);
 
 // Пластинки: первая — случайная, вторая — недостающая, потом ничего
-assert.equal(B.discFor([], () => 0.1), 'music_disc_5'); assert.equal(B.discFor([], () => 0.9), 'music_disc_otherside');
-assert.equal(B.discFor(['boss:disc:music_disc_5']), 'music_disc_otherside');
-assert.equal(B.discFor(['boss:disc:music_disc_5', 'boss:disc:music_disc_otherside']), undefined);
+// Идентификаторы Bedrock 1.19.50 (recipes/record_5.json: minecraft:record_5), не Java music_disc_*
+assert.deepEqual([...B.DISCS], ['record_5', 'record_otherside']);
+assert.equal(B.discFor([], () => 0.1), 'record_5'); assert.equal(B.discFor([], () => 0.9), 'record_otherside');
+assert.equal(B.discFor(['boss:disc:record_5']), 'record_otherside');
+assert.equal(B.discFor(['boss:disc:record_5', 'boss:disc:record_otherside']), undefined);
+// отметка о пластинке — только после успешной выдачи
+assert.match(src, /run\(p, `give @s \$\{disc\} 1`\)\.then\(\(result\) => \{\s*if \(!result\) return;\s*p\.addTag/);
+
+// Арена боя — только за решёткой (z −12): тоннель не считается, плита старта и портал — внутри
+assert.ok(B.inFight({ x: 528.5, y: -59, z: -67.5 }) && B.inFight({ x: 480, y: -61, z: -104 }));
+assert.ok(!B.inFight({ x: 528.5, y: -55, z: -5 }) && !B.inFight({ x: 528.5, y: -55, z: -12 }) && B.inFight({ x: 528.5, y: -55, z: -12.01 }));
+assert.ok(!B.inFight({ x: 528.5, y: -59, z: -67.5 }, 'minecraft:nether'));
+// погибшему инвентарь чистится по тегу, а не по состоянию боя: отметка ставится при смерти, снимается после /clear
+assert.match(src, /e\.hurtEntity\.addTag\(CLEAR\)/); assert.match(src, /run\(p, 'clear @s'\);\s*p\.removeTag\(CLEAR\)/);
+assert.ok(src.indexOf('processClears();') < src.indexOf('if (fight) {\n\t\tfor (const p of world.getPlayers()) if (p.hasTag(FIGHTER)'), 'чистка — до проверки боя');
 
 // Точки: прислужники в утопленной площади, решётка в тоннеле, призыв в проёме портала
 for (const [x, y, z] of B.MINION_SPOTS) { assert.equal(y, -60); assert.ok(Math.hypot(x - 528, z + 56) <= 19); }
@@ -78,6 +90,6 @@ const w = vm.runInNewContext(wa + ';warpAllowed', {
 });
 const warp = { id: 'boss', role: 'player', minLevel: 26 };
 assert.ok(!w({ role: 'player', lvl: 25 }, warp) && w({ role: 'player', lvl: 26 }, warp) && w({ role: 'helper', lvl: 1 }, warp));
-assert.match(fs.readFileSync(new URL('scripts/chat/commands/player.js', bp), 'utf8'), /warp\.id === 'boss' && bossBusy\(\) && !target\.hasTag\(FIGHTER\)/);
+assert.match(fs.readFileSync(new URL('scripts/chat/commands/player.js', bp), 'utf8'), /warp\.id === 'boss' && bossBusy\(\)\) \{/);
 
 console.log('PASS: boss start rules, phases, minion waves, discs, spots, 4-locale keys, entity/sounds, warp level gate.');

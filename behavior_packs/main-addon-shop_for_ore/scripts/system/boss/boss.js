@@ -7,9 +7,9 @@
 // (у Хранителя рука не рисуется). Фазы: 1 — обычный бой; 2 (здоровье ≤ 60 %) — раз в WAVE_SECONDS «Тьма», визг
 // крикуна и 2 скелета; 3 — тотем сработал (у босса появилось Поглощение): ярость (server:rage), «Тьма» постоянно,
 // к скелетам добавляются скелеты-иссушители. Прислужников живых не больше MAX_MINIONS, иссушителей — MAX_WITHER.
-// Смерть участника: выпавшие вещи на арене уничтожаются, после возрождения инвентарь очищается (/clear —
+// Смерть участника: выпавшие вещи на арене уничтожаются, после возрождения (тег boss:clear) инвентарь очищается (/clear —
 // остаётся только то, что было с keep_on_death; меню и кирку уровня функции мира выдают заново), игрок выбывает.
-// Ушёл с арены или вышел из игры — выбыл. Победа — босс погиб после тотема: каждому, кто дожил, монеты, VIP-монеты,
+// Ушёл за решётку (тоннель — не арена боя) или вышел из игры — выбыл. Победа — босс погиб после тотема: каждому, кто дожил, монеты, VIP-монеты,
 // достижение (тег stat:boss) и пластинка: первая — случайная из двух, вторая — недостающая.
 // Поражение — выбыли все или прошло FIGHT_SECONDS: Хранитель уходит. В любом конце: решётка открыта, прислужники убраны.
 // После перезагрузки скриптов посреди боя (boss_state = 1 или босс в мире) бой отменяется без награды.
@@ -31,11 +31,17 @@ export const WAVE_SECONDS = 20;
 export const MAX_MINIONS = 4;
 export const MAX_WITHER = 2;
 export const REWARD = { money: 25000, vip_coins: 10 };
-export const DISCS = ['music_disc_5', 'music_disc_otherside'];
+export const DISCS = ['record_5', 'record_otherside'];   // идентификаторы Bedrock (в Java — music_disc_*)
 
 export const START = [528, -60, -68];          // резной сланец перед порталом (стоять на нём — y −59)
 export const SUMMON = [528, -60, -73];         // проём портала
 export const BARS = [[526, -55, -12], [530, -51, -12]];   // решётка в тоннеле
+export const CLEAR = 'boss:clear';             // погиб в бою: после возрождения стереть инвентарь (тег переживает конец боя и выход)
+
+/** Внутри арены за решёткой (тоннель с z −12 и дальше — не арена боя). */
+export function inFight(loc, dimensionId = 'minecraft:overworld') {
+	return dimensionId === 'minecraft:overworld' && loc.x >= 480 && loc.x < 576 && loc.y >= -61 && loc.y < -20 && loc.z >= -104 && loc.z < -12;
+}
 const ITEMS_BOX = 'x=480,y=-62,z=-104,dx=95,dy=42,dz=102';
 // Где появляются прислужники: круг радиусом 18 в утопленной площади (пол y −61, стоять — y −60)
 export const MINION_SPOTS = Array.from({ length: 8 }, (_, i) => {
@@ -165,11 +171,12 @@ function reward(p) {
 	p.addTag('stat:boss');
 	tell(p, 'chat.boss.victory', String(REWARD.money), String(REWARD.vip_coins));
 	const disc = discFor(p.getTags());
-	if (disc) {
+	// отметку о пластинке ставим только после успешной выдачи: run() при ошибке команды возвращает undefined
+	if (disc) run(p, `give @s ${disc} 1`).then((result) => {
+		if (!result) return;
 		p.addTag(`boss:disc:${disc}`);
-		run(p, `give @s ${disc} 1`);
 		tell(p, 'chat.boss.disc');
-	}
+	});
 }
 
 function knockOut(name, key) {
@@ -225,7 +232,7 @@ function fightStep() {
 		const p = findOnline(name);
 		if (!p) { knockOut(name); continue; }
 		if (fight.dead.has(name)) continue;
-		if (!inArena(p.location, p.dimension?.id)) knockOut(name, 'chat.boss.left');
+		if (!inFight(p.location, p.dimension?.id)) knockOut(name, 'chat.boss.left');
 		else if (phase === 3) run(p, 'effect @s darkness 3 0 true');
 	}
 	cmd(`kill @e[type=item,${ITEMS_BOX}]`);
@@ -233,11 +240,20 @@ function fightStep() {
 	if (t - fight.started >= FIGHT_SECONDS) endFight('timeout');
 }
 
-/** Погибший участник возродился: стереть оставшееся (keep_on_death) и вывести из боя. */
-function respawned(p) {
-	run(p, 'clear @s');
-	fight.dead.delete(p.name);
-	knockOut(p.name, 'chat.boss.died');
+/** Погибшие в бою возродились: стереть оставшееся (keep_on_death) и вывести из боя — даже если бой уже кончился. */
+function processClears() {
+	for (const p of world.getPlayers()) {
+		if (!p.hasTag(CLEAR)) continue;
+		let hp = 0;
+		try { hp = p.getComponent('minecraft:health').current; } catch {}
+		if (hp <= 0) continue;
+		run(p, 'clear @s');
+		p.removeTag(CLEAR);
+		if (fight?.fighters.has(p.name)) {
+			fight.dead.delete(p.name);
+			knockOut(p.name, 'chat.boss.died');
+		} else tell(p, 'chat.boss.died');
+	}
 }
 
 function load() {
@@ -256,15 +272,10 @@ const hinted = new Set();   // кому уже подсказали, как ра
 
 system.runSchedule(() => {
 	if (!loaded) return load();
+	processClears();
 	if (fight) {
 		for (const p of world.getPlayers()) if (p.hasTag(FIGHTER) && !fight.fighters.has(p.name)) p.removeTag(FIGHTER);
-		for (const name of [...fight.dead]) {
-			const p = findOnline(name);
-			if (!p) { fight.dead.delete(name); knockOut(name); continue; }
-			let hp = 0;
-			try { hp = p.getComponent('minecraft:health').current; } catch {}
-			if (hp > 0) respawned(p);
-		}
+		for (const name of [...fight.dead]) if (!findOnline(name)) { fight.dead.delete(name); knockOut(name); }
 		return fightStep();
 	}
 	// тег участника мог остаться у того, кто вышел из игры посреди боя
@@ -281,11 +292,13 @@ system.runSchedule(() => {
 	}
 	const starter = inside.find(p => onStart(p.location) && !p.hasTag('role:bot'));
 	if (!starter) return;
+	// участники — только за решёткой; всех остальных на арене и в тоннеле переносит на спавн
+	const arena = inside.filter(p => inFight(p.location, p.dimension?.id));
 	const check = checkStart({
 		busy: false, now: now(), until, starter: starter.name,
-		players: inside.map(p => ({ name: p.name, level: getScore(p, 'lvl'), bot: p.hasTag('role:bot') }))
+		players: arena.map(p => ({ name: p.name, level: getScore(p, 'lvl'), bot: p.hasTag('role:bot') }))
 	});
-	if (check.ok) return startFight(check.fighters, check.kick);
+	if (check.ok) return startFight(check.fighters, inside.map(p => p.name).filter(n => !check.fighters.includes(n)));
 	// отказ: шаг назад с плиты, чтобы сообщение не повторялось каждую секунду
 	run(starter, `tp @s ${START[0] + 0.5} ${START[1] + 1} ${START[2] + 2.5}`);
 	tell(starter, `chat.boss.${check.reason}`, ...(check.minutes ? [String(check.minutes)] : check.reason === 'level' ? [String(MIN_LEVEL)] : check.reason === 'too_many' ? [String(MAX_FIGHTERS)] : []));
@@ -298,6 +311,7 @@ world.events.entityHurt.subscribe((e) => {
 	try { hp = e.hurtEntity.getComponent('minecraft:health').current; } catch {}
 	if (hp <= 0) {
 		fight.dead.add(e.hurtEntity.name);
+		e.hurtEntity.addTag(CLEAR);
 		system.run(() => cmd(`kill @e[type=item,${ITEMS_BOX}]`));
 	}
 });

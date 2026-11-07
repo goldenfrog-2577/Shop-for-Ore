@@ -6,7 +6,7 @@ import { world } from '@minecraft/server';
 import { commandsList, tell, hasRole, run, WARPS, warpAllowed, tellText, muteMinutesLeft, getScore, isVip, transferMoney, findPlayer, getRole, getWarns, ROLES, RULES_COUNT, emotesList, emotes } from '../../DataBase.js';
 import { isJailed, tellJailed } from '../../system/security/jail.js';
 import { combatSecondsLeft, teleportToArena } from '../../system/combat/pvp.js';
-import { bossBusy, FIGHTER } from '../../system/boss/boss.js';
+import { bossBusy } from '../../system/boss/boss.js';
 import { canTeleport, listGames, joinGame, leaveGame, getGame, startGame, endGame } from '../../system/minigames/minigames.js';
 import { ChangePasswordUI } from '../../registration/change.js';
 import { resolveTarget, tellList } from './common.js';
@@ -180,8 +180,8 @@ export const PLAYER_COMMANDS = {
 		}
 		// Сплиф: участникам и зрителям телепорт закрыт до конца игры (кроме владельца)
 		if (!canTeleport(target, player)) return;
-		// Бой с Хранителем: на арену не пускать, пока бой не кончится (участник уже там)
-		if (warp.id === 'boss' && bossBusy() && !target.hasTag(FIGHTER)) {
+		// Бой с Хранителем: варп ведёт в тоннель за закрытой решёткой — пока идёт бой, туда никого
+		if (warp.id === 'boss' && bossBusy()) {
 			tell(player, 'chat.boss.busy');
 			return;
 		}
