@@ -22,6 +22,9 @@ const reset = admin.indexOf("'%admin.players.button.resetpass'"), vip = admin.in
 assert.ok(vip < reset && reset < back && admin.indexOf("'%admin.players.button.resetpass'", reset + 1) < 0);
 assert.ok(!/[^\n]*'%admin\.players\.button\.resetpass'[^\n]*\n[^\n]*\n[^\n]*vip_give/.test(admin));
 assert.match(admin, /\.\.\.\(bot \? \[\{ text: '%admin\.bot\.button\.remove'/);
+// Карточка игрока: «Предупреждения» → «VIP-монеты» → «Монет на балансе»
+const w = admin.indexOf('%admin.players.body.warns '), v = admin.indexOf('%admin.players.body.vip_coins '), m = admin.indexOf('%admin.players.body.money ');
+assert.ok(w > 0 && w < v && v < m);
 
 // !boost stop: прочерк заменён словом «нет» на языке читателя
 assert.match(read(new URL('scripts/chat/commands/admin.js', bp)), /boost \?\? \{ translate: 'chat\.cmd\.boost\.stop\.no' \}/);
