@@ -161,6 +161,9 @@ chat.error.no_money=§r⩕ §l§cERROR!§r §8» §7Not enough §r
 chat.cmd.error.no_permission=§r⩕ §l§cERROR!§r §8» §7You don't have permission to use this command
 chat.cmd.error.unknown=§r⩕ §l§cERROR!§r §8» §7Unknown command: §e%1$s§7. Type §e!help§7 to see the list of commands
 chat.cmd.error.offline=§r⩕ §l§cERROR!§r §8» §7Player §f%1$s§r§7 is not online
+chat.cmd.error.selector=§r⩕ §l§cERROR!§r §8» §7Selector §f%1$s§r§7 isn't supported: use §e@a§7, §e@s§7, §e@p§7 or §e@r
+chat.cmd.error.selector_single=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 accepts only one player: §e@s§7, §e@p§7 or §e@r
+chat.cmd.error.selector_empty=§r⩕ §l§cERROR!§r §8» §7Nobody matches §f%1$s§r§7 right now
 chat.cmd.error.target_role=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 can't receive this: requires the %2$s§r§7 role or higher
 chat.cmd.error.role=§r⩕ §l§cERROR!§r §8» §7You cannot use this on §f%1$s§r§7: their role is equal to yours or higher
 chat.cmd.error.issuer=§r⩕ §l§cERROR!§r §8» §7This restriction was issued by the %1$s§r§7 role. That role or a higher one can lift it
@@ -249,6 +252,7 @@ chat.cmd.resetpass.error.offline=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 i
 ## --- CHAT: HELP, PRIVATE MESSAGES, EMOJI ---
 ##   chat.help.*, chat.cmd.help.*, chat.emotes.*, chat.cmd.msg.*, chat.cmd.reply.*, chat.cmd.clearchat.*
 chat.help.header=§8-----§f Command List §8-----§f
+chat.help.selectors=§7Instead of a name: §e@s§7 — you, §e@p§7 — nearest, §e@r§7 — random, §e@a§7 — everyone but you
 chat.help.help=§7Commands for your role; with a command name — details about it
 chat.help.warp=§7Teleport to a point (spawn, mine, minigames, PvP arena, spleef); without arguments — the list
 chat.help.game=§7Minigames: no arguments — the list, §ejoin <game>§7 — sign up, §eleave§7 — leave

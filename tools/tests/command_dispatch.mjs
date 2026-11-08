@@ -7,17 +7,18 @@ const ROLES=['player','helper','moder','admin','owner'],mk=(name,role='player')=
 const owner=mk('Owner','owner'),admin=mk('Admin','admin'),alice=mk('Alice Smith'),bot=mk('Bot','bot'),people=[alice,admin,bot,owner];
 const getRole=p=>ROLES.slice().reverse().find(r=>p.hasTag('role:'+r))??'player',hasRole=(p,r)=>ROLES.indexOf(getRole(p))>=ROLES.indexOf(r);
 const handlers={beforeChat:[],playerLeave:[]},world={events:Object.fromEntries(Object.keys(handlers).map(k=>[k,{subscribe:fn=>handlers[k].push(fn)}])),getPlayers:()=>people.values()};
-let now=1000,wipes=0,resets=0;const notices=[],native=[],delegated=[],passwords=[],routed=[],sounds=[];let helpHook;
+let now=1000,wipes=0,resets=0;const notices=[],native=[],delegated=[],passwords=[],routed=[],sounds=[];let helpHook;const muted=[];
 const stubs={
  '@minecraft/server':{world},
  '../../DataBase.js':{commandsList,isPending:p=>!!p.pending,tell:(p,key,...args)=>notices.push({p,key,args}),hasRole,findPlayer:name=>people.find(p=>p.name===name),getRole,ROLES,run:(p,cmd)=>native.push(cmd),menuFeedback:(p,error)=>sounds.push([p.name,error]),settleCommands:async()=>{},toldErrorCount:p=>p.errs??0,toldSuccessCount:p=>p.oks??0},
  './player.js':{PLAYER_COMMANDS:{help:(p,a)=>helpHook?helpHook(p):routed.push(['help',p,Array.from(a)])},textWidth:s=>s.length,emoteGrid:()=> 'grid'},
- './moderator.js':{MODERATION_COMMANDS:{},isCoord:()=>true},
+ './moderator.js':{MODERATION_COMMANDS:{mute:(p,a)=>muted.push([p.name,...Array.from(a)])},isCoord:()=>true},
  './admin.js':{ADMIN_COMMANDS:{},debugLines:()=>[],giveOreMagnet:()=>true,setMoney:()=>true},
  '../../system/worldedit.js':{worldEditCommand:(p,a)=>delegated.push([p,Array.from(a)])},
  '../../system/core/offline_reset.js':{resetOffline:()=>resets++,offlineCounts:()=>({offline:2,online:4})},
  '../../system/core/wipe.js':{wipeAll:async()=>wipes++,wipeCounts:()=>({all:6,online:4})},
- '../../registration/change.js':{resetPassword:(p,t)=>passwords.push(t)}
+ '../../registration/change.js':{resetPassword:(p,t)=>passwords.push(t)},
+ './selectors.js':{...await import(new URL('scripts/chat/commands/selectors.js',bp))}
 };
 const context=vm.createContext({Date:{now:()=>now}}),cache=new Map(),mod=new vm.SourceTextModule(source,{context,identifier:new URL('scripts/chat/commands/commands.js',bp).href});
 await mod.link(spec=>{assert(stubs[spec],'unresolved import '+spec);if(!cache.has(spec)){const values=stubs[spec];cache.set(spec,new vm.SyntheticModule(Object.keys(values),function(){for(const[k,v]of Object.entries(values))this.setExport(k,v);},{context,identifier:spec}));}return cache.get(spec);});await mod.evaluate();
@@ -41,4 +42,11 @@ assert(!fs.existsSync(new URL('scripts/chat/commands/owner.js',bp)));
 helpHook=()=>{};await send('!help');assert.deepEqual(sounds,[]);
 helpHook=(p)=>{p.errs=(p.errs??0)+1;};await send('!help');assert.deepEqual(sounds.at(-1),['Sound',true]);
 helpHook=(p)=>{p.oks=(p.oks??0)+1;};await send('!help');assert.deepEqual(sounds.at(-1),['Sound',false]);assert.equal(sounds.length,2);helpHook=undefined;}
+// Селекторы: !mute @a … — по вызову на каждого, кроме себя и бота, с ником вместо селектора; @s — сам; @e и * — ошибка
+{const chat=handlers.beforeChat[0];const send=async(P,m)=>{chat({sender:P,message:m,cancel:false});for(let i=0;i<6;i++)await Promise.resolve();};
+const loc={x:0,y:0,z:0},dim={id:'minecraft:overworld'};for(const p of people){p.location=loc;p.dimension=dim;}
+await send(admin,'!mute @a 5 флуд');assert.deepEqual(muted.map(m=>m.join('|')).sort(),['Admin|Alice Smith|5|флуд','Admin|Owner|5|флуд','Admin|Sound|5|флуд'].sort());
+muted.length=0;await send(admin,'!mute @s 1');assert.deepEqual(muted,[['Admin','Admin','1']]);
+muted.length=0;notices.length=0;await send(admin,'!mute @e 1');assert.equal(muted.length,0);assert.equal(notices.at(-1).key,'chat.cmd.error.selector');
+await send(admin,'!mute * 1');assert.equal(notices.at(-1).key,'chat.cmd.error.selector');assert.equal(muted.length,0);}
 console.log('PASS: real ESM imports/exports, one chat/leave subscription, all owner guards, one-use/expired/leave confirmations, resetpass, roles and shared chat dispatcher.');

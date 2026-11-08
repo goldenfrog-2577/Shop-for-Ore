@@ -13,6 +13,7 @@ import { worldEditCommand } from '../../system/worldedit.js';
 import { resetOffline, offlineCounts } from '../../system/core/offline_reset.js';
 import { wipeAll, wipeCounts } from '../../system/core/wipe.js';
 import { resetPassword } from '../../registration/change.js';
+import { PLAYER_ARG, isSelector, selectTargets } from './selectors.js';
 
 // Помощники, которые нужны меню администратора и тестам
 export { textWidth, emoteGrid } from './player.js';
@@ -181,6 +182,19 @@ export function runChatCommand(player, command, args) {
 	// Проверка роли: команда доступна, если роль игрока не ниже нужной
 	if (!hasRole(player, findCommand.role)) {
 		tell(player, 'chat.cmd.error.no_permission');
+		return;
+	}
+	// Селектор на месте ника (@a, @s, @p, @r — chat/commands/selectors.js): команда — по разу на каждую цель,
+	// с её ником, поэтому проверки прав работают для каждой цели отдельно
+	const pos = PLAYER_ARG[command];
+	if (pos !== undefined && isSelector(args[pos])) {
+		const result = selectTargets(player, args[pos], command, [...world.getPlayers()]);
+		if (result.error) return tell(player, result.error, ...result.args);
+		for (const target of result.targets) {
+			const own = [...args];
+			own[pos] = target.name;
+			handler(player, own, command);
+		}
 		return;
 	}
 	handler(player, args, command);
