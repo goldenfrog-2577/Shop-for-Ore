@@ -42,7 +42,7 @@ const lines = Number(we.match(/export const HELP_LINES=(\d+);/)[1]);
 for (const l of LANGS) {
 	assert.match(lang[l]['chat.cmd.worldedit.help.header'], /^§8-----§f .+ §8-----§f$/, l);
 	for (let i = 1; i < lines; i++) assert.match(lang[l][`chat.cmd.worldedit.help.${i}`], /^§f!worldedit [a-z0-9]+.* - §7\S/, `${l} ${i}`);
-	assert.match(lang[l][`chat.cmd.worldedit.help.${lines}`], /^§8\S/, l); assert.ok(!lang[l][`chat.cmd.worldedit.help.${lines + 1}`], l);
+	assert.match(lang[l][`chat.cmd.worldedit.help.${lines}`], /^§7\S/, l);   // владелец: §7, как остальные строки assert.ok(!lang[l][`chat.cmd.worldedit.help.${lines + 1}`], l);
 }
 assert.ok(we.includes("rawtext.push({text:'\\n§8------------------------'})"));
 
