@@ -66,6 +66,7 @@
 			"registration/password.js",
 			"registration/change.js",
 			"chat/commands/common.js",
+			"chat/censor.js",
 			"chat/commands/player.js",
 			"system/security/freeze.js",
 			"system/security/cps.js",

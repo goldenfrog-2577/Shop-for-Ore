@@ -21,6 +21,7 @@ export const ERROR_KEYS = new Set([
 	'chat.admin.item.error.unknown',
 	'chat.bank.error.no_players',
 	'chat.boss.busy',
+	'chat.cmd.prefix.error.profanity',
 	'chat.music.error.no_discs',
 	'chat.music.error.off',
 	'chat.music.error.arena',

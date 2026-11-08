@@ -160,6 +160,9 @@
 			"path" : "scripts/chat/chat.js"
 		},
 		{
+			"path" : "scripts/chat/censor.js"
+		},
+		{
 			"path" : "scripts/chat/commands/commands.js"
 		},
 		{
