@@ -17,9 +17,9 @@ execute as @a[tag=!role:bot,tag=!sys:bot] at @s if block ~~~ crimson_planks run 
 execute as @a[tag=!role:bot,tag=!sys:bot] at @s if block ~~~ warped_planks run tp @s 0 5 -33
 # Порталы мини-игр. PvP-арена: случайную точку площадки выбирает scripts/system/pvp.js по тегу sys:warp_pvp
 tag @a[x=-103,y=0,z=-51,r=1,tag=!sys:warp_pvp] add sys:warp_pvp
-# Сплиф — белый портал, тир — зелёный (рамка из зелёного бетона x −111…−107)
-execute as @a[x=-115,y=0,z=-51,r=1] at @s run tp @s 500 3 500
-execute as @a[x=-109,y=0,z=-51,r=1] at @s run tp @s 435 -45 338
+# Арена босса — бирюзовый портал, тир — зелёный (рамка из зелёного бетона x −111…−107)
+execute as @a[x=-115,y=0,z=-51,r=1] at @s run tp @s 528 -55 -5
+execute as @a[x=-109,y=0,z=-51,r=1] at @s run tp @s 435 -50 338
 
 ## --- Режим игры и ванильный опыт ---
 # Приключение всем, кроме персонала (у него свой режим: !gm1, !gm6)

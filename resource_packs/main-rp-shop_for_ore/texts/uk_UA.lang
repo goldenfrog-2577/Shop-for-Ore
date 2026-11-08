@@ -46,6 +46,7 @@ item.server:admin_menu=§eМеню адміна §7[Натисни, щоб ві�
 item.server:admin_stick=§cПаличка адміна§r
 item.server:portable_ender_crystal.name=§eПортативний кристал Енду
 item.spawn_egg.entity.server:floating_text.name=Яйце призову голограми
+entity.warden.name=Страж
 entity.server:warden_boss.name=Страж
 entity.server:floating_text.name=Голограма
 container.shop.feedback=§lВідгук класти сюди...

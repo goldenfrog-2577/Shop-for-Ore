@@ -4,7 +4,7 @@ import { getScore, metricNumbers, emotes, isPending, isBot, getRole, ROLE_COLORS
 
 // --- Значения по умолчанию для тегов игрока ---
 const rank = 'rank:';
-const rankDefault = '§7Player';
+const rankDefault = '%role.player';
 
 // --- Настройки антиспама и антифлуда ---
 const MAX_MESSAGE_LENGTH = 200; // Максимальная длина сообщения
