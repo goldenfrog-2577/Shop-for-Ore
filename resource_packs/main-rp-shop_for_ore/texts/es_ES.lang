@@ -634,7 +634,7 @@ chat.shop.cosmetics.selected.death=§r §eTienda §8» §7Partículas al mori
 chat.shop.cosmetics.selected.sell=§r §eTienda §8» §7Partículas de venta: §e%1$s
 
 ## --- AJUSTES ---
-##   menu.settings.*, chat.settings.*
+##   menu.settings.*, chat.settings.*, menu.music.*, music.*, chat.music.*
 menu.settings.title=§l§8Menú del servidor » §r §8§lAjustes
 menu.settings.body=§7Ajusta el panel, las partículas, los sonidos y la música, o cambia tu contraseña.
 menu.settings.state=§7Estado actual:
@@ -663,7 +663,29 @@ menu.settings.menu_sounds.success.title=§l§8Sonidos del menú » Éxito
 menu.settings.menu_sounds.error=§8Errores
 menu.settings.menu_sounds.error.title=§l§8Sonidos del menú » Error
 menu.settings.music.title=§l§8 Ajustes » Música
-menu.settings.music.body=§7La música de fondo del mapa. Si la desactivas, deja de sonar solo para ti. El volumen es el control «Música» de los ajustes del juego.
+menu.settings.music.body=§7La música del mapa suena solo para ti: el mundo, la mina del Nether y la arena del Custodio tienen sus propias pistas. El control «Música» del juego no le afecta; el volumen se ajusta aquí y el general con el control «Tocadiscos/bloques musicales».
+menu.music.now=§7Suena ahora:
+menu.music.source=§7Fuente:
+menu.music.source.server=§fmúsica del servidor
+menu.music.source.discs=§fmis discos
+menu.music.volume=§7Volumen:
+menu.music.discs=§7Discos reunidos:
+menu.music.button.volume=§8Volumen
+menu.music.button.to_discs=§8Poner mis discos
+menu.music.button.to_server=§8Poner música del servidor
+menu.music.button.next=§8Siguiente pista
+menu.music.button.discs=§8Elegir un disco
+menu.music.volume.title=§l§8 Música » Volumen
+menu.music.volume.label=§7Volumen de la música (desde la siguiente pista)
+menu.music.discs.title=§l§8 Música » Mis discos
+menu.music.discs.body=§7Discos que han estado en tu inventario. Pulsa uno para que suene ya. En la arena del Custodio siempre suena su música.
+music.now_playing=§eAhora suena: §f%1$s §7de §f%2$s
+chat.music.volume=§r §3Ajustes §8» §7Volumen de la música: §e%1$s§7 de 100 — desde la siguiente pista
+chat.music.source.server=§r §3Ajustes §8» §7Ahora suena la §emúsica del servidor
+chat.music.source.discs=§r §3Ajustes §8» §7Ahora suenan §etus discos
+chat.music.error.no_discs=§r⩕ §l§cERROR!§r §8» §7Aún no tienes discos: lleva cualquiera en el inventario y aparecerá en la lista
+chat.music.error.off=§r⩕ §l§cERROR!§r §8» §7La música está desactivada: actívala primero
+chat.music.error.arena=§r⩕ §l§cERROR!§r §8» §7En la arena del Custodio solo suena su música
 chat.settings.enabled=§r §3Ajustes §8» §7Ajuste cambiado: §aActivado
 chat.settings.disabled=§r §3Ajustes §8» §7Ajuste cambiado: §cDesactivado
 chat.settings.icons_only=§r §3Ajustes §8» §7Ajuste cambiado: §eSolo iconos

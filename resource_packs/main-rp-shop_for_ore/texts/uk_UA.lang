@@ -634,7 +634,7 @@ chat.shop.cosmetics.selected.death=§r §eМагазин §8» §7Части�
 chat.shop.cosmetics.selected.sell=§r §eМагазин §8» §7Частинки при продажу: §e%1$s
 
 ## --- НАЛАШТУВАННЯ ---
-##   menu.settings.*, chat.settings.*
+##   menu.settings.*, chat.settings.*, menu.music.*, music.*, chat.music.*
 menu.settings.title=§l§8Меню сервера » §r §8§lНалаштування
 menu.settings.body=§7Налаштуй панель, частинки, звуки й музику або зміни пароль.
 menu.settings.state=§7Поточний стан:
@@ -663,7 +663,29 @@ menu.settings.menu_sounds.success.title=§l§8Звуки в меню » Успі
 menu.settings.menu_sounds.error=§8Помилки
 menu.settings.menu_sounds.error.title=§l§8Звуки в меню » Помилка
 menu.settings.music.title=§l§8 Налаштування » Музика
-menu.settings.music.body=§7Фонова музика карти. Якщо вимкнути, вона перестане грати лише в тебе. Гучність — повзунок «Музика» в налаштуваннях самої гри.
+menu.settings.music.body=§7Музика карти грає лише в тебе: у світі, в пекельній шахті й на арені Стража — свої треки. Повзунок «Музика» в налаштуваннях гри на неї не впливає; гучність — тут, загальна — повзунок «Програвачі».
+menu.music.now=§7Зараз грає:
+menu.music.source=§7Джерело:
+menu.music.source.server=§fмузика сервера
+menu.music.source.discs=§fмої платівки
+menu.music.volume=§7Гучність:
+menu.music.discs=§7Платівок зібрано:
+menu.music.button.volume=§8Гучність
+menu.music.button.to_discs=§8Грати мої платівки
+menu.music.button.to_server=§8Грати музику сервера
+menu.music.button.next=§8Наступний трек
+menu.music.button.discs=§8Вибрати платівку
+menu.music.volume.title=§l§8 Музика » Гучність
+menu.music.volume.label=§7Гучність музики (з наступного треку)
+menu.music.discs.title=§l§8 Музика » Мої платівки
+menu.music.discs.body=§7Платівки, які побували в тебе в інвентарі. Натисни — заграє одразу. На арені Стража завжди звучить її музика.
+music.now_playing=§eЗараз грає: §f%1$s §7від §f%2$s
+chat.music.volume=§r §3Налаштування §8» §7Гучність музики: §e%1$s§7 зі 100 — з наступного треку
+chat.music.source.server=§r §3Налаштування §8» §7Тепер грає §eмузика сервера
+chat.music.source.discs=§r §3Налаштування §8» §7Тепер грають §eтвої платівки
+chat.music.error.no_discs=§r⩕ §l§cERROR!§r §8» §7У тебе ще немає платівок: потримай будь-яку в інвентарі — і вона з’явиться в списку
+chat.music.error.off=§r⩕ §l§cERROR!§r §8» §7Музику вимкнено — спершу ввімкни її
+chat.music.error.arena=§r⩕ §l§cERROR!§r §8» §7На арені Стража грає лише її музика
 chat.settings.enabled=§r §3Налаштування §8» §7Налаштування змінено: §aУвімкнено
 chat.settings.disabled=§r §3Налаштування §8» §7Налаштування змінено: §cВимкнено
 chat.settings.icons_only=§r §3Налаштування §8» §7Налаштування змінено: §eЛише значки

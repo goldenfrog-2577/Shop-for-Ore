@@ -11,7 +11,8 @@ import { cosmeticsMenu } from './cosmetics_shop.js';
 import { achievementsMenu } from './achievements_menu.js';
 import { listGames, gameOf, joinGame, leaveGame } from '../system/minigames/minigames.js';
 import { runChatCommand } from '../chat/commands/commands.js';
-import { MUSIC_OFF } from '../system/ui/music.js';
+import { MUSIC_OFF, DISC_MODE, getVolume, setVolume, setMusicOff, unlockedDiscs, nowPlaying, nextTrack, playNow } from '../system/ui/music.js';
+import { TRACK, DISCS } from '../system/ui/music_tracks.js';
 import { ChangePasswordUI } from '../registration/change.js';
 import { redeemPromo } from '../system/economy/promo.js';
 
@@ -168,16 +169,52 @@ function tagSetting(player, kind, tag, back) {
 	}, back);
 }
 
-// Музыка: выключена, пока есть тег player:music_off (system/ui/music.js)
+// Музыка (system/ui/music.js): вкл/выкл, громкость 0–100, источник — музыка сервера по зонам или свои пластинки,
+// следующий трек и выбор пластинки (плашка «Сейчас играет»). В описании — что играет и как всё настроено
 function musicSetting(player, back) {
-	toggleMenu(player, '%menu.settings.music.title', '%menu.settings.music.body', !player.hasTag(MUSIC_OFF), (on) => {
-		if (on) player.removeTag(MUSIC_OFF);
-		else {
-			player.addTag(MUSIC_OFF);
-			run(player, 'stopsound @s music.game');
-		}
-		changed(player, on);
-	}, back);
+	const again = () => musicSetting(player, back);
+	const off = player.hasTag(MUSIC_OFF), discMode = player.hasTag(DISC_MODE), discs = unlockedDiscs(player);
+	const body = () => {
+		const t = nowPlaying(player);
+		return ['%menu.settings.music.body', '',
+			`%menu.settings.state ${off ? '%menu.settings.state.off' : '%menu.settings.state.on'}`,
+			`%menu.music.now ${t ? `§f${t.title} §8— §7${t.author}` : '§8—'}`,
+			`%menu.music.source ${discMode ? '%menu.music.source.discs' : '%menu.music.source.server'}`,
+			`%menu.music.volume §f${getVolume(player)}§7 / 100`,
+			`%menu.music.discs §f${discs.length}§7 / ${DISCS.length}`].join('\n');
+	};
+	showMenu(player, '%menu.settings.music.title', body, [
+		{ text: off ? '\ue139 %menu.settings.button.enable' : '\ue130 %menu.settings.button.disable', run: () => { setMusicOff(player, !off); changed(player, off); again(); } },
+		{ text: '%menu.music.button.volume', icon: 'textures/server_icons/note_block', run: () => musicVolume(player, again) },
+		{ text: discMode ? '%menu.music.button.to_server' : '%menu.music.button.to_discs', icon: 'textures/items/record_cat', run: () => {
+			if (!discMode && !discs.length) return tell(player, 'chat.music.error.no_discs');
+			if (discMode) player.removeTag(DISC_MODE); else player.addTag(DISC_MODE);
+			tell(player, discMode ? 'chat.music.source.server' : 'chat.music.source.discs');
+			again();
+		} },
+		{ text: '%menu.music.button.next', icon: 'textures/ui/arrowRight', run: () => {
+			if (off) return tell(player, 'chat.music.error.off');
+			nextTrack(player);
+			again();
+		} },
+		discMode && discs.length && { text: '%menu.music.button.discs', icon: 'textures/items/record_13', run: () => musicDiscs(player, again) },
+		backButton(back)
+	], back);
+}
+
+function musicVolume(player, back) {
+	const form = modal('%menu.music.volume.title').slider('%menu.music.volume.label', 0, 100, 10, getVolume(player));
+	showModal(player, form, ([v]) => { setVolume(player, v); tell(player, 'chat.music.volume', String(getVolume(player))); back(); }, back);
+}
+
+// Свои пластинки: нажал — играет сразу (на арене Хранителя всегда её музыка)
+function musicDiscs(player, back) {
+	const items = unlockedDiscs(player).map(id => ({ text: `§8${TRACK[id].title}\n§7${TRACK[id].author}`, icon: `textures/items/record_${id}`, run: () => {
+		if (player.hasTag(MUSIC_OFF)) return tell(player, 'chat.music.error.off');
+		if (!playNow(player, id)) return tell(player, 'chat.music.error.arena');
+		back();
+	} }));
+	showMenu(player, '%menu.music.discs.title', '%menu.music.discs.body', [...items, backButton(back)], back);
 }
 
 // Панель слева: три состояния (теги player:board_icons, player:board_no — functions/settings/*)

@@ -173,7 +173,7 @@ scenes = [
         back('fb_settings')]),
     toggle('particles', [f'/tag {PL} add player:particle'], [f'/tag {PL} remove player:particle']),
     toggle('sounds', [f'/tag {PL} add player:sound'], [f'/tag {PL} remove player:sound']),
-    toggle('music', [f'/tag {PL} remove player:music_off'], [f'/tag {PL} add player:music_off', f'/stopsound {PL} music.game']),
+    toggle('music', [f'/tag {PL} remove player:music_off'], [f'/tag {PL} add player:music_off', f'/stopsound {PL}']),
     # Правила
     scene('fb_rules', B('rules'), ['%menu.rules.header', '\n\n', *lines('menu.rules.line', RULES_COUNT), '\n\n', '%menu.rules.footer'], [back('fb_main')]),
     # Телепортации: точки без скриптов (PvP-арена, сплиф и тир работают на скриптах — их нет)

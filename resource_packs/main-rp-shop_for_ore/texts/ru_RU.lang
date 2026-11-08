@@ -634,7 +634,7 @@ chat.shop.cosmetics.selected.death=§r §eМагазин §8» §7Части�
 chat.shop.cosmetics.selected.sell=§r §eМагазин §8» §7Частицы при продаже: §e%1$s
 
 ## --- НАСТРОЙКИ ---
-##   menu.settings.*, chat.settings.*
+##   menu.settings.*, chat.settings.*, menu.music.*, music.*, chat.music.*
 menu.settings.title=§l§8Меню сервера » §r §8§lНастройки
 menu.settings.body=§7Настрой панель, частицы, звуки и музыку или смени пароль.
 menu.settings.state=§7Текущее состояние:
@@ -663,7 +663,29 @@ menu.settings.menu_sounds.success.title=§l§8Звуки в меню » Успе
 menu.settings.menu_sounds.error=§8Ошибки
 menu.settings.menu_sounds.error.title=§l§8Звуки в меню » Ошибка
 menu.settings.music.title=§l§8 Настройки » Музыка
-menu.settings.music.body=§7Фоновая музыка карты. Если выключить, она перестанет играть только у тебя. Громкость — ползунок «Музыка» в настройках самой игры.
+menu.settings.music.body=§7Музыка карты играет только у тебя: в мире, в адской шахте и на арене Хранителя — свои треки. Ползунок «Музыка» в настройках игры на неё не влияет; громкость — здесь, общая — ползунок «Проигрыватели».
+menu.music.now=§7Сейчас играет:
+menu.music.source=§7Источник:
+menu.music.source.server=§fмузыка сервера
+menu.music.source.discs=§fмои пластинки
+menu.music.volume=§7Громкость:
+menu.music.discs=§7Пластинок собрано:
+menu.music.button.volume=§8Громкость
+menu.music.button.to_discs=§8Играть мои пластинки
+menu.music.button.to_server=§8Играть музыку сервера
+menu.music.button.next=§8Следующий трек
+menu.music.button.discs=§8Выбрать пластинку
+menu.music.volume.title=§l§8 Музыка » Громкость
+menu.music.volume.label=§7Громкость музыки (со следующего трека)
+menu.music.discs.title=§l§8 Музыка » Мои пластинки
+menu.music.discs.body=§7Пластинки, которые побывали у тебя в инвентаре. Нажми — заиграет сразу. На арене Хранителя всегда звучит её музыка.
+music.now_playing=§eСейчас играет: §f%1$s §7от §f%2$s
+chat.music.volume=§r §3Настройки §8» §7Громкость музыки: §e%1$s§7 из 100 — со следующего трека
+chat.music.source.server=§r §3Настройки §8» §7Теперь играет §eмузыка сервера
+chat.music.source.discs=§r §3Настройки §8» §7Теперь играют §eтвои пластинки
+chat.music.error.no_discs=§r⩕ §l§cERROR!§r §8» §7У тебя ещё нет пластинок: подержи любую в инвентаре — и она появится в списке
+chat.music.error.off=§r⩕ §l§cERROR!§r §8» §7Музыка выключена — сначала включи её
+chat.music.error.arena=§r⩕ §l§cERROR!§r §8» §7На арене Хранителя играет только её музыка
 chat.settings.enabled=§r §3Настройки §8» §7Настройка изменена: §aВключено
 chat.settings.disabled=§r §3Настройки §8» §7Настройка изменена: §cВыключено
 chat.settings.icons_only=§r §3Настройки §8» §7Настройка изменена: §eТолько значки
