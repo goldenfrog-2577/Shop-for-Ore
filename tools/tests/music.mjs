@@ -16,7 +16,7 @@ const ctx = {
 	system: { runSchedule: (cb, n) => schedules.push([n, cb]) },
 	world: { getPlayers: () => players.values(), events: { playerLeave: { subscribe: cb => { leave = cb; } } } }
 };
-vm.runInNewContext(src + '\nglobalThis.M={zoneOf,playlistFor,pickTrack,musicStep,startTrack,NETHER,GAP,ZONE_PAUSE,getVolume,setVolume,unlockedDiscs,nowPlaying,playNow,nextTrack,setMusicOff,MUSIC_OFF,DISC_MODE,DISC_SCAN_TICKS};', ctx);
+vm.runInNewContext(src + '\nglobalThis.M={zoneOf,playlistFor,pickTrack,musicStep,startTrack,NETHER,GAP,ZONE_PAUSE,getVolume,setVolume,unlockedDiscs,nowPlaying,playNow,setMusicOff,MUSIC_OFF,DISC_MODE,DISC_SCAN_TICKS};', ctx);
 const M = ctx.M;
 
 // Треки: у каждого файл, длина, название и автор; плейлисты из существующих треков, без повторов
@@ -75,7 +75,8 @@ for (let i = 0; i < M.ZONE_PAUSE + 1; i++) sec();
 assert.ok(P.cmds.includes('stopsound @s') && P.cmds.some(c => c.startsWith('playsound shop.music.'))); assert.equal(B.cmds.length, 0);
 assert.ok(M.nowPlaying(P) && T.PLAYLISTS.world.includes(M.nowPlaying(P).id)); assert.equal(toasts.length, 0);   // сам выбранный — без плашки
 // Следующий трек — плашка «Сейчас играет: <название> от <автор>»
-const before = M.nowPlaying(P).id; assert.ok(M.nextTrack(P)); assert.notEqual(M.nowPlaying(P).id, before);
+const before = M.nowPlaying(P).id, pick = T.PLAYLISTS.world.find(id => id !== before);
+assert.ok(M.playNow(P, pick)); assert.equal(M.nowPlaying(P).id, pick);
 assert.equal(toasts.length, 1); const raw = toasts[0][1][0];
 assert.equal(raw.translate, 'music.now_playing'); assert.deepEqual([...raw.with.rawtext.map(x => x.text)], [M.nowPlaying(P).title, M.nowPlaying(P).author]);
 // Громкость: тег music:volume:N, по умолчанию 100, в пределах 0–100
@@ -90,7 +91,8 @@ P.addTag('music:disc:cat'); P.location = { x: 528, y: -55, z: -40 };
 assert.ok(!M.playNow(P, 'cat') && M.playNow(P, 'ward'));   // на арене — только её музыка (ward в ней есть)
 // Выключили в меню — трек останавливается сразу
 P.location = { x: 0, y: 5, z: 0 }; M.playNow(P, '5'); P.cmds.length = 0; M.setMusicOff(P, true);
-assert.deepEqual([...P.cmds], ['stopsound @s shop.music.5']); assert.equal(M.nowPlaying(P), undefined); assert.ok(!M.nextTrack(P));
+assert.deepEqual([...P.cmds], ['stopsound @s shop.music.5']); assert.equal(M.nowPlaying(P), undefined); assert.ok(!M.playNow(P, '5'));
+assert.ok(!src.includes('nextTrack') && !read(new URL('scripts/menu/main_menu.js', bp)).includes('button.next'));   // «Следующий трек» убран — только выбор из списка
 leave({ playerName: 'P' }); assert.equal(M.nowPlaying(P), undefined);
 
 // Ресурс-пак: на каждый трек — shop.music.<id>, категория record, не объёмный, поток; встроенная музыка заглушена

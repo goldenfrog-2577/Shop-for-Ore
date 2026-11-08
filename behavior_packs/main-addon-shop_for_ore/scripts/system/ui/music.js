@@ -127,11 +127,6 @@ export function playNow(p, id) {
 	toastTrack(p, id);
 	return true;
 }
-/** Следующий трек текущего плейлиста. */
-export function nextTrack(p) {
-	const { list } = playlistOf(p);
-	return playNow(p, pickTrack(list, music.get(p.name)?.track ?? music.get(p.name)?.last));
-}
 /** Выключатель в Настройках: выключение сразу останавливает трек. */
 export function setMusicOff(p, off) {
 	if (off) p.addTag(MUSIC_OFF); else p.removeTag(MUSIC_OFF);

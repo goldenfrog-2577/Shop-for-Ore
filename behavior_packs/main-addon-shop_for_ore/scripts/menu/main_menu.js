@@ -11,7 +11,7 @@ import { cosmeticsMenu } from './cosmetics_shop.js';
 import { achievementsMenu } from './achievements_menu.js';
 import { listGames, gameOf, joinGame, leaveGame } from '../system/minigames/minigames.js';
 import { runChatCommand } from '../chat/commands/commands.js';
-import { MUSIC_OFF, DISC_MODE, getVolume, setVolume, setMusicOff, unlockedDiscs, nowPlaying, nextTrack, playNow, playlistOf } from '../system/ui/music.js';
+import { MUSIC_OFF, DISC_MODE, getVolume, setVolume, setMusicOff, unlockedDiscs, nowPlaying, playNow, playlistOf } from '../system/ui/music.js';
 import { TRACK, DISCS } from '../system/ui/music_tracks.js';
 import { BOSS_DISCS } from '../system/player/discs.js';
 import { ChangePasswordUI } from '../registration/change.js';
@@ -191,11 +191,6 @@ function musicSetting(player, back) {
 			if (!discMode && !discs.length) return tell(player, 'chat.music.error.no_discs');
 			if (discMode) player.removeTag(DISC_MODE); else player.addTag(DISC_MODE);
 			tell(player, discMode ? 'chat.music.source.server' : 'chat.music.source.discs');
-			again();
-		} },
-		{ text: '%menu.music.button.next', icon: 'textures/ui/arrowRight', run: () => {
-			if (off) return tell(player, 'chat.music.error.off');
-			nextTrack(player);
 			again();
 		} },
 		{ text: '%menu.music.button.choose', icon: 'textures/server_icons/note_block', run: () => musicChoose(player, again) },

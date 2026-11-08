@@ -674,7 +674,6 @@ menu.music.discs=§7Discs collected:
 menu.music.button.volume=§8Volume
 menu.music.button.to_discs=§8Play my discs
 menu.music.button.to_server=§8Play server music
-menu.music.button.next=§8Next track
 menu.music.button.choose=§8Choose a track
 menu.music.choose.title=§l§8 Music » Choose a track
 menu.music.choose.body=§7Tap a track to play it now. The one playing now is green.

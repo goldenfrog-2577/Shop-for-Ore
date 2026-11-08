@@ -674,7 +674,6 @@ menu.music.discs=§7Пластинок собрано:
 menu.music.button.volume=§8Громкость
 menu.music.button.to_discs=§8Играть мои пластинки
 menu.music.button.to_server=§8Играть музыку сервера
-menu.music.button.next=§8Следующий трек
 menu.music.button.choose=§8Выбрать трек
 menu.music.choose.title=§l§8 Музыка » Выбрать трек
 menu.music.choose.body=§7Нажми на трек — он заиграет сразу. Зелёным отмечен тот, что играет сейчас.

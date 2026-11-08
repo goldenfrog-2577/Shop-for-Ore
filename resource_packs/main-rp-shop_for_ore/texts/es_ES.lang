@@ -674,7 +674,6 @@ menu.music.discs=§7Discos reunidos:
 menu.music.button.volume=§8Volumen
 menu.music.button.to_discs=§8Poner mis discos
 menu.music.button.to_server=§8Poner música del servidor
-menu.music.button.next=§8Siguiente pista
 menu.music.button.choose=§8Elegir pista
 menu.music.choose.title=§l§8 Música » Elegir pista
 menu.music.choose.body=§7Pulsa una pista para que suene ya. La que suena ahora está en verde.

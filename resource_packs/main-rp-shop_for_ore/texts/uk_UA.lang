@@ -674,7 +674,6 @@ menu.music.discs=§7Платівок зібрано:
 menu.music.button.volume=§8Гучність
 menu.music.button.to_discs=§8Грати мої платівки
 menu.music.button.to_server=§8Грати музику сервера
-menu.music.button.next=§8Наступний трек
 menu.music.button.choose=§8Вибрати трек
 menu.music.choose.title=§l§8 Музика » Вибрати трек
 menu.music.choose.body=§7Натисни на трек — він заграє одразу. Зеленим позначено той, що грає зараз.
