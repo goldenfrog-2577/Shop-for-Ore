@@ -25,6 +25,7 @@ export const ERROR_KEYS = new Set([
 	'chat.cmd.error.selector',
 	'chat.cmd.error.selector_single',
 	'chat.cmd.error.selector_empty',
+	'chat.cmd.logs.error.page',
 	'chat.music.error.no_discs',
 	'chat.music.error.off',
 	'chat.music.error.arena',

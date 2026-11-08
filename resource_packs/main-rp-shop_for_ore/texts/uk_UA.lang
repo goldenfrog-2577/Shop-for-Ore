@@ -308,6 +308,7 @@ chat.help.resetoffline=§7Скидає §cвсі§7 теги й рахунки �
 chat.help.role=§7Призначає роль: гравець, хелпер (лише спостереження), модератор або адміністратор
 chat.help.worldedit=§7Виділення, заливка, заміна й копіювання блоків; скасування змін
 chat.help.roles=§7Ролі всіх гравців у мережі
+chat.help.logs=§7Журнал дій персоналу: покарання, ролі, бусти, скидання
 chat.help.resetpass=§7Скидає забутий пароль гравцю в мережі — він одразу задасть новий
 chat.cmd.help.detail=§r §7CMD §8» §f%1$s§r§8 — §7%2$s§r§7. Доступно: %3$s§r§7 і вище
 chat.emotes.header=§8-----§f Список емодзі §8-----§f
@@ -1249,6 +1250,12 @@ chat.cmd.role.error.owner=§r⩕ §l§cERROR!§r §8» §7Роль власни�
 chat.cmd.role.error.bot=§r⩕ §l§cERROR!§r §8» §7Боту роль не видається: у нього завжди префікс «Бот»
 chat.cmd.roles.header=§8-----§f Ролі гравців §8-----§f
 chat.cmd.roles.line=§f%1$s§r§8 — %2$s
+chat.cmd.logs.use=§r §7CMD §8» §7Використання: §e!logs§7 [гравець] [page <номер>]
+chat.cmd.logs.header=§8-----§f Журнал персоналу §7(%1$s/%2$s) §8-----§f
+chat.cmd.logs.header_player=§8-----§f Журнал: %1$s §7(%2$s/%3$s) §8-----§f
+chat.cmd.logs.empty=§7Записів немає
+chat.cmd.logs.started=§7%1$s §8» §7журнал розпочато
+chat.cmd.logs.error.page=§r⩕ §l§cERROR!§r §8» §7Сторінки §e%1$s§7 немає — усього §e%2$s
 
 ## --- МЕНЮ АДМІНІСТРАТОРА ---
 ##   admin.*, chat.admin.*

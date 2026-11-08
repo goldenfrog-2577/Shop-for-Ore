@@ -64,6 +64,7 @@
 			"system/player/void.js",
 			"system/boss/boss.js",
 			"registration/password.js",
+			"system/security/staff_log.js",
 			"registration/change.js",
 			"chat/commands/common.js",
 			"chat/censor.js",
@@ -449,6 +450,10 @@
 			],
 			[
 				"system/boss/boss.js",
+				20
+			],
+			[
+				"system/security/staff_log.js",
 				20
 			],
 			[

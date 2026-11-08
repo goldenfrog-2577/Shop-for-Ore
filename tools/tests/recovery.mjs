@@ -39,7 +39,7 @@ for(const part of hud.hud(player))if(part.score)assert.ok(Number.isFinite(player
 player.scores.lvl=25;player.tags.delete('player');await ctx.ensure(player);assert.ok(!player.hasTag('player'),'rebirth signal must remain until the function resets progress');player.tags.add('player');
 // Full wipe runs asynchronously in order; offline scores stay removed and online scores are explicit.
 offline.scores={money:900,xp:50,lvl:8};player.tags.add('player:vip');player.tags.add('ach:first');player.scores.stat_mined=100;
-const wipe={...ctx,ensurePlayerScores:ctx.ensure,STATS:['stat_mined'],tell(){},syncResetEpoch(){},DynamicPropertiesDefinition:class{defineNumber(){}}};
+const wipe={...ctx,ensurePlayerScores:ctx.ensure,STATS:['stat_mined'],tell(){},logAction(){},syncResetEpoch(){},DynamicPropertiesDefinition:class{defineNumber(){}}};
 vm.runInNewContext(source('scripts/system/core/wipe.js')+'\nglobalThis.wipe=wipeAll;',wipe);
 await wipe.wipe(player);
 assert.equal(player.scores.lvl,1);assert.equal(player.scores.money,0);assert.equal(player.scores.vip_coins,0);assert.equal(player.scores.xp,0);assert.equal(player.scores.rebirth,0);assert.equal(player.scores.xp_need,100);

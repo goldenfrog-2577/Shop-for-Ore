@@ -308,6 +308,7 @@ chat.help.resetoffline=§7Resets §call§7 tags and scores of players who are §
 chat.help.role=§7Assigns a role: player, helper (watching only), moderator or admin
 chat.help.worldedit=§7Select, fill, replace and copy blocks; undo block changes
 chat.help.roles=§7Roles of everyone online
+chat.help.logs=§7Staff action log: punishments, roles, boosts, resets
 chat.help.resetpass=§7Resets a forgotten password of an online player — they set a new one right away
 chat.cmd.help.detail=§r §7CMD §8» §f%1$s§r§8 — §7%2$s§r§7. Available to: %3$s§r§7 and above
 chat.emotes.header=§8-----§f Emote List §8-----§f
@@ -1249,6 +1250,12 @@ chat.cmd.role.error.owner=§r⩕ §l§cERROR!§r §8» §7The owner's role can't
 chat.cmd.role.error.bot=§r⩕ §l§cERROR!§r §8» §7The bot can't get a role: it always has the "Bot" prefix
 chat.cmd.roles.header=§8-----§f Player Roles §8-----§f
 chat.cmd.roles.line=§f%1$s§r§8 — %2$s
+chat.cmd.logs.use=§r §7CMD §8» §7Usage: §e!logs§7 [player] [page <number>]
+chat.cmd.logs.header=§8-----§f Staff Log §7(%1$s/%2$s) §8-----§f
+chat.cmd.logs.header_player=§8-----§f Log: %1$s §7(%2$s/%3$s) §8-----§f
+chat.cmd.logs.empty=§7No entries
+chat.cmd.logs.started=§7%1$s §8» §7log started
+chat.cmd.logs.error.page=§r⩕ §l§cERROR!§r §8» §7There is no page §e%1$s§7 — §e%2$s§7 in total
 
 ## --- ADMIN MENU ---
 ##   admin.*, chat.admin.*

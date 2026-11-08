@@ -9,6 +9,7 @@ import { freezePlayer, unfreezePlayer } from '../../system/security/freeze.js';
 import { cpsOf, cpsLimit } from '../../system/security/cps.js';
 import { MODE, modeName, clearViolations, flaggedPlayers, acMode, violationsOf, CHECKS } from '../../system/security/anticheat.js';
 import { canPunish, tellList } from './common.js';
+import { logAction } from '../../system/security/staff_log.js';
 
 /** Координата для !tp: число (можно с дробью и минусом) или относительная ~ / ~-3.5. */
 export const isCoord = (a) => /^(~?-?\d+(\.\d+)?|~)$/.test(a);
@@ -51,6 +52,7 @@ export const MODERATION_COMMANDS = {
 			}
 			// Без причины — стандартное сообщение игры (раньше выгнанный видел сырой ключ %chat.cmd.kick.no_reason)
 			run(player, kickReason ? `kick "${target.name}" ${kickReason}` : `kick "${target.name}"`);
+			logAction(player, 'kick', target.name, kickReason);
 			// JSON через JSON.stringify: кавычки в причине больше не ломают сообщение
 			run(player, `tellraw @a ${JSON.stringify({ rawtext: [{ translate: 'chat.cmd.kick', with: { rawtext: [{ text: target.name }, kickReason ? { text: kickReason } : { translate: 'chat.cmd.kick.no_reason' }] } }] })}`);
 		} else {
@@ -77,6 +79,7 @@ export const MODERATION_COMMANDS = {
 		target.getTags().filter(t => t.startsWith('state:mute:')).forEach(t => target.removeTag(t));
 		target.addTag(`state:mute:${minutes === Infinity ? 'permanent' : Date.now() + minutes * 60000}`);
 		setIssuer(target, 'mute', getRole(player));
+		logAction(player, 'mute', target.name, args.slice(1));
 		const reason = args.slice(2).join(' ');
 		run(player, `tellraw @a ${rawTranslateRich('chat.cmd.mute', target.name, termText(minutes), reason ? { text: reason } : { translate: 'chat.cmd.kick.no_reason' })}`);
 	},
@@ -104,6 +107,7 @@ export const MODERATION_COMMANDS = {
 		leaveGame(target, 'jail');
 		jail(target, minutes);
 		setIssuer(target, 'jail', getRole(player));
+		logAction(player, 'jail', target.name, args.slice(1));
 		const reason = args.slice(2).join(' ');
 		run(player, `tellraw @a ${rawTranslateRich('chat.cmd.jail', target.name, termText(minutes), reason ? { text: reason } : { translate: 'chat.cmd.kick.no_reason' })}`);
 	},
@@ -124,6 +128,7 @@ export const MODERATION_COMMANDS = {
 		}
 		if (!canLift(player, target, 'jail')) return;
 		release(target, 'chat.jail.released.early');
+		logAction(player, 'unjail', target.name);
 		run(player, `tellraw @a ${rawTranslate('chat.cmd.unjail', target.name, player.name)}`);
 	},
 
@@ -145,6 +150,7 @@ export const MODERATION_COMMANDS = {
 		if (!canLift(player, target, 'mute')) return;
 		target.getTags().filter(t => t.startsWith('state:mute:')).forEach(t => target.removeTag(t));
 		clearIssuer(target, 'mute');
+		logAction(player, 'unmute', target.name);
 		tell(player, 'chat.cmd.unmute.done', target.name);
 		tell(target, 'chat.cmd.unmute.received');
 	},
@@ -163,6 +169,7 @@ export const MODERATION_COMMANDS = {
 		}
 		if (!canPunish(player, target)) return;
 		const warns = getWarns(target) + 1;
+		logAction(player, 'warn', target.name, `${Math.min(warns, 3)}/3 ${reason}`);
 		target.getTags().filter(t => t.startsWith('state:warn:')).forEach(t => target.removeTag(t));
 		run(player, `tellraw @a ${rawTranslate('chat.cmd.warn', target.name, String(warns), reason)}`);
 		if (warns >= 3) {
@@ -201,6 +208,7 @@ export const MODERATION_COMMANDS = {
 		target.getTags().filter(t => t.startsWith('state:warn:')).forEach(t => target.removeTag(t));
 		if (left > 0) target.addTag(`state:warn:${left}`);
 		else clearIssuer(target, 'warn');
+		logAction(player, 'unwarn', target.name, `${before} → ${left}`);
 		tell(player, 'chat.cmd.unwarn.done', target.name, String(before - left), String(left));
 		if (target.name !== player.name) tell(target, 'chat.cmd.unwarn.received', String(before - left), String(left));
 	},
@@ -225,6 +233,7 @@ export const MODERATION_COMMANDS = {
 		// Игрок застывает там, где стоит (в том числе в воздухе): system/security/freeze.js возвращает его на место каждый тик
 		freezePlayer(target);
 		setIssuer(target, 'frozen', getRole(player));
+		logAction(player, 'freeze', target.name);
 		tell(player, 'chat.cmd.freeze.on', target.name);
 		tell(target, 'chat.cmd.freeze.received.on');
 	},
@@ -246,6 +255,7 @@ export const MODERATION_COMMANDS = {
 		// Разморозить может только роль не ниже заморозившего
 		if (!canLift(player, target, 'frozen')) return;
 		unfreezePlayer(target);
+		logAction(player, 'unfreeze', target.name);
 		tell(player, 'chat.cmd.freeze.off', target.name);
 		tell(target, 'chat.cmd.freeze.received.off');
 	},
