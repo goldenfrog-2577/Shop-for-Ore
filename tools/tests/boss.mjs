@@ -7,12 +7,24 @@ const src = fs.readFileSync(new URL('scripts/system/boss/boss.js', bp), 'utf8');
 const pure = src.slice(0, src.indexOf('// ======== Состояние ========'))
 	.replace(/^import .*;\r?\n/gm, '').replace(/\bexport (?=(?:async )?function|const)/g, '');
 const ctx = { Math };
-vm.runInNewContext(pure + '\nglobalThis.B={inFight,CLEAR,onStart,checkStart,phaseOf,waveSpawns,discFor,DISCS:DISCS,MIN_LEVEL,MAX_FIGHTERS,HP,START,SUMMON,BARS,MINION_SPOTS,MAX_MINIONS,MAX_WITHER,DISCS};', ctx);
+vm.runInNewContext(pure + '\nglobalThis.B={inFight,CLEAR,onStart,hornAction,HORN,HORN_SOUND,checkStart,phaseOf,waveSpawns,discFor,DISCS:DISCS,MIN_LEVEL,MAX_FIGHTERS,HP,START,SUMMON,BARS,MINION_SPOTS,MAX_MINIONS,MAX_WITHER,DISCS};', ctx);
 const B = ctx.B;
 
-// Плита старта: стоять на резном сланце (528, −60, −68) — ноги на y −59
-assert.ok(B.onStart({ x: 528.4, y: -59, z: -67.5 }));
-assert.ok(!B.onStart({ x: 528.4, y: -60, z: -67.5 }) && !B.onStart({ x: 529.1, y: -59, z: -67.5 }));
+// Плита старта: резной сланец (528, −61, −68; владелец опустил на 1) — ноги на y −60
+assert.ok(B.onStart({ x: 528.41, y: -60, z: -67.61 }));   // точка из игры (скриншот владельца)
+assert.ok(!B.onStart({ x: 528.4, y: -59, z: -67.5 }) && !B.onStart({ x: 529.1, y: -60, z: -67.5 }));
+// Рог: «Тосковать» = data 6; на плите — старт, не на плите — подсказка; другая мелодия на плите — подсказка; не рог — ничего
+assert.equal(B.HORN, 'minecraft:goat_horn'); assert.equal(B.HORN_SOUND, 6);
+assert.equal(B.hornAction('minecraft:goat_horn', 6, true), 'start');
+assert.equal(B.hornAction('minecraft:goat_horn', 6, false), 'place');
+assert.equal(B.hornAction('minecraft:goat_horn', 0, true), 'melody');
+assert.equal(B.hornAction('minecraft:goat_horn', 7, false), null);
+assert.equal(B.hornAction('minecraft:stick', 6, true), null);
+// Старт — по itemStartCharge (на перезарядке его нет), рог тратится после startFight; плита без рога больше не будит
+assert.match(src, /world\.events\.itemStartCharge\.subscribe[\s\S]*?startFight\(check\.fighters[\s\S]*?clear @s \$\{HORN\} \$\{HORN_SOUND\} 1/);
+assert.ok(!/inside\.find\(p => onStart/.test(src));
+// Рог — только из мистика
+assert.match(fs.readFileSync(new URL('scripts/system/combat/mythic.js', bp), 'utf8'), /\{ w: 2, item: 'goat_horn', count: \[1, 1\], data: 6 \}/);
 
 // Старт: перезарядка, уровень, не больше 4, бот и низкий уровень — на спавн
 const P = (name, level, bot = false) => ({ name, level, bot });
