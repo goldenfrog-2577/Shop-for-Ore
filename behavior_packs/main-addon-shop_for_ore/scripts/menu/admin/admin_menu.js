@@ -320,9 +320,9 @@ function playerActions(player, target) {
 		`%admin.players.body.playtime ${playtimeText(target)}`,
 		`%admin.players.body.role %role.${getRole(target)}`,
 		`%admin.players.body.lvl ${getScore(target, 'lvl')}`,
-		`%admin.players.body.money ${getScore(target, 'money')} §r${COIN_GLYPH}`,
 		`%admin.players.body.warns ${getWarns(target)}§7/§f3§r`,
 		...(isVip(target) ? [`%admin.players.body.vip_coins ${getScore(target, 'vip_coins')} §r${VIP_COIN_GLYPH}`] : []),
+		`%admin.players.body.money ${getScore(target, 'money')} §r${COIN_GLYPH}`,
 		`%admin.players.body.mute ${muteMinutesLeft(target) === Infinity ? '%chat.term.permanent' : muteMinutesLeft(target) > 0 ? muteMinutesLeft(target) + ' %admin.common.min' : '%admin.players.mute.none'}`,
 		// В тюрьме — сколько осталось
 		...(isJailed(target) ? [`%admin.players.body.jail ${jailMinutesLeft(target) === Infinity ? '%chat.term.permanent' : `${jailMinutesLeft(target)} %admin.common.min`}`] : [])
