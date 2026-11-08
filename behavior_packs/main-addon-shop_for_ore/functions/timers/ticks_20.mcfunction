@@ -77,3 +77,10 @@ function fallback/check
 # Книга-промокод: работает без Script API. fallback/check считает секунды без heartbeat.
 execute if score scripts system matches 5.. run function promo/books_scan
 execute if score fallback_test settings matches 1 run function promo/books_scan
+
+## --- Не вошёл в аккаунт: слепота и замедление (system/session) ---
+# Скрипты накладывают их сами; здесь — на случай, когда скрипты не загрузились. Снимает их вход (scripts/registration)
+effect @a[tag=auth:login,tag=!role:bot,tag=!sys:bot] blindness 60 255 true
+effect @a[tag=auth:login,tag=!role:bot,tag=!sys:bot] slowness 60 255 true
+effect @a[tag=auth:register,tag=!role:bot,tag=!sys:bot] blindness 60 255 true
+effect @a[tag=auth:register,tag=!role:bot,tag=!sys:bot] slowness 60 255 true

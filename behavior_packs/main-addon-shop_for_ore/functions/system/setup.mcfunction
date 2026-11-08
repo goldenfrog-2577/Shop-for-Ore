@@ -1,4 +1,4 @@
-# Разовая настройка табло. Вызывается из system/timers, пока setup system меньше 8.
+# Разовая настройка табло. Вызывается из system/timers, пока setup system меньше 9.
 # 2 — табло qx и tpore переименованы в xp_need и magnet (единый стиль названий, 0.3.0)
 # Если понадобится новое табло — добавить сюда и поднять номер в timers и ниже.
 scoreboard objectives add xp_need dummy System
@@ -35,4 +35,6 @@ scoreboard players add boost_x4 system 0
 execute if score stand_timers_migrated system matches 0 run scoreboard players set rain_event system -1
 execute if score stand_timers_migrated system matches 0 run tickingarea add 48 0 48 63 15 63 shop_stand_migration
 scoreboard objectives add play_seconds dummy
-scoreboard players set setup system 8
+# 8 — вход в мир без скриптов (system/session): у игроков в сети — 1, у вышедших счёта нет
+scoreboard objectives add session dummy
+scoreboard players set setup system 9
