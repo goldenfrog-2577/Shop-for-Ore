@@ -56,8 +56,11 @@
 			"system/player/achievements.js",
 			"menu/achievements_menu.js",
 			"system/combat/pvp.js",
-			"system/minigames/minigames.js",
 			"system/boss/arena.js",
+			"system/ui/music_tracks.js",
+			"system/ui/music.js",
+			"system/player/discs.js",
+			"system/minigames/minigames.js",
 			"system/player/void.js",
 			"system/boss/boss.js",
 			"registration/password.js",
@@ -86,8 +89,6 @@
 			"chat/commands/admin.js",
 			"system/worldedit.js",
 			"chat/commands/commands.js",
-			"system/ui/music_tracks.js",
-			"system/ui/music.js",
 			"menu/main_menu.js",
 			"system/player/tools.js",
 			"system/core/migrate.js",
@@ -155,6 +156,14 @@
 			[
 				"system/combat/pvp.js",
 				"playerLeave"
+			],
+			[
+				"system/ui/music.js",
+				"playerLeave"
+			],
+			[
+				"system/player/discs.js",
+				"blockBreak"
 			],
 			[
 				"system/minigames/minigames.js",
@@ -329,10 +338,6 @@
 				"beforeChat"
 			],
 			[
-				"system/ui/music.js",
-				"playerLeave"
-			],
-			[
 				"menu/main_menu.js",
 				"beforeItemUse"
 			],
@@ -403,16 +408,28 @@
 				1200
 			],
 			[
+				"system/boss/arena.js",
+				20
+			],
+			[
+				"system/ui/music.js",
+				20
+			],
+			[
+				"system/ui/music.js",
+				100
+			],
+			[
+				"system/player/discs.js",
+				100
+			],
+			[
 				"system/minigames/minigames.js",
 				20
 			],
 			[
 				"system/minigames/minigames.js",
 				100
-			],
-			[
-				"system/boss/arena.js",
-				20
 			],
 			[
 				"system/boss/boss.js",
@@ -433,14 +450,6 @@
 			[
 				"system/worldedit.js",
 				1
-			],
-			[
-				"system/ui/music.js",
-				20
-			],
-			[
-				"system/ui/music.js",
-				100
 			],
 			[
 				"system/player/tools.js",

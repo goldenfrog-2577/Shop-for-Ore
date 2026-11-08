@@ -138,7 +138,7 @@ progressScreen.message.locating=Прежде чем задавать много 
 progressScreen.message.resourceLoading=Telegram хоста: @goldenfrog_2577
 
 ## --- ОБЩЕЕ: РОЛИ, ЦВЕТА, СРОКИ, ОШИБКИ ---
-##   menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
+##   menu.common.*, role.*, rank.collector, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
 menu.common.tap_to_open=§8[§7Нажми, чтобы открыть§8]
 menu.common.back=§8§r §8Назад
 menu.common.time.second=с
@@ -183,6 +183,7 @@ role.tag.helper=§3Хелпер
 role.tag.moder=§9Модератор
 role.tag.bot=§7Бот
 role.tag.player=§fИгрок
+rank.collector=§dМеломан
 chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Сообщение слишком длинное (больше §e200§7 символов)
 chat.error.spam=§r⩕ §l§cERROR!§r §8» §7Не спамь в чате!
 
@@ -681,15 +682,24 @@ menu.music.choose.world=§7Сейчас доступна §fмузыка мир�
 menu.music.choose.nether=§7Сейчас доступна §fмузыка Незера§7.
 menu.music.choose.boss=§7На арене Хранителя — §fтолько её музыка§7.
 menu.music.choose.discs=§7Сейчас доступны §fтвои пластинки§7.
+menu.music.button.collection=§8Коллекция пластинок
+menu.music.collection.title=§l§8 Музыка » Коллекция
+menu.music.collection.body=§7Найденную пластинку можно включить. Остальные редко выпадают при копании (в Незере и Пещере — чаще) и за победы в мини-играх; «5» и otherside — награда за Хранителя. Собери все 15 — получишь префикс §dМеломан§7 в чате и бесплатный след «Ноты» в Косметике.
+menu.music.hint.mine=§7Копание и мини-игры
+menu.music.hint.boss=§7Победа над Хранителем
 menu.music.volume.title=§l§8 Музыка » Громкость
 menu.music.volume.label=§7Громкость музыки (со следующего трека)
 music.now_playing=§eСейчас играет: §f%1$s §7от §f%2$s
+music.disc_found=§dНайдена пластинка: §f%1$s
 chat.music.volume=§r §3Настройки §8» §7Громкость музыки: §e%1$s§7 из 100 — со следующего трека
+chat.music.disc.found=§r §3Музыка §8» §7Ты нашёл(ла) пластинку §e%1$s§7! Собрано §e%2$s§7 из §e%3$s
+chat.music.collector=§r §3Музыка §8» §7§f%1$s§r§7 собрал(а) все пластинки и получил(а) префикс §dМеломан§7!
 chat.music.source.server=§r §3Настройки §8» §7Теперь играет §eмузыка сервера
 chat.music.source.discs=§r §3Настройки §8» §7Теперь играют §eтвои пластинки
 chat.music.error.no_discs=§r⩕ §l§cERROR!§r §8» §7У тебя ещё нет пластинок: подержи любую в инвентаре — и она появится в списке
 chat.music.error.off=§r⩕ §l§cERROR!§r §8» §7Музыка выключена — сначала включи её
 chat.music.error.arena=§r⩕ §l§cERROR!§r §8» §7На арене Хранителя играет только её музыка
+chat.music.error.locked=§r⩕ §l§cERROR!§r §8» §7Эта пластинка ещё не найдена
 chat.settings.enabled=§r §3Настройки §8» §7Настройка изменена: §aВключено
 chat.settings.disabled=§r §3Настройки §8» §7Настройка изменена: §cВыключено
 chat.settings.icons_only=§r §3Настройки §8» §7Настройка изменена: §eТолько значки

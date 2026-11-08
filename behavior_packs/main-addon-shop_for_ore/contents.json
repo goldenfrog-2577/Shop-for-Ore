@@ -358,6 +358,9 @@
 			"path" : "scripts/system/player/void.js"
 		},
 		{
+			"path" : "scripts/system/player/discs.js"
+		},
+		{
 			"path" : "scripts/system/player/ranks.js"
 		},
 		{

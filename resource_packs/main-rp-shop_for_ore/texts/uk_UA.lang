@@ -138,7 +138,7 @@ progressScreen.message.locating=Перш ніж ставити багато пи
 progressScreen.message.resourceLoading=Telegram хоста: @goldenfrog_2577
 
 ## --- СПІЛЬНЕ: РОЛІ, КОЛЬОРИ, СТРОКИ, ПОМИЛКИ ---
-##   menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
+##   menu.common.*, role.*, rank.collector, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
 menu.common.tap_to_open=§8[§7Натисни, щоб відкрити§8]
 menu.common.back=§8§r §8Назад
 menu.common.time.second=с
@@ -183,6 +183,7 @@ role.tag.helper=§3Хелпер
 role.tag.moder=§9Модератор
 role.tag.bot=§7Бот
 role.tag.player=§fГравець
+rank.collector=§dМеломан
 chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Повідомлення занадто довге (понад §e200§7 символів)
 chat.error.spam=§r⩕ §l§cERROR!§r §8» §7Не спам у чаті!
 
@@ -681,15 +682,24 @@ menu.music.choose.world=§7Зараз доступна §fмузика світ�
 menu.music.choose.nether=§7Зараз доступна §fмузика Незеру§7.
 menu.music.choose.boss=§7На арені Стража — §fлише її музика§7.
 menu.music.choose.discs=§7Зараз доступні §fтвої платівки§7.
+menu.music.button.collection=§8Колекція платівок
+menu.music.collection.title=§l§8 Музика » Колекція
+menu.music.collection.body=§7Знайдену платівку можна ввімкнути. Інші зрідка випадають під час копання (у Незері та Печері — частіше) і за перемоги в міні-іграх; «5» і otherside — нагорода за Стража. Збери всі 15 — отримаєш префікс §dМеломан§7 у чаті й безкоштовний слід «Ноти» в Косметиці.
+menu.music.hint.mine=§7Копання й міні-ігри
+menu.music.hint.boss=§7Перемога над Стражем
 menu.music.volume.title=§l§8 Музика » Гучність
 menu.music.volume.label=§7Гучність музики (з наступного треку)
 music.now_playing=§eЗараз грає: §f%1$s §7від §f%2$s
+music.disc_found=§dЗнайдено платівку: §f%1$s
 chat.music.volume=§r §3Налаштування §8» §7Гучність музики: §e%1$s§7 зі 100 — з наступного треку
+chat.music.disc.found=§r §3Музика §8» §7Ти знайшов(ла) платівку §e%1$s§7! Зібрано §e%2$s§7 із §e%3$s
+chat.music.collector=§r §3Музика §8» §7§f%1$s§r§7 зібрав(ла) всі платівки й отримав(ла) префікс §dМеломан§7!
 chat.music.source.server=§r §3Налаштування §8» §7Тепер грає §eмузика сервера
 chat.music.source.discs=§r §3Налаштування §8» §7Тепер грають §eтвої платівки
 chat.music.error.no_discs=§r⩕ §l§cERROR!§r §8» §7У тебе ще немає платівок: потримай будь-яку в інвентарі — і вона з’явиться в списку
 chat.music.error.off=§r⩕ §l§cERROR!§r §8» §7Музику вимкнено — спершу ввімкни її
 chat.music.error.arena=§r⩕ §l§cERROR!§r §8» §7На арені Стража грає лише її музика
+chat.music.error.locked=§r⩕ §l§cERROR!§r §8» §7Цю платівку ще не знайдено
 chat.settings.enabled=§r §3Налаштування §8» §7Налаштування змінено: §aУвімкнено
 chat.settings.disabled=§r §3Налаштування §8» §7Налаштування змінено: §cВимкнено
 chat.settings.icons_only=§r §3Налаштування §8» §7Налаштування змінено: §eЛише значки

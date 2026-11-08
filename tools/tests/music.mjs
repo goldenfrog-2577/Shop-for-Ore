@@ -106,7 +106,7 @@ assert.ok(fs.existsSync(new URL('sounds/music/main.theme.ogg', rp)) || !fs.exist
 // Меню и ключи: все chat.music.* / menu.music.* / music.* из скриптов — на 4 языках, ошибки — в ERROR_KEYS
 const menu = read(new URL('scripts/menu/main_menu.js', bp));
 const used = new Set([...(menu + src).matchAll(/['%](?:chat\.music|menu\.music|music)\.[a-z_.]+[a-z]/g)].map(m => m[0].slice(1)));
-used.delete('menu.music.choose');                       // `%menu.music.choose.${key}` — ключ на каждый плейлист
+used.delete('menu.music.choose'); used.delete('menu.music.hint');   // шаблонные ключи — проверяются по вариантам                       // `%menu.music.choose.${key}` — ключ на каждый плейлист
 for (const key of ['world', 'nether', 'boss', 'discs']) used.add(`menu.music.choose.${key}`);
 assert.ok(used.has('music.now_playing') && used.has('menu.music.button.choose') && used.size >= 20);
 // «Выбрать трек» — весь текущий плейлист (музыка зоны или свои пластинки), а не только «Следующий трек»

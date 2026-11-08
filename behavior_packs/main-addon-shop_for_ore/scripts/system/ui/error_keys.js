@@ -24,6 +24,7 @@ export const ERROR_KEYS = new Set([
 	'chat.music.error.no_discs',
 	'chat.music.error.off',
 	'chat.music.error.arena',
+	'chat.music.error.locked',
 	'chat.boss.cooldown',
 	'chat.boss.level',
 	'chat.boss.too_many',

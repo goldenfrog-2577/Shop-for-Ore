@@ -13,6 +13,7 @@ import { listGames, gameOf, joinGame, leaveGame } from '../system/minigames/mini
 import { runChatCommand } from '../chat/commands/commands.js';
 import { MUSIC_OFF, DISC_MODE, getVolume, setVolume, setMusicOff, unlockedDiscs, nowPlaying, nextTrack, playNow, playlistOf } from '../system/ui/music.js';
 import { TRACK, DISCS } from '../system/ui/music_tracks.js';
+import { BOSS_DISCS } from '../system/player/discs.js';
 import { ChangePasswordUI } from '../registration/change.js';
 import { redeemPromo } from '../system/economy/promo.js';
 
@@ -197,7 +198,8 @@ function musicSetting(player, back) {
 			nextTrack(player);
 			again();
 		} },
-		{ text: '%menu.music.button.choose', icon: 'textures/items/record_13', run: () => musicChoose(player, again) },
+		{ text: '%menu.music.button.choose', icon: 'textures/server_icons/note_block', run: () => musicChoose(player, again) },
+		{ text: '%menu.music.button.collection', icon: 'textures/items/record_13', run: () => musicCollection(player, again) },
 		backButton(back)
 	], back);
 }
@@ -205,6 +207,21 @@ function musicSetting(player, back) {
 function musicVolume(player, back) {
 	const form = modal('%menu.music.volume.title').slider('%menu.music.volume.label', 0, 100, 10, getVolume(player));
 	showModal(player, form, ([v]) => { setVolume(player, v); tell(player, 'chat.music.volume', String(getVolume(player))); back(); }, back);
+}
+
+// Коллекция: все 15 пластинок. Найденная — нажал, и она играет (источник переключается на «Мои пластинки»);
+// ненайденная — «???» с подсказкой, где искать (system/player/discs.js)
+function musicCollection(player, back) {
+	const owned = unlockedDiscs(player);
+	const items = DISCS.map(d => owned.includes(d.id)
+		? { text: `§8${d.title}\n§7${d.author}`, icon: `textures/items/record_${d.id}`, run: () => {
+			if (player.hasTag(MUSIC_OFF)) return tell(player, 'chat.music.error.off');
+			player.addTag(DISC_MODE);
+			if (!playNow(player, d.id)) return tell(player, 'chat.music.error.arena');
+			back();
+		} }
+		: { text: `§8???\n%menu.music.hint.${BOSS_DISCS.includes(d.id) ? 'boss' : 'mine'}`, icon: 'textures/ui/lock', run: () => tell(player, 'chat.music.error.locked') });
+	showMenu(player, '%menu.music.collection.title', `%menu.music.collection.body\n\n%menu.music.discs §f${owned.length}§7 / ${DISCS.length}`, [...items, backButton(back)], back);
 }
 
 // Выбрать трек из текущего плейлиста: музыка зоны (мир, Незер, арена Хранителя) или свои пластинки. Нажал — играет сразу,
