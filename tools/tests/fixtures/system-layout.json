@@ -77,6 +77,7 @@
 			"system/core/reset_history.js",
 			"menu/admin/admin_enchant.js",
 			"system/economy/boosts.js",
+			"system/player/ranks.js",
 			"chat/chat.js",
 			"system/core/player_scores.js",
 			"system/bot/spawnbot.js",
@@ -85,7 +86,6 @@
 			"system/security/anticheat_checks.js",
 			"system/bot/bot.js",
 			"menu/admin/admin_menu.js",
-			"system/player/ranks.js",
 			"system/combat/mythic.js",
 			"system/security/ban.js",
 			"chat/commands/admin.js",
@@ -231,6 +231,10 @@
 				"worldInitialize"
 			],
 			[
+				"system/player/ranks.js",
+				"tick"
+			],
+			[
 				"chat/chat.js",
 				"playerLeave"
 			],
@@ -309,10 +313,6 @@
 			[
 				"menu/admin/admin_menu.js",
 				"beforeItemUse"
-			],
-			[
-				"system/player/ranks.js",
-				"tick"
 			],
 			[
 				"system/combat/mythic.js",

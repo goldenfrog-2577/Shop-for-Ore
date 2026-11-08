@@ -166,7 +166,7 @@ tools/
 | `boost:` | `boost:x2`, `boost:x4`, `boost:magnet` | действующие бусты |
 | `player:` | `player`, `player:pvp`, `player:rebirth`, `player:board…`, `player:sound`, `player:particle`, `player:music_off`, `player:haste`, `player:vip` (VIP) | игрок и его настройки |
 | `sys:` | `sys:buy_ok`, `sys:pick_update`, `sys:rebirth_now`, `sys:hunger_off`, `sys:pvp_v2`, `sys:warp_pvp`, `sys:wipe:<номер>`, `sys:vip_migrated`, `sys:offline_reset:<номер>`, `sys:wins_split` (прежние победы перенесены в `stat_win_pvp_ffa`), `sys:guided` (гид бота для новичков пройден или не нужен), `sys:fb_open`, `sys:fb_pre`, `sys:fb_block`, `sys:fb_nav`, `sys:fb_nav_ready`, `sys:fb_go_<сцена>`, `sys:fb_ok` (запасное меню) | служебные отметки функций |
-| `rank:` | `rank:<префикс>` | префикс в чате (`!prefix`); уровень `rank:§r<N>` со значком и `rank:§aVIP` ставит `scripts/system/player/ranks.js` |
+| `rank:` | `rank:<префикс>` | префикс в чате (`!prefix`); уровень `rank:§r<N>` со значком и `rank:§aVIP` ставит `scripts/system/player/ranks.js`. Порядок в чате (`chat/chat.js`): роль → «Меломан» → свои префиксы → уровень или VIP последним |
 | `promo:` | `promo:<код>` (строчными) | введённые промокоды (`scripts/system/economy/promo.js`) |
 | `ach:` | `ach:<id>` | полученные достижения (`scripts/system/player/achievements.js`) |
 | `zone:` | `zone:tir` | игрок в зоне тира (кирка уровня убрана) |
