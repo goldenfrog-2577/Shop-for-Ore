@@ -61,6 +61,7 @@ export function ChangePasswordUI(player, onBack) {
  */
 export function resetPassword(owner, target) {
 	clearPassword(target);
+	target.removeTag('auth:reset_request');   // заявка «Я забыл пароль» (registration/forgot.js) выполнена
 	target.removeTag('auth:done');
 	target.removeTag('auth:login');
 	target.addTag('auth:register');

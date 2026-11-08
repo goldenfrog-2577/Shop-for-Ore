@@ -5,6 +5,7 @@ import { tellText, run, tell, menuFeedback } from '../DataBase.js';
 import { modal } from '../menu/common/forms.js';
 import { checkPassword } from './password.js';
 import { unlockPlayer } from './system.js';
+import { ForgotUI, notifyRequests, RESET_REQUEST } from './forgot.js';
 
 // Защита от подбора пароля: после MAX_WRONG неверных паролей подряд форма входа не показывается LOCK_MS.
 // Счётчик — по нику и в памяти: перезаход паузу не снимает, перезагрузка скриптов — снимает
@@ -25,19 +26,24 @@ export function loginLockSeconds(player, now = Date.now()) {
  */
 export function LoginUI(player) {
 	const login = modal('%account.login.title')
-		.textField('%account.login.hint', '%account.login.placeholder');
+		.textField('%account.login.hint', '%account.login.placeholder')
+		// «Я забыл пароль» — заявка владельцу и ник в Telegram (registration/forgot.js), пароль не проверяется
+		.toggle('%account.login.forgot', false);
 	return login.show(player).then(r => {
 		// Форма закрыта — через ~2 с она покажется снова
 		if (!r.formValues) return;
+		if (r.formValues[1] === true) return ForgotUI(player);
 		const password = String(r.formValues[0] ?? '').trim();
 		// Проверка пароля по хешу (старый открытый пароль при успехе сразу переводится в хеш).
 		// Теги меняем синхронно (addTag/removeTag), а не командой tag — иначе тег снимался
 		// с задержкой и форма открывалась повторно
 		if (password && checkPassword(player, password)) {
 			wrong.delete(player.name);
+			player.removeTag(RESET_REQUEST);   // вспомнил пароль — заявка не нужна
 			player.removeTag('auth:login');
 			unlockPlayer(player);
 			tellText(player, '\n%chat.account.logged_in\n ');
+			if (player.hasTag('role:owner')) notifyRequests(player);
 			if (!player.hasTag('player:menu_success_off')) run(player, 'playsound random.levelup @s');
 		} else {
 			const w = wrong.get(player.name) ?? { count: 0, until: 0 };

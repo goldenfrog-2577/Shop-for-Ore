@@ -99,6 +99,7 @@
 			"system/boss/portal.js",
 			"system/ui/hud.js",
 			"system/core/fallback.js",
+			"registration/forgot.js",
 			"registration/login.js",
 			"registration/register.js",
 			"registration/system.js",

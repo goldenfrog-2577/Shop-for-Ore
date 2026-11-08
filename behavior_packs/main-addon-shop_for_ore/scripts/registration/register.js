@@ -39,7 +39,8 @@ export function RegisterUI(player) {
 		player.removeTag('auth:register');
 		unlockPlayer(player);
 		// В чате ник и пароль — параметры ключей (%1$s): где они стоят, решает перевод
-		tellText(player, '\n%account.register.greeting\n\n%account.register.welcome\n\n%account.register.info\n%account.register.password\n\n%account.register.remember\n ',
+		// Приветствие — что есть на сервере (одна строка — один ключ), затем пароль: он показывается только здесь, один раз
+		tellText(player, '\n%account.register.greeting\n%account.register.welcome\n%account.register.feature.1\n%account.register.feature.2\n%account.register.feature.3\n%account.register.feature.4\n%account.register.menu\n\n%account.register.info\n%account.register.password\n\n%account.register.remember\n ',
 			{ 'account.register.greeting': [player.name], 'account.register.password': [password] });
 		if (!player.hasTag('player:menu_success_off')) run(player, 'playsound random.levelup @s');
 	});
