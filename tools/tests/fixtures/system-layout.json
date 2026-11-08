@@ -98,6 +98,7 @@
 			"system/minigames/tir.js",
 			"system/economy/trader.js",
 			"system/combat/trident.js",
+			"system/security/portals.js",
 			"system/boss/portal.js",
 			"system/ui/hud.js",
 			"system/core/fallback.js",
@@ -375,6 +376,18 @@
 			[
 				"system/combat/trident.js",
 				"playerLeave"
+			],
+			[
+				"system/security/portals.js",
+				"beforeItemUseOn"
+			],
+			[
+				"system/security/portals.js",
+				"playerLeave"
+			],
+			[
+				"system/security/portals.js",
+				"tick"
 			],
 			[
 				"system/boss/portal.js",

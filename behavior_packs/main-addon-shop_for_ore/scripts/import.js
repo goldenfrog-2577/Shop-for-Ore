@@ -46,6 +46,7 @@ import './system/core/wipe.js';        // Вайп: номер вайпа, сб�
 import './system/core/offline_reset.js'; // !resetoffline: всё сбросить игрокам не в сети
 import './system/combat/trident.js';     // Трезубец с «Громовержцем»: молния в поражённого игрока
 import './system/player/void.js';        // Бездна: упал ниже мира — на спавн
+import './system/security/portals.js';   // Порталы закрыты: поджиг отменяется, порталы ломаются, из Незера и Энда — на спавн
 import './system/player/discs.js';       // Коллекция пластинок: дроп при копании и за мини-игры, «Меломан» за все 15
 import './system/boss/arena.js';         // Арена Хранителя: музыка (Ancestry, «5») и эмбиент Древнего города
 import './system/boss/boss.js';          // Босс Хранитель: старт с плиты у портала, фазы, тотем, награды

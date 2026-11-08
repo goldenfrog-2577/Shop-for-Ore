@@ -106,6 +106,7 @@ export const ERROR_KEYS = new Set([
 	'chat.rebirth.error.level',
 	'chat.rebirth.error.max',
 	'chat.server.feather_game',
+	'chat.server.portal_blocked',
 	'chat.shop.cosmetics.error.no_coins',
 	'chat.shop.cosmetics.error.vip',
 	'chat.shop.cosmetics.error.vip_sell',
