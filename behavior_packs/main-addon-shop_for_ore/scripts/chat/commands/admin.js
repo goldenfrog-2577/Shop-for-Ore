@@ -402,7 +402,7 @@ export const ADMIN_COMMANDS = {
 				tell(player, 'chat.cmd.boost.stop.none');
 				return;
 			}
-			tell(player, 'chat.cmd.boost.stop.done', boost ?? '—', String(magnets.length));
+			tell(player, 'chat.cmd.boost.stop.done', boost ?? { translate: 'chat.cmd.boost.stop.no' }, String(magnets.length));
 			return;
 		}
 		// Личный «Магнит руды» (как в магазине): !boost magnet [ник] [минуты 1–60] — себе или игроку

@@ -14,12 +14,12 @@
 								{
 									"id": "power",
 									"level": 5
-								},
-								{
-									"function": "set_name",
-									"name": "§eЛук Снайпера§r"
 								}
 							]
+						},
+						{
+							"function": "set_name",
+							"name": "§eЛук Снайпера§r"
 						}
 					]
 				}

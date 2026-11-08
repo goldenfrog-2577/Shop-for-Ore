@@ -214,6 +214,9 @@
 			"path" : "scripts/system/boss/boss.js"
 		},
 		{
+			"path" : "scripts/system/boss/portal.js"
+		},
+		{
 			"path" : "structures/server/bot.mcstructure"
 		},
 		{

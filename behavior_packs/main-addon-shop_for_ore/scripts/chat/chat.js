@@ -4,7 +4,6 @@ import { getScore, metricNumbers, emotes, isPending, isBot, getRole, ROLE_COLORS
 
 // --- Значения по умолчанию для тегов игрока ---
 const rank = 'rank:';
-const rankDefault = '%role.player';
 
 // --- Настройки антиспама и антифлуда ---
 const MAX_MESSAGE_LENGTH = 200; // Максимальная длина сообщения
@@ -60,7 +59,7 @@ function getRanks(player) {
 		})
 	// Префикс с цветом или названием роли, которой у игрока нет (выдан до проверки или роль сняли), не показываем
 		.filter((x) => x && !impersonatedRole(player, x));
-	return ranks.length === 0 ? [rankDefault]: ranks;
+	return ranks;
 }
 
 // --- Цвет ника и текста в чате: тег chat:name_color / chat:text_color (команда !color), иначе ник — цвет роли ---
@@ -132,7 +131,7 @@ world.events.beforeChat.subscribe((data) => {
  * @param {string} message
  */
 export function sendChatMessage(sender, message) {
-	const ranks = getRanks(sender).join('§r§8] | [§r');
+	const ranks = getRanks(sender);
 	const nameColor = nameColorOf(sender);
 	const textColor = textColorOf(sender);
 	// Московское время (UTC+3) считаем от UTC, чтобы не зависеть от часового пояса движка/устройства
@@ -146,11 +145,12 @@ export function sendChatMessage(sender, message) {
 		run(world.getDimension('overworld'), `tellraw @a ${JSON.stringify({ rawtext })}`);
 		return;
 	}
-	// Префикс роли (кроме обычного игрока) — переводимое слово, поэтому не world.say, а tellraw с translate
+	// Префикс роли — переводимое слово (у обычного игрока — «Игрок» на языке читателя), поэтому не world.say, а tellraw с translate.
+	// Дальше префиксы из тегов rank: (уровень, VIP); если их нет — только роль
 	const role = getRole(sender);
-	const rawtext = [{ text: ` §7${time} §8[` }];
-	if (role !== 'player') rawtext.push({ translate: `role.tag.${role}` }, { text: '§r§8] | [§r' });
-	rawtext.push({ text: `${ranks}§8]§r ${nameColor}${sender.name}  ${textColor}${formatMessage}` });
+	const rawtext = [{ text: ` §7${time} §8[` }, { translate: `role.tag.${role}` }];
+	if (ranks.length) rawtext.push({ text: `§r§8] | [§r${ranks.join('§r§8] | [§r')}` });
+	rawtext.push({ text: `§r§8]§r ${nameColor}${sender.name}  ${textColor}${formatMessage}` });
 	run(world.getDimension('overworld'), `tellraw @a ${JSON.stringify({ rawtext })}`);
 }
 

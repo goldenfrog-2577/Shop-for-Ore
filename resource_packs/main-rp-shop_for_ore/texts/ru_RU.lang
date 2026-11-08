@@ -172,7 +172,7 @@ chat.cmd.error.storage=§r⩕ §l§cERROR!§r §8» §7Данные мира н�
 chat.term.permanent=навсегда
 chat.term.minutes=мин
 color.minecoin_gold=Золото монет
-role.player=§7Игрок
+role.player=§fИгрок
 role.helper=§3Хелпер
 role.moder=§9Модератор
 role.admin=§cАдминистратор
@@ -182,6 +182,7 @@ role.tag.admin=§cАдмин
 role.tag.helper=§3Хелпер
 role.tag.moder=§9Модератор
 role.tag.bot=§7Бот
+role.tag.player=§fИгрок
 chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Сообщение слишком длинное (больше §e200§7 символов)
 chat.error.spam=§r⩕ §l§cERROR!§r §8» §7Не спамь в чате!
 
@@ -317,7 +318,8 @@ menu.main.button.games=§8§r §8Мини-игры
 
 ## --- ЗАПАСНОЕ МЕНЮ НА NPC (LEGACY MENU) ---
 ##   legacy_menu.*
-legacy_menu.notice=§7Если ты видишь это сообщение, то скрипты карты сейчас §cне работают§7, а это запасное меню. Работает то, что не зависит от скриптов: магазин (зачарования кирки, PvP-наборы, бусты), настройки, правила, телепортации и прокачка. Банк, промокоды, достижения, мини-игры, косметика и лавка торговца недоступны, пока скрипты вновь не заработают. Сообщи владельцу - §fkapycta1231484§7.
+legacy_menu.notice=§7Если ты видишь это сообщение, то скрипты карты сейчас §cне работают§7, а это запасное меню. Работает то, что не зависит от скриптов: магазин (зачарования кирки, PvP-наборы, бусты), настройки, правила, телепортации и прокачка. Банк, достижения, мини-игры, косметика и лавка торговца недоступны, пока скрипты вновь не заработают. Сообщи владельцу - §fkapycta1231484§7.
+legacy_menu.promo=§7Промокоды: если меню не работает, переименуй книгу в промокод строчными буквами и брось её рядом. В радиусе двух блоков не должно быть других игроков. При успехе книга исчезнет; при ошибке её можно подобрать.
 legacy_menu.button.about= О карте
 legacy_menu.button.shop= Магазин
 legacy_menu.button.settings= Настройки
@@ -354,14 +356,12 @@ legacy_menu.button.rebirth= Ребитх
 
 ## --- О КАРТЕ: УРОВНИ, КАК ИГРАТЬ, СОЗДАТЕЛИ, ВЕРСИЯ ---
 ##   menu.about.*, menu.levels.*, menu.howtoplay.*, menu.creators.*, menu.version.*
-
 menu.about.title=§l§8Меню сервера » §r §8§lО карте
 menu.about.body=§7Всё о карте: уровни и шахты, как играть, создатели и что нового в версии.
 menu.about.button.levels=§8§r §8Уровни
 menu.about.button.howtoplay=§f⩆ §8Как играть?
 menu.about.button.creators=§f⩇ §8Создатели
 menu.about.button.version=§8§r §8Версия карты
-
 menu.levels.title=§l§8Меню сервера » §r §8§lУровни
 menu.levels.line.1=1 уровень - Земля и Палка
 menu.levels.line.2=2 уровень - Камень и Деревянная кирка
@@ -403,7 +403,6 @@ menu.levels.line.37=37 уровень - Блок рудной меди и §5Н�
 menu.levels.line.38=38 уровень - (ничего)
 menu.levels.line.39=39 уровень - Блок аметиста
 menu.levels.line.40=40 уровень - Покупка VIP (§aМАКСИМАЛЬНЫЙ!!!§r)
-
 menu.howtoplay.title=§l§8Меню сервера » §f⩆§8 Как играть?
 menu.howtoplay.line.1=§l§7Обучение
 menu.howtoplay.line.2=§r§7• Продавай руду и блоки, чтобы повышать уровень и открывать новые кирки и руды. Подробнее: §r §7Уровни
@@ -426,9 +425,7 @@ menu.howtoplay.line.18=§r§7 - твой уровень и следующий
 menu.howtoplay.line.19=§r§7 - твой опыт и сколько §r§7 нужно до следующего §r§7 уровня
 menu.howtoplay.line.20=§r§7 - твой ребитх, который даёт Проворство
 menu.howtoplay.line.21=§r§7 - сколько игроков сейчас в мире
-
 menu.creators.title=§l§8Меню сервера » §f⩇§8 Создатели
-
 menu.version.title=§l§8Меню сервера » §r §8§lВерсия карты
 menu.version.line.1=§l§7Тут написано про последнее обновление карты
 menu.version.label=§2Версия карты:
@@ -499,8 +496,8 @@ chat.lvlup.level.33=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e3
 chat.lvlup.level.34=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e34§7 уровня, получена §bАлмазная кирка
 chat.lvlup.level.35=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e35§7 уровня
 chat.lvlup.level.36=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e36§7 уровня
-chat.lvlup.level.37=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e37§7 уровня
-chat.lvlup.level.38=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e38§7 уровня, получена §5Незеритовая кирка
+chat.lvlup.level.37=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e37§7 уровня, получена §5Незеритовая кирка
+chat.lvlup.level.38=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e38§7 уровня
 chat.lvlup.level.39=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e39§7 уровня
 chat.lvlup.level.40=§r §aLvL UP §8» §f%1$s§r§7 достиг(ла) §e40§7 уровня — это §aМАКСИМУМ§7!
 chat.vip.error.requirements=§r⩕ §l§cERROR!§r §8» §7Для §eVIP§7 нужен §e40§7 уровень  и §e125 000§7 
@@ -571,6 +568,7 @@ chat.ore_magnet.end=§r §eМагазин §8» §eМагнит руды§7 �
 chat.cmd.boost.use=§r §7CMD §8» §7Использование: §e!boost§7 <x2/x4> [минуты 1–60, по умолчанию 5], §e!boost magnet§7 [игрок] [минуты] или §e!boost stop§7 (отключить выданные бусты)
 chat.cmd.boost.stop.none=§r⩕ §l§cERROR!§r §8» §7Сейчас нет бустов, выданных администратором — купленные игроками не отключаются
 chat.cmd.boost.stop.done=§r §7CMD §8» §7Выданные бусты отключены: общий буст — §e%1$s§7, магнитов — §e%2$s
+chat.cmd.boost.stop.no=нет
 chat.cmd.boost.started=§r §bБуст §8» §7§f%1$s§r§7 включил(а) §e%2$s буст§7 для всех на §e%3$s минут§7!
 chat.cmd.boost.magnet.received=§r §eМагазин §8» §7§f%1$s§r§7 включил(а) тебе §eМагнит руды§7 на §e%2$s минут§7: выпавшие рядом предметы летят к тебе
 chat.cmd.boost.magnet.done=§r §7CMD §8» §7§eМагнит руды§7 на §e%2$s минут§7 выдан игроку §f%1$s
@@ -710,7 +708,6 @@ menu.rules.line.11=§r§l11.§r§7 Не спорить с решением пе�
 menu.promo.title=§l§8Меню сервера » §r §8§lПромокоды
 menu.promo.body=§7Промокоды можно найти в любом месте. Они помечены на табличках §2таким§7 цветом.
 menu.promo.hint=§7Если ты нашёл такой, введи его в поле ниже — большие и маленькие буквы можно не различать.
-menu.promo.book=§7Если меню не работает, переименуй книгу в промокод строчными буквами и брось её рядом. В радиусе двух блоков не должно быть других игроков. При успехе книга исчезнет; при ошибке её можно подобрать.
 menu.promo.placeholder=§7Введи промокод...
 chat.promo.error.used=§r⩕ §l§cERROR!§r §8» §7Ты уже активировал(а) этот §eпромокод
 chat.promo.error.invalid=§r⩕ §l§cERROR!§r §8» §7Неверный промокод
@@ -1143,12 +1140,18 @@ chat.cmd.resetoffline.summary=§r §7CMD §8» §7Игрокам §cне в �
 chat.cmd.resetoffline.confirm=§r §7CMD §8» §7Чтобы подтвердить, напиши §e!resetoffline confirm§7 в течение 30 секунд
 chat.cmd.resetoffline.done=§r §7CMD §8» §7Готово: счета игроков не в сети сброшены, теги снимутся при их входе
 chat.cmd.debug.header=§8-----§f Отладка: %1$s§r §8-----§f
-chat.cmd.worldedit.help.5=Лимитов объёма и стороны нет. Операции идут частями; копия и отмена хранятся до перезагрузки скриптов или выхода из мира.
-chat.cmd.worldedit.help.4=!worldedit undo — отменить последнюю операцию; cancel — остановить текущую. Сущности не копируются.
-chat.cmd.worldedit.help.3=!worldedit copy; paste [x y z] — с отступом относительно позиции при копировании.
-chat.cmd.worldedit.help.2=!worldedit size; set <блок> [данные]; replace <старый блок> <новый блок> [новые данные].
-chat.cmd.worldedit.help.1=!worldedit pos1 [x y z] / pos2 [x y z] — точки; без координат — позиция игрока. Поддерживаются ~координаты.
 chat.cmd.worldedit.error.failed=§r⩕ §l§cERROR!§r §8» §7Операция не завершена. Если блоки изменились, используй !worldedit undo; для прерванной отмены повтори undo.
+chat.cmd.worldedit.help.header=§8-----§f Справка по WorldEdit §8-----§f
+chat.cmd.worldedit.help.1=§f!worldedit pos1 [x y z] - §7первая точка выделения; без координат — где стоишь, можно ~координаты
+chat.cmd.worldedit.help.2=§f!worldedit pos2 [x y z] - §7вторая точка выделения
+chat.cmd.worldedit.help.3=§f!worldedit size - §7размер выделения
+chat.cmd.worldedit.help.4=§f!worldedit set <блок> [данные] - §7заполнить выделение блоком
+chat.cmd.worldedit.help.5=§f!worldedit replace <старый блок> <новый блок> [новые данные] - §7заменить одни блоки другими
+chat.cmd.worldedit.help.6=§f!worldedit copy - §7скопировать выделение
+chat.cmd.worldedit.help.7=§f!worldedit paste [x y z] - §7вставить с тем же отступом, что был при копировании
+chat.cmd.worldedit.help.8=§f!worldedit undo - §7отменить последнюю операцию
+chat.cmd.worldedit.help.9=§f!worldedit cancel - §7остановить текущую операцию
+chat.cmd.worldedit.help.10=§8Лимитов объёма и стороны нет, операции идут частями. Сущности не копируются. Копия и отмена хранятся до перезагрузки скриптов или выхода из мира.
 chat.cmd.worldedit.error.detail=§r⩕ §l§cERROR!§r §8» §7Этап: §e%1$s§7. Команда: §f%2$s§7. Причина: §f%3$s
 chat.cmd.worldedit.phase.recovery=восстановление ресурсов
 chat.cmd.worldedit.phase.chunks=загрузка чанков

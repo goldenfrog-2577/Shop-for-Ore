@@ -15,6 +15,12 @@
 					"rawtext": [
 						{
 							"translate": "legacy_menu.notice"
+						},
+						{
+							"text": "\n\n"
+						},
+						{
+							"translate": "legacy_menu.promo"
 						}
 					]
 				},
