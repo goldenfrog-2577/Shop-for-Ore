@@ -204,7 +204,7 @@ const STACK_16 = new Set(['minecraft:ender_pearl', 'minecraft:snowball', 'minecr
 	'minecraft:oak_sign', 'minecraft:spruce_sign', 'minecraft:birch_sign', 'minecraft:jungle_sign', 'minecraft:acacia_sign',
 	'minecraft:dark_oak_sign', 'minecraft:mangrove_sign', 'minecraft:crimson_sign', 'minecraft:warped_sign', 'minecraft:banner',
 	'minecraft:armor_stand', 'server:portable_ender_crystal']);
-const STACK_1 = /(potion|_bucket|_boat|_minecart|totem_of_undying|enchanted_book|written_book|writable_book|_stew|cake|saddle|music_disc|bed)$/;
+const STACK_1 = /(potion|_bucket|_boat|_minecart|totem_of_undying|enchanted_book|written_book|writable_book|_stew|cake|saddle|bed)$|^minecraft:record_[a-z0-9]+$/;   // пластинки в Bedrock 1.19.50 — minecraft:record_<id>, не music_disc_*
 function maxStack(item) {
 	if (STACK_16.has(item.typeId)) return 16;
 	if (STACK_1.test(item.typeId)) return 1;
