@@ -7,11 +7,11 @@ const ROLES=['player','helper','moder','admin','owner'],mk=(name,role='player')=
 const owner=mk('Owner','owner'),admin=mk('Admin','admin'),alice=mk('Alice Smith'),bot=mk('Bot','bot'),people=[alice,admin,bot,owner];
 const getRole=p=>ROLES.slice().reverse().find(r=>p.hasTag('role:'+r))??'player',hasRole=(p,r)=>ROLES.indexOf(getRole(p))>=ROLES.indexOf(r);
 const handlers={beforeChat:[],playerLeave:[]},world={events:Object.fromEntries(Object.keys(handlers).map(k=>[k,{subscribe:fn=>handlers[k].push(fn)}])),getPlayers:()=>people.values()};
-let now=1000,wipes=0,resets=0;const notices=[],native=[],delegated=[],passwords=[],routed=[];
+let now=1000,wipes=0,resets=0;const notices=[],native=[],delegated=[],passwords=[],routed=[],sounds=[];let helpHook;
 const stubs={
  '@minecraft/server':{world},
- '../../DataBase.js':{commandsList,isPending:p=>!!p.pending,tell:(p,key,...args)=>notices.push({p,key,args}),hasRole,findPlayer:name=>people.find(p=>p.name===name),getRole,ROLES,run:(p,cmd)=>native.push(cmd)},
- './player.js':{PLAYER_COMMANDS:{help:(p,a)=>routed.push(['help',p,Array.from(a)])},textWidth:s=>s.length,emoteGrid:()=> 'grid'},
+ '../../DataBase.js':{commandsList,isPending:p=>!!p.pending,tell:(p,key,...args)=>notices.push({p,key,args}),hasRole,findPlayer:name=>people.find(p=>p.name===name),getRole,ROLES,run:(p,cmd)=>native.push(cmd),menuFeedback:(p,error)=>sounds.push([p.name,error]),settleCommands:async()=>{},toldErrorCount:p=>p.errs??0,toldSuccessCount:p=>p.oks??0},
+ './player.js':{PLAYER_COMMANDS:{help:(p,a)=>helpHook?helpHook(p):routed.push(['help',p,Array.from(a)])},textWidth:s=>s.length,emoteGrid:()=> 'grid'},
  './moderator.js':{MODERATION_COMMANDS:{},isCoord:()=>true},
  './admin.js':{ADMIN_COMMANDS:{},debugLines:()=>[],giveOreMagnet:()=>true,setMoney:()=>true},
  '../../system/worldedit.js':{worldEditCommand:(p,a)=>delegated.push([p,Array.from(a)])},
@@ -36,4 +36,9 @@ command(owner,'resetpass',['Alice','Smith']);assert.equal(passwords[0],alice);co
 command(owner,'roles');const raw=JSON.parse(native.at(-1).slice('tellraw @s '.length));assert.equal(raw.rawtext.find(p=>p.translate==='chat.cmd.roles.line').with.rawtext[0].text,'Owner');
 let data={sender:alice,message:'!HeLp  one two',cancel:false};handlers.beforeChat[0](data);assert.equal(data.cancel,true);assert.deepEqual(routed.at(-1),['help',alice,['one','two']]);alice.pending=true;const n=routed.length;handlers.beforeChat[0]({sender:alice,message:'!help'});assert.equal(routed.length,n);
 assert(!fs.existsSync(new URL('scripts/chat/commands/owner.js',bp)));
+// Звук результата команды из чата: ошибка/успех по счётчикам сообщений, справка — без звука
+{const chat=handlers.beforeChat[0],P=mk('Sound');people.push(P);const send=async(m)=>{chat({sender:P,message:m,cancel:false});for(let i=0;i<6;i++)await Promise.resolve();};
+helpHook=()=>{};await send('!help');assert.deepEqual(sounds,[]);
+helpHook=(p)=>{p.errs=(p.errs??0)+1;};await send('!help');assert.deepEqual(sounds.at(-1),['Sound',true]);
+helpHook=(p)=>{p.oks=(p.oks??0)+1;};await send('!help');assert.deepEqual(sounds.at(-1),['Sound',false]);assert.equal(sounds.length,2);helpHook=undefined;}
 console.log('PASS: real ESM imports/exports, one chat/leave subscription, all owner guards, one-use/expired/leave confirmations, resetpass, roles and shared chat dispatcher.');

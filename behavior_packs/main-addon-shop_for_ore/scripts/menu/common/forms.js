@@ -52,6 +52,14 @@ function allowed(player) {
 	state.opened = true;
 	return true;
 }
+// Клик — короткий звук при нажатии кнопки поверх стандартного звука интерфейса (Настройки → Звуки в меню → Клик).
+// Напрямую, не через run(): он не считается звуком результата действия
+export const CLICK_SOUND = 'playsound random.pop @s ~ ~ ~ 0.5 1.6';
+export const CLICK_OFF = 'player:menu_click_off';
+function click(player) {
+	try { if (!player.hasTag(CLICK_OFF)) player.runCommandAsync(CLICK_SOUND).catch(() => {}); } catch { /* игрок вышел */ }
+}
+
 // null — форма не показана (обработчики ничего не делают, «Назад» тоже не срабатывает)
 const show = (player, form) => {
 	const state = acting.get(player.name);
@@ -88,6 +96,7 @@ export function showMenu(player, title, body, items, onBack) {
 		if (!r) return;
 		if (closedByPlayer(r)) return;
 		if (r.canceled || r.selection === undefined) return;
+		click(player);
 		act(player, list[r.selection]?.run, () => showMenu(player, title, body, items, onBack));
 	});
 }
@@ -103,6 +112,7 @@ export function showModal(player, form, onSubmit, onBack) {
 	return show(player, form).then(r => {
 		if (!r) return;
 		if (!r.formValues) return closedByPlayer(r) ? act(player, onBack) : undefined;
+		click(player);
 		act(player, () => onSubmit(r.formValues), onBack);
 	});
 }
@@ -126,6 +136,7 @@ export function confirm(player, title, body, onYes, onNo) {
 		.button2(' %menu.common.no');
 	return show(player, form).then(r => {
 		if (!r) return;
+		if (r.selection === 1 || (!r.canceled && r.selection === 0)) click(player);
 		if (r.selection === 1) act(player, onYes, onNo);
 		else if (!r.canceled && onNo && r.selection === 0) act(player, onNo);
 	});

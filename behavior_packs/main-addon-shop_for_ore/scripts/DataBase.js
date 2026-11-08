@@ -70,10 +70,19 @@ export function metricNumbers(value) {
 // ошибка — закрыть всю цепочку, успех — оставить открытым последнее окно.
 const told = new Map();
 const toldErrors = new Map();
+const toldSuccess = new Map();
 /** @param {Entity} entity */
 export const toldCount = (entity) => told.get(entity.name) ?? 0;
 /** @param {Entity} entity */
 export const toldErrorCount = (entity) => toldErrors.get(entity.name) ?? 0;
+/** Сколько сообщений об успехе (ключ …done… или «Настройка изменена») получил игрок — для звука после команды чата. */
+export const toldSuccessCount = (entity) => toldSuccess.get(entity.name) ?? 0;
+const SUCCESS_KEY = /\.done(\.|$)|^chat\.settings\./;
+/** В сообщении tellraw есть ключ успеха. */
+export function isSuccessMessage(command) {
+	for (const m of command.matchAll(TRANSLATE)) if (SUCCESS_KEY.test(m[1])) return true;
+	return false;
+}
 const TRANSLATE = /"translate":"([^"]+)"/g;
 /** В сообщении tellraw есть ключ ошибки. */
 export function isErrorMessage(command) {
@@ -93,7 +102,7 @@ export const menuSoundCount = p => soundTotals.get(p.name) ?? 0;
 export const failedCommandCount = p => failedTotals.get(p.name) ?? 0;
 export const beginMenuAction = p => menuActions.set(p.name, toldErrorCount(p));
 export const endMenuAction = p => menuActions.delete(p.name);
-world.events.playerLeave.subscribe(e => { for (const map of [pendingCommands, menuActions, commandTotals, soundTotals, failedTotals, told, toldErrors]) map.delete(e.playerName); });
+world.events.playerLeave.subscribe(e => { for (const map of [pendingCommands, menuActions, commandTotals, soundTotals, failedTotals, told, toldErrors, toldSuccess]) map.delete(e.playerName); });
 /** Дождаться команд действия, включая команды из их обработчиков .then. */
 export const hasPendingCommands = entity => (pendingCommands.get(entity.name)?.size ?? 0) > 0;
 export async function settleCommands(entity) {
@@ -103,7 +112,7 @@ export async function settleCommands(entity) {
 		await Promise.all([...pending]);
 	}
 }
-/** Звуки результата действия меню; настройки хранятся у каждого игрока отдельно. */
+/** Звуки результата: действие меню, команда чата (!…), вход и пароль; настройки хранятся у каждого игрока отдельно. */
 export function menuFeedback(player, error = false) {
 	if (player.hasTag(error ? 'player:menu_error_off' : 'player:menu_success_off')) return;
 	return run(player, `playsound ${error ? 'note.bass' : 'random.orb'} @s`);
@@ -119,6 +128,7 @@ export function run(entity, command) {
 	if (command.startsWith('tellraw @s ')) {
 		told.set(entity.name, toldCount(entity) + 1);
 		if (isErrorMessage(command)) toldErrors.set(entity.name, toldErrorCount(entity) + 1);
+		else if (isSuccessMessage(command)) toldSuccess.set(entity.name, toldSuccessCount(entity) + 1);
 	}
 	const task = entity.runCommandAsync(command).then((r) => r ?? {}, () => { if (entity.name) failedTotals.set(entity.name, failedCommandCount(entity) + 1); return undefined; });
 	if (entity.name) {

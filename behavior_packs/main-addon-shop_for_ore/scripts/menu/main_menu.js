@@ -254,6 +254,7 @@ function menuSounds(player, back) {
 	showMenu(player, '%menu.settings.menu_sounds.title', '%menu.settings.menu_sounds.body', [
 		{ text: '%menu.settings.menu_sounds.success', run: () => toggle('success') },
 		{ text: '%menu.settings.menu_sounds.error', run: () => toggle('error') },
+		{ text: '%menu.settings.menu_sounds.click', run: () => toggle('click') },
 		backButton(back)
 	], back);
 }

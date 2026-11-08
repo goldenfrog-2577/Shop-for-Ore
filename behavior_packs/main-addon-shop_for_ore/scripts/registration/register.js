@@ -1,7 +1,7 @@
 // --- UI регистрации нового игрока ---
 // Форму вызывает registration/system.js
 
-import { tellText, run } from '../DataBase.js';
+import { tellText, run, menuFeedback } from '../DataBase.js';
 import { modal } from '../menu/common/forms.js';
 import { PASSWORD_MIN, PASSWORD_MAX, setPassword } from './password.js';
 import { unlockPlayer } from './system.js';
@@ -23,13 +23,13 @@ export function RegisterUI(player) {
 		// Если игрок не подтвердил правила
 		if (r.formValues[1] !== true) {
 			tellText(player, '\n%chat.account.error.no_cheats\n ');
-			run(player, 'playsound note.bass @s');
+			menuFeedback(player, true);
 			return;
 		}
 		// Пустой или слишком длинный пароль не принимаем
 		if (password.length < PASSWORD_MIN || password.length > PASSWORD_MAX) {
 			tellText(player, '\n%chat.account.error.password_length\n ');
-			run(player, 'playsound note.bass @s');
+			menuFeedback(player, true);
 			return;
 		}
 		// Теги ставим синхронно и в правильном порядке: сначала пароль (соль + хеш), потом auth:done —
@@ -41,6 +41,6 @@ export function RegisterUI(player) {
 		// В чате ник и пароль — параметры ключей (%1$s): где они стоят, решает перевод
 		tellText(player, '\n%account.register.greeting\n\n%account.register.welcome\n\n%account.register.info\n%account.register.password\n\n%account.register.remember\n ',
 			{ 'account.register.greeting': [player.name], 'account.register.password': [password] });
-		run(player, 'playsound random.levelup @s');
+		if (!player.hasTag('player:menu_success_off')) run(player, 'playsound random.levelup @s');
 	});
 }

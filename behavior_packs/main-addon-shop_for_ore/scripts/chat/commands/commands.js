@@ -5,7 +5,7 @@
 // Новая команда: строка в commandsList и метод в объекте своей роли (имя — без «!»).
 
 import { world } from '@minecraft/server';
-import { commandsList, isPending, tell, hasRole, findPlayer, getRole, ROLES, run } from '../../DataBase.js';
+import { commandsList, isPending, tell, hasRole, findPlayer, getRole, ROLES, run, menuFeedback, settleCommands, toldErrorCount, toldSuccessCount } from '../../DataBase.js';
 import { PLAYER_COMMANDS } from './player.js';
 import { MODERATION_COMMANDS } from './moderator.js';
 import { ADMIN_COMMANDS } from './admin.js';
@@ -153,7 +153,14 @@ world.events.beforeChat.subscribe((data) => {
 	// Парсим команду и аргументы
 	const args = message.slice(1).split(/\s+/);
 	const command = args.shift().toLowerCase();
+	// Звук результата, как в меню: ошибка (ключ из ERROR_KEYS) — «ошибка», сообщение об успехе (…done…) — «успех»;
+	// справка и списки (!help, !online) без звука. Выключается там же: Настройки → Звуки в меню
+	const before = { errors: toldErrorCount(player), success: toldSuccessCount(player) };
 	runChatCommand(player, command, args);
+	settleCommands(player).then(() => {
+		const error = toldErrorCount(player) > before.errors;
+		if (error || toldSuccessCount(player) > before.success) menuFeedback(player, error);
+	}).catch(() => {});
 });
 
 /**
