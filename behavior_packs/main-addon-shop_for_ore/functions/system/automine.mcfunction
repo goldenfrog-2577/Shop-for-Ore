@@ -31,14 +31,16 @@ fill 12 -4 -14 10 0 -12 gold_ore
 fill 12 -4 -7 10 0 -5 lapis_ore
 fill 12 -4 0 10 0 2 diamond_ore
 fill 12 -4 7 10 0 9 emerald_ore
+# Незер: ямы по кругу — левый ряд сверху вниз, нижний слева направо, правый снизу вверх; десятая (x 10…12, z −28…−26) пока пустая
 fill -9 0 -26 -11 -4 -28 netherrack
-fill -9 0 -33 -11 -4 -35 magma
-fill -9 0 -40 -11 -4 -42 quartz_ore
-fill -9 0 -47 -11 -4 -49 nether_gold_ore
-fill -4 0 -47 -2 -4 -49 ancient_debris
-fill 3 0 -47 5 -4 -49 netherite_block
-fill 10 0 -47 12 -4 -49 obsidian
-fill 10 0 -42 12 -4 -40 crying_obsidian
+fill -9 0 -33 -11 -4 -35 quartz_ore
+fill -9 0 -40 -11 -4 -42 nether_gold_ore
+fill -9 0 -47 -11 -4 -49 magma
+fill -4 0 -47 -2 -4 -49 gilded_blackstone
+fill 3 0 -47 5 -4 -49 ancient_debris
+fill 10 0 -47 12 -4 -49 netherite_block
+fill 10 0 -42 12 -4 -40 obsidian
+fill 10 0 -35 12 -4 -33 crying_obsidian
 fill -37 -1 -68 -35 -1 -66 amethyst_cluster
 # Пещера: пол и стенки ям — обычный камень, а гранит, андезит и диорит в 1.19.50 тоже «stone»,
 # поэтому кирка 26+ уровня ломает и их. Перед заливкой ям: дыры в полу (y 0) — снова камень (декор не трогаем:
