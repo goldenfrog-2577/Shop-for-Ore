@@ -103,7 +103,8 @@ const music = new Map();    // ник → состояние musicStep
 let seconds = 0;
 const send = (p, commands) => { for (const c of commands) p.runCommandAsync(c).catch(() => {}); };
 const isBot = (p) => p.hasTag('role:bot');
-const playlistOf = (p) => playlistFor(zoneOf(p.location, p.dimension?.id), p.hasTag(DISC_MODE), unlockedDiscs(p));
+/** Текущий плейлист игрока { key, list } — что можно выбрать в меню «Выбрать трек». */
+export const playlistOf = (p) => playlistFor(zoneOf(p.location, p.dimension?.id), p.hasTag(DISC_MODE), unlockedDiscs(p));
 
 /** Что играет у игрока сейчас (трек из music_tracks.js) или undefined — пауза, выключено, ещё не начиналось. */
 export function nowPlaying(p) {

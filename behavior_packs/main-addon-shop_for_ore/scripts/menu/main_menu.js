@@ -11,7 +11,7 @@ import { cosmeticsMenu } from './cosmetics_shop.js';
 import { achievementsMenu } from './achievements_menu.js';
 import { listGames, gameOf, joinGame, leaveGame } from '../system/minigames/minigames.js';
 import { runChatCommand } from '../chat/commands/commands.js';
-import { MUSIC_OFF, DISC_MODE, getVolume, setVolume, setMusicOff, unlockedDiscs, nowPlaying, nextTrack, playNow } from '../system/ui/music.js';
+import { MUSIC_OFF, DISC_MODE, getVolume, setVolume, setMusicOff, unlockedDiscs, nowPlaying, nextTrack, playNow, playlistOf } from '../system/ui/music.js';
 import { TRACK, DISCS } from '../system/ui/music_tracks.js';
 import { ChangePasswordUI } from '../registration/change.js';
 import { redeemPromo } from '../system/economy/promo.js';
@@ -197,7 +197,7 @@ function musicSetting(player, back) {
 			nextTrack(player);
 			again();
 		} },
-		discMode && discs.length && { text: '%menu.music.button.discs', icon: 'textures/items/record_13', run: () => musicDiscs(player, again) },
+		{ text: '%menu.music.button.choose', icon: 'textures/items/record_13', run: () => musicChoose(player, again) },
 		backButton(back)
 	], back);
 }
@@ -207,14 +207,17 @@ function musicVolume(player, back) {
 	showModal(player, form, ([v]) => { setVolume(player, v); tell(player, 'chat.music.volume', String(getVolume(player))); back(); }, back);
 }
 
-// Свои пластинки: нажал — играет сразу (на арене Хранителя всегда её музыка)
-function musicDiscs(player, back) {
-	const items = unlockedDiscs(player).map(id => ({ text: `§8${TRACK[id].title}\n§7${TRACK[id].author}`, icon: `textures/items/record_${id}`, run: () => {
-		if (player.hasTag(MUSIC_OFF)) return tell(player, 'chat.music.error.off');
-		if (!playNow(player, id)) return tell(player, 'chat.music.error.arena');
-		back();
-	} }));
-	showMenu(player, '%menu.music.discs.title', '%menu.music.discs.body', [...items, backButton(back)], back);
+// Выбрать трек из текущего плейлиста: музыка зоны (мир, Незер, арена Хранителя) или свои пластинки. Нажал — играет сразу,
+// с плашкой «Сейчас играет»; играющий сейчас отмечен
+function musicChoose(player, back) {
+	if (player.hasTag(MUSIC_OFF)) return tell(player, 'chat.music.error.off');
+	const { key, list } = playlistOf(player), now = nowPlaying(player)?.id;
+	const items = list.map(id => ({
+		text: `${id === now ? '§2' : '§8'}${TRACK[id].title}\n§7${TRACK[id].author}`,
+		icon: TRACK[id].item ? `textures/items/record_${id}` : 'textures/server_icons/note_block',
+		run: () => { if (!playNow(player, id)) return tell(player, 'chat.music.error.off'); back(); }
+	}));
+	showMenu(player, '%menu.music.choose.title', `%menu.music.choose.body\n\n%menu.music.choose.${key}`, [...items, backButton(back)], back);
 }
 
 // Панель слева: три состояния (теги player:board_icons, player:board_no — functions/settings/*)
