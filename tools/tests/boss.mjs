@@ -143,5 +143,8 @@ assert.match(src, /if \(bossBusy\(\)\) return tell\(p, 'chat\.boss\.busy'\);/, '
 assert.match(src, /hasTag\('role:bot'\) \|\| isPending\(p\) \|\| !loaded\) return;/);
 assert.match(src, /inFight\(q\.location, q\.dimension\?\.id\) && !isPending\(q\)\)/);
 assert.match(fs.readFileSync(new URL('scripts/system/core/wipe.js', bp), 'utf8'), /'boss:disc:', WIPE_TAG\]/);
-assert.match(fs.readFileSync(new URL('scripts/system/minigames/minigames.js', bp), 'utf8'), /getEffect\(MinecraftEffectTypes\.levitation\) \|\| p\.getEffect\(MinecraftEffectTypes\.slowFalling\)[\s\S]*?effect @s clear[\s\S]*?g\.def\.start\(p/);
+{ const mg = fs.readFileSync(new URL('scripts/system/minigames/minigames.js', bp), 'utf8');
+	assert.match(mg, /getEffect\(MinecraftEffectTypes\.levitation\) \|\| p\.getEffect\(MinecraftEffectTypes\.slowFalling\)/);
+	assert.match(mg, /if \(hasFeatherEffect\(player\)\) return fail\('chat\.game\.error\.feather'\);\n\tg\.players\.add/);
+	assert.ok(!mg.includes('effect @s clear'), 'only the feather effects — never clear bought ones'); }
 console.log('PASS: boss start rules, phases, minion waves, discs, spots, 4-locale keys, entity/sounds, warp level gate.');
