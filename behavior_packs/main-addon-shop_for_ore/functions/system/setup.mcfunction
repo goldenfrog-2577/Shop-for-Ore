@@ -40,4 +40,7 @@ scoreboard objectives add session dummy
 # 9 — новый порядок блоков Незера (кварц 17, самородки 18, магма 19, позолоченный чернит 20, обломки 21):
 # кирки всем заново — у кого старая кирка своего уровня, она ломала бы другие блоки
 scoreboard players reset * pick
-scoreboard players set setup system 10
+# 10 — Хранитель: победы и лучшее время боя в секундах (!top boss / boss_time, scripts/system/boss/boss.js)
+scoreboard objectives add stat_win_boss dummy
+scoreboard objectives add stat_boss_time dummy
+scoreboard players set setup system 11

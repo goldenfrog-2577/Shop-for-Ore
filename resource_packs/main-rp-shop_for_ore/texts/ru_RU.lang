@@ -268,7 +268,7 @@ chat.help.fly=§7Полёт в режиме приключения: §eon§7/§e
 chat.help.clearchat=§7Очищает чат тебе; §eall§7 — всем игрокам (модератор и выше)
 chat.help.balance=§7Сколько у тебя монет и VIP-коинов
 chat.help.pay=§7Перевод монет игроку в сети — как в Банке; сумма — целое число
-chat.help.top=§7Топ-5 игроков в сети: по монетам, уровню, ребитхам, VIP-коинам, K/D, победам в PvP или в сплифе. Без аргумента — подсказка
+chat.help.top=§7Топ-5 игроков в сети: по монетам, уровню, ребитхам, VIP-коинам, K/D, победам в PvP, в сплифе или над Хранителем, лучшему времени боя с Хранителем. Без аргумента — подсказка
 chat.help.stats=§7Уровень, опыт, монеты, VIP-коины, ребитхи, роль и предупреждения игрока
 chat.help.online=§7Кто сейчас в сети: ник, роль и уровень, старшие роли сверху
 chat.help.report=§7Жалоба на игрока персоналу в сети (хелперам и выше), не чаще раза в минуту
@@ -915,7 +915,7 @@ chat.cmd.achievement.error.missing=§r §l§cERROR!§r §8» §7У игрок
 
 ## --- СТАТИСТИКА, ТОПЫ И ОНЛАЙН ---
 ##   chat.cmd.stats.*, chat.cmd.top.*, chat.cmd.online.*
-chat.cmd.top.use=§r §7CMD §8» §7Использование: §e!top§7 <money/lvl/rebirth/vip_coins/kd/pvp/spleef> — топ-5 игроков в сети
+chat.cmd.top.use=§r §7CMD §8» §7Использование: §e!top§7 <money/lvl/rebirth/vip_coins/kd/pvp/spleef/boss/boss_time> — топ-5 игроков в сети
 chat.cmd.top.header.money=§8-----§f Топ по монетам (в сети) §8-----§f
 chat.cmd.top.header.lvl=§8-----§f Топ по уровню (в сети) §8-----§f
 chat.cmd.top.header.rebirth=§8-----§f Топ по ребитхам (в сети) §8-----§f
@@ -923,7 +923,10 @@ chat.cmd.top.header.vip_coins=§8-----§f Топ по VIP-коинам (в се�
 chat.cmd.top.header.kd=§8-----§f Топ по K/D — убийства/смерти (в сети) §8-----§f
 chat.cmd.top.header.pvp=§8-----§f Топ по победам в «Последнем выжившем» (в сети) §8-----§f
 chat.cmd.top.header.spleef=§8-----§f Топ по победам в сплифе (в сети) §8-----§f
+chat.cmd.top.header.boss=§8-----§f Топ по победам над Хранителем (в сети) §8-----§f
+chat.cmd.top.header.boss_time=§8-----§f Топ по времени боя с Хранителем (в сети) §8-----§f
 chat.cmd.top.kd_value=§e%1$s§7/§e%2$s §8(%3$s)
+chat.cmd.top.boss_value=§e%1$s §8(лучшее время §e%2$s§8)
 chat.cmd.top.line=§e%1$s.§r §f%2$s§r§8 — §e%3$s
 chat.cmd.stats.header=§8-----§f Статистика игрока %1$s§r §8-----§f
 chat.cmd.stats.lvl=§7Уровень: §e%1$s §f
@@ -1470,6 +1473,8 @@ admin.server.button.top_vip_coins=§8Топ по VIP-коинам
 admin.server.button.top_kd=§8Топ по K/D
 admin.server.button.top_pvp=§8Топ по победам в PvP
 admin.server.button.top_spleef=§8Топ по победам в сплифе
+admin.server.button.top_boss=§8Топ по победам над Хранителем
+admin.server.button.top_boss_time=§8Топ по времени боя с Хранителем
 
 ## --- МЕНЮ АДМИНИСТРАТОРА: БОТ И ЭФФЕКТЫ ---
 ##   admin.bot.*, chat.admin.bot.*, chat.cmd.bot.*, effect.*, hud.bot.*, bot.*

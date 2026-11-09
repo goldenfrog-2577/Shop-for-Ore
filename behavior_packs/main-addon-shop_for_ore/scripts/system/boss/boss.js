@@ -3,7 +3,9 @@
 // только из сундука мистика, system/combat/mythic.js). Мелодия доигрывает до конца (HORN_MS ≈ 7 с), через полсекунды рог
 // пропадает из инвентаря и только тогда появляется Хранитель; проверки старта повторяются в этот момент. Нужны: нет боя, прошла общая перезарядка
 // (COOLDOWN_SECONDS, отметка boss_until в табло system — секунды Unix), на арене 1–4 игрока с уровнем ≥ MIN_LEVEL.
-// Остальных с арены (ниже уровня, бот) в начале боя переносит на спавн.
+// Бот карты (system/bot/bot.js) идёт в бой, если стоит за решёткой и следует за одним из участников: занимает одно из
+// MAX_FIGHTERS мест (здоровье босса считается и с ним), бьёт Хранителя и прислужников, наград и статистики не получает;
+// мест нет — остаётся снаружи. Остальных с арены (ниже уровня, бот не в отряде) в начале боя переносит на спавн.
 // Бой: решётка в тоннеле закрывается, участники получают тег boss:fighter (по нему босс выбирает цель),
 // Хранитель вылезает из портала; здоровье 500/750/1000/1250 по числу участников, в левой руке — тотем бессмертия
 // (у Хранителя рука не рисуется). Фазы: 1 — обычный бой; 2 (здоровье ≤ 60 %) — раз в WAVE_SECONDS «Тьма», визг
@@ -14,7 +16,9 @@
 // Смерть участника: выпавшие вещи на арене уничтожаются, после возрождения (тег boss:clear) инвентарь очищается (/clear —
 // остаётся только то, что было с keep_on_death; меню и кирку уровня функции мира выдают заново), игрок выбывает.
 // Ушёл за решётку (тоннель — не арена боя) или вышел из игры — выбыл. Победа — босс погиб после тотема: каждому, кто дожил, монеты, VIP-монеты,
-// достижение (тег stat:boss) и пластинка: первая — случайная из двух, вторая — недостающая.
+// достижение (тег stat:boss), пластинка (первая — случайная из двух, вторая — недостающая) и строка в топе:
+// табло stat_win_boss — число побед, stat_boss_time — лучшее время боя в секундах (!top boss / boss_time).
+// Если из живых участников остался только бот — поражение.
 // Поражение — выбыли все или прошло FIGHT_SECONDS: Хранитель уходит. В любом конце: решётка открыта, прислужники убраны.
 // После перезагрузки скриптов посреди боя (boss_state = 1 или босс в мире) бой отменяется без награды.
 
@@ -73,8 +77,9 @@ export function hornAction(itemId, data, onPlate) {
 }
 
 /**
- * Можно ли начать бой. players — [{ name, level, bot }] на арене; now и until — секунды Unix.
- * { ok: true, fighters, kick } или { ok: false, reason: 'busy'|'cooldown'|'too_many'|'level', minutes? }.
+ * Можно ли начать бой. players — [{ name, level, bot, follows }] на арене (follows — за кем следует бот); now и until — секунды Unix.
+ * Бот в отряде, если следует за участником и осталось место. { ok: true, fighters, kick } или
+ * { ok: false, reason: 'busy'|'cooldown'|'too_many'|'level', minutes? }.
  */
 export function checkStart({ busy, now, until, players, starter }) {
 	if (busy) return { ok: false, reason: 'busy' };
@@ -82,8 +87,14 @@ export function checkStart({ busy, now, until, players, starter }) {
 	const fighters = players.filter(p => !p.bot && p.level >= MIN_LEVEL).map(p => p.name);
 	if (!fighters.includes(starter)) return { ok: false, reason: 'level' };
 	if (fighters.length > MAX_FIGHTERS) return { ok: false, reason: 'too_many' };
+	for (const b of players.filter(p => p.bot && fighters.includes(p.follows))) if (fighters.length < MAX_FIGHTERS) fighters.push(b.name);
 	return { ok: true, fighters, kick: players.filter(p => !fighters.includes(p.name)).map(p => p.name) };
 }
+
+/** Лучшее время боя: 0 — побед ещё не было. */
+export const bestTime = (prev, seconds) => prev > 0 ? Math.min(prev, seconds) : seconds;
+/** Время для топа: «м:сс». */
+export const mmss = (seconds) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 
 /** Фаза: 3 — тотем сработал; 2 — здоровье не выше 60 %; иначе 1. */
 export const phaseOf = ({ current, max, totem }) => totem ? 3 : current <= max * PHASE2_SHARE ? 2 : 1;
@@ -150,9 +161,21 @@ function clearArena() {
 	cmd(`kill @e[type=item,${ITEMS_BOX}]`);
 }
 
+// Бот подключается сам (system/bot/bot.js → connectBot): импорт отсюда поменял бы порядок загрузки модулей
+let botLink = { name: () => undefined, follows: () => undefined, assist() {}, bench() {}, end() {} };
+export const connectBot = (link) => { botLink = link; };
+const isBotName = (name) => !!name && botLink.name() === name;
+// Цели бота в бою: Хранитель и прислужники
+const botTargets = () => [...bosses(), ...minions()];
+
 function startFight(fighters, kick) {
 	const n = fighters.length;
 	fight = { fighters: new Set(fighters), dead: new Set(), started: now(), max: HP[n - 1], phase: 1, nextWave: 0, totem: false };
+	// Бот в отряде — бьёт цели; не в отряде (перенесён с арены или следует за участником) — ждёт на спавне до конца боя,
+	// иначе вернулся бы за участником или к своей точке прямо в бой
+	const bot = botLink.name(), spawn = { x: SPAWN[0], y: SPAWN[1], z: SPAWN[2] };
+	if (bot && fight.fighters.has(bot)) botLink.assist(botTargets, spawn);
+	else if (bot && (fight.fighters.has(botLink.follows()) || kick.includes(bot))) { botLink.assist(botTargets, spawn); botLink.bench(); }
 	cmd('scoreboard players set boss_state system 1');
 	for (const name of kick) {
 		const p = findOnline(name);
@@ -179,12 +202,14 @@ function startFight(fighters, kick) {
 
 function endFight(result) {
 	if (!fight) return;
-	const winners = result === 'victory' ? [...fight.fighters].filter(n => !fight.dead.has(n)) : [];
+	const winners = result === 'victory' ? [...fight.fighters].filter(n => !fight.dead.has(n) && !isBotName(n)) : [];
+	const seconds = now() - fight.started;
 	for (const name of fight.fighters) {
 		const p = findOnline(name);
 		if (!p) continue;
 		p.removeTag(FIGHTER);
-		if (winners.includes(name)) reward(p);
+		if (isBotName(name)) continue;
+		if (winners.includes(name)) reward(p, seconds);
 		else tell(p, result === 'timeout' ? 'chat.boss.timeout' : result === 'abort' ? 'chat.boss.abort' : 'chat.boss.defeat');
 	}
 	for (const b of bosses()) {
@@ -194,15 +219,18 @@ function endFight(result) {
 	}
 	clearArena();
 	setBars(true);
+	botLink.end();
 	until = now() + COOLDOWN_SECONDS;
 	cmd(`scoreboard players set boss_until system ${until}`);
 	cmd('scoreboard players set boss_state system 0');
 	fight = undefined;
 }
 
-function reward(p) {
+function reward(p, seconds) {
 	run(p, `scoreboard players add @s money ${REWARD.money}`);
 	run(p, `scoreboard players add @s vip_coins ${REWARD.vip_coins}`);
+	run(p, 'scoreboard players add @s stat_win_boss 1');
+	run(p, `scoreboard players set @s stat_boss_time ${bestTime(getScore(p, 'stat_boss_time'), seconds)}`);
 	p.addTag('stat:boss');
 	tell(p, 'chat.boss.victory', String(REWARD.money), String(REWARD.vip_coins));
 	const disc = discFor(p.getTags());
@@ -222,6 +250,7 @@ function knockOut(name, key) {
 		p.removeTag(FIGHTER);
 		if (key) tell(p, key);
 	}
+	if (isBotName(name)) botLink.bench();
 }
 
 function wave(phase) {
@@ -280,7 +309,7 @@ function fightStep() {
 		if (p && !fight.dead.has(name)) run(p, 'effect @s darkness 3 0 true');
 	}
 	cmd(`kill @e[type=item,${ITEMS_BOX}]`);
-	if (![...fight.fighters].some(n => !fight.dead.has(n))) return endFight('defeat');
+	if (![...fight.fighters].some(n => !fight.dead.has(n) && !isBotName(n))) return endFight('defeat');
 	if (t - fight.started >= FIGHT_SECONDS) endFight('timeout');
 }
 
@@ -345,7 +374,7 @@ function tryStart(p) {
 	const arena = inside.filter(q => inFight(q.location, q.dimension?.id));
 	const check = checkStart({
 		busy: false, now: now(), until, starter: p.name,
-		players: arena.map(q => ({ name: q.name, level: getScore(q, 'lvl'), bot: q.hasTag('role:bot') }))
+		players: arena.map(q => ({ name: q.name, level: getScore(q, 'lvl'), bot: q.hasTag('role:bot'), follows: q.hasTag('role:bot') ? botLink.follows() : undefined }))
 	});
 	if (!check.ok) return { ...check, args: check.minutes ? [String(check.minutes)] : check.reason === 'level' ? [String(MIN_LEVEL)] : check.reason === 'too_many' ? [String(MAX_FIGHTERS)] : [] };
 	return { ...check, inside };
@@ -403,7 +432,11 @@ world.events.entityHurt.subscribe((e) => {
 	if (!fight || e.hurtEntity?.typeId !== 'minecraft:player' || !fight.fighters.has(e.hurtEntity.name)) return;
 	let hp = 1;
 	try { hp = e.hurtEntity.getComponent('minecraft:health').current; } catch {}
-	if (hp <= 0) {
+	if (hp <= 0 && isBotName(e.hurtEntity.name)) {
+		// бот: после гибели появится на спавне (botLink.assist) и в бой не вернётся; вещи из «Управления слотами» ему выдаст bot.js
+		knockOut(e.hurtEntity.name);
+		system.run(() => cmd(`kill @e[type=item,${ITEMS_BOX}]`));
+	} else if (hp <= 0) {
 		fight.dead.add(e.hurtEntity.name);
 		e.hurtEntity.addTag(CLEAR);
 		system.run(() => cmd(`kill @e[type=item,${ITEMS_BOX}]`));

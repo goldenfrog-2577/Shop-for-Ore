@@ -9,6 +9,9 @@
 //   spar   — спарринг на PvP-арене: бьёт ближайшего игрока на арене, сложность 1–4 (скорость ударов, дальность);
 //   game   — играет в мини-игре (добор игроков): PvP — как спарринг, сплиф — копает снег под соперниками.
 // Отдельно: присесть (sit), автототем (тотем во второй руке, если она пуста), возврат после перезахода.
+// Бой с Хранителем (system/boss/boss.js): поверх режима follow — пока идёт бой, бот в отряде бьёт ближайшую цель
+// (connectBot → assist), выбывший или не взятый в отряд ждёт на спавне (bench). Режим не меняется и не сохраняется:
+// после перезагрузки скриптов бой отменяется, и бот снова просто следует за игроком.
 // Состояние — в свойстве мира shop:bot_state (JSON), бот после перезахода в мир появляется на прежнем месте
 // с прежним режимом и предметами из «Управления слотами».
 // Победы и смерти бота в статистику и достижения не идут (achievements.js, minigames.js).
@@ -21,6 +24,7 @@ import { freezePlayer, unfreezePlayer } from '../security/freeze.js';
 import { showHudLine } from '../ui/toast.js';
 import { teleportToArena } from '../combat/pvp.js';
 import { getGame, gameOf, joinGame, leaveGame } from '../minigames/minigames.js';
+import { connectBot } from '../boss/boss.js';
 
 export const MODES = ['idle', 'dummy', 'follow', 'stay', 'mirror', 'spar', 'game'];
 export const SPAR_LEVELS = [1, 2, 3, 4];
@@ -262,6 +266,11 @@ function nearestOpponent(bot, among) {
 function fight(bot, among) {
 	const t = nearestOpponent(bot, among);
 	if (!t) { if (tick % 20 === 0) safe(() => bot.stopMoving()); return; }
+	attack(bot, t);
+}
+
+/** Подойти и бить цель со сложностью спарринга. */
+function attack(bot, t) {
 	const cfg = SPAR[state.level] ?? SPAR[2];
 	if (state.level === 4 && tick % 20 === 0) {
 		const effect = safe(() => bot.getEffect(MinecraftEffectTypes.speed));
@@ -293,6 +302,36 @@ function spleef(bot, among) {
 	}
 }
 
+// ===== Бой с Хранителем =====
+
+let assist;   // { targets: () => сущности, spawn: { x, y, z }, out } — только пока идёт бой
+connectBot({
+	name: () => getBot()?.name,
+	/** За кем следует бот (режим follow), иначе undefined. */
+	follows: () => state.mode === 'follow' ? state.target : undefined,
+	/** Начало боя: бить ближайшую из targets(); погибнет — появится в spawn и будет ждать конца боя. */
+	assist(targets, spawn) { assist = { targets, spawn, out: false }; motion = undefined; guide = undefined; },
+	/** Выбыл (или не взят в отряд): стоять, пока бой не кончится. */
+	bench() {
+		if (!assist) return;
+		assist.out = true;
+		const bot = getBot();
+		if (bot) safe(() => bot.stopMoving());
+	},
+	/** Бой кончился — снова обычный режим. */
+	end() { assist = undefined; motion = undefined; }
+});
+
+function bossFight(bot) {
+	let best, bestD = SEEK_RADIUS;
+	for (const e of safe(() => assist.targets()) ?? []) {
+		const d = safe(() => dist(e.location, bot.location));
+		if (d !== undefined && d < bestD) { best = e; bestD = d; }
+	}
+	if (best) attack(bot, best);
+	else if (tick % 20 === 0) safe(() => bot.stopMoving());
+}
+
 // ===== Каждый тик =====
 
 world.events.tick.subscribe(() => {
@@ -308,8 +347,9 @@ world.events.tick.subscribe(() => {
 		return;
 	}
 	if (bot && tick === respawnAt) {
-		// Погиб — убрать тело и призвать заново на прежнем месте (режим и предметы вернёт onBotSpawned)
-		const pos = state.pos, mode = state.mode;
+		// Погиб — убрать тело и призвать заново на прежнем месте (режим и предметы вернёт onBotSpawned); в бою с боссом — на спавне
+		const pos = assist ? assist.spawn : state.pos, mode = state.mode;
+		if (assist) assist.out = true;
 		removeBot();
 		state.mode = mode;
 		const someone = [...world.getPlayers()].find(p => !isPending(p) && !p.hasTag('role:bot'));
@@ -324,8 +364,8 @@ world.events.tick.subscribe(() => {
 		healNext = false;
 		safe(() => bot.getComponent('health').resetToMaxValue());
 	}
-	// Автототем: только в пустую вторую руку (keep), раз в секунду
-	if (state.totem && tick % 20 === 0) run(bot, 'replaceitem entity @s slot.weapon.offhand 0 keep totem_of_undying');
+	// Автототем: только в пустую вторую руку (keep), раз в секунду; в бою с боссом — нет (иначе бот почти бессмертен)
+	if (state.totem && !(assist && !assist.out) && tick % 20 === 0) run(bot, 'replaceitem entity @s slot.weapon.offhand 0 keep totem_of_undying');
 	// Где стоит — для возврата после перезахода (раз в 5 с)
 	if (tick % 100 === 0) {
 		const { x, y, z } = bot.location;
@@ -334,6 +374,11 @@ world.events.tick.subscribe(() => {
 	}
 	if (state.mode !== 'mirror') safe(() => { if (bot.isSneaking !== state.sit) bot.isSneaking = state.sit; });
 
+	if (assist && (assist.out || state.mode === 'follow')) {
+		if (!assist.out) bossFight(bot);
+		else if (tick % 20 === 0) safe(() => bot.stopMoving());
+		return;
+	}
 	if (tick % 40 === 0) guideTick(bot);
 	if (guide) { guideStep(bot); return; }
 

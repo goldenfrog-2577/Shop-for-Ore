@@ -268,7 +268,7 @@ chat.help.fly=§7Flight in adventure mode: §eon§7/§eoff§7, for you or a play
 chat.help.clearchat=§7Clears your chat; §eall§7 — for every player (moderator and above)
 chat.help.balance=§7How many coins and VIP coins you have
 chat.help.pay=§7Sends coins to an online player — like the Bank; the amount is a whole number
-chat.help.top=§7Top 5 online players: by coins, level, rebirths, VIP coins, K/D, PvP or Spleef wins. Without an argument — usage hint
+chat.help.top=§7Top 5 online players: by coins, level, rebirths, VIP coins, K/D, PvP, Spleef or Warden wins, best Warden fight time. Without an argument — usage hint
 chat.help.stats=§7A player's level, XP, coins, VIP coins, rebirths, role and warnings
 chat.help.online=§7Who is online: name, role and level, senior roles first
 chat.help.report=§7Reports a player to online staff (helpers and above), at most once a minute
@@ -915,7 +915,7 @@ chat.cmd.achievement.error.missing=§r §l§cERROR!§r §8» §7§f%1$s§r§7
 
 ## --- STATS, TOPS & ONLINE ---
 ##   chat.cmd.stats.*, chat.cmd.top.*, chat.cmd.online.*
-chat.cmd.top.use=§r §7CMD §8» §7Usage: §e!top§7 <money/lvl/rebirth/vip_coins/kd/pvp/spleef> — top 5 online players
+chat.cmd.top.use=§r §7CMD §8» §7Usage: §e!top§7 <money/lvl/rebirth/vip_coins/kd/pvp/spleef/boss/boss_time> — top 5 online players
 chat.cmd.top.header.money=§8-----§f Top by coins (online) §8-----§f
 chat.cmd.top.header.lvl=§8-----§f Top by level (online) §8-----§f
 chat.cmd.top.header.rebirth=§8-----§f Top by rebirths (online) §8-----§f
@@ -923,7 +923,10 @@ chat.cmd.top.header.vip_coins=§8-----§f Top by VIP coins (online) §8-----§f
 chat.cmd.top.header.kd=§8-----§f Top by K/D — kills/deaths (online) §8-----§f
 chat.cmd.top.header.pvp=§8-----§f Top by Last One Standing wins (online) §8-----§f
 chat.cmd.top.header.spleef=§8-----§f Top by Spleef wins (online) §8-----§f
+chat.cmd.top.header.boss=§8-----§f Top by Warden wins (online) §8-----§f
+chat.cmd.top.header.boss_time=§8-----§f Top by Warden fight time (online) §8-----§f
 chat.cmd.top.kd_value=§e%1$s§7/§e%2$s §8(%3$s)
+chat.cmd.top.boss_value=§e%1$s §8(best time §e%2$s§8)
 chat.cmd.top.line=§e%1$s.§r §f%2$s§r§8 — §e%3$s
 chat.cmd.stats.header=§8-----§f Stats of %1$s§r §8-----§f
 chat.cmd.stats.lvl=§7Level: §e%1$s §f
@@ -1470,6 +1473,8 @@ admin.server.button.top_vip_coins=§8Top by VIP coins
 admin.server.button.top_kd=§8Top by K/D
 admin.server.button.top_pvp=§8Top by PvP wins
 admin.server.button.top_spleef=§8Top by Spleef wins
+admin.server.button.top_boss=§8Top by Warden wins
+admin.server.button.top_boss_time=§8Top by Warden fight time
 
 ## --- ADMIN MENU: BOT & EFFECTS ---
 ##   admin.bot.*, chat.admin.bot.*, chat.cmd.bot.*, effect.*, hud.bot.*, bot.*

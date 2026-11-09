@@ -8,7 +8,7 @@ const bot=mk('Bot',['sys:bot','role:bot']),human=mk('Human',['player:pvp','auth:
 const calls=[],commands=[],props={},clock={now:()=>1000};
 for(const method of ['navigateToEntity','navigateToLocation','lookAtEntity','stopMoving','stopBreakingBlock','attackEntity','jump','setRotation'])bot[method]=(...args)=>calls.push([method,...args]);
 bot.getComponent=()=>({current:20,resetToMaxValue(){}});
-const ctx={world:{events,getPlayers:()=>[bot,human].values(),getDynamicProperty:k=>props[k],setDynamicProperty:(k,v)=>props[k]=v},Location:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},BlockLocation:class{},DynamicPropertiesDefinition:class{},Date:clock,
+const ctx={connectBot(){},world:{events,getPlayers:()=>[bot,human].values(),getDynamicProperty:k=>props[k],setDynamicProperty:(k,v)=>props[k]=v},Location:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},BlockLocation:class{},DynamicPropertiesDefinition:class{},Date:clock,
 	isAir:id=>!id||id==='minecraft:air',isSolid:id=>id==='minecraft:stone',getBot:()=>bot,isBot:p=>p.hasTag('sys:bot')||p.hasTag('role:bot'),isPending:()=>false,getScore:()=>10,findPlayer:n=>n===human.name?human:undefined,
 	run:(p,c)=>commands.push(c),onBotSpawned(){},onBotRemoved(){},freezePlayer(){},unfreezePlayer(){},showHudLine(){},getGame(){},gameOf(){},leaveGame(){},joinGame(){return true;},teleportToArena:p=>p.addTag('player:pvp')};
 vm.runInNewContext(load('scripts/system/bot/bot.js')+'\nglobalThis.botApi={setBotMode};',ctx);

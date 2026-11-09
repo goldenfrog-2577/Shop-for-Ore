@@ -522,6 +522,8 @@ function serverMenu(player) {
 		{ text: '%admin.server.button.top_kd', icon: 'textures/items/iron_sword', run: () => runChatCommand(player, 'top', ['kd']) },
 		{ text: '%admin.server.button.top_pvp', icon: 'textures/items/diamond_sword', run: () => runChatCommand(player, 'top', ['pvp']) },
 		{ text: '%admin.server.button.top_spleef', icon: 'textures/items/diamond_shovel', run: () => runChatCommand(player, 'top', ['spleef']) },
+		{ text: '%admin.server.button.top_boss', icon: 'textures/items/echo_shard', run: () => runChatCommand(player, 'top', ['boss']) },
+		{ text: '%admin.server.button.top_boss_time', icon: 'textures/items/clock_item', run: () => runChatCommand(player, 'top', ['boss_time']) },
 		{ text: '%admin.boosts.button.auto', icon: 'textures/ui/icon_setting', run: () => autoEventsForm(player, () => serverMenu(player)) },
 		back(() => admin_menu(player))
 	], () => admin_menu(player));

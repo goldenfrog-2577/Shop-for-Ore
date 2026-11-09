@@ -268,7 +268,7 @@ chat.help.fly=§7Vuelo en modo aventura: §eon§7/§eoff§7, para ti o un jugado
 chat.help.clearchat=§7Limpia tu chat; §eall§7, el de todos (moderador o superior)
 chat.help.balance=§7Cuántas monedas y monedas VIP tienes
 chat.help.pay=§7Envía monedas a un jugador conectado, como en el Banco; la cantidad es un número entero
-chat.help.top=§7Top 5 de jugadores conectados: por monedas, nivel, reinicios, monedas VIP, K/D, victorias en PvP o en Spleef. Sin argumento — ayuda
+chat.help.top=§7Top 5 de jugadores conectados: por monedas, nivel, reinicios, monedas VIP, K/D, victorias en PvP, en Spleef o contra el Custodio, mejor tiempo contra el Custodio. Sin argumento — ayuda
 chat.help.stats=§7Nivel, experiencia, monedas, monedas VIP, reinicios, rol y advertencias de un jugador
 chat.help.online=§7Quién está conectado: nombre, rol y nivel, primero los rangos altos
 chat.help.report=§7Denuncia a un jugador ante el personal conectado (ayudantes y superiores), como mucho una vez por minuto
@@ -915,7 +915,7 @@ chat.cmd.achievement.error.missing=§r §l§cERROR!§r §8» §7§f%1$s§r§7
 
 ## --- ESTADÍSTICAS, TOPS Y CONECTADOS ---
 ##   chat.cmd.stats.*, chat.cmd.top.*, chat.cmd.online.*
-chat.cmd.top.use=§r §7CMD §8» §7Uso: §e!top§7 <money/lvl/rebirth/vip_coins/kd/pvp/spleef> — top 5 de jugadores conectados
+chat.cmd.top.use=§r §7CMD §8» §7Uso: §e!top§7 <money/lvl/rebirth/vip_coins/kd/pvp/spleef/boss/boss_time> — top 5 de jugadores conectados
 chat.cmd.top.header.money=§8-----§f Top por monedas (conectados) §8-----§f
 chat.cmd.top.header.lvl=§8-----§f Top por nivel (conectados) §8-----§f
 chat.cmd.top.header.rebirth=§8-----§f Top por reinicios (conectados) §8-----§f
@@ -923,7 +923,10 @@ chat.cmd.top.header.vip_coins=§8-----§f Top por monedas VIP (conectados) §8--
 chat.cmd.top.header.kd=§8-----§f Top por K/D — bajas/muertes (conectados) §8-----§f
 chat.cmd.top.header.pvp=§8-----§f Top por victorias en «El último en pie» (conectados) §8-----§f
 chat.cmd.top.header.spleef=§8-----§f Top por victorias en Spleef (conectados) §8-----§f
+chat.cmd.top.header.boss=§8-----§f Top por victorias contra el Custodio (conectados) §8-----§f
+chat.cmd.top.header.boss_time=§8-----§f Top por tiempo contra el Custodio (conectados) §8-----§f
 chat.cmd.top.kd_value=§e%1$s§7/§e%2$s §8(%3$s)
+chat.cmd.top.boss_value=§e%1$s §8(mejor tiempo §e%2$s§8)
 chat.cmd.top.line=§e%1$s.§r §f%2$s§r§8 — §e%3$s
 chat.cmd.stats.header=§8-----§f Estadísticas de %1$s§r §8-----§f
 chat.cmd.stats.lvl=§7Nivel: §e%1$s §f
@@ -1470,6 +1473,8 @@ admin.server.button.top_vip_coins=§8Top por monedas VIP
 admin.server.button.top_kd=§8Top por K/D
 admin.server.button.top_pvp=§8Top por victorias en PvP
 admin.server.button.top_spleef=§8Top por victorias en Spleef
+admin.server.button.top_boss=§8Top por victorias contra el Custodio
+admin.server.button.top_boss_time=§8Top por tiempo contra el Custodio
 
 ## --- MENÚ DE ADMINISTRADOR: BOT Y EFECTOS ---
 ##   admin.bot.*, chat.admin.bot.*, chat.cmd.bot.*, effect.*, hud.bot.*, bot.*
