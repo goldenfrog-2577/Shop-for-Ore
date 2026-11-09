@@ -12,9 +12,11 @@
 // Ушёл за решётку (тоннель — не арена боя) или вышел из игры — выбыл. Победа — босс погиб после тотема: каждому, кто дожил, монеты, VIP-монеты,
 // достижение (тег stat:boss) и пластинка: первая — случайная из двух, вторая — недостающая.
 // Поражение — выбыли все или прошло FIGHT_SECONDS: Хранитель уходит. В любом конце: решётка открыта, прислужники убраны.
-// После перезагрузки скриптов посреди боя (boss_state = 1 или босс в мире) бой отменяется без награды.
+// После перезагрузки скриптов посреди боя (boss_state = 1 или босс в мире) бой отменяется без награды. Арена могла быть
+// не загружена (все ушли): тогда tickingarea boss_recover грузит её, и уборка ждёт, пока чанки загрузятся (RECOVER_CORNERS);
+// до этого бой не начать, решётка закрыта.
 
-import { system, world, Location, MinecraftEffectTypes } from '@minecraft/server';
+import { system, world, Location, BlockLocation, MinecraftEffectTypes } from '@minecraft/server';
 import { getScore, run, tell } from '../../DataBase.js';
 import { inArena } from './arena.js';
 import { SPAWN } from '../player/void.js';
@@ -104,8 +106,9 @@ const findOnline = (name) => players().find(p => p.name === name);
 let fight;                 // { fighters: Set, dead: Set, started, max, phase, nextWave }
 let until = 0;             // конец перезарядки (секунды Unix), читается из табло при загрузке
 let loaded = false;
+let recovering = 0;         // > 0 — бой оборвался перезагрузкой, ждём загрузки арены; число — сколько проверок подряд она загружена
 
-export const bossBusy = () => !!fight;
+export const bossBusy = () => !!fight || recovering > 0;
 
 function setBars(open) {
 	const [[x0, y0, z0], [x1, y1, z1]] = BARS;
@@ -267,15 +270,35 @@ function processClears() {
 	}
 }
 
+const RECOVER_AREA = 'boss_recover';
+// Углы и центр арены: если все эти блоки читаются, чанки (и сущности в них) загружены
+const RECOVER_CORNERS = [[480, -104], [575, -104], [480, -12], [575, -12], [528, -58]];
+const arenaLoaded = () => {
+	try { return RECOVER_CORNERS.every(([x, z]) => !!overworld().getBlock(new BlockLocation(x, -60, z))); } catch { return false; }
+};
+
 function load() {
 	loaded = true;
 	until = systemScore('boss_until');
+	for (const p of world.getPlayers()) p.removeTag(FIGHTER);
 	if (systemScore('boss_state') === 1 || bosses().length) {
-		for (const b of bosses()) { try { b.teleport({ x: SUMMON[0], y: -200, z: SUMMON[2] }, overworld(), 0, 0); } catch {} }
-		clearArena();
-		cmd('scoreboard players set boss_state system 0');
-		for (const p of world.getPlayers()) p.removeTag(FIGHTER);
+		// Хранитель и прислужники могут быть в незагруженных чанках — getEntities их не видит. Грузим арену и ждём
+		recovering = 1;
+		cmd(`tickingarea add 480 -62 -104 575 -20 -12 ${RECOVER_AREA}`);
+		return;
 	}
+	setBars(true);
+}
+
+/** Уборка после оборванного боя — когда арена загружена две проверки подряд (сущности появляются вслед за чанками). */
+function recoverStep() {
+	if (!arenaLoaded()) { recovering = 1; return; }
+	if (++recovering < 3) return;
+	for (const b of bosses()) { try { b.teleport({ x: SUMMON[0], y: -200, z: SUMMON[2] }, overworld(), 0, 0); } catch {} }
+	clearArena();
+	cmd('scoreboard players set boss_state system 0');
+	cmd(`tickingarea remove ${RECOVER_AREA}`);
+	recovering = 0;
 	setBars(true);
 }
 
@@ -284,6 +307,7 @@ const hinted = new Set();   // кому уже подсказали, как ра
 system.runSchedule(() => {
 	if (!loaded) return load();
 	processClears();
+	if (recovering) return recoverStep();
 	if (fight) {
 		for (const p of world.getPlayers()) if (p.hasTag(FIGHTER) && !fight.fighters.has(p.name)) p.removeTag(FIGHTER);
 		for (const name of [...fight.dead]) if (!findOnline(name)) { fight.dead.delete(name); knockOut(name); }
