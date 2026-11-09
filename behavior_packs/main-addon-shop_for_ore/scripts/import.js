@@ -12,7 +12,7 @@ import { world, system } from '@minecraft/server';
 import { hasRole, tell } from './DataBase.js';
 
 // Лог о запуске скриптов аддона
-console.log('[Shop for Ore] Addon scripts are working properly');
+console.warn('[Shop for Ore] Addon scripts are working properly');
 
 // Импорт модулей меню
 import './menu/main_menu.js';         // Основное меню магазина
