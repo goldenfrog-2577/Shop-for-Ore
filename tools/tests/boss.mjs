@@ -147,4 +147,12 @@ assert.match(src, /inFight\(q\.location, q\.dimension\?\.id\) && !isPending\(q\)
 // Вампиризм берёт фазу по текущему здоровью (не по снимку раз в секунду), фаза назад не откатывается
 assert.match(src, /const phase = Math\.max\(fight\.phase, phaseOf\(\{ current, max: fight\.max, totem: fight\.totem \}\)\);\n\tconst next = vampireHeal\(\{ phase,/);
 assert.equal(B.vampireHeal({ phase: Math.max(1, B.phaseOf({ current: 299, max: 500, totem: false })), current: 299, max: 500, damage: 10, died: false, victimMax: 20 }), 300);
+// Перезагрузка посреди боя: арену сначала грузим (tickingarea), убираем только когда чанки загружены; до этого бой не начать
+{
+	const load = src.slice(src.indexOf('function load()'), src.indexOf('const hinted'));
+	assert.match(load, /recovering = 1;\n\t\tcmd\(`tickingarea add 480 -62 -104 575 -20 -12 \$\{RECOVER_AREA\}`\);\n\t\treturn;/);
+	assert.match(load, /if \(!arenaLoaded\(\)\) \{ recovering = 1; return; \}[\s\S]*scoreboard players set boss_state system 0[\s\S]*tickingarea remove/);
+	assert.match(src, /processClears\(\);\n\tif \(recovering\) return recoverStep\(\);/);
+	assert.match(src, /export const bossBusy = \(\) => !!fight \|\| recovering > 0;/);
+}
 console.log('PASS: boss start rules, phases, minion waves, discs, spots, 4-locale keys, entity/sounds, warp level gate.');
