@@ -117,4 +117,7 @@ for (const f of walk(new URL('scripts/', bp)).filter(u => u.pathname.endsWith('.
 const pvp = fs.readFileSync(new URL('scripts/system/combat/pvp.js', bp), 'utf8');
 assert.ok(src.includes("export const FIGHTER = 'boss:fighter'") && pvp.includes("e.source.hasTag('boss:fighter')"));
 
+// Codex (#123/#124): ушедший с арены выбывает до награды; тотем отмечается сразу при ударе (иначе добитый за секунду босс — «отмена»)
+assert.match(src, /function fightStep\(\) \{[\s\S]*?knockOut\(name, 'chat\.boss\.left'\)[\s\S]*?if \(!boss\) return endFight\(fight\.totem \? 'victory' : 'abort'\);/);
+assert.match(src, /e\.hurtEntity\?\.typeId === BOSS\)[\s\S]*?if \(absorbed \|\| hp <= 0\) markTotem\(e\.hurtEntity\);/);
 console.log('PASS: boss start rules, phases, minion waves, discs, spots, 4-locale keys, entity/sounds, warp level gate.');
