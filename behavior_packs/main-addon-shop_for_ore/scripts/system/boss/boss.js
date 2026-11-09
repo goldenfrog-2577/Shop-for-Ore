@@ -347,7 +347,7 @@ world.events.itemStartCharge.subscribe((e) => {
 	const action = hornAction(e.itemStack?.typeId, e.itemStack?.data, onStart(p.location));
 	if (!action) return;
 	if (action !== 'start') return tell(p, `chat.boss.horn_${action}`);
-	if (fight) return tell(p, 'chat.boss.busy');
+	if (bossBusy()) return tell(p, 'chat.boss.busy');   // идёт бой или уборка после перезагрузки
 	// участники — только за решёткой; всех остальных на арене и в тоннеле переносит на спавн
 	const inside = players().filter(q => inArena(q.location, q.dimension?.id));
 	const arena = inside.filter(q => inFight(q.location, q.dimension?.id));

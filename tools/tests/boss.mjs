@@ -133,4 +133,5 @@ assert.match(src, /e\.hurtEntity\?\.typeId === BOSS\)[\s\S]*?if \(absorbed \|\| 
 	assert.match(src, /processClears\(\);\n\tif \(recovering\) return recoverStep\(\);/);
 	assert.match(src, /export const bossBusy = \(\) => !!fight \|\| recovering > 0;/);
 }
+assert.match(src, /if \(bossBusy\(\)\) return tell\(p, 'chat\.boss\.busy'\);/, 'horn waits for recovery cleanup');
 console.log('PASS: boss start rules, phases, minion waves, discs, spots, 4-locale keys, entity/sounds, warp level gate.');
