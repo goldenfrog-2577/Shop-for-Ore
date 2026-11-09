@@ -364,7 +364,7 @@ system.runSchedule(() => {
 // Рог «Тосковать» на плите у портала будит Хранителя (раньше — просто встать на плиту)
 /** Проверки старта прямо сейчас: { ok, fighters, inside } или { ok: false, reason, args }. */
 function tryStart(p) {
-	if (fight) return { ok: false, reason: 'busy', args: [] };
+	if (bossBusy()) return { ok: false, reason: 'busy', args: [] };   // идёт бой или уборка после перезагрузки
 	// участники — только за решёткой; всех остальных на арене и в тоннеле переносит на спавн
 	const inside = players().filter(q => inArena(q.location, q.dimension?.id));
 	// не вошедший в аккаунт (форма входа) в бой не идёт — иначе под чужим ником можно разбудить босса и потерять вещи владельца ника

@@ -155,4 +155,5 @@ assert.equal(B.vampireHeal({ phase: Math.max(1, B.phaseOf({ current: 299, max: 5
 	assert.match(src, /processClears\(\);\n\tif \(recovering\) return recoverStep\(\);/);
 	assert.match(src, /export const bossBusy = \(\) => !!fight \|\| recovering > 0;/);
 }
+assert.match(src, /function tryStart\(p\) \{\n\tif \(bossBusy\(\)\) return \{ ok: false, reason: 'busy'/, 'horn waits for recovery cleanup');
 console.log('PASS: boss start rules, phases, minion waves, discs, spots, 4-locale keys, entity/sounds, warp level gate.');
