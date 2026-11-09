@@ -113,4 +113,12 @@ assert.match(src, /e\.hurtEntity\?\.typeId === BOSS\)[\s\S]*?if \(absorbed \|\| 
   assert.match(pvp, /hasTag\('boss:fighter'\) && inBossFight\(e\.source\.location, e\.source\.dimension\?\.id\)\) return;/);
   const fightBox = src.match(/export function inFight\(loc, dimensionId = 'minecraft:overworld'\) \{\s*return (.*);/)[1];
   assert.equal(pvp.match(/export const inBossFight = \(loc, dimensionId\) => (.*);/)[1], fightBox); }
+// Перезагрузка посреди боя: арену сначала грузим (tickingarea), убираем только когда чанки загружены; до этого бой не начать
+{
+	const load = src.slice(src.indexOf('function load()'), src.indexOf('const hinted'));
+	assert.match(load, /recovering = 1;\n\t\tcmd\(`tickingarea add 480 -62 -104 575 -20 -12 \$\{RECOVER_AREA\}`\);\n\t\treturn;/);
+	assert.match(load, /if \(!arenaLoaded\(\)\) \{ recovering = 1; return; \}[\s\S]*scoreboard players set boss_state system 0[\s\S]*tickingarea remove/);
+	assert.match(src, /processClears\(\);\n\tif \(recovering\) return recoverStep\(\);/);
+	assert.match(src, /export const bossBusy = \(\) => !!fight \|\| recovering > 0;/);
+}
 console.log('PASS: boss start rules, phases, minion waves, discs, spots, 4-locale keys, entity/sounds, warp level gate.');
