@@ -31,7 +31,7 @@ assert.equal(D.rollDisc([], 1, seq(0, 0)), D.DROP_POOL[0]);
 assert.equal(D.rollDisc([D.DROP_POOL[0]], 1, seq(0, 0)), D.DROP_POOL[1]);
 assert.equal(D.rollDisc(D.DROP_POOL, 1, () => 0), undefined);
 
-const mk = (name, lvl, tags = []) => { const s = new Set(tags); return { name, lvl, hasTag: t => s.has(t), addTag: t => s.add(t), getTags: () => [...s] }; };
+const mk = (name, lvl, tags = []) => { const s = new Set(tags); return { name, lvl, hasTag: t => s.has(t), addTag: t => s.add(t), removeTag: t => s.delete(t), getTags: () => [...s] }; };
 // Выдача: отметка, сообщение и плашка — только после успешного /give
 const P = mk('P', 30);
 giveOk = false; await D.giveDisc(P, 'cat'); assert.ok(!P.hasTag('music:disc:cat')); assert.equal(toasts.length, 0);
@@ -48,6 +48,8 @@ Math.random = R;
 const C = mk('C', 30, [...D.DROP_POOL.map(id => 'music:disc:' + id), 'boss:disc:record_5']);
 assert.ok(!D.checkCollector(C)); C.addTag('boss:disc:record_otherside');
 assert.ok(D.checkCollector(C)); assert.ok(C.hasTag('music:collector') && C.hasTag('cosmetic:trail:note')); assert.ok(!D.checkCollector(C));
+// Codex (#123): вайп снял cosmetic:-теги — след «Ноты» возвращается без повторного объявления
+{ const before = ran.length; C.removeTag('cosmetic:trail:note'); assert.ok(!D.checkCollector(C)); assert.ok(C.hasTag('cosmetic:trail:note')); assert.equal(ran.length, before); }
 assert.ok(ran.some(([n, c]) => n === 'C' && c.includes('chat.music.collector')));
 
 // Мини-игры: победителю с наградой — бросок пластинки; чат — префикс «Меломан»; меню — коллекция с «???»

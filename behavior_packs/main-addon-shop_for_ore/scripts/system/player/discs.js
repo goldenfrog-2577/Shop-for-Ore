@@ -47,7 +47,12 @@ export function rollWinDisc(p, rand = Math.random) {
 
 /** Все 15 — один раз: префикс «Меломан», след «Ноты», сообщение всем. */
 export function checkCollector(p) {
-	if (p.hasTag(COLLECTOR) || unlockedDiscs(p).length < DISCS.length) return false;
+	// Вайп снимает все cosmetic:-теги, а пластинки и «Меломан» остаются — бесплатный след «Ноты» вернуть (без повторного объявления)
+	if (p.hasTag(COLLECTOR)) {
+		if (!p.hasTag(COLLECTOR_TRAIL)) p.addTag(COLLECTOR_TRAIL);
+		return false;
+	}
+	if (unlockedDiscs(p).length < DISCS.length) return false;
 	p.addTag(COLLECTOR);
 	p.addTag(COLLECTOR_TRAIL);
 	run(p, `tellraw @a ${rawTranslateRich('chat.music.collector', p.name)}`);
