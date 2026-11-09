@@ -122,8 +122,13 @@ assert.match(src, /e\.hurtEntity\?\.typeId === BOSS\)[\s\S]*?if \(absorbed \|\| 
 	assert.match(src, /arenaArea\(true\);\n\tcmd\(`summon \$\{BOSS\}/);
 	assert.match(src.slice(src.indexOf('function endFight')), /clearArena\(\);\n\tarenaArea\(false\);/);
 	assert.match(src, /if \(!boss\) return arenaLoaded\(\) \? endFight\(fight\.totem \? 'victory' : 'abort'\) : undefined;/);
-	assert.match(load, /if \(!arenaLoaded\(\)\) \{ recovering = 1; return; \}[\s\S]*scoreboard players set boss_state system 0[\s\S]*arenaArea\(false\)/);
+	assert.match(load, /if \(!arenaLoaded\(\)\) \{\n\t\trecovering = 1;\n[\s\S]*?if \(\+\+recoverWait % 10 === 0\) arenaArea\(true\);\n\t\treturn;\n\t\}[\s\S]*scoreboard players set boss_state system 0[\s\S]*arenaArea\(false\)/);
 	assert.match(src, /processClears\(\);\n\tif \(recovering\) return recoverStep\(\);/);
 	assert.match(src, /export const bossBusy = \(\) => !!fight \|\| recovering > 0;/);
 }
+// Не вошедший в аккаунт не будит Хранителя и не идёт в бой; вайп снимает отметки пластинок; перо не берётся в мини-игру
+assert.match(src, /onStart\(p\.location\) && !p\.hasTag\('role:bot'\) && !isPending\(p\)\)/);
+assert.match(src, /inFight\(p\.location, p\.dimension\?\.id\) && !isPending\(p\)\)/);
+assert.match(fs.readFileSync(new URL('scripts/system/core/wipe.js', bp), 'utf8'), /'boss:disc:', WIPE_TAG\]/);
+assert.match(fs.readFileSync(new URL('scripts/system/minigames/minigames.js', bp), 'utf8'), /getEffect\(MinecraftEffectTypes\.levitation\) \|\| p\.getEffect\(MinecraftEffectTypes\.slowFalling\)[\s\S]*?effect @s clear[\s\S]*?g\.def\.start\(p/);
 console.log('PASS: boss start rules, phases, minion waves, discs, spots, 4-locale keys, entity/sounds, warp level gate.');
