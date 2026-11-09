@@ -11,9 +11,13 @@ import { world, BlockLocation } from '@minecraft/server';
 import { run, tell } from '../../DataBase.js';
 
 export const PORTABLE_CRYSTAL = 'server:portable_ender_crystal';
+// Арена боя с Хранителем — те же границы, что inFight в system/boss/boss.js (за решёткой; тоннель — уже не арена).
+// Одного тега boss:fighter мало: ушедший с арены (!warp spawn) теряет тег только на следующей секундной проверке боя
+export const inBossFight = (loc, dimensionId) => dimensionId === 'minecraft:overworld' && loc.x >= 480 && loc.x < 576 && loc.y >= -61 && loc.y < -20 && loc.z >= -104 && loc.z < -12;
 world.events.beforeItemUse.subscribe((e) => {
 	if (e.item?.typeId !== PORTABLE_CRYSTAL || e.source?.typeId !== 'minecraft:player') return;
-	if (e.source.hasTag('player:pvp') || e.source.hasTag('boss:fighter')) return;
+	if (e.source.hasTag('player:pvp')) return;
+	if (e.source.hasTag('boss:fighter') && inBossFight(e.source.location, e.source.dimension?.id)) return;
 	e.cancel = true;
 	tell(e.source, 'chat.pvp.crystal_arena_only');
 });
