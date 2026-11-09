@@ -133,7 +133,7 @@ const pvp = fs.readFileSync(new URL('scripts/system/combat/pvp.js', bp), 'utf8')
 assert.ok(src.includes("export const FIGHTER = 'boss:fighter'") && pvp.includes("e.source.hasTag('boss:fighter')"));
 
 // Codex (#123/#124): ушедший с арены выбывает до награды; тотем отмечается сразу при ударе (иначе добитый за секунду босс — «отмена»)
-assert.match(src, /function fightStep\(\) \{[\s\S]*?knockOut\(name, 'chat\.boss\.left'\)[\s\S]*?if \(!boss\) return endFight\(fight\.totem \? 'victory' : 'abort'\);/);
+assert.match(src, /function fightStep\(\) \{[\s\S]*?knockOut\(name, 'chat\.boss\.left'\)[\s\S]*?if \(!boss\) return arenaLoaded\(\) \? endFight\(fight\.totem \? 'victory' : 'abort'\) : undefined;/);
 assert.match(src, /e\.hurtEntity\?\.typeId === BOSS\)[\s\S]*?if \(absorbed \|\| hp <= 0\) markTotem\(e\.hurtEntity\);/);
 // Codex (#108): кристалл — участнику боя только внутри арены (тот же прямоугольник, что inFight)
 { const pvp = fs.readFileSync(new URL('scripts/system/combat/pvp.js', bp), 'utf8');
@@ -150,8 +150,13 @@ assert.equal(B.vampireHeal({ phase: Math.max(1, B.phaseOf({ current: 299, max: 5
 // Перезагрузка посреди боя: арену сначала грузим (tickingarea), убираем только когда чанки загружены; до этого бой не начать
 {
 	const load = src.slice(src.indexOf('function load()'), src.indexOf('const hinted'));
-	assert.match(load, /recovering = 1;\n\t\tcmd\(`tickingarea add 480 -62 -104 575 -20 -12 \$\{RECOVER_AREA\}`\);\n\t\treturn;/);
-	assert.match(load, /if \(!arenaLoaded\(\)\) \{ recovering = 1; return; \}[\s\S]*scoreboard players set boss_state system 0[\s\S]*tickingarea remove/);
+	assert.match(load, /recovering = 1;\n\t\tarenaArea\(true\);\n\t\treturn;/);
+	assert.match(src, /tickingarea add 480 -62 -104 575 -20 -12 \$\{ARENA_AREA\}/);
+	// бой: арена загружена весь бой; невидимый босс — не победа, пока арена не загружена
+	assert.match(src, /arenaArea\(true\);\n\tcmd\(`summon \$\{BOSS\}/);
+	assert.match(src.slice(src.indexOf('function endFight')), /clearArena\(\);\n\tarenaArea\(false\);/);
+	assert.match(src, /if \(!boss\) return arenaLoaded\(\) \? endFight\(fight\.totem \? 'victory' : 'abort'\) : undefined;/);
+	assert.match(load, /if \(!arenaLoaded\(\)\) \{ recovering = 1; return; \}[\s\S]*scoreboard players set boss_state system 0[\s\S]*arenaArea\(false\)/);
 	assert.match(src, /processClears\(\);\n\tif \(recovering\) return recoverStep\(\);/);
 	assert.match(src, /export const bossBusy = \(\) => !!fight \|\| recovering > 0;/);
 }
