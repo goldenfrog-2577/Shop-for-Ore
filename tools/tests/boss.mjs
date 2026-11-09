@@ -24,7 +24,7 @@ assert.equal(B.hornAction('minecraft:stick', 6, true), null);
 // рог забирается, и только потом startFight; рога уже нет — отказ; плита без рога больше не будит
 assert.equal(B.HORN_MS, 7500);
 assert.match(src, /world\.events\.itemStartCharge\.subscribe[\s\S]*?summon = \{ name: p\.name, at: Date\.now\(\) \+ HORN_MS \}/);
-assert.match(src, /Date\.now\(\) < summon\.at\) return;[\s\S]*?if \(!hasHorn\(p\)\) return tell\(p, 'chat\.boss\.horn_lost'\);[\s\S]*?const check = tryStart\(p\);[\s\S]*?clear @s \$\{HORN\} \$\{HORN_SOUND\} 1[\s\S]*?system\.run\(\(\) => startFight\(/);
+assert.match(src, /Date\.now\(\) < summon\.at\) return;[\s\S]*?if \(!hasHorn\(p\)\) return tell\(p, 'chat\.boss\.horn_lost'\);[\s\S]*?const check = tryStart\(p\);[\s\S]*?clear @s \$\{HORN\} \$\{HORN_SOUND\} 1`\)\.then\(\(result\) => \{[\s\S]*?startFight\(/);
 // Вампиризм: звуковой удар (без причины или издалека), лечит на отнятое, за смерть — на запас цели; в ярости ×1,5; потолок — порог фазы
 assert.ok(B.isSonic(undefined, 12) && B.isSonic(undefined, 2) && B.isSonic('entityAttack', 9) && !B.isSonic('entityAttack', 1.9));
 assert.equal(B.vampireHeal({ phase: 1, current: 900, max: 1000, damage: 15, died: false, victimMax: 20 }), 915);
@@ -162,5 +162,11 @@ assert.equal(B.vampireHeal({ phase: Math.max(1, B.phaseOf({ current: 299, max: 5
 }
 assert.match(src, /function tryStart\(p\) \{\n\tif \(bossBusy\(\)\) return \{ ok: false, reason: 'busy'/, 'horn waits for recovery cleanup');
 assert.match(fs.readFileSync(new URL('scripts/system/core/wipe.js', bp), 'utf8'), /'boss:disc:', WIPE_TAG\]/);
-assert.match(fs.readFileSync(new URL('scripts/system/minigames/minigames.js', bp), 'utf8'), /getEffect\(MinecraftEffectTypes\.levitation\) \|\| p\.getEffect\(MinecraftEffectTypes\.slowFalling\)[\s\S]*?effect @s clear[\s\S]*?g\.def\.start\(p/);
+{ const mg = fs.readFileSync(new URL('scripts/system/minigames/minigames.js', bp), 'utf8');
+	assert.match(mg, /getEffect\(MinecraftEffectTypes\.levitation\) \|\| p\.getEffect\(MinecraftEffectTypes\.slowFalling\)/);
+	assert.match(mg, /if \(hasFeatherEffect\(player\)\) return fail\('chat\.game\.error\.feather'\);\n\tg\.players\.add/);
+	assert.ok(!mg.includes('effect @s clear'), 'only the feather effects — never clear bought ones'); }
+// Бой — только после того, как рог действительно забрали
+assert.match(src, /run\(p, `clear @s \$\{HORN\} \$\{HORN_SOUND\} 1`\)\.then\(\(result\) => \{\n\t\tsummoning = false;\n\t\tif \(!result\) return tell\(p, 'chat\.boss\.horn_lost'\);\n\t\tif \(bossBusy\(\)\) return;\n\t\tstartFight\(/);
+assert.match(src, /if \(summon \|\| summoning\) return tell\(p, 'chat\.boss\.busy'\);/);
 console.log('PASS: boss start rules, phases, minion waves, discs, spots, 4-locale keys, entity/sounds, warp level gate.');

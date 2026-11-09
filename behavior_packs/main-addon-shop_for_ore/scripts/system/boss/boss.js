@@ -398,6 +398,7 @@ const hasHorn = (p) => {
 	return false;
 };
 
+let summoning = false;   // рог забирается командой — до её ответа второй призыв не начинать
 let summon;   // { name, at } — «Тосковать» прозвучала, Хранитель появится в at (мс)
 
 // Рог «Тосковать» на плите у портала будит Хранителя (раньше — просто встать на плиту)
@@ -408,7 +409,7 @@ world.events.itemStartCharge.subscribe((e) => {
 	const action = hornAction(e.itemStack?.typeId, e.itemStack?.data, onStart(p.location));
 	if (!action) return;
 	if (action !== 'start') return tell(p, `chat.boss.horn_${action}`);
-	if (summon) return tell(p, 'chat.boss.busy');
+	if (summon || summoning) return tell(p, 'chat.boss.busy');
 	const check = tryStart(p);
 	if (!check.ok) return tell(p, `chat.boss.${check.reason}`, ...check.args);
 	summon = { name: p.name, at: Date.now() + HORN_MS };
@@ -425,8 +426,14 @@ system.runSchedule(() => {
 	if (!hasHorn(p)) return tell(p, 'chat.boss.horn_lost');
 	const check = tryStart(p);
 	if (!check.ok) return tell(p, `chat.boss.${check.reason}`, ...check.args);
-	run(p, `clear @s ${HORN} ${HORN_SOUND} 1`);
-	system.run(() => startFight(check.fighters, check.inside.map(q => q.name).filter(n => !check.fighters.includes(n))));
+	// бой — только если рог действительно забрали (run при ошибке команды возвращает undefined)
+	summoning = true;
+	run(p, `clear @s ${HORN} ${HORN_SOUND} 1`).then((result) => {
+		summoning = false;
+		if (!result) return tell(p, 'chat.boss.horn_lost');
+		if (bossBusy()) return;
+		startFight(check.fighters, check.inside.map(q => q.name).filter(n => !check.fighters.includes(n)));
+	});
 }, 2);
 
 // Смерть участника: отметить; выпавшее уничтожится в fightStep, остальное — после возрождения
