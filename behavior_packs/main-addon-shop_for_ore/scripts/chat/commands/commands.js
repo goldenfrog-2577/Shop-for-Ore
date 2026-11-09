@@ -14,8 +14,7 @@ import { resetOffline, offlineCounts } from '../../system/core/offline_reset.js'
 import { wipeAll, wipeCounts } from '../../system/core/wipe.js';
 import { resetPassword } from '../../registration/change.js';
 import { PLAYER_ARG, isSelector, selectTargets } from './selectors.js';
-import { logAction, readLog } from '../../system/security/staff_log.js';
-import { tellList } from './common.js';
+import { logAction } from '../../system/security/staff_log.js';
 
 // Помощники, которые нужны меню администратора и тестам
 export { textWidth, emoteGrid } from './player.js';
@@ -35,52 +34,7 @@ world.events.playerLeave.subscribe((data) => {
 	resetRequests.delete(data.playerName);
 });
 
-// Журнал персонала (system/security/staff_log.js): строк на странице !logs
-const LOGS_PAGE = 10;
-
-/** Время записи журнала по Москве: «08.11 19:24». */
-function logTime(ms) {
-	const d = new Date(ms + 3 * 60 * 60 * 1000);
-	const p = (n) => String(n).padStart(2, '0');
-	return `${p(d.getUTCDate())}.${p(d.getUTCMonth() + 1)} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())}`;
-}
-
-/** Разбор «!logs [ник] [page N]» → { name, page } или null (неверно набрано). */
-function parseLogsArgs(args) {
-	const i = args.findIndex(a => a.toLowerCase() === 'page');
-	if (i === -1) return { name: args.join(' '), page: 1 };
-	if (i !== args.length - 2 || !/^[1-9]\d*$/.test(args[i + 1])) return null;
-	return { name: args.slice(0, i).join(' '), page: Number(args[i + 1]) };
-}
-
-/** Строка журнала для чата. */
-function logLine(e) {
-	if (e.command === '#start') return { translate: 'chat.cmd.logs.started', with: [logTime(e.time)] };
-	return { text: `§7${logTime(e.time)} §e${e.by} §8» §f!${e.command}${e.target ? ' §b' + e.target : ''}${e.details ? ' §7' + e.details : ''}` };
-}
-
 const OWNER_COMMANDS = {
-	logs(player, args) {
-		// !logs [ник] [page N] — журнал действий персонала, новые сверху; с ником — где он наказывал или его наказывали
-		const parsed = parseLogsArgs(args);
-		if (!parsed) {
-			tell(player, 'chat.cmd.logs.use');
-			return;
-		}
-		const name = parsed.name.toLowerCase();
-		const entries = readLog().filter(e => !name || e.by.toLowerCase() === name || e.target.toLowerCase().split(', ').includes(name));
-		const pages = Math.max(1, Math.ceil(entries.length / LOGS_PAGE));
-		if (parsed.page > pages) {
-			tell(player, 'chat.cmd.logs.error.page', String(parsed.page), String(pages));
-			return;
-		}
-		const header = parsed.name
-			? { translate: 'chat.cmd.logs.header_player', with: [parsed.name, String(parsed.page), String(pages)] }
-			: { translate: 'chat.cmd.logs.header', with: [String(parsed.page), String(pages)] };
-		const lines = entries.slice((parsed.page - 1) * LOGS_PAGE, parsed.page * LOGS_PAGE).map(logLine);
-		tellList(player, header, lines.length ? lines : [{ translate: 'chat.cmd.logs.empty' }]);
-	},
-
 	worldedit: (player, args) => worldEditCommand(player, args),
 	resetoffline(player, args) {
 		// Как !wipe: сводка, выполнение — только «!resetoffline confirm» в течение 30 секунд
