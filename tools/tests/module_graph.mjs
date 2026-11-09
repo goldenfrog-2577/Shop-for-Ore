@@ -24,7 +24,7 @@ async function startup(base,old=false){
  class ItemStack{constructor(type,amount){this.type=type;this.typeId=type?.id;this.amount=amount;}}
  class Enchantment{constructor(type,level){Object.assign(this,{type,level});}}
  const dictionary=new Proxy({}, {get:(o,k)=>({id:String(k),maxLevel:5})});
- const server={world,system,Location:Point,BlockLocation:Point,DynamicPropertiesDefinition,Items:{get:id=>({id})},ItemStack,Enchantment,EnchantmentList:class{},MinecraftEnchantmentTypes:dictionary,MinecraftEffectTypes:dictionary,MinecraftBlockTypes:dictionary,GameMode:{creative:'creative',survival:'survival',adventure:'adventure',spectator:'spectator'}};
+ const server={world,system,Location:Point,Vector:Point,BlockLocation:Point,DynamicPropertiesDefinition,Items:{get:id=>({id})},ItemStack,Enchantment,EnchantmentList:class{},MinecraftEnchantmentTypes:dictionary,MinecraftEffectTypes:dictionary,MinecraftBlockTypes:dictionary,GameMode:{creative:'creative',survival:'survival',adventure:'adventure',spectator:'spectator'}};
  const form=class{};const games=[];const chain={maxTicks(){return this;},structureName(){return this;}};
  const natives={'@minecraft/server':server,'@minecraft/server-ui':{ActionFormData:form,ModalFormData:form,MessageFormData:form},'@minecraft/server-gametest':{register:(namespace,name,fn)=>{games.push([namespace,name]);return chain;}}};
  const cache=new Map();

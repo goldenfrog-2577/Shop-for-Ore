@@ -8,15 +8,73 @@ const bot=mk('Bot',['sys:bot','role:bot']),human=mk('Human',['player:pvp','auth:
 const calls=[],commands=[],props={},clock={now:()=>1000};
 for(const method of ['navigateToEntity','navigateToLocation','lookAtEntity','stopMoving','stopBreakingBlock','attackEntity','jump','setRotation'])bot[method]=(...args)=>calls.push([method,...args]);
 bot.getComponent=()=>({current:20,resetToMaxValue(){}});
-const ctx={connectBot(){},world:{events,getPlayers:()=>[bot,human].values(),getDynamicProperty:k=>props[k],setDynamicProperty:(k,v)=>props[k]=v},Location:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},BlockLocation:class{},DynamicPropertiesDefinition:class{},Date:clock,
+const ctx={connectBot(){},world:{events,getPlayers:()=>[bot,human].values(),getDynamicProperty:k=>props[k],setDynamicProperty:(k,v)=>props[k]=v},Location:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},Vector:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},BlockLocation:class{},DynamicPropertiesDefinition:class{},Date:clock,
 	isAir:id=>!id||id==='minecraft:air',isSolid:id=>id==='minecraft:stone',getBot:()=>bot,isBot:p=>p.hasTag('sys:bot')||p.hasTag('role:bot'),isPending:()=>false,getScore:()=>10,findPlayer:n=>n===human.name?human:undefined,
 	run:(p,c)=>commands.push(c),onBotSpawned(){},onBotRemoved(){},freezePlayer(){},unfreezePlayer(){},showHudLine(){},getGame(){},gameOf(){},leaveGame(){},joinGame(){return true;},teleportToArena:p=>p.addTag('player:pvp')};
-vm.runInNewContext(load('scripts/system/bot/bot.js')+'\nglobalThis.botApi={setBotMode};',ctx);
+vm.runInNewContext(load('scripts/system/bot/bot.js')+'\nglobalThis.botApi={setBotMode,startBotGuide,canGuidePlayer};',ctx);
 const tick=n=>{for(let i=0;i<n;i++)for(const fn of events.tick.handlers)fn();};
 ctx.botApi.setBotMode('follow',{target:'Human'});tick(20);assert.ok(calls.some(c=>c[0]==='navigateToEntity'));assert.ok(!commands.some(c=>c.startsWith('tp ')),'distant target starts with walking');
 for(let i=0;i<10;i++){bot.location.x+=0.5;tick(10);}assert.ok(!commands.some(c=>c.startsWith('tp ')),'progress avoids teleport');
 tick(220);assert.ok(commands.some(c=>c.startsWith('tp ')),'stuck recovery eventually works');assert.ok(!calls.some(c=>c[0]==='jump'),'flat stuck follow never jumps');
 human.location.x=bot.location.x+2;ctx.botApi.setBotMode('spar',{level:4});calls.length=0;tick(40);assert.ok(calls.filter(c=>c[0]==='attackEntity').length>=15);assert.ok(calls.some(c=>c[0]==='jump'));assert.ok(calls.some(c=>c[0]==='navigateToLocation'),'hardest bot circles its target');
+
+// A real bow uses the selected slot, holds the draw for 20 ticks and checks the line again at release.
+bot.selectedSlot = 2;
+bot.headLocation = { ...bot.location, y: bot.location.y + 1.62 };
+human.location.x = bot.location.x + 10;
+human.headLocation = { ...human.location, y: human.location.y + 1.62 };
+bot.getComponent = type => type === 'inventory'
+	? { container: { getItem: slot => slot === 2 ? { typeId: 'minecraft:bow' } : undefined } }
+	: { current: 20, resetToMaxValue() {} };
+let wall = false, ammo = true;
+dim.getBlockFromRay = (from, direction, options) => {
+	assert.equal(from, bot.headLocation);
+	assert.equal(direction.x, 1);
+	assert.ok(options.maxDistance > 9 && options.maxDistance < 10);
+	return wall ? { typeId: 'minecraft:stone' } : undefined;
+};
+bot.useItemInSlot = slot => { calls.push(['draw', slot]); return ammo; };
+bot.stopUsingItem = () => calls.push(['release', bot.selectedSlot]);
+ctx.botApi.setBotMode('spar', { level: 2 });
+calls.length = 0;
+tick(1);
+assert.deepEqual(calls.filter(c => c[0] === 'draw'), [['draw', 2]]);
+tick(19);
+assert.ok(!calls.some(c => c[0] === 'release'));
+tick(1);
+assert.deepEqual(calls.filter(c => c[0] === 'release'), [['release', 2]]);
+tick(10);
+wall = true;
+calls.length = 0;
+tick(20);
+assert.deepEqual(calls.filter(c => c[0] === 'release'), [['release', 3]], 'release only after changing the bow slot');
+assert.equal(bot.selectedSlot, 2, 'the configured slot is restored');
+wall = false;
+ammo = false;
+calls.length = 0;
+tick(24);
+assert.ok(calls.some(c => c[0] === 'draw'));
+assert.ok(calls.some(c => c[0] === 'navigateToEntity'), 'failed draw falls back to approaching');
+assert.ok(!calls.some(c => c[0] === 'release'));
+assert.equal(ctx.botApi.startBotGuide(human), 'chat.admin.bot.error.guide_busy');
+
+ctx.botApi.setBotMode('idle');
+human.location.x = bot.location.x + 2;
+assert.ok(human.hasTag('sys:guided'), 'this player has already had the automatic guide');
+assert.equal(ctx.botApi.startBotGuide(bot), 'chat.admin.bot.error.guide_target');
+assert.equal(ctx.botApi.startBotGuide(human), undefined);
+assert.equal(ctx.botApi.startBotGuide(human), 'chat.admin.bot.error.guide_busy');
+const delivered = [];
+ctx.run = (player, command) => { if (command.startsWith('tellraw ')) delivered.push({ player, command }); };
+tick(214);
+assert.equal(delivered.length, 4);
+assert.ok(delivered.every((m, i) => m.player === human && m.command.includes('bot.guide.' + (i + 1))));
+assert.equal(ctx.botApi.startBotGuide(human), undefined, 'an administrator can assign the guide again');
+human.dimension = { id: 'nether' };
+tick(1);
+assert.equal(delivered.length, 4, 'the guide stops if the player changes dimension');
+human.dimension = dim;
+
 // Dummy HUD blocks lower-priority arena updates for its lease, then releases them.
 let now=1000;const hud={world:{events:{playerLeave:event()}},Date:{now:()=>now},run:(p,c)=>commands.push(c)};
 vm.runInNewContext(load('scripts/system/ui/toast.js')+'\nglobalThis.line=showHudLine;',hud);
@@ -44,5 +102,24 @@ let present=true,menu;const ui={world:{events:{beforeItemUse:event()}},getBot:()
 vm.runInNewContext(load('scripts/menu/admin/admin_menu.js')+'\nglobalThis.menu=botMenu;',ui);ui.menu(human);
 const slots=menu.items.findIndex(i=>i.text==='%admin.bot.button.slots'),sit=menu.items.findIndex(i=>i.text.startsWith('%admin.bot.button.sit'));
 assert.equal(sit,slots+1);assert.ok(menu.items[sit].text.replace(/§./g,'').includes('[ '));assert.ok(menu.body.includes('%admin.bot.status %admin.bot.present'));
+
+const pending = mk('Pending', ['auth:login']);
+let guideForm, submitGuide, selectedGuide;
+Object.assign(ui, {
+	hasRole: () => true,
+	isBot: ctx.isBot,
+	getRole: () => 'player',
+	canGuidePlayer: ctx.botApi.canGuidePlayer,
+	findPlayer: name => name === human.name ? human : undefined,
+	startBotGuide: target => { selectedGuide = target; },
+	tell() {},
+	modal: () => ({ dropdown(label, names) { guideForm = [...names]; return this; } }),
+	showModal: (p, f, submit) => { submitGuide = submit; },
+});
+ui.world.getPlayers = () => [bot, human, pending].values();
+menu.items.find(item => item.text === '%admin.bot.button.guide').run();
+assert.deepEqual(guideForm, [human.name]);
+submitGuide([0]);
+assert.equal(selectedGuide, human);
 present=false;ui.menu(human);assert.ok(!menu.items.some(i=>i.text.startsWith('%admin.bot.button.sit')));assert.ok(menu.body.includes('%admin.bot.absent'));
-console.log('PASS: walk before teleport, stuck recovery, fast jumping/circling sparring, dummy HUD priority and late bot entry.');
+console.log('PASS: walk before teleport, stuck recovery, fast jumping/circling sparring, dummy HUD priority, late bot entry, native bow lifecycle and selected guide.');
