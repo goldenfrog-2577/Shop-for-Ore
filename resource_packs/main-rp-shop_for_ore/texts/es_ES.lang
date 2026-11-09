@@ -990,12 +990,15 @@ chat.cmd.cps.info=§r §7CMD §8» §7CPS de §f%1$s§r§7: ahora §e%2$s§7,
 ## --- JEFE: CUSTODIO ---
 ##   chat.boss.*
 chat.boss.hint=§r §3Custodio §8» §7Toca en el §fcuerno de cabra§7 la melodía §f«Anhelar»§7 sobre la §fpizarra abismal cincelada§7 frente al portal para despertar al Custodio. Ese cuerno solo sale del cofre §5místico§7. Combate desde el nivel §e26§7, hasta §e4§7 jugadores.
+chat.boss.horn_heard=§r §3Custodio §8» §7El portal escucha la melodía… Deja que suene hasta el final.
+chat.boss.horn_lost=§r §3Custodio §8» §7El cuerno «Anhelar» ya no está en tu inventario: el Custodio no despertó.
 chat.boss.horn_melody=§r §3Custodio §8» §7El Custodio no responde a esta melodía. Solo lo despierta §f«Anhelar»§7.
 chat.boss.horn_place=§r §3Custodio §8» §7La melodía resuena por la cueva, pero el portal no la oye. Toca §f«Anhelar»§7 sobre la §fpizarra abismal cincelada§7 frente al portal.
 chat.boss.start=§r §3Custodio §8» §7§c¡El Custodio despierta!§7 Combatientes: §f%s§7. El sculk consumirá las pertenencias de los caídos.
 chat.boss.kicked=§r §3Custodio §8» §7Ha empezado un combate contra el Custodio: no participas y te hemos llevado al spawn.
 chat.boss.phase2=§r §3Custodio §8» §7El sculk se agita: el Custodio llama a los muertos.
 chat.boss.totem=§r §3Custodio §8» §7§cEl Tótem de la inmortalidad se ha roto: ¡el Custodio está furioso!
+chat.boss.vampire=§r §3Custodio §8» §7§c¡El Custodio devoró un alma caída y recuperó sus fuerzas!
 chat.boss.victory=§r §3Custodio §8» §7§a¡El Custodio ha caído!§7 Recompensa: §f%1$s§7 monedas y §f%2$s§7 monedas VIP.
 chat.boss.disc=§r §3Custodio §8» §7Entre las cenizas había un disco.
 chat.boss.defeat=§r §3Custodio §8» §7Todos los combatientes han caído: el Custodio se ha retirado a la oscuridad.

@@ -457,6 +457,10 @@
 				20
 			],
 			[
+				"system/boss/boss.js",
+				2
+			],
+			[
 				"system/security/anticheat.js",
 				1
 			],

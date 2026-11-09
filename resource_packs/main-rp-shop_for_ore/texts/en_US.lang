@@ -990,12 +990,15 @@ chat.cmd.cps.info=§r §7CMD §8» §7CPS of §f%1$s§r§7: now §e%2$s§7, m
 ## --- BOSS: WARDEN ---
 ##   chat.boss.*
 chat.boss.hint=§r §3Warden §8» §7Play the §fGoat Horn§7 tune §f"Yearn"§7 while standing on the §fchiseled deepslate§7 in front of the portal to wake the Warden. That horn drops only from the §5mythic§7 chest. Fight from level §e26§7, up to §e4§7 players.
+chat.boss.horn_heard=§r §3Warden §8» §7The portal listens to the tune… Let it play to the end.
+chat.boss.horn_lost=§r §3Warden §8» §7The "Yearn" horn is no longer in your inventory — the Warden did not wake.
 chat.boss.horn_melody=§r §3Warden §8» §7The Warden does not answer this tune. Only §f"Yearn"§7 wakes it.
 chat.boss.horn_place=§r §3Warden §8» §7The tune echoes through the cave, but the portal cannot hear it. Play §f"Yearn"§7 on the §fchiseled deepslate§7 in front of the portal.
 chat.boss.start=§r §3Warden §8» §7§cThe Warden awakens!§7 Fighters: §f%s§7. The sculk will consume the belongings of the fallen.
 chat.boss.kicked=§r §3Warden §8» §7A Warden fight has started — you are not a fighter and were moved to spawn.
 chat.boss.phase2=§r §3Warden §8» §7The sculk stirs: the Warden calls the dead.
 chat.boss.totem=§r §3Warden §8» §7§cThe Totem of Undying shattered — the Warden is enraged!
+chat.boss.vampire=§r §3Warden §8» §7§cThe Warden devoured a fallen soul and regained its strength!
 chat.boss.victory=§r §3Warden §8» §7§aThe Warden is defeated!§7 Reward: §f%1$s§7 coins and §f%2$s§7 VIP coins.
 chat.boss.disc=§r §3Warden §8» §7A music disc was found among the ashes.
 chat.boss.defeat=§r §3Warden §8» §7All fighters are out — the Warden retreated into the darkness.
