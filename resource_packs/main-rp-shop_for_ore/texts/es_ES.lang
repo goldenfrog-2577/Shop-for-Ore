@@ -914,6 +914,7 @@ chat.game.spectate=§r §6Minijuegos §8» §7Has quedado fuera: mira %1$s§r
 chat.game.error.already=§r⩕ §l§cERROR!§r §8» §7Ya estás en %1$s. Sal con §e!game leave
 chat.game.error.running=§r⩕ §l§cERROR!§r §8» §7%1$s ya está en curso: espera al siguiente
 chat.game.error.full=§r⩕ §l§cERROR!§r §8» §7No quedan plazas en %1$s
+chat.game.error.feather=§r⩕ §l§cERROR!§r §8» §7No puedes entrar mientras actúa la pluma del Salto de fe (levitación o caída lenta): espera un poco
 chat.game.error.not_in_game=§r⩕ §l§cERROR!§r §8» §7No estás en ningún minijuego
 chat.cmd.game.header=§8-----§f Minijuegos §8-----§f
 chat.cmd.game.line=§e%1$s§8 — §f%2$s§8 · §7%3$s §8(%4$s/%5$s)

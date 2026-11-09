@@ -74,6 +74,10 @@ const tellGame = (g, key, ...args) => {
 const gameName = (g) => ({ translate: `minigame.${g.def.id}.name` });
 
 /** Записаться в игру. Бота (role:bot) — только с allowBot (меню администратора → Бот, system/bot/bot.js). @returns {boolean} */
+const hasFeatherEffect = (p) => {
+	try { return !!(p.getEffect(MinecraftEffectTypes.levitation) || p.getEffect(MinecraftEffectTypes.slowFalling)); } catch { return false; }
+};
+
 export function joinGame(player, id, { allowBot = false } = {}) {
 	const g = getGame(id);
 	const fail = (key, ...a) => { tell(player, key, ...a); return false; };
@@ -88,6 +92,9 @@ export function joinGame(player, id, { allowBot = false } = {}) {
 	if (!allowBot && combatSecondsLeft(player) > 0) return fail('chat.pvp.combat', combatSecondsLeft(player));
 	if (g.phase === 'running' && !(allowBot && isBot(player))) return fail('chat.game.error.running', gameName(g));
 	if (g.players.size >= g.def.maxPlayers) return fail('chat.game.error.full', gameName(g));
+	// перо «Прыжка веры» (system/player/void.js): с левитацией или плавным падением в игру не войти — снять только эти два
+	// эффекта командой в 1.19.50 нельзя (effect clear снял бы и купленные), а в игре перо уже не работает
+	if (hasFeatherEffect(player)) return fail('chat.game.error.feather');
 	g.players.add(player.name);
 	player.addTag(GAME_TAG + g.def.id);
 	if (g.phase === 'running') {
@@ -180,10 +187,6 @@ export function startGame(g) {
 	for (const name of g.players) {
 		const p = findPlayer(name);
 		if (!p) continue;
-		// перо «Прыжка веры» (system/player/void.js): левитацию и плавное падение в игру не берём
-		let feather = false;
-		try { feather = !!(p.getEffect(MinecraftEffectTypes.levitation) || p.getEffect(MinecraftEffectTypes.slowFalling)); } catch {}
-		if (feather) run(p, 'effect @s clear');
 		g.def.start(p, index++, g.players.size);
 		showTitle(p, [{ text: '§a' }, { translate: 'title.game.go' }]);
 		run(p, 'playsound note.pling @s ~ ~ ~ 1 2');
