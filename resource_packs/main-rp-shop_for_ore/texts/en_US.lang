@@ -969,6 +969,7 @@ chat.game.spectate=§r §6Minigames §8» §7You are out — watch %1$s§r§7
 chat.game.error.already=§r §l§cERROR!§r §8» §7You are already in %1$s. Leave with §e!game leave
 chat.game.error.running=§r §l§cERROR!§r §8» §7%1$s is already running — wait for the next one
 chat.game.error.full=§r §l§cERROR!§r §8» §7%1$s is full
+chat.game.error.feather=§r §l§cERROR!§r §8» §7You can't join while the Leap of Faith feather is active (levitation or slow falling) — wait a little
 chat.game.error.not_in_game=§r §l§cERROR!§r §8» §7You are not in a minigame
 chat.cmd.game.header=§8-----§f Minigames §8-----§f
 chat.cmd.game.line=§e%1$s§8 — §f%2$s§8 · §7%3$s §8(%4$s/%5$s)
