@@ -239,16 +239,28 @@ function wave(phase) {
 	}
 }
 
+/** Тотем сработал: ярость и сообщение (один раз). Пишется сразу из entityHurt — между проверками раз в секунду босса могут добить. */
+function markTotem(boss) {
+	if (fight.totem) return;
+	fight.totem = true;
+	try { boss?.triggerEvent('server:rage'); } catch {}
+	for (const name of fight.fighters) { const p = findOnline(name); if (p) tell(p, 'chat.boss.totem'); }
+}
+
 function fightStep() {
 	const t = now();
 	const [boss] = bosses();
 	// тотем: после него у босса Поглощение — других источников у Хранителя нет
 	if (boss && !fight.totem) {
-		try { fight.totem = !!boss.getEffect(MinecraftEffectTypes.absorption); } catch {}
-		if (fight.totem) {
-			boss.triggerEvent('server:rage');
-			for (const name of fight.fighters) { const p = findOnline(name); if (p) tell(p, 'chat.boss.totem'); }
-		}
+		let absorbed = false;
+		try { absorbed = !!boss.getEffect(MinecraftEffectTypes.absorption); } catch {}
+		if (absorbed) markTotem(boss);
+	}
+	// Сначала — кто всё ещё в бою: ушедший с арены (или вышедший) выбывает до награды, даже если босса добили в эту же секунду
+	for (const name of [...fight.fighters]) {
+		const p = findOnline(name);
+		if (!p) { knockOut(name); continue; }
+		if (!fight.dead.has(name) && !inFight(p.location, p.dimension?.id)) knockOut(name, 'chat.boss.left');
 	}
 	if (!boss) return endFight(fight.totem ? 'victory' : 'abort');
 	let current = fight.max;
@@ -262,13 +274,10 @@ function fightStep() {
 		wave(phase);
 		fight.nextWave = t + WAVE_SECONDS;
 	}
-	// участники: ушёл с арены — выбыл; погибший выбывает после возрождения (respawned)
-	for (const name of [...fight.fighters]) {
+	// ярость: «Тьма» оставшимся (ушедшие уже выбыли выше; погибший выбывает после возрождения — respawned)
+	if (phase === 3) for (const name of fight.fighters) {
 		const p = findOnline(name);
-		if (!p) { knockOut(name); continue; }
-		if (fight.dead.has(name)) continue;
-		if (!inFight(p.location, p.dimension?.id)) knockOut(name, 'chat.boss.left');
-		else if (phase === 3) run(p, 'effect @s darkness 3 0 true');
+		if (p && !fight.dead.has(name)) run(p, 'effect @s darkness 3 0 true');
 	}
 	cmd(`kill @e[type=item,${ITEMS_BOX}]`);
 	if (![...fight.fighters].some(n => !fight.dead.has(n))) return endFight('defeat');
@@ -384,6 +393,13 @@ system.runSchedule(() => {
 // Смерть участника: отметить; выпавшее уничтожится в fightStep, остальное — после возрождения
 world.events.entityHurt.subscribe((e) => {
 	if (fight && e.damagingEntity?.typeId === BOSS) vampire(e);
+	// Удар по боссу: тотем отмечаем сразу (Поглощение или смертельный удар — умереть он может только после тотема)
+	if (fight && !fight.totem && e.hurtEntity?.typeId === BOSS) {
+		let absorbed = false, hp = 1;
+		try { absorbed = !!e.hurtEntity.getEffect(MinecraftEffectTypes.absorption); } catch {}
+		try { hp = e.hurtEntity.getComponent('minecraft:health').current; } catch {}
+		if (absorbed || hp <= 0) markTotem(e.hurtEntity);
+	}
 	if (!fight || e.hurtEntity?.typeId !== 'minecraft:player' || !fight.fighters.has(e.hurtEntity.name)) return;
 	let hp = 1;
 	try { hp = e.hurtEntity.getComponent('minecraft:health').current; } catch {}
