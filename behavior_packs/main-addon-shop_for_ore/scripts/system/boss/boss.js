@@ -265,7 +265,8 @@ function fightStep() {
 	if (!boss) return endFight(fight.totem ? 'victory' : 'abort');
 	let current = fight.max;
 	try { current = boss.getComponent('minecraft:health').current; } catch {}
-	const phase = phaseOf({ current, max: fight.max, totem: fight.totem });
+	// фаза не откатывается назад (порог 60 % мог быть пройден и между проверками)
+	const phase = Math.max(fight.phase, phaseOf({ current, max: fight.max, totem: fight.totem }));
 	if (phase === 2 && fight.phase === 1) {
 		for (const name of fight.fighters) { const p = findOnline(name); if (p) tell(p, 'chat.boss.phase2'); }
 	}
@@ -419,7 +420,9 @@ function vampire(e) {
 	let current, hp = 1, victimMax = 0;
 	try { current = boss.getComponent('minecraft:health').current; } catch { return; }
 	try { const h = victim.getComponent('minecraft:health'); hp = h.current; victimMax = h.value; } catch {}
-	const next = vampireHeal({ phase: fight.phase, current, max: fight.max, damage: e.damage, died: hp <= 0, victimMax });
+	// фаза — по здоровью прямо сейчас: игроки могли пробить 60 % после последней проверки fightStep (раз в секунду)
+	const phase = Math.max(fight.phase, phaseOf({ current, max: fight.max, totem: fight.totem }));
+	const next = vampireHeal({ phase, current, max: fight.max, damage: e.damage, died: hp <= 0, victimMax });
 	if (next === null) return;
 	try { boss.getComponent('minecraft:health').setCurrent(next); } catch { return; }
 	const { x, y, z } = boss.location;
