@@ -21,7 +21,7 @@
 // Если из живых участников остался только бот — поражение.
 // Поражение — выбыли все или прошло FIGHT_SECONDS: Хранитель уходит. В любом конце: решётка открыта, прислужники убраны.
 // После перезагрузки скриптов посреди боя (boss_state = 1 или босс в мире) бой отменяется без награды. Арена могла быть
-// не загружена (все ушли): тогда tickingarea boss_recover грузит её, и уборка ждёт, пока чанки загрузятся (RECOVER_CORNERS);
+// не загружена (все ушли): тогда tickingarea boss_arena грузит её (она же держит арену загруженной весь бой), и уборка ждёт, пока чанки загрузятся (RECOVER_CORNERS);
 // до этого бой не начать, решётка закрыта.
 
 import { system, world, Location, BlockLocation, MinecraftEffectTypes } from '@minecraft/server';
@@ -154,6 +154,16 @@ let recovering = 0;         // > 0 — бой оборвался перезаг�
 
 export const bossBusy = () => !!fight || recovering > 0;
 
+// Арена держится загруженной (tickingarea) весь бой и при уборке после перезагрузки: незагруженного Хранителя
+// getEntities не видит — его нельзя ни посчитать живым, ни убрать
+const ARENA_AREA = 'boss_arena';
+const arenaArea = (on) => cmd(on ? `tickingarea add 480 -62 -104 575 -20 -12 ${ARENA_AREA}` : `tickingarea remove ${ARENA_AREA}`);
+// Углы и центр арены: если все эти блоки читаются, чанки (и сущности в них) загружены
+const RECOVER_CORNERS = [[480, -104], [575, -104], [480, -12], [575, -12], [528, -58]];
+const arenaLoaded = () => {
+	try { return RECOVER_CORNERS.every(([x, z]) => !!overworld().getBlock(new BlockLocation(x, -60, z))); } catch { return false; }
+};
+
 function setBars(open) {
 	const [[x0, y0, z0], [x1, y1, z1]] = BARS;
 	cmd(`fill ${x0} ${y0} ${z0} ${x1} ${y1} ${z1} ${open ? 'air' : 'iron_bars'} 0`);
@@ -195,6 +205,7 @@ function startFight(fighters, kick) {
 		run(p, 'playsound mob.warden.emerge @s ~ ~ ~ 2 1');
 		tell(p, 'chat.boss.start', String(n));
 	}
+	arenaArea(true);
 	cmd(`summon ${BOSS} ${SUMMON.join(' ')} server:spawn_emerging`);
 	// событие здоровья и тотем — тиком позже, когда сущность уже есть
 	system.run(() => {
@@ -221,6 +232,7 @@ function endFight(result) {
 		try { b.teleport({ x: SUMMON[0], y: -200, z: SUMMON[2] }, overworld(), 0, 0); } catch {}
 	}
 	clearArena();
+	arenaArea(false);
 	setBars(true);
 	botLink.end();
 	until = now() + COOLDOWN_SECONDS;
@@ -294,7 +306,8 @@ function fightStep() {
 		if (!p) { knockOut(name); continue; }
 		if (!fight.dead.has(name) && !inFight(p.location, p.dimension?.id)) knockOut(name, 'chat.boss.left');
 	}
-	if (!boss) return endFight(fight.totem ? 'victory' : 'abort');
+	// босса не видно: конец боя, только если арена загружена (иначе он просто в незагруженном чанке)
+	if (!boss) return arenaLoaded() ? endFight(fight.totem ? 'victory' : 'abort') : undefined;
 	let current = fight.max;
 	try { current = boss.getComponent('minecraft:health').current; } catch {}
 	// фаза не откатывается назад (порог 60 % мог быть пройден и между проверками)
@@ -333,13 +346,6 @@ function processClears() {
 	}
 }
 
-const RECOVER_AREA = 'boss_recover';
-// Углы и центр арены: если все эти блоки читаются, чанки (и сущности в них) загружены
-const RECOVER_CORNERS = [[480, -104], [575, -104], [480, -12], [575, -12], [528, -58]];
-const arenaLoaded = () => {
-	try { return RECOVER_CORNERS.every(([x, z]) => !!overworld().getBlock(new BlockLocation(x, -60, z))); } catch { return false; }
-};
-
 function load() {
 	loaded = true;
 	until = systemScore('boss_until');
@@ -347,7 +353,7 @@ function load() {
 	if (systemScore('boss_state') === 1 || bosses().length) {
 		// Хранитель и прислужники могут быть в незагруженных чанках — getEntities их не видит. Грузим арену и ждём
 		recovering = 1;
-		cmd(`tickingarea add 480 -62 -104 575 -20 -12 ${RECOVER_AREA}`);
+		arenaArea(true);
 		return;
 	}
 	setBars(true);
@@ -360,7 +366,7 @@ function recoverStep() {
 	for (const b of bosses()) { try { b.teleport({ x: SUMMON[0], y: -200, z: SUMMON[2] }, overworld(), 0, 0); } catch {} }
 	clearArena();
 	cmd('scoreboard players set boss_state system 0');
-	cmd(`tickingarea remove ${RECOVER_AREA}`);
+	arenaArea(false);
 	recovering = 0;
 	setBars(true);
 }
