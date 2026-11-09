@@ -14,6 +14,17 @@ export const PLAYER_ARG = {
 	warn: 0, unwarn: 0, freeze: 0, unfreeze: 0, tphere: 0, gm1: 0, gm2: 0, fly: 1, ban: 0, scoreboard: 0, tag: 0,
 	achievement: 0, color: 0, prefix: 0, stick: 0, debug: 0, role: 0, resetpass: 0
 };
+const lc = (a) => (a || '').toLowerCase();
+/** Где ник у команд, у которых он «плавает» в зависимости от формы: !ac reset <ник> / !ac <ник> / !ac mode …; !fly [on|off] <ник>. */
+const PLAYER_ARG_BY_FORM = {
+	ac: (args) => lc(args[0]) === 'reset' ? 1 : lc(args[0]) === 'mode' ? undefined : 0,
+	fly: (args) => lc(args[0]) === 'on' || lc(args[0]) === 'off' ? 1 : 0
+};
+/** Номер аргумента с ником для этой формы команды (undefined — у формы нет ника). */
+export function playerArgPos(command, args) {
+	const byForm = PLAYER_ARG_BY_FORM[command];
+	return byForm ? byForm(args) : PLAYER_ARG[command];
+}
 /** Команды только с одной целью. */
 export const SINGLE_TARGET = new Set(['msg', 'pay', 'report', 'ban', 'role', 'resetpass']);
 export const SELECTORS = ['@a', '@s', '@p', '@r'];
