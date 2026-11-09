@@ -969,6 +969,7 @@ chat.game.spectate=§r §6Міні-ігри §8» §7Ти вибув(ла) �
 chat.game.error.already=§r⩕ §l§cERROR!§r §8» §7Ти вже в грі %1$s. Вийти — §e!game leave
 chat.game.error.running=§r⩕ §l§cERROR!§r §8» §7%1$s уже триває — дочекайся наступної
 chat.game.error.full=§r⩕ §l§cERROR!§r §8» §7У грі %1$s немає місць
+chat.game.error.feather=§r⩕ §l§cERROR!§r §8» §7Поки діє перо «Стрибка віри» (левітація чи повільне падіння), у гру не увійти — зачекай трохи
 chat.game.error.not_in_game=§r⩕ §l§cERROR!§r §8» §7Ти не в міні-грі
 chat.cmd.game.header=§8-----§f Міні-ігри §8-----§f
 chat.cmd.game.line=§e%1$s§8 — §f%2$s§8 · §7%3$s §8(%4$s/%5$s)
