@@ -8,7 +8,7 @@
 // Идея — по мотивам карты FearCube (с разрешения автора), код свой.
 
 import { isJailed, jailMinutesLeft } from '../security/jail.js';
-import { world, system } from '@minecraft/server';
+import { world, system, MinecraftEffectTypes } from '@minecraft/server';
 import { run, rawTranslateRich, isPending, isBot, findPlayer, tell } from '../../DataBase.js';
 import { teleportToArena, combatSecondsLeft } from '../combat/pvp.js';
 import { showTitle } from '../ui/toast.js';
@@ -181,6 +181,10 @@ export function startGame(g) {
 	for (const name of g.players) {
 		const p = findPlayer(name);
 		if (!p) continue;
+		// перо «Прыжка веры» (system/player/void.js): левитацию и плавное падение в игру не берём
+		let feather = false;
+		try { feather = !!(p.getEffect(MinecraftEffectTypes.levitation) || p.getEffect(MinecraftEffectTypes.slowFalling)); } catch {}
+		if (feather) run(p, 'effect @s clear');
 		g.def.start(p, index++, g.players.size);
 		showTitle(p, [{ text: '§a' }, { translate: 'title.game.go' }]);
 		run(p, 'playsound note.pling @s ~ ~ ~ 1 2');
