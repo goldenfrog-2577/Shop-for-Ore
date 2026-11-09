@@ -331,14 +331,21 @@ function load() {
 }
 
 /** Уборка после оборванного боя — когда арена загружена две проверки подряд (сущности появляются вслед за чанками). */
+let recoverWait = 0;
 function recoverStep() {
-	if (!arenaLoaded()) { recovering = 1; return; }
+	if (!arenaLoaded()) {
+		recovering = 1;
+		// команда загрузки могла не пройти (очередь команд при перезагрузке) — повторяем раз в 10 секунд
+		if (++recoverWait % 10 === 0) arenaArea(true);
+		return;
+	}
 	if (++recovering < 3) return;
 	for (const b of bosses()) { try { b.teleport({ x: SUMMON[0], y: -200, z: SUMMON[2] }, overworld(), 0, 0); } catch {} }
 	clearArena();
 	cmd('scoreboard players set boss_state system 0');
 	arenaArea(false);
 	recovering = 0;
+	recoverWait = 0;
 	setBars(true);
 }
 
