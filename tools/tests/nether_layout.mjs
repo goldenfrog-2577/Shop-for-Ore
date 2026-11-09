@@ -43,7 +43,17 @@ assert.match(read('functions/system/setup.mcfunction'), /scoreboard players rese
 assert.match(read('functions/system/timers.mcfunction'), /matches \.\.10 run function system\/setup/);
 assert.match(read('scripts/system/security/anticheat_checks.js'), /\|gilded_blackstone\|/);
 
-const names = { ru_RU: ['Кварц', 'Золотые самородки', 'Магма', 'Позолоченный чернит', 'Древние обломки'] };
+const names = [
+	['item.quartz.name', 'Незерский кварц'],
+	['item.gold_nugget.name', 'Кусочек золота'],
+	['tile.magma.name', 'Магма'],
+	['tile.gilded_blackstone.name', 'Позолоченный чернит'],
+	['tile.ancient_debris.name', 'Древние обломки'],
+];
 const ru = fs.readFileSync(new URL('../../resource_packs/main-rp-shop_for_ore/texts/ru_RU.lang', import.meta.url), 'utf8');
-names.ru_RU.forEach((n, i) => assert.ok(ru.includes(`menu.levels.line.${17 + i}=${17 + i} уровень - ${n}\r\n`), n));
+names.forEach(([key, name], i) => {
+	const level = 17 + i;
+	assert.ok(ru.includes('menu.levels.line.' + level + '=' + level + ' уровень - ' + name + '\r\n'), name);
+	assert.ok(ru.includes(key + '=' + name + '\r\n'), 'inventory ' + name);
+});
 console.log('PASS: Nether order — pits, autosale levels/prices, pickaxe lists and level menu agree; tenth pit empty; pickaxes reissued once.');
