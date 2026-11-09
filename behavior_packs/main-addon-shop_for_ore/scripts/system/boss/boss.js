@@ -18,7 +18,7 @@
 // до этого бой не начать, решётка закрыта.
 
 import { system, world, Location, BlockLocation, MinecraftEffectTypes } from '@minecraft/server';
-import { getScore, run, tell } from '../../DataBase.js';
+import { getScore, run, tell, isPending } from '../../DataBase.js';
 import { inArena } from './arena.js';
 import { SPAWN } from '../player/void.js';
 
@@ -309,14 +309,21 @@ function load() {
 }
 
 /** Уборка после оборванного боя — когда арена загружена две проверки подряд (сущности появляются вслед за чанками). */
+let recoverWait = 0;
 function recoverStep() {
-	if (!arenaLoaded()) { recovering = 1; return; }
+	if (!arenaLoaded()) {
+		recovering = 1;
+		// команда загрузки могла не пройти (очередь команд при перезагрузке) — повторяем раз в 10 секунд
+		if (++recoverWait % 10 === 0) arenaArea(true);
+		return;
+	}
 	if (++recovering < 3) return;
 	for (const b of bosses()) { try { b.teleport({ x: SUMMON[0], y: -200, z: SUMMON[2] }, overworld(), 0, 0); } catch {} }
 	clearArena();
 	cmd('scoreboard players set boss_state system 0');
 	arenaArea(false);
 	recovering = 0;
+	recoverWait = 0;
 	setBars(true);
 }
 
@@ -348,7 +355,7 @@ system.runSchedule(() => {
 // Рог «Тосковать» на плите у портала будит Хранителя (раньше — просто встать на плиту)
 world.events.itemStartCharge.subscribe((e) => {
 	const p = e.source;
-	if (p?.typeId !== 'minecraft:player' || p.hasTag('role:bot') || !loaded) return;
+	if (p?.typeId !== 'minecraft:player' || p.hasTag('role:bot') || isPending(p) || !loaded) return;
 	if (!inArena(p.location, p.dimension?.id)) return;
 	const action = hornAction(e.itemStack?.typeId, e.itemStack?.data, onStart(p.location));
 	if (!action) return;
@@ -356,7 +363,8 @@ world.events.itemStartCharge.subscribe((e) => {
 	if (bossBusy()) return tell(p, 'chat.boss.busy');   // идёт бой или уборка после перезагрузки
 	// участники — только за решёткой; всех остальных на арене и в тоннеле переносит на спавн
 	const inside = players().filter(q => inArena(q.location, q.dimension?.id));
-	const arena = inside.filter(q => inFight(q.location, q.dimension?.id));
+	// не вошедший в аккаунт (форма входа) в бой не идёт — иначе под чужим ником можно потерять вещи владельца ника
+	const arena = inside.filter(q => inFight(q.location, q.dimension?.id) && !isPending(q));
 	const check = checkStart({
 		busy: false, now: now(), until, starter: p.name,
 		players: arena.map(q => ({ name: q.name, level: getScore(q, 'lvl'), bot: q.hasTag('role:bot') }))
