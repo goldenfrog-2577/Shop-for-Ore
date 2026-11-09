@@ -140,4 +140,8 @@ assert.match(src, /e\.hurtEntity\?\.typeId === BOSS\)[\s\S]*?if \(absorbed \|\| 
   assert.match(pvp, /hasTag\('boss:fighter'\) && inBossFight\(e\.source\.location, e\.source\.dimension\?\.id\)\) return;/);
   const fightBox = src.match(/export function inFight\(loc, dimensionId = 'minecraft:overworld'\) \{\s*return (.*);/)[1];
   assert.equal(pvp.match(/export const inBossFight = \(loc, dimensionId\) => (.*);/)[1], fightBox); }
+// Не вошедший в аккаунт (auth:login / auth:register) не будит Хранителя и не попадает в участники
+assert.match(src, /hasTag\('role:bot'\) \|\| isPending\(p\) \|\| !loaded\) return;/);
+assert.match(src, /if \(!p \|\| isPending\(p\) \|\| !inArena/);
+assert.match(src, /inFight\(q\.location, q\.dimension\?\.id\) && !isPending\(q\)/);
 console.log('PASS: boss start rules, phases, minion waves, discs, spots, 4-locale keys, entity/sounds, warp level gate.');
