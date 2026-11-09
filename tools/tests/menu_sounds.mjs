@@ -31,7 +31,10 @@ for (const f of ['registration/login.js', 'registration/register.js', 'registrat
 	assert.ok(!/run\(player, 'playsound random\.levelup @s'\)/.test(s.replace(/if \(!player\.hasTag\('player:menu_success_off'\)\) run\(player, 'playsound random\.levelup @s'\)/g, '')), f);
 }
 // Настройки: третий переключатель «Клик» на 4 языках
-assert.match(read(new URL('scripts/menu/main_menu.js', bp)), /'%menu\.settings\.menu_sounds\.click', run: \(\) => toggle\('click'\)/);
+// Кнопки «Звуки в меню» — с ванильными текстурами (решение владельца: текстуры, не глифы)
+{ const mm = read(new URL('scripts/menu/main_menu.js', bp));
+  for (const [k, ic] of [['success', 'confirm'], ['error', 'cancel'], ['click', 'cursor']])
+    assert.ok(mm.includes(`{ text: '%menu.settings.menu_sounds.${k}', icon: 'textures/ui/${ic}', run: () => toggle('${k}') }`), k); }
 for (const l of ['ru_RU', 'en_US', 'uk_UA', 'es_ES']) {
 	const keys = new Set(read(new URL(`texts/${l}.lang`, rp)).split(/\r?\n/).map(x => x.split('=')[0]));
 	for (const k of ['menu.settings.menu_sounds.click', 'menu.settings.menu_sounds.click.title']) assert.ok(keys.has(k), `${l} ${k}`);
