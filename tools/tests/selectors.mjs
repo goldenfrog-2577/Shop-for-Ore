@@ -25,6 +25,16 @@ for (const [cmd, pos] of Object.entries(S.PLAYER_ARG)) {
 	assert.match(usage[cmd][pos] ?? '', /^[<[]player/, `!${cmd}: аргумент ${pos} — не ник (${usage[cmd].join(' ')})`);
 }
 for (const cmd of S.SINGLE_TARGET) assert.ok(cmd in S.PLAYER_ARG, cmd);
+// Codex (#123): у !ac и !fly ник «плавает» по форме команды — селектор раскрывается на правильном месте
+assert.equal(S.playerArgPos('ac', ['reset', '@a']), 1);
+assert.equal(S.playerArgPos('ac', ['@a']), 0);
+assert.equal(S.playerArgPos('ac', ['mode', 'kick']), undefined);
+assert.equal(S.playerArgPos('fly', ['@s']), 0);
+assert.equal(S.playerArgPos('fly', ['on', '@a']), 1);
+assert.equal(S.playerArgPos('fly', ['OFF', '@p']), 1);
+assert.equal(S.playerArgPos('mute', ['@a', '5m']), 0);
+assert.equal(S.playerArgPos('help', []), undefined);
+assert.match(fs.readFileSync(new URL('scripts/chat/commands/commands.js', bp), 'utf8'), /const pos = playerArgPos\(command, args\);/);
 // Ошибки селекторов — на 4 языках и в ERROR_KEYS
 const errors = fs.readFileSync(new URL('scripts/system/ui/error_keys.js', bp), 'utf8');
 for (const k of ['chat.cmd.error.selector', 'chat.cmd.error.selector_single', 'chat.cmd.error.selector_empty']) {
