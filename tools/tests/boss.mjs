@@ -135,4 +135,9 @@ assert.ok(src.includes("export const FIGHTER = 'boss:fighter'") && pvp.includes(
 // Codex (#123/#124): ушедший с арены выбывает до награды; тотем отмечается сразу при ударе (иначе добитый за секунду босс — «отмена»)
 assert.match(src, /function fightStep\(\) \{[\s\S]*?knockOut\(name, 'chat\.boss\.left'\)[\s\S]*?if \(!boss\) return endFight\(fight\.totem \? 'victory' : 'abort'\);/);
 assert.match(src, /e\.hurtEntity\?\.typeId === BOSS\)[\s\S]*?if \(absorbed \|\| hp <= 0\) markTotem\(e\.hurtEntity\);/);
+// Codex (#108): кристалл — участнику боя только внутри арены (тот же прямоугольник, что inFight)
+{ const pvp = fs.readFileSync(new URL('scripts/system/combat/pvp.js', bp), 'utf8');
+  assert.match(pvp, /hasTag\('boss:fighter'\) && inBossFight\(e\.source\.location, e\.source\.dimension\?\.id\)\) return;/);
+  const fightBox = src.match(/export function inFight\(loc, dimensionId = 'minecraft:overworld'\) \{\s*return (.*);/)[1];
+  assert.equal(pvp.match(/export const inBossFight = \(loc, dimensionId\) => (.*);/)[1], fightBox); }
 console.log('PASS: boss start rules, phases, minion waves, discs, spots, 4-locale keys, entity/sounds, warp level gate.');
