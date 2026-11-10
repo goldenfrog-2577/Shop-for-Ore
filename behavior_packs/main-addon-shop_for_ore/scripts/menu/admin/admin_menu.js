@@ -305,23 +305,24 @@ function playerActions(player, target) {
 		// Роль меняет только владелец, и не самому себе
 		if (hasRole(player, 'owner') && !target.hasTag('role:owner') && !target.hasTag('role:bot')) {
 			items.push({ text: '%admin.players.button.role', icon: 'textures/ui/permissions_op_crown', run: () => playerRole(player, target) });
-
-			// Сброс забытого пароля — с подтверждением (команда !resetpass)
-			items.push({ text: '%admin.players.button.resetpass', icon: 'textures/ui/icon_lock', run: () => confirm(player, WARN_TITLE, '%admin.players.resetpass.body', () => runChatCommand(player, 'resetpass', [target.name]), () => playerActions(player, target)) });
 		}
 	}
 	if (hasRole(player, 'owner')) items.push(isVip(target)
 		? { text: '%admin.players.button.vip_take', icon: 'textures/items/amethyst_shard', run: () => setVip(player, target, false) }
 		: { text: '%admin.players.button.vip_give', icon: 'textures/items/amethyst_shard', run: () => setVip(player, target, true) });
+	// Сброс забытого пароля — последним перед «Назад», с подтверждением (команда !resetpass). Тем же, кому можно менять роль
+	if (!self && hasRole(player, 'owner') && !target.hasTag('role:owner') && !target.hasTag('role:bot')) {
+		items.push({ text: '%admin.players.button.resetpass', icon: 'textures/ui/icon_lock', run: () => confirm(player, WARN_TITLE, '%admin.players.resetpass.body', () => runChatCommand(player, 'resetpass', [target.name]), () => playerActions(player, target)) });
+	}
 	items.push(back(() => playersMenu(player)));
 	const body = [
 		`%admin.players.body.name ${name}`,
 		`%admin.players.body.playtime ${playtimeText(target)}`,
 		`%admin.players.body.role %role.${getRole(target)}`,
 		`%admin.players.body.lvl ${getScore(target, 'lvl')}`,
-		`%admin.players.body.money ${getScore(target, 'money')} §r${COIN_GLYPH}`,
 		`%admin.players.body.warns ${getWarns(target)}§7/§f3§r`,
 		...(isVip(target) ? [`%admin.players.body.vip_coins ${getScore(target, 'vip_coins')} §r${VIP_COIN_GLYPH}`] : []),
+		`%admin.players.body.money ${getScore(target, 'money')} §r${COIN_GLYPH}`,
 		`%admin.players.body.mute ${muteMinutesLeft(target) === Infinity ? '%chat.term.permanent' : muteMinutesLeft(target) > 0 ? muteMinutesLeft(target) + ' %admin.common.min' : '%admin.players.mute.none'}`,
 		// В тюрьме — сколько осталось
 		...(isJailed(target) ? [`%admin.players.body.jail ${jailMinutesLeft(target) === Infinity ? '%chat.term.permanent' : `${jailMinutesLeft(target)} %admin.common.min`}`] : [])
@@ -547,7 +548,8 @@ export function botMenu(player) {
 	] : [{ text: '%admin.bot.button.spawn', icon: 'textures/server_icons/steve', run: async () => { const bot = await spawnBot(player); tell(player, bot ? 'chat.admin.bot.spawned' : 'chat.admin.bot.error.spawn', name); if (bot) botMenu(player); } }];
 	items.push(toggle('totem', 'totem', 'textures/items/totem'), toggle('returnOnLoad', 'return', 'textures/ui/refresh_light'),
 		{ text: '%admin.bot.button.rename', icon: 'textures/items/name_tag', run: () => botRename(player) },
-		{ text: '%admin.bot.button.remove', icon: 'textures/ui/cancel', run: () => { if (removeBot()) tell(player, 'chat.admin.bot.removed', name); botMenu(player); } },
+		// «Убрать бота» — только когда он в мире (без бота вверху кнопка «Вызвать бота»)
+		...(bot ? [{ text: '%admin.bot.button.remove', icon: 'textures/ui/cancel', run: () => { if (removeBot()) tell(player, 'chat.admin.bot.removed', name); botMenu(player); } }] : []),
 		back(() => admin_menu(player)));
 	showMenu(player, '%admin.bot.title', () => `%admin.bot.name §f${getBotName()}\n%admin.bot.status ${getBot() ? '%admin.bot.present' : '%admin.bot.absent'}`, items, () => admin_menu(player));
 }

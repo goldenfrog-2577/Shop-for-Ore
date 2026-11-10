@@ -12,7 +12,7 @@ import { world, system } from '@minecraft/server';
 import { hasRole, tell } from './DataBase.js';
 
 // Лог о запуске скриптов аддона
-console.log('[Shop for Ore] Addon scripts is working');
+console.log('[Shop for Ore] Addon scripts are working properly');
 
 // Импорт модулей меню
 import './menu/main_menu.js';         // Основное меню магазина
@@ -48,12 +48,11 @@ import './system/combat/trident.js';     // Трезубец с «Громове
 import './system/player/void.js';        // Бездна: упал ниже мира — на спавн
 import './system/boss/arena.js';         // Арена Хранителя: музыка (Ancestry, «5») и эмбиент Древнего города
 import './system/boss/boss.js';          // Босс Хранитель: старт с плиты у портала, фазы, тотем, награды
+import './system/boss/portal.js';        // Бирюзовый портал в мини-играх → арена (проверки как у !warp boss)
 import './system/player/ranks.js';       // Префикс уровня в чате (rank:§rN, у VIP — rank:§aVIP)
 import './system/ui/hud.js';         // Панель слева (actionbar)
 import './system/core/fallback.js';    // Пульс скриптов: без него включается запасное меню на NPC
-
-// Вход и регистрация
-import './registration/system.js';
+import './registration/system.js'; // Вход и регистрация в аккаунт: проверка, запись, смена пароля, сброс пароля
 
 // После загрузки уведомить администраторов в сети.
 system.run(() => {
@@ -61,6 +60,7 @@ system.run(() => {
 		if (hasRole(player, 'admin')) tell(player, 'chat.cmd.reload.done');
 	}
 });
+
 import './system/player/playtime.js'; // Суммарное время в мире
 import './system/core/reset_history.js'; // Очистка служебных номеров без повторного вайпа
 import './system/core/player_scores.js'; // Восстановление отсутствующих счетов после сброса

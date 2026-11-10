@@ -183,7 +183,7 @@ world.events.tick.subscribe(() => {
 			const was = lastWorth.get(player.name);
 			lastWorth.set(player.name, worth);
 			if (was !== undefined && worth > was && player.hasTag('player:particle') && onGold(player)) {
-				run(player, `particle ${sell.particle} ~ ~1 ~`);
+				sellCloud(player.dimension, player.location, sell.particle);
 			}
 		}
 		if (player.hasTag('state:invis') || player.hasTag('state:frozen') || player.hasTag('role:bot')) continue;
@@ -194,6 +194,19 @@ world.events.tick.subscribe(() => {
 	}
 });
 world.events.playerLeave.subscribe((e) => { lastPos.delete(e.playerName); lastWorth.delete(e.playerName); });
+
+// Облако при продаже: SELL_POINTS случайных точек вокруг игрока — кольцо радиусом 0.6…1.3 блока от ног до макушки
+// (раньше была одна частица на уровне пояса). Новое облако — при каждом росте счёта, т. е. пока идёт продажа
+export const SELL_POINTS = 10;
+export function sellPoints(rand = Math.random) {
+	return Array.from({ length: SELL_POINTS }, () => {
+		const a = rand() * Math.PI * 2, r = 0.6 + rand() * 0.7;
+		return [Math.cos(a) * r, 0.1 + rand() * 1.9, Math.sin(a) * r];
+	});
+}
+function sellCloud(dim, loc, id) {
+	for (const [dx, dy, dz] of sellPoints()) particleAt(dim, loc.x + dx, loc.y + dy, loc.z + dz, id);
+}
 
 function onGold(player) {
 	try {

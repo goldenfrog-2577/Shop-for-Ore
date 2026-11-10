@@ -124,7 +124,7 @@ def warp(label, warp_id, x, y, z):
 
 
 scenes = [
-    scene('fb_main', '%menu.main.title', ['%legacy_menu.notice'], [
+    scene('fb_main', '%menu.main.title', ['%legacy_menu.notice', '\n\n', '%legacy_menu.promo'], [
         go(B('about'), 'fb_about'),
         go(B('shop'), 'fb_shop'),
         go(B('settings'), 'fb_settings'),

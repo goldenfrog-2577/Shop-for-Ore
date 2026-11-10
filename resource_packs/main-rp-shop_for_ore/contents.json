@@ -274,6 +274,9 @@
 			"path": "textures/server_icons/tnt_block.png"
 		},
 		{
+			"path": "textures/server_icons/warden.png"
+		},
+		{
 			"path": "entity/thrown_ender_crystal.entity.json"
 		},
 		{

@@ -150,8 +150,8 @@ function settings(player) {
 	showMenu(player, '%menu.settings.title', '%menu.settings.body', [
 		{ text: '%menu.settings.button.board', icon: 'textures/items/sign', run: () => boardSetting(player, again) },
 		{ text: '%menu.settings.button.particles', icon: 'textures/items/emerald', run: () => tagSetting(player, 'particles', 'player:particle', again) },
-		{ text: '%menu.settings.button.sounds', icon: 'textures/blocks/noteblock', run: () => tagSetting(player, 'sounds', 'player:sound', again) },
-		{ text: '%menu.settings.button.menu_sounds', icon: 'textures/blocks/noteblock', run: () => menuSounds(player, again) },
+		{ text: '%menu.settings.button.sounds', icon: 'textures/server_icons/note_block', run: () => tagSetting(player, 'sounds', 'player:sound', again) },
+		{ text: '%menu.settings.button.menu_sounds', icon: 'textures/server_icons/note_block', run: () => menuSounds(player, again) },
 		{ text: '%menu.settings.button.music', icon: 'textures/items/record_cat', run: () => musicSetting(player, again) },
 		{ text: '%menu.settings.button.password', icon: 'textures/ui/icon_lock', run: () => ChangePasswordUI(player, again) },
 		backButton(back)
@@ -192,6 +192,20 @@ function boardSetting(player, back) {
 	], back);
 }
 
+function menuSounds(player, back) {
+	const toggle = (kind) => toggleMenu(player, '%menu.settings.menu_sounds.' + kind + '.title',
+		'%menu.settings.menu_sounds.body', !player.hasTag('player:menu_' + kind + '_off'), on => {
+			if (on) player.removeTag('player:menu_' + kind + '_off'); else player.addTag('player:menu_' + kind + '_off');
+			tell(player, on ? 'chat.settings.enabled' : 'chat.settings.disabled');
+			menuSounds(player, back);
+		}, () => menuSounds(player, back));
+	showMenu(player, '%menu.settings.menu_sounds.title', '%menu.settings.menu_sounds.body', [
+		{ text: '%menu.settings.menu_sounds.success', run: () => toggle('success') },
+		{ text: '%menu.settings.menu_sounds.error', run: () => toggle('error') },
+		backButton(back)
+	], back);
+}
+
 // ===== Банк и мини-игры =====
 
 export function bank(player) {
@@ -226,7 +240,7 @@ function rules(player) {
 
 // Промокоды: список, условия и награды — system/economy/promo.js
 function promocodes(player) {
-	const form = modal('%menu.promo.title').textField('%menu.promo.body\n\n%menu.promo.hint\n\n%menu.promo.book', '%menu.promo.placeholder');
+	const form = modal('%menu.promo.title').textField('%menu.promo.body\n\n%menu.promo.hint', '%menu.promo.placeholder');
 	showModal(player, form, ([code]) => redeemPromo(player, code), () => menu(player));
 }
 
@@ -251,20 +265,6 @@ function upgrading(player) {
 	showMenu(player, '%menu.upgrades.title', '%menu.upgrades.body', [
 		product(player, '%menu.upgrades.button.vip', '125.0K', COIN, 'upgrade/upgrade_vip'),
 		product(player, '%menu.upgrades.button.rebirth', `25 - ${MAX_LEVEL}`, LVL, 'upgrade/upgrade_rebirth'),
-		backButton(back)
-	], back);
-}
-
-function menuSounds(player, back) {
-	const toggle = (kind) => toggleMenu(player, '%menu.settings.menu_sounds.' + kind + '.title',
-		'%menu.settings.menu_sounds.body', !player.hasTag('player:menu_' + kind + '_off'), on => {
-			if (on) player.removeTag('player:menu_' + kind + '_off'); else player.addTag('player:menu_' + kind + '_off');
-			tell(player, on ? 'chat.settings.enabled' : 'chat.settings.disabled');
-			menuSounds(player, back);
-		}, () => menuSounds(player, back));
-	showMenu(player, '%menu.settings.menu_sounds.title', '%menu.settings.menu_sounds.body', [
-		{ text: '%menu.settings.menu_sounds.success', run: () => toggle('success') },
-		{ text: '%menu.settings.menu_sounds.error', run: () => toggle('error') },
 		backButton(back)
 	], back);
 }

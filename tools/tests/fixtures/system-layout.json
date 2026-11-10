@@ -94,6 +94,7 @@
 			"system/minigames/tir.js",
 			"system/economy/trader.js",
 			"system/combat/trident.js",
+			"system/boss/portal.js",
 			"system/ui/hud.js",
 			"system/core/fallback.js",
 			"registration/login.js",
@@ -367,6 +368,10 @@
 				"playerLeave"
 			],
 			[
+				"system/boss/portal.js",
+				"playerLeave"
+			],
+			[
 				"system/ui/hud.js",
 				"playerLeave"
 			],
@@ -439,6 +444,10 @@
 			[
 				"system/core/migrate.js",
 				20
+			],
+			[
+				"system/boss/portal.js",
+				2
 			],
 			[
 				"system/core/fallback.js",

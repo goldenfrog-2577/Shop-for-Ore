@@ -281,12 +281,14 @@ function begin(player,kind,box,work) {
 async function prepareUndo(job,box) { job.backup=await snapshot(job,box,'undo'); }
 const atOffset=(to,at,from)=>({x:to.x+at.x-from.x,y:to.y+at.y-from.y,z:to.z+at.z-from.z});
 
+export const HELP_LINES=10;
 export function worldEditCommand(player,args=[]) {
 	if(!hasRole(player,'owner'))return tell(player,'chat.cmd.error.no_permission');
 	const action=String(args[0]??'help').toLowerCase(),rest=args.slice(1);
 	try {
 		if(action==='help'||action==='?') {
-			const rawtext=[];for(let i=1;i<=5;i++){if(i>1)rawtext.push({text:'\n'});rawtext.push({translate:'chat.cmd.worldedit.help.'+i});}
+			// Как !help: заголовок, команды «§f!команда - §7описание», примечание и линия снизу
+			const rawtext=[{translate:'chat.cmd.worldedit.help.header'}];for(let i=1;i<=HELP_LINES;i++)rawtext.push({text:'\n'},{translate:'chat.cmd.worldedit.help.'+i});rawtext.push({text:'\n§8------------------------'});
 			void player.runCommandAsync('tellraw @s '+JSON.stringify({rawtext})).catch(()=>{});return;
 		}
 		if(action==='cancel'){

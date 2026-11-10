@@ -13,9 +13,13 @@
 							"enchants": [
 								{
 									"id": "power",
-									"level": 3
+									"level": 5
 								}
 							]
+						},
+						{
+							"function": "set_name",
+							"name": "§eЛук Снайпера§r"
 						}
 					]
 				}
