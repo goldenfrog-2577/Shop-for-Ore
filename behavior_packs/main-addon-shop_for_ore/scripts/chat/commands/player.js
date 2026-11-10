@@ -126,6 +126,8 @@ export const PLAYER_COMMANDS = {
 		for (const cmd of commandsList.filter(cmd => hasRole(player, cmd.role))) {
 			rawtext.push({ text: `\n§f${cmd.command} - ` }, { translate: cmd.description.slice(1) });
 		}
+		// Подсказка про селекторы вместо ника (chat/commands/selectors.js)
+		rawtext.push({ text: '\n' }, { translate: 'chat.help.selectors' });
 		rawtext.push({ text: '\n§8------------------------' });
 		run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
 	},

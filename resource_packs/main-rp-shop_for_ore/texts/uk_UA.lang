@@ -161,6 +161,9 @@ chat.error.no_money=§r⩕ §l§cERROR!§r §8» §7Недостатньо §r�
 chat.cmd.error.no_permission=§r⩕ §l§cERROR!§r §8» §7У тебе немає прав на цю команду
 chat.cmd.error.unknown=§r⩕ §l§cERROR!§r §8» §7Невідома команда: §e%1$s§7. Напиши §e!help§7, щоб дізнатися список команд
 chat.cmd.error.offline=§r⩕ §l§cERROR!§r §8» §7Гравець §f%1$s§r§7 не в мережі
+chat.cmd.error.selector=§r⩕ §l§cERROR!§r §8» §7Селектор §f%1$s§r§7 не підтримується: використовуй §e@a§7, §e@s§7, §e@p§7 або §e@r
+chat.cmd.error.selector_single=§r⩕ §l§cERROR!§r §8» §7У §f%1$s§r§7 можна вказати лише одного гравця: §e@s§7, §e@p§7 або §e@r
+chat.cmd.error.selector_empty=§r⩕ §l§cERROR!§r §8» §7Під селектор §f%1$s§r§7 зараз ніхто не підходить
 chat.cmd.error.target_role=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 не може це отримати: потрібна роль не нижче %2$s
 chat.cmd.error.role=§r⩕ §l§cERROR!§r §8» §7Не можна застосувати до §f%1$s§r§7: його роль така сама, як твоя, або вища
 chat.cmd.error.issuer=§r⩕ §l§cERROR!§r §8» §7Обмеження накладено роллю %1$s§r§7. Зняти його може ця роль або вища
@@ -249,6 +252,7 @@ chat.cmd.resetpass.error.offline=§r⩕ §l§cERROR!§r §8» §7Гравець 
 ## --- ЧАТ: ДОВІДКА, ОСОБИСТІ ПОВІДОМЛЕННЯ, ЕМОДЗІ ---
 ##   chat.help.*, chat.cmd.help.*, chat.emotes.*, chat.cmd.msg.*, chat.cmd.reply.*, chat.cmd.clearchat.*
 chat.help.header=§8-----§f Список команд §8-----§f
+chat.help.selectors=§7Замість ніка: §e@s§7 — ти, §e@p§7 — найближчий, §e@r§7 — випадковий, §e@a§7 — усі, крім тебе
 chat.help.help=§7Список команд твоєї ролі; з назвою команди — докладно про неї
 chat.help.warp=§7Телепорт на точку (спавн, шахта, міні-ігри, PvP-арена, сплиф); без аргументів — список точок
 chat.help.game=§7Міні-ігри: без аргументів — список, §ejoin <гра>§7 — записатися, §eleave§7 — вийти

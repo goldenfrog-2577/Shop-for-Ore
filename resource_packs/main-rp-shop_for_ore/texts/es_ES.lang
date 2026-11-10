@@ -161,6 +161,9 @@ chat.error.no_money=§r⩕ §l§cERROR!§r §8» §7No tienes suficientes §r
 chat.cmd.error.no_permission=§r⩕ §l§cERROR!§r §8» §7No tienes permiso para usar este comando
 chat.cmd.error.unknown=§r⩕ §l§cERROR!§r §8» §7Comando desconocido: §e%1$s§7. Escribe §e!help§7 para ver la lista de comandos
 chat.cmd.error.offline=§r⩕ §l§cERROR!§r §8» §7El jugador §f%1$s§r§7 no está conectado
+chat.cmd.error.selector=§r⩕ §l§cERROR!§r §8» §7El selector §f%1$s§r§7 no está disponible: usa §e@a§7, §e@s§7, §e@p§7 o §e@r
+chat.cmd.error.selector_single=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 solo admite un jugador: §e@s§7, §e@p§7 o §e@r
+chat.cmd.error.selector_empty=§r⩕ §l§cERROR!§r §8» §7Ahora nadie coincide con §f%1$s
 chat.cmd.error.target_role=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 no puede recibir esto: se necesita el rol %2$s§r§7 o superior
 chat.cmd.error.role=§r⩕ §l§cERROR!§r §8» §7No puedes usarlo con §f%1$s§r§7: su rol es igual o superior al tuyo
 chat.cmd.error.issuer=§r⩕ §l§cERROR!§r §8» §7La restricción la impuso el rol %1$s§r§7. Puede quitarla ese mismo rol o uno superior
@@ -249,6 +252,7 @@ chat.cmd.resetpass.error.offline=§r⩕ §l§cERROR!§r §8» §7§f%1$s§r§7 n
 ## --- CHAT: AYUDA, MENSAJES PRIVADOS, EMOJIS ---
 ##   chat.help.*, chat.cmd.help.*, chat.emotes.*, chat.cmd.msg.*, chat.cmd.reply.*, chat.cmd.clearchat.*
 chat.help.header=§8-----§f Lista de comandos §8-----§f
+chat.help.selectors=§7En lugar de un nombre: §e@s§7 — tú, §e@p§7 — el más cercano, §e@r§7 — uno al azar, §e@a§7 — todos menos tú
 chat.help.help=§7Comandos de tu rol; con el nombre de un comando, sus detalles
 chat.help.warp=§7Teletransporte a un punto (inicio, mina, minijuegos, arena PvP, spleef); sin argumentos, la lista
 chat.help.game=§7Minijuegos: sin argumentos, la lista; §ejoin <juego>§7 para apuntarte, §eleave§7 para salir

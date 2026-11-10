@@ -178,6 +178,9 @@
 			"path" : "scripts/chat/commands/admin.js"
 		},
 		{
+			"path" : "scripts/chat/commands/selectors.js"
+		},
+		{
 			"path" : "scripts/import.js"
 		},
 		{
