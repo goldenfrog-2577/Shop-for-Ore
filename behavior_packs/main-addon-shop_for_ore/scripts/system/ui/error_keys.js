@@ -13,6 +13,8 @@ export const ERROR_KEYS = new Set([
 	'chat.admin.bot.error.absent',
 	'chat.admin.bot.error.spawn',
 	'chat.admin.bot.error.game',
+	'chat.admin.bot.error.guide_busy',
+	'chat.admin.bot.error.guide_target',
 	'chat.admin.bot.error.name',
 	'chat.admin.bot.error.present',
 	'chat.admin.enchant.error',

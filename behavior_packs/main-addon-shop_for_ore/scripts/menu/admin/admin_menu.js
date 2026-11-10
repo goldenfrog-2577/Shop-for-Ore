@@ -19,7 +19,7 @@ import { getBot, getBotName, setBotName, spawnBot, removeBot } from '../../syste
 import { wipeAll, wipeCounts } from '../../system/core/wipe.js';
 import { resetOffline, offlineCounts } from '../../system/core/offline_reset.js';
 import { canTeleport, listGames } from '../../system/minigames/minigames.js';
-import { setBotMode, toggleBot, rememberBotItem, botState, SPAR_LEVELS } from '../../system/bot/bot.js';
+import { setBotMode, toggleBot, rememberBotItem, botState, SPAR_LEVELS, canGuidePlayer, startBotGuide } from '../../system/bot/bot.js';
 
 const BACK_ICON = 'textures/ui/icon_import';
 // Кружки цвета роли из шрифта карты: серый, синий, красный
@@ -547,6 +547,7 @@ export function botMenu(player) {
 		{ text: '%admin.bot.button.say', icon: 'textures/ui/comment', run: () => botSay(player) },
 		{ text: '%admin.bot.button.slots', icon: 'textures/items/iron_chestplate', run: () => botSlots(player) },
 		toggle('sit', 'sit', 'textures/ui/sneak'),
+		{ text: '%admin.bot.button.guide', icon: 'textures/items/book_normal', run: () => botGuide(player) },
 		{ text: '%admin.main.button.effects', icon: 'textures/items/potion_bottle_confusion', run: () => botEffects(player) },
 		{ text: '%admin.bot.button.clear_effects', icon: 'textures/items/bucket_milk', run: () => { run(bot, 'effect @s clear'); tell(player, 'chat.admin.bot.effect.cleared', bot.name); } },
 	] : [{ text: '%admin.bot.button.spawn', icon: 'textures/server_icons/steve', run: async () => { const bot = await spawnBot(player); tell(player, bot ? 'chat.admin.bot.spawned' : 'chat.admin.bot.error.spawn', name); if (bot) botMenu(player); } }];
@@ -598,6 +599,24 @@ function botGame(player) {
 		} })),
 		back(() => botModeMenu(player))
 	], () => botModeMenu(player));
+}
+
+function botGuide(player) {
+	if (!hasRole(player, 'admin')) return tell(player, 'chat.cmd.error.no_permission');
+	const bot = getBot();
+	if (!bot) return tell(player, 'chat.admin.bot.error.absent');
+	const names = orderedPlayers(player).filter(target => canGuidePlayer(target, bot)).map(target => target.name);
+	if (!names.length) return tell(player, 'chat.admin.bot.error.guide_target');
+	const form = modal('%admin.bot.guide.title').dropdown('%admin.players.choose', names, 0);
+	showModal(player, form, ([index]) => {
+		if (!hasRole(player, 'admin')) return tell(player, 'chat.cmd.error.no_permission');
+		const name = names[index];
+		const target = findPlayer(name);
+		if (!target) return tell(player, 'chat.cmd.error.offline', name);
+		const error = startBotGuide(target);
+		if (error) return tell(player, error);
+		tell(player, 'chat.admin.bot.guide.done', target.name);
+	}, () => botMenu(player));
 }
 
 // Имя задаётся при появлении бота, поэтому бот, который уже в мире, призывается заново под новым именем
