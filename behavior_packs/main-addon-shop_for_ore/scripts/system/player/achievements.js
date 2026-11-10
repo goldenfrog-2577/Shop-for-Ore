@@ -5,7 +5,8 @@
 // stat_playtime (минут в игре), stat_wins (победы во всех мини-играх; по играм — stat_win_<id>, minigames.js),
 // stat_amethyst (продано осколков аметиста, functions/system/autosale), stat_tir_hits (оплаченные попадания в тире, tir.js).
 // Отметки-теги: stat:paid (перевод денег, DataBase.transferMoney), stat:tir_bullseye (меткость 90 % с 30+ блоков, tir.js),
-// stat:trader и stat:head:<id> (покупки в лавке торговца, trader.js), stat:void (падение в бездну, void.js).
+// stat:trader и stat:head:<id> (покупки в лавке торговца, trader.js), stat:void (падение в бездну, void.js),
+// stat:boss (победа над Хранителем, system/boss/boss.js).
 // stat:trader:kit_diamond / kit_netherite / pickaxe — успешные покупки наборов и любой VIP-кирки.
 // Промокоды — теги promo:<код> (promo.js).
 // Проверка раз в секунду; за раз игроку выдаётся не больше одного достижения, следующее — когда
@@ -58,6 +59,7 @@ export const ACHIEVEMENTS = [
 	{ id: 'tir_100', type: 'task', ...score('stat_tir_hits', 100), reward: { money: 10000, items: [['loot:achievements/sniper_bow', 1]] } },
 	{ id: 'trader', type: 'task', done: (p) => p.hasTag('stat:trader'), reward: { vip_coins: 20 } },
 	{ id: 'void', type: 'task', done: (p) => p.hasTag('stat:void'), reward: { items: [['feather', 1]] } },
+	{ id: 'boss', type: 'task', done: (p) => p.hasTag('stat:boss'), reward: { vip_coins: 15 } },
 	// --- Испытания ---
 	{ id: 'rebirth_5', type: 'challenge', ...score('rebirth', 5), reward: { vip_coins: 200 } },
 	{ id: 'rich_1m', type: 'challenge', ...score('money', 1000000), reward: { vip_coins: 100 } },

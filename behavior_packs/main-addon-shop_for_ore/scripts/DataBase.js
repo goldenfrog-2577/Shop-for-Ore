@@ -513,6 +513,7 @@ export const emotesList = Object.entries(emotes).map(([name, symbol]) => ({ name
 // (и не ниже роли точки). Меню сервера → Телепортации показывает все точки роли «игрок».
 // Спавн — всегда 0 5 0; шахта — по уровню: 1–15 — основная (у спавна), 16–25 — адская, 26–40 — Пещера.
 // vip: true — точка только для VIP (и персонала): VIP-остров с VIP-шахтой и лавкой торговца
+// minLevel — с какого уровня точка доступна игроку (персоналу — всегда)
 export const WARPS = [
 	{ id: 'spawn', role: 'player', pos: [0, 5, 0] },
 	{ id: 'mine', role: 'player', pos: (p) => {
@@ -526,14 +527,15 @@ export const WARPS = [
 	{ id: 'pvp', role: 'player', arena: true },
 	{ id: 'spleef', role: 'player', pos: [500, 3, 500] },
 	{ id: 'tir', role: 'player', pos: [435, -45, 338] },
-	// Локация босса: пока босса нет — только персоналу
-	{ id: 'boss', role: 'admin', pos: [184, 11, 287] },
+	// Арена Хранителя (system/boss/boss.js): тоннель за решёткой, с 26 уровня; во время боя закрыта для не-участников
+	{ id: 'boss', role: 'player', minLevel: 26, pos: [528, -55, -5] },
 	{ id: 'vip', role: 'player', vip: true, pos: [-60, 5, -60] },
 	{ id: 'cmd', role: 'admin', pos: [50, 5, 50] }
 ];
 
 /** Может ли игрок пользоваться точкой: роль не ниже точки, точка VIP — только VIP и персоналу. */
-export const warpAllowed = (player, warp) => hasRole(player, warp.role) && (!warp.vip || isVip(player) || hasRole(player, 'helper'));
+export const warpAllowed = (player, warp) => hasRole(player, warp.role) && (!warp.vip || isVip(player) || hasRole(player, 'helper'))
+	&& (!warp.minLevel || getScore(player, 'lvl') >= warp.minLevel || hasRole(player, 'helper'));
 
 // ======== Список команд чата: имя, описание (ключ .lang), роль — !help, chat/commands/commands.js ========
 

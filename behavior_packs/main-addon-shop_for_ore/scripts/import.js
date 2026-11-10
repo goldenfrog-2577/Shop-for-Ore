@@ -47,6 +47,7 @@ import './system/core/offline_reset.js'; // !resetoffline: всё сбросит
 import './system/combat/trident.js';     // Трезубец с «Громовержцем»: молния в поражённого игрока
 import './system/player/void.js';        // Бездна: упал ниже мира — на спавн
 import './system/boss/arena.js';         // Арена Хранителя: музыка (Ancestry, «5») и эмбиент Древнего города
+import './system/boss/boss.js';          // Босс Хранитель: старт с плиты у портала, фазы, тотем, награды
 import './system/player/ranks.js';       // Префикс уровня в чате (rank:§rN, у VIP — rank:§aVIP)
 import './system/ui/hud.js';         // Панель слева (actionbar)
 import './system/core/fallback.js';    // Пульс скриптов: без него включается запасное меню на NPC

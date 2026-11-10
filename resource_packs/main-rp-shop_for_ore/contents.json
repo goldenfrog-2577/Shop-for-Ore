@@ -277,6 +277,12 @@
 			"path": "entity/thrown_ender_crystal.entity.json"
 		},
 		{
+			"path": "entity/warden_boss.entity.json"
+		},
+		{
+			"path": "sounds.json"
+		},
+		{
 			"path": "textures/ui/server/server_scoreboard_entry.png"
 		},
 		{

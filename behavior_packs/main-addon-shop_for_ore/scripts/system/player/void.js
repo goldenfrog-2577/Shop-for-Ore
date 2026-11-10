@@ -4,11 +4,14 @@
 // Урона от бездны (он начинается ещё ниже) и от падения не будет: телепорт сбрасывает высоту падения.
 // Не трогаем: мини-игры (теги game:… — у сплифа и PvP свои правила выбывания), бота, замороженных,
 // творческий режим и наблюдателя (персонал может летать под картой). Проверка — раз в CHECK_TICKS тиков.
+// Шутка к награде «Прыжка веры» (перо): ПКМ пером — левитация на FEATHER_SECONDS секунд, потом плавное падение,
+// одно перо пропадает. В мини-играх (теги game:…) перо не работает — левитация ломала бы их правила.
 
 import { world, GameMode } from '@minecraft/server';
 import { run, tell } from '../../DataBase.js';
 
 export const VOID_Y = -64;
+export const FEATHER_SECONDS = 10;
 export const SPAWN = [0, 5, 0];
 const CHECK_TICKS = 5;
 
@@ -37,4 +40,15 @@ world.events.tick.subscribe(() => {
 		player.addTag('stat:void');   // достижение «Прыжок веры» (system/player/achievements.js)
 		tell(player, 'chat.server.void');
 	}
+});
+
+world.events.itemUse.subscribe((e) => {
+	const player = e.source;
+	if (e.item?.typeId !== 'minecraft:feather' || player?.typeId !== 'minecraft:player') return;
+	if (player.getTags().some(t => t.startsWith('game:'))) return tell(player, 'chat.server.feather_game');
+	run(player, 'clear @s feather 0 1');
+	run(player, `effect @s levitation ${FEATHER_SECONDS} 0`);
+	// после левитации — плавное падение, чтобы шутка не стоила здоровья
+	run(player, `effect @s slow_falling ${FEATHER_SECONDS + 10} 0 true`);
+	tell(player, 'chat.server.feather');
 });

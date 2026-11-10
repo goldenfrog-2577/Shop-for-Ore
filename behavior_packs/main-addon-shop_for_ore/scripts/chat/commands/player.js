@@ -6,6 +6,7 @@ import { world } from '@minecraft/server';
 import { commandsList, tell, hasRole, run, WARPS, warpAllowed, tellText, muteMinutesLeft, getScore, isVip, transferMoney, findPlayer, getRole, getWarns, ROLES, RULES_COUNT, emotesList, emotes } from '../../DataBase.js';
 import { isJailed, tellJailed } from '../../system/security/jail.js';
 import { combatSecondsLeft, teleportToArena } from '../../system/combat/pvp.js';
+import { bossBusy } from '../../system/boss/boss.js';
 import { canTeleport, listGames, joinGame, leaveGame, getGame, startGame, endGame } from '../../system/minigames/minigames.js';
 import { ChangePasswordUI } from '../../registration/change.js';
 import { resolveTarget, tellList } from './common.js';
@@ -145,6 +146,12 @@ export const PLAYER_COMMANDS = {
 			tell(player, 'chat.cmd.warp.error.vip');
 			return;
 		}
+		// Точка с уровня (арена босса), а уровень ниже — понятная ошибка
+		const gated = WARPS.find(w => w.id === id && w.minLevel && hasRole(player, w.role) && !warpAllowed(player, w));
+		if (gated) {
+			tell(player, 'chat.cmd.warp.error.level', String(gated.minLevel));
+			return;
+		}
 		const warp = available.find(w => w.id === id);
 		if (!warp) {
 			tell(player, 'chat.cmd.error.not_found', args[0], '!warp');
@@ -173,6 +180,11 @@ export const PLAYER_COMMANDS = {
 		}
 		// Сплиф: участникам и зрителям телепорт закрыт до конца игры (кроме владельца)
 		if (!canTeleport(target, player)) return;
+		// Бой с Хранителем: варп ведёт в тоннель за закрытой решёткой — пока идёт бой, туда никого
+		if (warp.id === 'boss' && bossBusy()) {
+			tell(player, 'chat.boss.busy');
+			return;
+		}
 		if (warp.arena) {
 			teleportToArena(target);
 		} else {

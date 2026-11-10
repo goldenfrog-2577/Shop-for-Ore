@@ -8,7 +8,7 @@
 // Идея — по мотивам карты FearCube (с разрешения автора), код свой.
 
 import { isJailed, jailMinutesLeft } from '../security/jail.js';
-import { world, system } from '@minecraft/server';
+import { world, system, MinecraftEffectTypes } from '@minecraft/server';
 import { run, rawTranslateRich, isPending, isBot, findPlayer, tell } from '../../DataBase.js';
 import { teleportToArena, combatSecondsLeft } from '../combat/pvp.js';
 import { showTitle } from '../ui/toast.js';
@@ -74,6 +74,10 @@ const tellGame = (g, key, ...args) => {
 const gameName = (g) => ({ translate: `minigame.${g.def.id}.name` });
 
 /** Записаться в игру. Бота (role:bot) — только с allowBot (меню администратора → Бот, system/bot/bot.js). @returns {boolean} */
+const hasFeatherEffect = (p) => {
+	try { return !!(p.getEffect(MinecraftEffectTypes.levitation) || p.getEffect(MinecraftEffectTypes.slowFalling)); } catch { return false; }
+};
+
 export function joinGame(player, id, { allowBot = false } = {}) {
 	const g = getGame(id);
 	const fail = (key, ...a) => { tell(player, key, ...a); return false; };
@@ -88,6 +92,9 @@ export function joinGame(player, id, { allowBot = false } = {}) {
 	if (!allowBot && combatSecondsLeft(player) > 0) return fail('chat.pvp.combat', combatSecondsLeft(player));
 	if (g.phase === 'running' && !(allowBot && isBot(player))) return fail('chat.game.error.running', gameName(g));
 	if (g.players.size >= g.def.maxPlayers) return fail('chat.game.error.full', gameName(g));
+	// перо «Прыжка веры» (system/player/void.js): с левитацией или плавным падением в игру не войти — снять только эти два
+	// эффекта командой в 1.19.50 нельзя (effect clear снял бы и купленные), а в игре перо уже не работает
+	if (hasFeatherEffect(player)) return fail('chat.game.error.feather');
 	g.players.add(player.name);
 	player.addTag(GAME_TAG + g.def.id);
 	if (g.phase === 'running') {

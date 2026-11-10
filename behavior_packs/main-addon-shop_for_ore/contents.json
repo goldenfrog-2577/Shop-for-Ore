@@ -211,6 +211,9 @@
 			"path" : "scripts/system/boss/arena.js"
 		},
 		{
+			"path" : "scripts/system/boss/boss.js"
+		},
+		{
 			"path" : "structures/server/bot.mcstructure"
 		},
 		{
@@ -362,6 +365,9 @@
 		},
 		{
 			"path" : "entities/thrown_ender_crystal.json"
+		},
+		{
+			"path" : "entities/warden_boss.json"
 		},
 		{
 			"path" : "scripts/system/economy/boosts.js"

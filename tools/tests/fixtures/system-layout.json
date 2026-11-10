@@ -57,6 +57,10 @@
 			"menu/achievements_menu.js",
 			"system/combat/pvp.js",
 			"system/minigames/minigames.js",
+			"system/ui/music.js",
+			"system/boss/arena.js",
+			"system/player/void.js",
+			"system/boss/boss.js",
 			"registration/password.js",
 			"registration/change.js",
 			"chat/commands/common.js",
@@ -83,7 +87,6 @@
 			"chat/commands/admin.js",
 			"system/worldedit.js",
 			"chat/commands/commands.js",
-			"system/ui/music.js",
 			"menu/main_menu.js",
 			"system/player/tools.js",
 			"system/core/migrate.js",
@@ -91,8 +94,6 @@
 			"system/minigames/tir.js",
 			"system/economy/trader.js",
 			"system/combat/trident.js",
-			"system/player/void.js",
-			"system/boss/arena.js",
 			"system/ui/hud.js",
 			"system/core/fallback.js",
 			"registration/login.js",
@@ -160,6 +161,26 @@
 			[
 				"system/minigames/minigames.js",
 				"playerJoin"
+			],
+			[
+				"system/boss/arena.js",
+				"playerLeave"
+			],
+			[
+				"system/player/void.js",
+				"tick"
+			],
+			[
+				"system/player/void.js",
+				"itemUse"
+			],
+			[
+				"system/boss/boss.js",
+				"entityHurt"
+			],
+			[
+				"system/boss/boss.js",
+				"playerLeave"
 			],
 			[
 				"chat/commands/player.js",
@@ -346,14 +367,6 @@
 				"playerLeave"
 			],
 			[
-				"system/player/void.js",
-				"tick"
-			],
-			[
-				"system/boss/arena.js",
-				"playerLeave"
-			],
-			[
 				"system/ui/hud.js",
 				"playerLeave"
 			],
@@ -392,6 +405,18 @@
 				100
 			],
 			[
+				"system/ui/music.js",
+				40
+			],
+			[
+				"system/boss/arena.js",
+				20
+			],
+			[
+				"system/boss/boss.js",
+				20
+			],
+			[
 				"system/security/anticheat.js",
 				1
 			],
@@ -408,19 +433,11 @@
 				1
 			],
 			[
-				"system/ui/music.js",
-				40
-			],
-			[
 				"system/player/tools.js",
 				20
 			],
 			[
 				"system/core/migrate.js",
-				20
-			],
-			[
-				"system/boss/arena.js",
 				20
 			],
 			[

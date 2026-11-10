@@ -4,15 +4,20 @@
 //    Туда ведут !warp pvp и портал из мини-игр (system.mcfunction ставит тег sys:warp_pvp, телепорт делает этот файл).
 // 2) Кто получил или нанёс урон другому игроку на арене, 15 секунд не может уйти телепортом (!warp, меню).
 // 3) Портативный кристалл Энда (server:portable_ender_crystal, взрыв силы 6 без разрушения блоков) бросается
-//    только на арене: на спавне и в шахтах им можно было бы взорвать игроков, которые не в бою.
+//    только на арене и участниками боя с Хранителем (тег boss:fighter — FIGHTER в system/boss/boss.js):
+//    на спавне и в шахтах им можно было бы взорвать игроков, которые не в бою.
 
 import { world, BlockLocation } from '@minecraft/server';
 import { run, tell } from '../../DataBase.js';
 
 export const PORTABLE_CRYSTAL = 'server:portable_ender_crystal';
+// Арена боя с Хранителем — те же границы, что inFight в system/boss/boss.js (за решёткой; тоннель — уже не арена).
+// Одного тега boss:fighter мало: ушедший с арены (!warp spawn) теряет тег только на следующей секундной проверке боя
+export const inBossFight = (loc, dimensionId) => dimensionId === 'minecraft:overworld' && loc.x >= 480 && loc.x < 576 && loc.y >= -61 && loc.y < -20 && loc.z >= -104 && loc.z < -12;
 world.events.beforeItemUse.subscribe((e) => {
 	if (e.item?.typeId !== PORTABLE_CRYSTAL || e.source?.typeId !== 'minecraft:player') return;
 	if (e.source.hasTag('player:pvp')) return;
+	if (e.source.hasTag('boss:fighter') && inBossFight(e.source.location, e.source.dimension?.id)) return;
 	e.cancel = true;
 	tell(e.source, 'chat.pvp.crystal_arena_only');
 });
