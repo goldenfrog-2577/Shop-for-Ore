@@ -64,6 +64,7 @@ item.armor_stand.name=Стійка для обладунку
 item.diamond_chestplate.name=Алмазний нагрудник
 item.iron_chestplate.name=Залізний нагрудник
 item.enchanted_book.name=Книга чарів
+item.appleEnchanted.name=Зачароване золоте яблуко
 item.experience_bottle.name=Пляшечка чар
 item.honey_bottle.name=Пляшка з медом
 item.netherite_chestplate.name=Незеритовий нагрудник

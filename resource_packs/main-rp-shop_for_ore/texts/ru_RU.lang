@@ -64,6 +64,7 @@ item.armor_stand.name=Стойка для брони
 item.diamond_chestplate.name=Алмазный нагрудник
 item.iron_chestplate.name=Железный нагрудник
 item.enchanted_book.name=Чародейская книга
+item.appleEnchanted.name=Зачарованное золотое яблоко
 item.experience_bottle.name=Пузырёк опыта
 item.honey_bottle.name=Бутылочка мёда
 item.netherite_chestplate.name=Незеритовый нагрудник
