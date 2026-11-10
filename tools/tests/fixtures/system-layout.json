@@ -294,6 +294,10 @@
 			],
 			[
 				"system/worldedit.js",
+				"worldInitialize"
+			],
+			[
+				"system/worldedit.js",
 				"playerLeave"
 			],
 			[
@@ -415,7 +419,7 @@
 				20
 			]
 		],
-		"oneShots": 3,
+		"oneShots": 4,
 		"games": [
 			[
 				"server",

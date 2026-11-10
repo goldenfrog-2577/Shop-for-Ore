@@ -220,13 +220,13 @@
 			"path" : "functions/fallback/bring.mcfunction"
 		},
 		{
-			"path" : "functions/fallback/nav.mcfunction"
+			"path" : "functions/fallback/navigation.mcfunction"
 		},
 		{
 			"path" : "functions/fallback/open.mcfunction"
 		},
 		{
-			"path" : "functions/fallback/npcs.mcfunction"
+			"path" : "functions/fallback/npc_menu.mcfunction"
 		},
 		{
 			"path" : "functions/fallback/warp_mine.mcfunction"
