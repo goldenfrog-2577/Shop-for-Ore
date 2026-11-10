@@ -193,6 +193,9 @@
 			"path" : "scripts/registration/register.js"
 		},
 		{
+			"path" : "scripts/registration/forgot.js"
+		},
+		{
 			"path" : "scripts/registration/system.js"
 		},
 		{

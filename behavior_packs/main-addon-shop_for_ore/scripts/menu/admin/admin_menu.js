@@ -319,6 +319,8 @@ function playerActions(player, target) {
 		`%admin.players.body.name ${name}`,
 		`%admin.players.body.playtime ${playtimeText(target)}`,
 		`%admin.players.body.role %role.${getRole(target)}`,
+		// Заявка «Я забыл пароль» с экрана входа (registration/forgot.js) — сверить с Telegram и сбросить кнопкой ниже
+		...(target.hasTag('auth:reset_request') ? ['%admin.players.body.reset_request'] : []),
 		`%admin.players.body.lvl ${getScore(target, 'lvl')}`,
 		`%admin.players.body.warns ${getWarns(target)}§7/§f3§r`,
 		...(isVip(target) ? [`%admin.players.body.vip_coins ${getScore(target, 'vip_coins')} §r${VIP_COIN_GLYPH}`] : []),
