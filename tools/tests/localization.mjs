@@ -74,3 +74,31 @@ const lift={hasRole:guard.hasRole,getIssuer:p=>p.issuer,run:(p,s)=>{sent=s;},raw
 vm.runInNewContext(db.slice(begin,end)+'\nglobalThis.lift=canLift;',lift);
 for(const a of roles)for(const issuer of [null,...roles])assert.equal(lift.lift({role:a},{issuer},'mute'),!issuer||roles.indexOf(a)>=roles.indexOf(issuer),'issuer role boundary');
 console.log('PASS: punishment rejects equal/higher roles; lifting accepts the issuer role and higher (owner exception preserved).');
+
+const javaRu = maps[0];
+const javaName = key => javaRu.get(key)?.replace(/§[0-9a-gklmnor]/gi, '');
+for (const [key, expected] of Object.entries({
+	'entity.warden.name': 'Хранитель',
+	'entity.server:warden_boss.name': 'Хранитель',
+	'tile.gilded_blackstone.name': 'Позолоченный чернит',
+	'item.minecraft.goat_horn.sound.6': 'Тосковать',
+	'enchantment.durability': 'Прочность',
+	'enchantment.knockback': 'Отдача',
+	'enchantment.fire': 'Заговор огня',
+	'ach.toast.challenge': 'Испытание завершено',
+})) assert.equal(javaName(key), expected, key);
+for (const [game, custom, admin] of [
+	['potion.digSpeed', 'effect.haste.name', 'admin.effects.button.haste'],
+	['potion.slowFalling', 'effect.slow_falling.name', 'admin.effects.button.slow_falling'],
+]) {
+	assert.equal(javaName(custom), javaName(game));
+	assert.equal(javaName(admin), javaName(game));
+}
+assert.match(javaName('menu.shop.button.kits'), /^Наборы для PvP$/);
+assert.match(javaName('menu.shop.kits.title'), /Наборы для PvP$/);
+assert.match(javaName('hud.vip_coins'), /VIP-коины/);
+assert.ok([...javaRu.values()].every(value => !/VIP[-‑– ]монет/i.test(value)));
+assert.match(javaName('hud.rebirth'), /Ребитх/);
+assert.equal(javaName('menu.shop.button.boosts'), 'Бусты');
+assert.equal(javaName('item.gold_ingot.name'), 'Монета');
+assert.match(javaName('item.wooden_pickaxe.name'), /^Кирка 2/);
