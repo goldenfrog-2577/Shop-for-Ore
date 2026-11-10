@@ -370,6 +370,9 @@
 			"path" : "scripts/system/security/portals.js"
 		},
 		{
+			"path" : "scripts/system/security/staff_log.js"
+		},
+		{
 			"path" : "scripts/system/player/discs.js"
 		},
 		{

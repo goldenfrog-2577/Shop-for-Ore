@@ -140,6 +140,7 @@ context.world.scoreboard.getObjectives = () => [{ id: 'system', getScores: score
 context.tell = () => {};
 context.hasRole = () => true;
 context.isBot = p => p.hasTag('role:bot');
+context.logAction = () => {};
 vm.runInNewContext(withoutImports(bp + 'scripts/system/core/reset_history.js'), context);
 e.set('boost_x2', 47); e.set('rain_event', 12);
 vm.runInNewContext(withoutImports(bp + 'scripts/system/core/offline_reset.js') + '\nglobalThis.resetOfflineForTest=resetOffline;', context);

@@ -11,6 +11,7 @@ import { syncResetEpoch } from './reset_history.js';
 import { ensurePlayerScores } from './player_scores.js';
 import { run, tell } from '../../DataBase.js';
 import { STATS } from '../player/achievements.js';
+import { logAction } from '../security/staff_log.js';
 
 const WIPE_ID = 'shop:wipe_id';
 const WIPE_TAG = 'sys:wipe:';
@@ -60,6 +61,7 @@ export async function wipeAll(by) {
 	if (current === null) { tell(by, 'chat.cmd.error.storage'); return 0; }
 	const id = current + 1;
 	world.setDynamicProperty(WIPE_ID, id);
+	logAction(by, 'wipe', '', `#${id}`);
 	for (const objective of WIPE_OBJECTIVES) {
 		if (world.scoreboard.getObjective(objective)) await run(by, `scoreboard players reset * ${objective}`);
 	}

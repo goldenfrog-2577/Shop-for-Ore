@@ -7,6 +7,7 @@ const ROLES=['player','helper','moder','admin','owner'],mk=(name,role='player')=
 const owner=mk('Owner','owner'),admin=mk('Admin','admin'),alice=mk('Alice Smith'),bot=mk('Bot','bot'),people=[alice,admin,bot,owner];
 const getRole=p=>ROLES.slice().reverse().find(r=>p.hasTag('role:'+r))??'player',hasRole=(p,r)=>ROLES.indexOf(getRole(p))>=ROLES.indexOf(r);
 const handlers={beforeChat:[],playerLeave:[]},world={events:Object.fromEntries(Object.keys(handlers).map(k=>[k,{subscribe:fn=>handlers[k].push(fn)}])),getPlayers:()=>people.values()};
+const logged=[],lists=[];let logEntries=[];
 let now=1000,wipes=0,resets=0;const notices=[],native=[],delegated=[],passwords=[],routed=[],sounds=[];let helpHook;const muted=[];
 const stubs={
  '@minecraft/server':{world},
@@ -18,9 +19,11 @@ const stubs={
  '../../system/core/offline_reset.js':{resetOffline:()=>resets++,offlineCounts:()=>({offline:2,online:4})},
  '../../system/core/wipe.js':{wipeAll:async()=>wipes++,wipeCounts:()=>({all:6,online:4})},
  '../../registration/change.js':{resetPassword:(p,t)=>passwords.push(t)},
- './selectors.js':{...await import(new URL('scripts/chat/commands/selectors.js',bp))}
+ './selectors.js':{...await import(new URL('scripts/chat/commands/selectors.js',bp))},
+ '../../system/security/staff_log.js':{logAction:(...a)=>logged.push(a),readLog:()=>logEntries.slice()},
+ './common.js':{tellList:(p,h,l)=>lists.push({p,h,l:Array.from(l)})}
 };
-const context=vm.createContext({Date:{now:()=>now}}),cache=new Map(),mod=new vm.SourceTextModule(source,{context,identifier:new URL('scripts/chat/commands/commands.js',bp).href});
+const context=vm.createContext({Date:class extends Date{static now(){return now;}}}),cache=new Map(),mod=new vm.SourceTextModule(source,{context,identifier:new URL('scripts/chat/commands/commands.js',bp).href});
 await mod.link(spec=>{assert(stubs[spec],'unresolved import '+spec);if(!cache.has(spec)){const values=stubs[spec];cache.set(spec,new vm.SyntheticModule(Object.keys(values),function(){for(const[k,v]of Object.entries(values))this.setExport(k,v);},{context,identifier:spec}));}return cache.get(spec);});await mod.evaluate();
 assert.equal(handlers.beforeChat.length,1);assert.equal(handlers.playerLeave.length,1);const api=mod.namespace,command=(p,c,a=[])=>api.runChatCommand(p,c,a),last=()=>notices.at(-1)?.key;
 for(const key of ['textWidth','emoteGrid'])assert.equal(api[key],stubs['./player.js'][key]);assert.equal(api.isCoord,stubs['./moderator.js'].isCoord);for(const key of ['debugLines','giveOreMagnet','setMoney'])assert.equal(api[key],stubs['./admin.js'][key]);
@@ -49,4 +52,17 @@ await send(admin,'!mute @a 5 флуд');assert.deepEqual(muted.map(m=>m.join('|'
 muted.length=0;await send(admin,'!mute @s 1');assert.deepEqual(muted,[['Admin','Admin','1']]);
 muted.length=0;notices.length=0;await send(admin,'!mute @e 1');assert.equal(muted.length,0);assert.equal(notices.at(-1).key,'chat.cmd.error.selector');
 await send(admin,'!mute * 1');assert.equal(notices.at(-1).key,'chat.cmd.error.selector');assert.equal(muted.length,0);}
+// Журнал персонала: !logs только владельцу; [ник] [page N]; 10 строк на страницу, новые сверху; роль пишется в журнал
+{logged.length=0;command(owner,'role',[alice.name,'helper']);assert.deepEqual(logged.at(-1).slice(1),['role','Alice Smith','helper']);
+notices.length=0;command(admin,'logs',[]);assert.equal(notices.at(-1).key,'chat.cmd.error.no_permission');
+const T=Date.UTC(2026,10,8,16,24);logEntries=Array.from({length:23},(_,i)=>({seq:23-i,time:T,by:i%2?'Admin':'Moder',command:'mute',target:i%3?'Alice Smith':'Bob',details:'30m спам'}));
+logEntries.push({seq:0,time:T,by:'',command:'#start',target:'',details:''});
+lists.length=0;command(owner,'logs',[]);let L=lists.at(-1);assert.equal(L.h.translate,'chat.cmd.logs.header');assert.deepEqual(Array.from(L.h.with),['1','3']);assert.equal(L.l.length,10);
+assert.equal(L.l[0].text,'§708.11 19:24 §eModer §8» §f!mute §bBob §730m спам');
+command(owner,'logs',['page','3']);L=lists.at(-1);assert.equal(L.l.length,4);assert.equal(L.l.at(-1).translate,'chat.cmd.logs.started');assert.deepEqual(Array.from(L.l.at(-1).with),['08.11 19:24']);
+command(owner,'logs',['Alice','Smith','page','2']);L=lists.at(-1);assert.equal(L.h.translate,'chat.cmd.logs.header_player');assert.deepEqual(Array.from(L.h.with),['Alice Smith','2','2']);assert.ok(L.l.every(x=>x.text.includes('Alice Smith')||x.text.includes('§eAdmin')||x.text.includes('§eModer')));
+command(owner,'logs',['bob']);L=lists.at(-1);assert.equal(L.l.length,8);
+notices.length=0;command(owner,'logs',['page','4']);assert.equal(notices.at(-1).key,'chat.cmd.logs.error.page');assert.deepEqual(notices.at(-1).args,['4','3']);
+for(const bad of [['page'],['page','0'],['page','x'],['page','2','Bob']]){notices.length=0;command(owner,'logs',bad);assert.equal(notices.at(-1).key,'chat.cmd.logs.use',bad.join(' '));}
+logEntries=[];command(owner,'logs',['Nobody']);L=lists.at(-1);assert.deepEqual(L.l.map(x=>x.translate),['chat.cmd.logs.empty']);}
 console.log('PASS: real ESM imports/exports, one chat/leave subscription, all owner guards, one-use/expired/leave confirmations, resetpass, roles and shared chat dispatcher.');

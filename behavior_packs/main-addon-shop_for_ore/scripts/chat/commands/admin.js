@@ -14,6 +14,7 @@ import { ACHIEVEMENTS, has as hasAchievement, findAchievement, unlock, revoke } 
 import { addBan, kickBanned, findBan, removeBan, getBans, banActive, banMinutesLeft } from '../../system/security/ban.js';
 import { resolveTarget, tellList, canPunish } from './common.js';
 import { censor } from '../censor.js';
+import { logAction } from '../../system/security/staff_log.js';
 
 // Отказ: цвет, префикс или тег выдают игрока за роль, которой у него нет (role — owner/admin/moder/bot)
 function denyImpersonation(player, target, role) {
@@ -412,6 +413,7 @@ export const ADMIN_COMMANDS = {
 				tell(player, 'chat.cmd.boost.stop.none');
 				return;
 			}
+			logAction(player, 'boost', '', 'stop');
 			tell(player, 'chat.cmd.boost.stop.done', boost ?? { translate: 'chat.cmd.boost.stop.no' }, String(magnets.length));
 			return;
 		}
@@ -429,6 +431,7 @@ export const ADMIN_COMMANDS = {
 				return;
 			}
 			giveOreMagnet(player, target, minutesArg);
+			logAction(player, 'boost', target.name, `magnet ${minutesArg}`);
 			return;
 		}
 		const minutes = args[1] === undefined ? 5 : Number(args[1]);
@@ -446,6 +449,7 @@ export const ADMIN_COMMANDS = {
 		// Общий тег обновляется для зашедших позже по служебному таймеру.
 		run(player, `tag @a add boost:${type}`);
 		markAdminBoost(type, minutes);
+		logAction(player, 'boost', '', `${type} ${minutes}`);
 		run(player, `tellraw @a ${rawTranslate('chat.cmd.boost.started', player.name, type, String(minutes))}`);
 		run(player, 'execute as @a at @s run playsound note.bell @s');
 	},
@@ -508,6 +512,7 @@ export const ADMIN_COMMANDS = {
 				tell(player, 'chat.cmd.ban.error.full');
 				return;
 			}
+			logAction(player, 'ban', target.name, args.slice(1));
 			run(player, `tellraw @a ${rawTranslateRich('chat.cmd.ban.done', target.name, termText(banMinutes), reason ? { text: reason } : { translate: 'chat.cmd.kick.no_reason' })}`);
 			kickBanned(target, findBan(target));
 		} else {
@@ -516,6 +521,7 @@ export const ADMIN_COMMANDS = {
 				tell(player, 'chat.cmd.ban.error.full');
 				return;
 			}
+			logAction(player, 'ban', args[0], args.slice(1));
 			tell(player, 'chat.cmd.ban.offline', args[0], termText(banMinutes));
 		}
 	},
@@ -530,6 +536,7 @@ export const ADMIN_COMMANDS = {
 			tell(player, 'chat.cmd.error.not_found', args.join(' '), '!banlist');
 			return;
 		}
+		logAction(player, 'unban', removed.names.join(', '));
 		tell(player, 'chat.cmd.unban.done', removed.names.join(', '));
 	},
 

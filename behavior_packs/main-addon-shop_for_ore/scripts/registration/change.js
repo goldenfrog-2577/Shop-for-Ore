@@ -8,6 +8,7 @@ import { world } from '@minecraft/server';
 import { tellText, run, tell, menuFeedback } from '../DataBase.js';
 import { showModal, modal } from '../menu/common/forms.js';
 import { PASSWORD_MIN, PASSWORD_MAX, setPassword, checkPassword, clearPassword } from './password.js';
+import { logAction } from '../system/security/staff_log.js';
 
 // После 3 неверных старых паролей подряд — пауза, чтобы не подбирать пароль через эту форму
 const MAX_WRONG = 3;
@@ -73,5 +74,6 @@ export function resetPassword(owner, target) {
 			tell(p, 'chat.account.reset.staff', owner.name, target.name);
 		}
 	}
+	logAction(owner, 'resetpass', target.name);
 	return true;
 }

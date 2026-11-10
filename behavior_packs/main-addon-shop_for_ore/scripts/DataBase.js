@@ -830,6 +830,11 @@ export const commandsList = [
 		role: 'owner'
 	},
 	{
+		command: '!logs §7[§fplayer§7] [§fpage N§7]',
+		description: '%chat.help.logs',
+		role: 'owner'
+	},
+	{
 		command: '!resetpass §7<§fplayer§7>',
 		description: '%chat.help.resetpass',
 		role: 'owner'

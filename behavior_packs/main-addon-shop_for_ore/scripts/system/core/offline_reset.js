@@ -10,6 +10,7 @@
 import { world, DynamicPropertiesDefinition } from '@minecraft/server';
 import { syncResetEpoch, markResetEpoch } from './reset_history.js';
 import { run, tell, isBot } from '../../DataBase.js';
+import { logAction } from '../security/staff_log.js';
 
 const RESET_ID = 'shop:offline_reset_id';
 export const RESET_TAG = 'sys:offline_reset:';
@@ -51,6 +52,7 @@ export function resetOffline(by) {
 	if (current === null) { tell(by, 'chat.cmd.error.storage'); return 0; }
 	const id = current + 1;
 	world.setDynamicProperty(RESET_ID, id);
+	logAction(by, 'resetoffline', '', `#${id}`);
 	const online = [...world.getPlayers()];
 	for (const p of online) mark(p, id);
 	const dim = world.getDimension('overworld');
