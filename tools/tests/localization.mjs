@@ -102,3 +102,9 @@ assert.match(javaName('hud.rebirth'), /Ребитх/);
 assert.equal(javaName('menu.shop.button.boosts'), 'Бусты');
 assert.equal(javaName('item.gold_ingot.name'), 'Монета');
 assert.match(javaName('item.wooden_pickaxe.name'), /^Кирка 2/);
+
+for (const [index, locale] of langs.entries()) {
+	const reward = maps[index].get('ach.item.enchanted_golden_apple');
+	assert.ok(reward, locale + ': enchanted golden apple reward');
+	assert.equal(maps[index].get('item.appleEnchanted.name'), reward, locale + ': apple inventory name');
+}

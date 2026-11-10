@@ -64,6 +64,7 @@ item.armor_stand.name=Soporte para armaduras
 item.diamond_chestplate.name=Coraza de diamante
 item.iron_chestplate.name=Coraza de hierro
 item.enchanted_book.name=Libro encantado
+item.appleEnchanted.name=Manzana dorada encantada
 item.experience_bottle.name=Botella de hechizo
 item.honey_bottle.name=Bote de miel
 item.netherite_chestplate.name=Coraza de inframundita

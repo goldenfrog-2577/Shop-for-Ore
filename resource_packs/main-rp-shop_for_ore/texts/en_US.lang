@@ -64,6 +64,7 @@ item.armor_stand.name=Armor Stand
 item.diamond_chestplate.name=Diamond Chestplate
 item.iron_chestplate.name=Iron Chestplate
 item.enchanted_book.name=Enchanted Book
+item.appleEnchanted.name=Enchanted Golden Apple
 item.experience_bottle.name=Bottle o' Enchanting
 item.honey_bottle.name=Honey Bottle
 item.netherite_chestplate.name=Netherite Chestplate
