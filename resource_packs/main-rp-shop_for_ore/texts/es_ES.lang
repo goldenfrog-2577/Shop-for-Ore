@@ -10,7 +10,7 @@
 ## --- INFORMACIÓN DEL PACK ---
 ##   pack.*
 pack.name=Paquete de recursos para el mapa §lShop for Ore§r
-pack.description=Incluye pequeñas mejoras para una experiencia más cómoda. §c¡No se recomienda desactivar! §fVersión: §7[0.3.0_20261031_resources]
+pack.description=Incluye pequeñas mejoras para una experiencia más cómoda. §c¡No se recomienda desactivar! §fVersión: §7[0.3.0_20261108_resources]
 
 ## --- OBJETOS Y BLOQUES ---
 ##   item.*, tile.*, entity.*, container.shop.*
@@ -398,11 +398,11 @@ menu.levels.line.13=Nivel 13 - Diamantes y §bPico de diamante§r
 menu.levels.line.14=Nivel 14 - (nada)
 menu.levels.line.15=Nivel 15 - Esmeraldas y §5Pico de netherita§r
 menu.levels.line.16=Nivel 16 - Netherrack y Nueva ubicación: §cNether§r
-menu.levels.line.17=Nivel 17 - Magma
-menu.levels.line.18=Nivel 18 - Cuarzo
-menu.levels.line.19=Nivel 19 - Pepitas de oro
-menu.levels.line.20=Nivel 20 - Escombros antiguos
-menu.levels.line.21=Nivel 21 - (nada)
+menu.levels.line.17=Nivel 17 - Cuarzo
+menu.levels.line.18=Nivel 18 - Pepitas de oro
+menu.levels.line.19=Nivel 19 - Magma
+menu.levels.line.20=Nivel 20 - Piedra negra dorada
+menu.levels.line.21=Nivel 21 - Escombros antiguos
 menu.levels.line.22=Nivel 22 - Bloque de netherita
 menu.levels.line.23=Nivel 23 - (nada)
 menu.levels.line.24=Nivel 24 - Obsidiana

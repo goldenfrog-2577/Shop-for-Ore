@@ -10,7 +10,7 @@
 ## --- ІНФОРМАЦІЯ ПРО ПАК ---
 ##   pack.*
 pack.name=Ресурс-пак для карти §lShop for Ore§r
-pack.description=Містить невеликі покращення для комфортної гри. §cНе рекомендується вимикати! §fВерсія: §7[0.3.0_20261031_resources]
+pack.description=Містить невеликі покращення для комфортної гри. §cНе рекомендується вимикати! §fВерсія: §7[0.3.0_20261108_resources]
 
 ## --- ПРЕДМЕТИ І БЛОКИ ---
 ##   item.*, tile.*, entity.*, container.shop.*
@@ -398,11 +398,11 @@ menu.levels.line.13=13 рівень - Діаманти і §bДіамантов�
 menu.levels.line.14=14 рівень - (нічого)
 menu.levels.line.15=15 рівень - Смарагди і §5Незеритове кайло§r
 menu.levels.line.16=16 рівень - Незерак і Нова локація: §cНезер§r
-menu.levels.line.17=17 рівень - Магма
-menu.levels.line.18=18 рівень - Кварц
-menu.levels.line.19=19 рівень - Золоті самородки
-menu.levels.line.20=20 рівень - Давні уламки
-menu.levels.line.21=21 рівень - (нічого)
+menu.levels.line.17=17 рівень - Кварц
+menu.levels.line.18=18 рівень - Золоті самородки
+menu.levels.line.19=19 рівень - Магма
+menu.levels.line.20=20 рівень - Позолочений чорнокамінь
+menu.levels.line.21=21 рівень - Давні уламки
 menu.levels.line.22=22 рівень - Незеритовий блок
 menu.levels.line.23=23 рівень - (нічого)
 menu.levels.line.24=24 рівень - Обсидіан

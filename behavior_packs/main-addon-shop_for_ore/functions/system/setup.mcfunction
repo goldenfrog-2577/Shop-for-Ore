@@ -1,4 +1,4 @@
-# Разовая настройка табло. Вызывается из system/timers, пока setup system меньше 9.
+# Разовая настройка табло. Вызывается из system/timers, пока setup system меньше 10.
 # 2 — табло qx и tpore переименованы в xp_need и magnet (единый стиль названий, 0.3.0)
 # Если понадобится новое табло — добавить сюда и поднять номер в timers и ниже.
 scoreboard objectives add xp_need dummy System
@@ -37,4 +37,7 @@ execute if score stand_timers_migrated system matches 0 run tickingarea add 48 0
 scoreboard objectives add play_seconds dummy
 # 8 — вход в мир без скриптов (system/session): у игроков в сети — 1, у вышедших счёта нет
 scoreboard objectives add session dummy
-scoreboard players set setup system 9
+# 9 — новый порядок блоков Незера (кварц 17, самородки 18, магма 19, позолоченный чернит 20, обломки 21):
+# кирки всем заново — у кого старая кирка своего уровня, она ломала бы другие блоки
+scoreboard players reset * pick
+scoreboard players set setup system 10

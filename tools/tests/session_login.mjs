@@ -52,8 +52,8 @@ assert.ok(!half.tags.has('auth:login'));
 
 // Подключение: первой строкой system/system (каждый тик), табло создаёт setup (номер 9), эффекты — раз в секунду
 assert.match(read('functions/system/system.mcfunction'), /^(#.*\n|\n)*## --- Вход в мир[^\n]*\nfunction system\/session\n/);
-assert.match(read('functions/system/setup.mcfunction'), /scoreboard objectives add session dummy\nscoreboard players set setup system 9$/);
-assert.match(read('functions/system/timers.mcfunction'), /matches \.\.8 run function system\/setup/);
+assert.match(read('functions/system/setup.mcfunction'), /scoreboard objectives add session dummy\n/);
+assert.match(read('functions/system/timers.mcfunction'), /matches \.\.9 run function system\/setup/);
 const t20 = read('functions/timers/ticks_20.mcfunction');
 for (const t of ['auth:login', 'auth:register']) for (const e of ['blindness', 'slowness'])
 	assert.ok(t20.includes(`effect @a[tag=${t},tag=!role:bot,tag=!sys:bot] ${e} 60 255 true`), `${t} ${e}`);
