@@ -188,6 +188,10 @@
 			],
 			[
 				"system/boss/boss.js",
+				"itemStartCharge"
+			],
+			[
+				"system/boss/boss.js",
 				"entityHurt"
 			],
 			[

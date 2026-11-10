@@ -1,5 +1,6 @@
 // --- Босс: Хранитель (server:warden_boss) на арене Древнего города ---
-// Старт: игрок встаёт на резной сланец перед порталом (START). Нужны: нет боя, прошла общая перезарядка
+// Старт: игрок на резном сланце перед порталом (START) играет на козьем роге мелодию «Тосковать» (HORN_SOUND; рог выпадает
+// только из сундука мистика, system/combat/mythic.js), рог тратится, когда Хранитель появился. Нужны: нет боя, прошла общая перезарядка
 // (COOLDOWN_SECONDS, отметка boss_until в табло system — секунды Unix), на арене 1–4 игрока с уровнем ≥ MIN_LEVEL.
 // Остальных с арены (ниже уровня, бот) в начале боя переносит на спавн.
 // Бой: решётка в тоннеле закрывается, участники получают тег boss:fighter (по нему босс выбирает цель),
@@ -35,7 +36,11 @@ export const MAX_WITHER = 2;
 export const REWARD = { money: 25000, vip_coins: 10 };
 export const DISCS = ['record_5', 'record_otherside'];   // идентификаторы Bedrock (в Java — music_disc_*)
 
-export const START = [528, -60, -68];          // резной сланец перед порталом (стоять на нём — y −59)
+export const START = [528, -61, -68];          // резной сланец перед порталом (стоять на нём — y −60)
+// Козий рог: в Bedrock один предмет, мелодия — data 0–7; 6 — «Тосковать» (Yearn). Событие itemStartCharge приходит,
+// только когда рог действительно звучит: на перезарядке (7 с) бывают лишь beforeItemUse/itemUse — проверено в игре
+export const HORN = 'minecraft:goat_horn';
+export const HORN_SOUND = 6;
 export const SUMMON = [528, -60, -73];         // проём портала
 export const BARS = [[526, -55, -12], [530, -51, -12]];   // решётка в тоннеле
 export const CLEAR = 'boss:clear';             // погиб в бою: после возрождения стереть инвентарь (тег переживает конец боя и выход)
@@ -53,8 +58,15 @@ export const MINION_SPOTS = Array.from({ length: 8 }, (_, i) => {
 
 // ======== Чистые правила (проверяются tools/tests/boss.mjs) ========
 
-/** Стоит ли игрок на плите старта. */
+/** Стоит ли игрок на плите старта (там, где нужно сыграть на роге). */
 export const onStart = (loc) => Math.floor(loc.x) === START[0] && Math.floor(loc.z) === START[2] && Math.floor(loc.y) === START[1] + 1;
+
+/** Что сделать по звуку рога: 'start' — пробовать разбудить; 'melody' — не та мелодия на плите; 'place' — та мелодия, но не на плите; null — не рог. */
+export function hornAction(itemId, data, onPlate) {
+	if (itemId !== HORN) return null;
+	if (data !== HORN_SOUND) return onPlate ? 'melody' : null;
+	return onPlate ? 'start' : 'place';
+}
 
 /**
  * Можно ли начать бой. players — [{ name, level, bot }] на арене; now и until — секунды Unix.
@@ -338,20 +350,30 @@ system.runSchedule(() => {
 			setBars(true);
 		}
 	}
-	// не вошедший в аккаунт (форма входа) не будит Хранителя и в бой не идёт — иначе под чужим ником можно потерять вещи владельца ника
-	const starter = inside.find(p => onStart(p.location) && !p.hasTag('role:bot') && !isPending(p));
-	if (!starter) return;
-	// участники — только за решёткой; всех остальных на арене и в тоннеле переносит на спавн
-	const arena = inside.filter(p => inFight(p.location, p.dimension?.id) && !isPending(p));
-	const check = checkStart({
-		busy: false, now: now(), until, starter: starter.name,
-		players: arena.map(p => ({ name: p.name, level: getScore(p, 'lvl'), bot: p.hasTag('role:bot') }))
-	});
-	if (check.ok) return startFight(check.fighters, inside.map(p => p.name).filter(n => !check.fighters.includes(n)));
-	// отказ: шаг назад с плиты, чтобы сообщение не повторялось каждую секунду
-	run(starter, `tp @s ${START[0] + 0.5} ${START[1] + 1} ${START[2] + 2.5}`);
-	tell(starter, `chat.boss.${check.reason}`, ...(check.minutes ? [String(check.minutes)] : check.reason === 'level' ? [String(MIN_LEVEL)] : check.reason === 'too_many' ? [String(MAX_FIGHTERS)] : []));
 }, 20);
+
+// Рог «Тосковать» на плите у портала будит Хранителя (раньше — просто встать на плиту)
+world.events.itemStartCharge.subscribe((e) => {
+	const p = e.source;
+	if (p?.typeId !== 'minecraft:player' || p.hasTag('role:bot') || isPending(p) || !loaded) return;
+	if (!inArena(p.location, p.dimension?.id)) return;
+	const action = hornAction(e.itemStack?.typeId, e.itemStack?.data, onStart(p.location));
+	if (!action) return;
+	if (action !== 'start') return tell(p, `chat.boss.horn_${action}`);
+	if (bossBusy()) return tell(p, 'chat.boss.busy');   // идёт бой или уборка после перезагрузки
+	// участники — только за решёткой; всех остальных на арене и в тоннеле переносит на спавн
+	const inside = players().filter(q => inArena(q.location, q.dimension?.id));
+	// не вошедший в аккаунт (форма входа) в бой не идёт — иначе под чужим ником можно потерять вещи владельца ника
+	const arena = inside.filter(q => inFight(q.location, q.dimension?.id) && !isPending(q));
+	const check = checkStart({
+		busy: false, now: now(), until, starter: p.name,
+		players: arena.map(q => ({ name: q.name, level: getScore(q, 'lvl'), bot: q.hasTag('role:bot') }))
+	});
+	if (!check.ok) return tell(p, `chat.boss.${check.reason}`, ...(check.minutes ? [String(check.minutes)] : check.reason === 'level' ? [String(MIN_LEVEL)] : check.reason === 'too_many' ? [String(MAX_FIGHTERS)] : []));
+	startFight(check.fighters, inside.map(q => q.name).filter(n => !check.fighters.includes(n)));
+	// Рог тратится только после пробуждения
+	run(p, `clear @s ${HORN} ${HORN_SOUND} 1`);
+});
 
 // Смерть участника: отметить; выпавшее уничтожится в fightStep, остальное — после возрождения
 world.events.entityHurt.subscribe((e) => {
