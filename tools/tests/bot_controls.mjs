@@ -32,9 +32,14 @@ const third=mk('Third');assert.equal(mini.games.joinGame(third,'pvp_ffa'),false)
 assert.ok(calls.filter(c=>c[0].startsWith('navigate')).every(c=>c[2]<=1),'navigation respects API speed bounds');
 // Bot prefix survives a separately assigned role and arbitrary custom ranks.
 bot.addTag('role:owner');bot.addTag('rank:Fake');const chatCommands=[];
-const chat={world:{events,getDimension:()=>({})},system:{runSchedule(){}},getScore:()=>7,isBot:ctx.isBot,isPending:()=>false,getRole:()=> 'player',ROLE_COLORS:{owner:'§4',player:'§f'},BOT_COLOR:'§f',getChatColor:()=>undefined,impersonatedRole:()=>undefined,emotes:{},run:(p,c)=>chatCommands.push(c),isVip:()=>false,censor:s=>s};
+const chat={world:{events,getDimension:()=>({})},system:{runSchedule(){}},getScore:()=>7,isBot:ctx.isBot,isPending:()=>false,getRole:()=> 'player',ROLE_COLORS:{owner:'§4',player:'§f'},BOT_COLOR:'§f',getChatColor:()=>undefined,impersonatedRole:()=>undefined,emotes:{},run:(p,c)=>chatCommands.push(c),isVip:()=>false,censor:s=>s,LEVEL_RANK_RE:/^rank:(§r\d+\ue153?|§aVIP)$/};
 vm.runInNewContext(load('scripts/chat/chat.js')+'\nglobalThis.chat=sendChatMessage;',chat);chat.chat(bot,'hello');
 const message=chatCommands.at(-1);assert.ok(message.includes('role.tag.bot'));assert.ok(message.includes('§4Bot'));assert.ok(message.includes('7'));assert.ok(!message.includes('Fake'));assert.ok(!message.includes('role.tag.owner'));
+// Порядок префиксов (владелец): роль → Меломан → свои префиксы → уровень или VIP последним, как бы ни шли теги
+{const tags=['rank:§r12\ue153','rank:§bПро','music:collector','rank:§cАс'];const human={name:'Alex',hasTag:t=>tags.includes(t),getTags:()=>tags};
+chat.chat(human,'hi');const m=JSON.parse(chatCommands.at(-1).slice('tellraw @a '.length)).rawtext;const text=JSON.stringify(m);
+const at=s=>text.indexOf(s);assert.ok(at('role.tag.player')<at('rank.collector')&&at('rank.collector')<at('§bПро')&&at('§bПро')<at('§cАс')&&at('§cАс')<at('§r12'),text);
+tags[0]='rank:§aVIP';chat.chat(human,'hi');const t2=chatCommands.at(-1);assert.ok(t2.indexOf('§cАс')<t2.indexOf('§aVIP'));}
 let present=true,menu;const ui={world:{events:{beforeItemUse:event()}},getBot:()=>present?bot:undefined,getBotName:()=>bot.name,botState:()=>({mode:'follow',sit:false,totem:true,returnOnLoad:true}),showMenu:(p,t,b,items)=>menu={body:typeof b==='function'?b():b,items},backButton:run=>({text:'%admin.common.back',run})};
 vm.runInNewContext(load('scripts/menu/admin/admin_menu.js')+'\nglobalThis.menu=botMenu;',ui);ui.menu(human);
 const slots=menu.items.findIndex(i=>i.text==='%admin.bot.button.slots'),sit=menu.items.findIndex(i=>i.text.startsWith('%admin.bot.button.sit'));

@@ -2,6 +2,7 @@
 import { world, system } from '@minecraft/server';
 import { getScore, metricNumbers, emotes, isPending, isBot, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor, impersonatedRole, tell, run, isVip } from '../DataBase.js';
 import { censor } from './censor.js';
+import { LEVEL_RANK_RE } from '../system/player/ranks.js';
 
 // --- Значения по умолчанию для тегов игрока ---
 const rank = 'rank:';
@@ -132,8 +133,11 @@ world.events.beforeChat.subscribe((data) => {
  * @param {string} message
  */
 export function sendChatMessage(sender, message) {
-	// Префиксы тоже через цензуру — на случай, если префикс выдан до фильтра
-	const ranks = getRanks(sender).map(censor);
+	// Префиксы тоже через цензуру — на случай, если префикс выдан до фильтра.
+	// Порядок (владелец): роль → свои префиксы (Меломан, !prefix, !tag rank:) → в самом конце уровень или VIP
+	const all = getRanks(sender);
+	const isLevel = (r) => LEVEL_RANK_RE.test(rank + r);
+	const ranks = [...all.filter(r => !isLevel(r)).map(censor), ...all.filter(isLevel)];
 	const nameColor = nameColorOf(sender);
 	const textColor = textColorOf(sender);
 	// Московское время (UTC+3) считаем от UTC, чтобы не зависеть от часового пояса движка/устройства
@@ -149,7 +153,7 @@ export function sendChatMessage(sender, message) {
 		return;
 	}
 	// Префикс роли — переводимое слово (у обычного игрока — «Игрок» на языке читателя), поэтому не world.say, а tellraw с translate.
-	// Дальше префиксы из тегов rank: (уровень, VIP); если их нет — только роль
+	// Дальше — «Меломан», свои префиксы из тегов rank:, последним уровень или VIP; если их нет — только роль
 	const role = getRole(sender);
 	const rawtext = [{ text: ` §7${time} §8[` }, { translate: `role.tag.${role}` }];
 	// Собрал все 15 пластинок (system/player/discs.js) — префикс «Меломан» на языке читателя
