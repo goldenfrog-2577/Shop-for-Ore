@@ -1,7 +1,7 @@
 // --- UI авторизации игрока при входе ---
 // Форму вызывает registration/system.js
 
-import { tellText, run, tell } from '../DataBase.js';
+import { tellText, run, tell, menuFeedback } from '../DataBase.js';
 import { modal } from '../menu/common/forms.js';
 import { checkPassword } from './password.js';
 import { unlockPlayer } from './system.js';
@@ -38,11 +38,11 @@ export function LoginUI(player) {
 			player.removeTag('auth:login');
 			unlockPlayer(player);
 			tellText(player, '\n%chat.account.logged_in\n ');
-			run(player, 'playsound random.levelup @s');
+			if (!player.hasTag('player:menu_success_off')) run(player, 'playsound random.levelup @s');
 		} else {
 			const w = wrong.get(player.name) ?? { count: 0, until: 0 };
 			w.count++;
-			run(player, 'playsound note.bass @s');
+			menuFeedback(player, true);
 			if (w.count >= MAX_WRONG) {
 				w.count = 0;
 				w.until = Date.now() + LOCK_MS;

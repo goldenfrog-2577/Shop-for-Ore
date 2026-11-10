@@ -5,7 +5,7 @@
 // без пароля (карту играют и с пиратских клиентов, ник может занять кто угодно).
 
 import { world } from '@minecraft/server';
-import { tellText, run, tell } from '../DataBase.js';
+import { tellText, run, tell, menuFeedback } from '../DataBase.js';
 import { showModal, modal } from '../menu/common/forms.js';
 import { PASSWORD_MIN, PASSWORD_MAX, setPassword, checkPassword, clearPassword } from './password.js';
 
@@ -33,24 +33,24 @@ export function ChangePasswordUI(player, onBack) {
 			if (w.count >= MAX_WRONG) { w.count = 0; w.until = Date.now() + LOCK_MS; }
 			wrong.set(player.name, w);
 			tellText(player, '\n%chat.account.error.wrong_password\n ');
-			run(player, 'playsound note.bass @s');
+			menuFeedback(player, true);
 			return;
 		}
 		wrong.delete(player.name);
 		if (newPass.length < PASSWORD_MIN || newPass.length > PASSWORD_MAX) {
 			tellText(player, '\n%chat.account.error.password_length\n ');
-			run(player, 'playsound note.bass @s');
+			menuFeedback(player, true);
 			return;
 		}
 		if (newPass !== repeat) {
 			tellText(player, '\n%chat.account.error.mismatch\n ');
-			run(player, 'playsound note.bass @s');
+			menuFeedback(player, true);
 			return;
 		}
 		setPassword(player, newPass);
 		// Новый пароль показываем один раз, как при регистрации, — чтобы его можно было запомнить
 		tellText(player, '\n%chat.account.changed\n %account.register.password\n\n%account.register.remember\n ', { 'account.register.password': [newPass] });
-		run(player, 'playsound random.levelup @s');
+		if (!player.hasTag('player:menu_success_off')) run(player, 'playsound random.levelup @s');
 	}, onBack);
 }
 
