@@ -28,17 +28,646 @@
 	},
 	"music.game": {
 		"category": "music",
+		"sounds": []
+	},
+	"ambient.cave": {
+		"category": "ambient",
+		"sounds": []
+	},
+	"music.game.basalt_deltas": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.creative": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.credits": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.crimson_forest": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.deep_dark": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.dripstone_caves": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.end": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.endboss": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.frozen_peaks": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.grove": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.jagged_peaks": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.lush_caves": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.meadow": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.nether": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.nether_wastes": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.snowy_slopes": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.soul_sand_valley": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.soulsand_valley": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.stony_peaks": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.swamp_music": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.warped_forest": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game.water": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game_and_wild_equal_chance": {
+		"category": "music",
+		"sounds": []
+	},
+	"music.game_and_wild_favor_game": {
+		"category": "music",
+		"sounds": []
+	},
+	"shop.music.emerald_tycoon": {
+		"category": "record",
 		"sounds": [
 			{
 				"name": "sounds/music/main.theme",
 				"stream": true,
 				"volume": 0.4,
+				"is3D": false,
 				"load_on_low_memory": true
 			}
 		]
 	},
-	"ambient.cave": {
-		"category": "ambient",
-		"sounds": []
+	"shop.music.stand_tall": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/stand_tall",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.left_to_bloom": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/left_to_bloom",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.wending": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/wending",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.infinite_amethyst": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/infinite_amethyst",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.one_more_day": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/one_more_day",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.floating_dream": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/floating_dream",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.comforting_memories": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/comforting_memories",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.an_ordinary_day": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/an_ordinary_day",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.aerie": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/aerie",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.firebugs": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/firebugs",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.labyrinthine": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/labyrinthine",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.ancestry": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/ancestry",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.biome_fest": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/creative/creative1",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.blind_spots": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/creative/creative2",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.haunt_muskie": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/creative/creative3",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.aria_math": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/creative/creative4",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.dreiton": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/creative/creative5",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.taswell": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/creative/creative6",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.mutation": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/menu/menu1",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.moog_city_2": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/menu/menu2",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.beginning_2": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/menu/menu3",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.floating_trees": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/menu/menu4",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.concrete_halls": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/nether/nether1",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.dead_voxel": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/nether/nether2",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.warmth": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/nether/nether3",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.ballad_of_the_cats": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/nether/nether4",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.rubedo": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/nether/rubedo",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.chrysopoeia": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/nether/chrysopoeia",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.so_below": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/nether/so_below",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.13": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/13",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.cat": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/cat",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.blocks": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/blocks",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.chirp": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/chirp",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.far": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/far",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.mall": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/mall",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.mellohi": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/mellohi",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.stal": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/stal",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.strad": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/strad",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.ward": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/ward",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.11": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/11",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.wait": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/wait",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.pigstep": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/pigstep_master",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.otherside": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/otherside",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
+	},
+	"shop.music.5": {
+		"category": "record",
+		"sounds": [
+			{
+				"name": "sounds/music/game/records/5",
+				"stream": true,
+				"volume": 0.5,
+				"is3D": false,
+				"load_on_low_memory": true
+			}
+		]
 	}
 }

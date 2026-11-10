@@ -12,6 +12,7 @@ import { world, system, MinecraftEffectTypes } from '@minecraft/server';
 import { run, rawTranslateRich, isPending, isBot, findPlayer, tell } from '../../DataBase.js';
 import { teleportToArena, combatSecondsLeft } from '../combat/pvp.js';
 import { showTitle } from '../ui/toast.js';
+import { rollWinDisc } from '../player/discs.js';
 
 export const GAME_TAG = 'game:';
 // Куда возвращать после игры — точка «Мини-игры» (!warp minigames)
@@ -212,6 +213,8 @@ export function endGame(g, winner, reason = 'end') {
 		const reward = [r.money ? `§e+${r.money} §f${COIN}` : '', r.vip_coins ? `§e+${r.vip_coins} §f${VIP_COIN}` : ''].filter(Boolean).join('§7, ');
 		run(p, `tellraw @a ${rawTranslateRich('chat.game.winner', winner, gameName(g))}`);
 		tell(p, 'chat.game.reward', reward || '—');
+		// Иногда — ещё не найденная пластинка (system/player/discs.js)
+		rollWinDisc(p);
 	} else if (p && g.startedWith >= 2) {
 		// Победил живой игрок, но живых было меньше двух (остальные — бот): без награды и статистики
 		run(p, `tellraw @a ${rawTranslateRich('chat.game.winner', winner, gameName(g))}`);

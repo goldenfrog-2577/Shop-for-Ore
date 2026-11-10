@@ -1325,7 +1325,7 @@
 						},
 						"commands": [
 							"/tag @p[r=4] add player:music_off",
-							"/stopsound @p[r=4] music.game",
+							"/stopsound @p[r=4]",
 							"/tellraw @p[r=4] {\"rawtext\": [{\"translate\": \"chat.settings.disabled\"}]}",
 							"/tag @p[r=4] add sys:fb_go_settings",
 							"/tag @p[r=4] add sys:fb_nav"

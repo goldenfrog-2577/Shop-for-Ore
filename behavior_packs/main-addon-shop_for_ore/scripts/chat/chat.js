@@ -149,6 +149,8 @@ export function sendChatMessage(sender, message) {
 	// Дальше префиксы из тегов rank: (уровень, VIP); если их нет — только роль
 	const role = getRole(sender);
 	const rawtext = [{ text: ` §7${time} §8[` }, { translate: `role.tag.${role}` }];
+	// Собрал все 15 пластинок (system/player/discs.js) — префикс «Меломан» на языке читателя
+	if (sender.hasTag('music:collector')) rawtext.push({ text: '§r§8] | [§r' }, { translate: 'rank.collector' });
 	if (ranks.length) rawtext.push({ text: `§r§8] | [§r${ranks.join('§r§8] | [§r')}` });
 	rawtext.push({ text: `§r§8]§r ${nameColor}${sender.name}  ${textColor}${formatMessage}` });
 	run(world.getDimension('overworld'), `tellraw @a ${JSON.stringify({ rawtext })}`);

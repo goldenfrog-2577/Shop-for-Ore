@@ -138,7 +138,7 @@ progressScreen.message.locating=Before asking too many questions, read the signs
 progressScreen.message.resourceLoading=Host Telegram: @goldenfrog_2577
 
 ## --- COMMON: ROLES, COLORS, TERMS, ERRORS ---
-##   menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
+##   menu.common.*, role.*, rank.collector, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
 menu.common.tap_to_open=§8[§7Press to open§8]
 menu.common.back=§8§r §8Back
 menu.common.time.second=s
@@ -183,6 +183,7 @@ role.tag.helper=§3Helper
 role.tag.moder=§9Moderator
 role.tag.bot=§7Bot
 role.tag.player=§fPlayer
+rank.collector=§dMusic Lover
 chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Your message is too long (over §e200§7 characters)
 chat.error.spam=§r⩕ §l§cERROR!§r §8» §7Don't spam the chat!
 
@@ -634,7 +635,7 @@ chat.shop.cosmetics.selected.death=§r §eShop §8» §7Death particles: §e%
 chat.shop.cosmetics.selected.sell=§r §eShop §8» §7Sale particles: §e%1$s
 
 ## --- SETTINGS ---
-##   menu.settings.*, chat.settings.*
+##   menu.settings.*, chat.settings.*, menu.music.*, music.*, chat.music.*
 menu.settings.title=§l§8Server Menu » §r §8§lSettings
 menu.settings.body=§7Adjust your panel, particles, sounds and music, or change your password.
 menu.settings.state=§7Current state:
@@ -663,7 +664,41 @@ menu.settings.menu_sounds.success.title=§l§8Menu sounds » Success
 menu.settings.menu_sounds.error=§8Errors
 menu.settings.menu_sounds.error.title=§l§8Menu sounds » Error
 menu.settings.music.title=§l§8 Settings » Music
-menu.settings.music.body=§7The map's background music. Turning it off stops it only for you. Volume is the «Music» slider in the game settings.
+menu.settings.music.body=§7Map music plays only for you: the world, the nether mine and the Warden arena each have their own tracks. The game's «Music» slider doesn't affect it; set the volume here, the overall level is the «Jukebox/Note Blocks» slider.
+menu.music.now=§7Now playing:
+menu.music.source=§7Source:
+menu.music.source.server=§fserver music
+menu.music.source.discs=§fmy discs
+menu.music.volume=§7Volume:
+menu.music.discs=§7Discs collected:
+menu.music.button.volume=§8Volume
+menu.music.button.to_discs=§8Play my discs
+menu.music.button.to_server=§8Play server music
+menu.music.button.choose=§8Choose a track
+menu.music.choose.title=§l§8 Music » Choose a track
+menu.music.choose.body=§7Tap a track to play it now. The one playing now is green.
+menu.music.choose.world=§7Available now: §fworld music§7.
+menu.music.choose.nether=§7Available now: §fNether music§7.
+menu.music.choose.boss=§7At the Warden arena — §fonly its own music§7.
+menu.music.choose.discs=§7Available now: §fyour discs§7.
+menu.music.button.collection=§8Disc collection
+menu.music.collection.title=§l§8 Music » Collection
+menu.music.collection.body=§7Discs you have found can be played. The others rarely drop while mining (more often in the Nether and the Cave) and for minigame wins; «5» and otherside are the Warden reward. Collect all 15 to get the §dMusic Lover§7 prefix in chat and the free «Notes» trail in Cosmetics.
+menu.music.hint.mine=§7Mining and minigames
+menu.music.hint.boss=§7Defeating the Warden
+menu.music.volume.title=§l§8 Music » Volume
+menu.music.volume.label=§7Music volume (from the next track)
+music.now_playing=§eNow playing: §f%1$s §7by §f%2$s
+music.disc_found=§dDisc found: §f%1$s
+chat.music.volume=§r §3Settings §8» §7Music volume: §e%1$s§7 of 100 — from the next track
+chat.music.disc.found=§r §3Music §8» §7You found the §e%1$s§7 disc! Collected §e%2$s§7 of §e%3$s
+chat.music.collector=§r §3Music §8» §7§f%1$s§r§7 collected every disc and got the §dMusic Lover§7 prefix!
+chat.music.source.server=§r §3Settings §8» §7Now playing §eserver music
+chat.music.source.discs=§r §3Settings §8» §7Now playing §eyour discs
+chat.music.error.no_discs=§r⩕ §l§cERROR!§r §8» §7You have no discs yet: hold any disc in your inventory and it will appear in the list
+chat.music.error.off=§r⩕ §l§cERROR!§r §8» §7Music is off — turn it on first
+chat.music.error.arena=§r⩕ §l§cERROR!§r §8» §7Only the arena's own music plays at the Warden arena
+chat.music.error.locked=§r⩕ §l§cERROR!§r §8» §7You haven't found this disc yet
 chat.settings.enabled=§r §3Settings §8» §7Setting changed: §aOn
 chat.settings.disabled=§r §3Settings §8» §7Setting changed: §cOff
 chat.settings.icons_only=§r §3Settings §8» §7Setting changed: §eIcons only

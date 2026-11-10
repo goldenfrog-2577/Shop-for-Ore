@@ -56,9 +56,11 @@
 			"system/player/achievements.js",
 			"menu/achievements_menu.js",
 			"system/combat/pvp.js",
-			"system/minigames/minigames.js",
-			"system/ui/music.js",
 			"system/boss/arena.js",
+			"system/ui/music_tracks.js",
+			"system/ui/music.js",
+			"system/player/discs.js",
+			"system/minigames/minigames.js",
 			"system/player/void.js",
 			"system/boss/boss.js",
 			"registration/password.js",
@@ -156,16 +158,20 @@
 				"playerLeave"
 			],
 			[
+				"system/ui/music.js",
+				"playerLeave"
+			],
+			[
+				"system/player/discs.js",
+				"blockBreak"
+			],
+			[
 				"system/minigames/minigames.js",
 				"entityHurt"
 			],
 			[
 				"system/minigames/minigames.js",
 				"playerJoin"
-			],
-			[
-				"system/boss/arena.js",
-				"playerLeave"
 			],
 			[
 				"system/player/void.js",
@@ -402,20 +408,28 @@
 				1200
 			],
 			[
+				"system/boss/arena.js",
+				20
+			],
+			[
+				"system/ui/music.js",
+				20
+			],
+			[
+				"system/ui/music.js",
+				100
+			],
+			[
+				"system/player/discs.js",
+				100
+			],
+			[
 				"system/minigames/minigames.js",
 				20
 			],
 			[
 				"system/minigames/minigames.js",
 				100
-			],
-			[
-				"system/ui/music.js",
-				40
-			],
-			[
-				"system/boss/arena.js",
-				20
 			],
 			[
 				"system/boss/boss.js",

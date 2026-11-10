@@ -337,6 +337,9 @@
 			"path" : "scripts/system/ui/music.js"
 		},
 		{
+			"path" : "scripts/system/ui/music_tracks.js"
+		},
+		{
 			"path" : "scripts/menu/achievements_menu.js"
 		},
 		{
@@ -353,6 +356,9 @@
 		},
 		{
 			"path" : "scripts/system/player/void.js"
+		},
+		{
+			"path" : "scripts/system/player/discs.js"
 		},
 		{
 			"path" : "scripts/system/player/ranks.js"

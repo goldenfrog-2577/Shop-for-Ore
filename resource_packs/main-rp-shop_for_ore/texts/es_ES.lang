@@ -138,7 +138,7 @@ progressScreen.message.locating=Antes de hacer muchas preguntas, lee los cartele
 progressScreen.message.resourceLoading=Host Telegram: @goldenfrog_2577
 
 ## --- COMÚN: ROLES, COLORES, PLAZOS, ERRORES ---
-##   menu.common.*, role.*, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
+##   menu.common.*, role.*, rank.collector, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
 menu.common.tap_to_open=§8[§7Pulsa para abrir§8]
 menu.common.back=§8§r §8Atrás
 menu.common.time.second=s
@@ -183,6 +183,7 @@ role.tag.helper=§3Ayudante
 role.tag.moder=§9Moderador
 role.tag.bot=§7Bot
 role.tag.player=§fJugador
+rank.collector=§dMelómano
 chat.error.too_long=§r⩕ §l§cERROR!§r §8» §7Tu mensaje es demasiado largo (más de §e200§7 caracteres)
 chat.error.spam=§r⩕ §l§cERROR!§r §8» §7¡No hagas spam en el chat!
 
@@ -634,7 +635,7 @@ chat.shop.cosmetics.selected.death=§r §eTienda §8» §7Partículas al mori
 chat.shop.cosmetics.selected.sell=§r §eTienda §8» §7Partículas de venta: §e%1$s
 
 ## --- AJUSTES ---
-##   menu.settings.*, chat.settings.*
+##   menu.settings.*, chat.settings.*, menu.music.*, music.*, chat.music.*
 menu.settings.title=§l§8Menú del servidor » §r §8§lAjustes
 menu.settings.body=§7Ajusta el panel, las partículas, los sonidos y la música, o cambia tu contraseña.
 menu.settings.state=§7Estado actual:
@@ -663,7 +664,41 @@ menu.settings.menu_sounds.success.title=§l§8Sonidos del menú » Éxito
 menu.settings.menu_sounds.error=§8Errores
 menu.settings.menu_sounds.error.title=§l§8Sonidos del menú » Error
 menu.settings.music.title=§l§8 Ajustes » Música
-menu.settings.music.body=§7La música de fondo del mapa. Si la desactivas, deja de sonar solo para ti. El volumen es el control «Música» de los ajustes del juego.
+menu.settings.music.body=§7La música del mapa suena solo para ti: el mundo, la mina del Nether y la arena del Custodio tienen sus propias pistas. El control «Música» del juego no le afecta; el volumen se ajusta aquí y el general con el control «Tocadiscos/bloques musicales».
+menu.music.now=§7Suena ahora:
+menu.music.source=§7Fuente:
+menu.music.source.server=§fmúsica del servidor
+menu.music.source.discs=§fmis discos
+menu.music.volume=§7Volumen:
+menu.music.discs=§7Discos reunidos:
+menu.music.button.volume=§8Volumen
+menu.music.button.to_discs=§8Poner mis discos
+menu.music.button.to_server=§8Poner música del servidor
+menu.music.button.choose=§8Elegir pista
+menu.music.choose.title=§l§8 Música » Elegir pista
+menu.music.choose.body=§7Pulsa una pista para que suene ya. La que suena ahora está en verde.
+menu.music.choose.world=§7Disponible ahora: §fmúsica del mundo§7.
+menu.music.choose.nether=§7Disponible ahora: §fmúsica del Nether§7.
+menu.music.choose.boss=§7En la arena del Custodio — §fsolo su música§7.
+menu.music.choose.discs=§7Disponibles ahora: §ftus discos§7.
+menu.music.button.collection=§8Colección de discos
+menu.music.collection.title=§l§8 Música » Colección
+menu.music.collection.body=§7Los discos que encuentres se pueden poner. Los demás caen rara vez al picar (más a menudo en el Nether y la Cueva) y al ganar minijuegos; «5» y otherside son la recompensa del Custodio. Reúne los 15 para obtener el prefijo §dMelómano§7 en el chat y el rastro «Notas» gratis en Cosméticos.
+menu.music.hint.mine=§7Picar y minijuegos
+menu.music.hint.boss=§7Derrotar al Custodio
+menu.music.volume.title=§l§8 Música » Volumen
+menu.music.volume.label=§7Volumen de la música (desde la siguiente pista)
+music.now_playing=§eAhora suena: §f%1$s §7de §f%2$s
+music.disc_found=§dDisco encontrado: §f%1$s
+chat.music.volume=§r §3Ajustes §8» §7Volumen de la música: §e%1$s§7 de 100 — desde la siguiente pista
+chat.music.disc.found=§r §3Música §8» §7¡Encontraste el disco §e%1$s§7! Reunidos §e%2$s§7 de §e%3$s
+chat.music.collector=§r §3Música §8» §7¡§f%1$s§r§7 reunió todos los discos y obtuvo el prefijo §dMelómano§7!
+chat.music.source.server=§r §3Ajustes §8» §7Ahora suena la §emúsica del servidor
+chat.music.source.discs=§r §3Ajustes §8» §7Ahora suenan §etus discos
+chat.music.error.no_discs=§r⩕ §l§cERROR!§r §8» §7Aún no tienes discos: lleva cualquiera en el inventario y aparecerá en la lista
+chat.music.error.off=§r⩕ §l§cERROR!§r §8» §7La música está desactivada: actívala primero
+chat.music.error.arena=§r⩕ §l§cERROR!§r §8» §7En la arena del Custodio solo suena su música
+chat.music.error.locked=§r⩕ §l§cERROR!§r §8» §7Aún no has encontrado este disco
 chat.settings.enabled=§r §3Ajustes §8» §7Ajuste cambiado: §aActivado
 chat.settings.disabled=§r §3Ajustes §8» §7Ajuste cambiado: §cDesactivado
 chat.settings.icons_only=§r §3Ajustes §8» §7Ajuste cambiado: §eSolo iconos
