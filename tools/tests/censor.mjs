@@ -62,4 +62,8 @@ assert.ok((read('chat/commands/admin.js').match(/isProfane|censor\(prefixName\)|
 // Движок скриптов 1.19.50 не понимает \p{…} в регулярках — SyntaxError ломал загрузку всех скриптов (в игре, censor.js:95)
 { const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(d + '/' + e.name) : e.name.endsWith('.js') ? [d + '/' + e.name] : []);
   for (const f of walk(new URL('../../behavior_packs/main-addon-shop_for_ore/scripts', import.meta.url).pathname)) assert.ok(!/\\[pP]\{/.test(fs.readFileSync(f, 'utf8')), 'Unicode property escape in ' + f); }
+// Разложенная диакритика (буква + комбинируемый знак) не рвёт слово
+assert.equal(C.censor('fu\u0308ck'), '***');
+assert.equal(C.censor('fu\u0308ck you'), '*** you');
+assert.equal(C.censor('cafe\u0301'), 'cafe\u0301');
 console.log(`PASS: ${BAD.length} ругательств закрыты, ${GOOD.length} обычных слов не тронуты, замена — «***», подключено к чату и командам.`);
