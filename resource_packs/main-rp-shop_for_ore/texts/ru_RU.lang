@@ -1164,6 +1164,7 @@ chat.cmd.prefix.set=§r §7CMD §8» §7Префикс %1$s§r§7 выдан 
 chat.cmd.prefix.take=§r §7CMD §8» §7Префикс %1$s§r§7 снят у игрока §f%2$s
 chat.cmd.prefix.list=§r §7CMD §8» §7Префиксы игрока §f%1$s§r§7: %2$s
 chat.cmd.prefix.clear=§r §7CMD §8» §7Все префиксы сняты у игрока §f%1$s
+chat.cmd.prefix.error.profanity=§r⩕ §l§cERROR!§r §8» §7В префиксе не должно быть ругательств
 chat.cmd.tag.add=§r §7CMD §8» §7Тег §e%1$s§7 выдан игроку §f%2$s
 chat.cmd.tag.remove=§r §7CMD §8» §7Тег §e%1$s§7 снят у игрока §f%2$s
 chat.cmd.tag.list=§r §7CMD §8» §7Теги игрока §f%1$s§r§7: §e%2$s

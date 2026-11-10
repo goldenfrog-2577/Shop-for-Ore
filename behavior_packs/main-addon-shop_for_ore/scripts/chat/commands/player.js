@@ -10,6 +10,7 @@ import { bossBusy } from '../../system/boss/boss.js';
 import { canTeleport, listGames, joinGame, leaveGame, getGame, startGame, endGame } from '../../system/minigames/minigames.js';
 import { ChangePasswordUI } from '../../registration/change.js';
 import { resolveTarget, tellList } from './common.js';
+import { censor } from '../censor.js';
 
 // С кем игрок последним переписывался в ЛС (для !r): имя → имя собеседника
 const lastPrivate = new Map();
@@ -89,7 +90,8 @@ function sendPrivate(player, recipientName, text) {
 		tell(player, 'chat.cmd.error.offline', recipientName);
 		return;
 	}
-	// Замена текстовых кодов эмодзи на символы
+	// Ругательства → «***», затем коды эмодзи → символы
+	text = censor(text);
 	for (const [name, symbol] of Object.entries(emotes)) {
 		text = text.replaceAll(name, symbol);
 	}
@@ -294,7 +296,7 @@ export const PLAYER_COMMANDS = {
 	report(player, args) {
 		// Жалоба на игрока — уходит хелперам и выше, кто в сети
 		const reportName = args[0];
-		const reason = args.slice(1).join(' ');
+		const reason = censor(args.slice(1).join(' '));
 		if (!reportName || !reason) {
 			tell(player, 'chat.cmd.report.use');
 			return;

@@ -1,6 +1,7 @@
 // --- Чат-логика и антиспам для Shop for Ore ---
 import { world, system } from '@minecraft/server';
 import { getScore, metricNumbers, emotes, isPending, isBot, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor, impersonatedRole, tell, run, isVip } from '../DataBase.js';
+import { censor } from './censor.js';
 
 // --- Значения по умолчанию для тегов игрока ---
 const rank = 'rank:';
@@ -131,13 +132,15 @@ world.events.beforeChat.subscribe((data) => {
  * @param {string} message
  */
 export function sendChatMessage(sender, message) {
-	const ranks = getRanks(sender);
+	// Префиксы тоже через цензуру — на случай, если префикс выдан до фильтра
+	const ranks = getRanks(sender).map(censor);
 	const nameColor = nameColorOf(sender);
 	const textColor = textColorOf(sender);
 	// Московское время (UTC+3) считаем от UTC, чтобы не зависеть от часового пояса движка/устройства
 	const now = new Date(Date.now() + 3 * 60 * 60 * 1000);
 	const time = `${now.getUTCHours()}:${now.getUTCMinutes().toString().padStart(2, '0')}`;
-	const formatMessage = replaceEmotes(message);
+	// Ругательства → «***» (chat/censor.js) — до эмодзи, чтобы коды эмодзи не мешали
+	const formatMessage = replaceEmotes(censor(message));
 	// Бот карты: только префикс «Бот» — роли и ранги (rank:) его не перебивают
 	if (isBot(sender)) {
 		const rawtext = [{ text: ` §7${time} §8[` }];

@@ -1164,6 +1164,7 @@ chat.cmd.prefix.set=§r §7CMD §8» §7Prefijo %1$s§r§7 añadido a §f%2$s
 chat.cmd.prefix.take=§r §7CMD §8» §7Prefijo %1$s§r§7 quitado a §f%2$s
 chat.cmd.prefix.list=§r §7CMD §8» §7Prefijos de §f%1$s§r§7: %2$s
 chat.cmd.prefix.clear=§r §7CMD §8» §7Se quitaron todos los prefijos a §f%1$s
+chat.cmd.prefix.error.profanity=§r⩕ §l§cERROR!§r §8» §7El prefijo no puede contener palabrotas
 chat.cmd.tag.add=§r §7CMD §8» §7Etiqueta §e%1$s§7 añadida a §f%2$s
 chat.cmd.tag.remove=§r §7CMD §8» §7Etiqueta §e%1$s§7 quitada a §f%2$s
 chat.cmd.tag.list=§r §7CMD §8» §7Etiquetas de §f%1$s§r§7: §e%2$s

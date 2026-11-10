@@ -1164,6 +1164,7 @@ chat.cmd.prefix.set=§r §7CMD §8» §7Prefix %1$s§r§7 added for §f%2$s
 chat.cmd.prefix.take=§r §7CMD §8» §7Prefix %1$s§r§7 removed for §f%2$s
 chat.cmd.prefix.list=§r §7CMD §8» §7§f%1$s§r§7's prefixes: %2$s
 chat.cmd.prefix.clear=§r §7CMD §8» §7All prefixes removed from §f%1$s
+chat.cmd.prefix.error.profanity=§r⩕ §l§cERROR!§r §8» §7A prefix can't contain swear words
 chat.cmd.tag.add=§r §7CMD §8» §7Tag §e%1$s§7 added for §f%2$s
 chat.cmd.tag.remove=§r §7CMD §8» §7Tag §e%1$s§7 removed for §f%2$s
 chat.cmd.tag.list=§r §7CMD §8» §7§f%1$s§r§7's tags: §e%2$s

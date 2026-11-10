@@ -13,6 +13,7 @@ import { stopAdminBoosts, markAdminBoost, MAGNET_ADMIN_TAG, BOOST_TIMERS, boostS
 import { ACHIEVEMENTS, has as hasAchievement, findAchievement, unlock, revoke } from '../../system/player/achievements.js';
 import { addBan, kickBanned, findBan, removeBan, getBans, banActive, banMinutesLeft } from '../../system/security/ban.js';
 import { resolveTarget, tellList, canPunish } from './common.js';
+import { censor } from '../censor.js';
 
 // Отказ: цвет, префикс или тег выдают игрока за роль, которой у него нет (role — owner/admin/moder/bot)
 function denyImpersonation(player, target, role) {
@@ -232,6 +233,11 @@ export const ADMIN_COMMANDS = {
 				tell(player, 'chat.cmd.error.offline', prefixPlayer);
 				return;
 			}
+			// Префикс с ругательством не ставится (chat/censor.js), даже персоналу
+			if (prefixAction === 'set' && censor(prefixName) !== prefixName) {
+				tell(player, 'chat.cmd.prefix.error.profanity');
+				return;
+			}
 			// Префикс с цветом или названием роли (Админ, §cVIP…) — только тому, у кого эта роль
 			const fakeRole = prefixAction === 'set' ? impersonatedRole(target, prefixName) : undefined;
 			if (fakeRole) {
@@ -269,6 +275,10 @@ export const ADMIN_COMMANDS = {
 				return;
 			}
 			// Префикс (rank:) и цвет (chat:…_color:, старые name:/text:) — те же проверки, что у !prefix и !color
+			if (tagAction === 'add' && tagName.startsWith('rank:') && censor(tagName.slice(5)) !== tagName.slice(5)) {
+				tell(player, 'chat.cmd.prefix.error.profanity');
+				return;
+			}
 			if (tagAction === 'add' && /^(rank:|chat:|name:|text:)/.test(tagName)) {
 				const target = findPlayer(tagTarget);
 				if (!target) {
@@ -442,7 +452,7 @@ export const ADMIN_COMMANDS = {
 
 	say(player, args) {
 		// Объявление от сервера всем (эмодзи заменяются)
-		let text = args.join(' ');
+		let text = censor(args.join(' '));
 		if (!text) {
 			tell(player, 'chat.cmd.say.use');
 			return;
