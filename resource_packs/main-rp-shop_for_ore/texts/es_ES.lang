@@ -1,7 +1,7 @@
 ﻿## =============================
 ##  Shop for Ore: LOCALIZACIÓN ESPAÑOLA
 ##  Autor: kapycta1231484 & Claude
-##  Última actualización: 2026-10-31
+##  Última actualización: 2026-11-10
 ##  Este archivo contiene todos los textos del mapa Shop for Ore en español.
 ##  ¡Por favor, mantén las secciones y comentarios para facilitar la navegación!
 ##  Las secciones van por funciones; la línea bajo el título indica sus prefijos. Añade una clave donde sea y ejecuta: python3 tools/lang.py sort
@@ -10,7 +10,7 @@
 ## --- INFORMACIÓN DEL PACK ---
 ##   pack.*
 pack.name=Paquete de recursos para el mapa §lShop for Ore§r
-pack.description=Incluye pequeñas mejoras para una experiencia más cómoda. §c¡No se recomienda desactivar! §fVersión: §7[0.3.0_20261108_resources]
+pack.description=Incluye pequeñas mejoras para una experiencia más cómoda. §c¡No se recomienda desactivar! §fVersión: §7[0.3.0_20261110_resources]
 
 ## --- OBJETOS Y BLOQUES ---
 ##   item.*, tile.*, entity.*, container.shop.*
@@ -610,7 +610,7 @@ menu.creators.title=§l§8Menú del servidor » §f§8 Creadores
 menu.version.title=§l§8Menú del servidor » §r §8§lVersión del mapa
 menu.version.line.1=§l§7Aquí encontrarás información sobre la última actualización del mapa
 menu.version.label=§2Versión del mapa:
-menu.version.line.2=§lActualización 0.3.0 (en desarrollo)§r
+menu.version.line.2=§lVersión candidata 0.3.0 del 10 de noviembre de 2026§r
 menu.version.line.3=• Nuevo aspecto de los mensajes del chat: «icono Etiqueta » texto», sin exceso de colores
 menu.version.line.4=• Menús con un mismo estilo: títulos «Sección » Subsección», iconos en los botones
 menu.version.line.5=• Nuevo: «Imán de mineral» en Tienda » Potenciadores — los objetos cercanos vuelan hacia ti durante 5 minutos
@@ -635,6 +635,20 @@ menu.version.line.23=• VIP ahora es un estatus aparte (desde el nivel 40), rei
 menu.version.line.24=• Galería de tiro: dispara con arco a las dianas por monedas; la tienda del comerciante errante en la isla VIP
 menu.version.line.25=• Cárcel (!jail), denuncias (!report), baneos y silencios temporales
 menu.version.line.26=• 12 logros nuevos, códigos promocionales nuevos; si caes al vacío, vuelves al spawn
+menu.version.line.27=• El menú de respaldo y las comprobaciones de acceso funcionan si fallan los scripts.
+menu.version.line.28=• El propietario puede editar regiones con !worldedit. Los errores indican el paso y la causa.
+menu.version.line.29=• Se reordenaron las minas del Nether y se añadió la piedra negra dorada.
+menu.version.line.30=• La melodía «Anhelar» despierta al Custodio. El combate tiene fases, recompensas y una clasificación.
+menu.version.line.31=• Se añadieron la pluma del Salto de fe y los cristales del End portátiles.
+menu.version.line.32=• La música cambia según la zona. Elige pistas, ajusta el volumen y colecciona discos.
+menu.version.line.33=• Los clics, los aciertos y los errores del menú tienen ajustes de sonido independientes.
+menu.version.line.34=• Hay un nuevo saludo. «Olvidé mi contraseña» envía una solicitud al propietario.
+menu.version.line.35=• Se filtran el chat, los mensajes privados y los prefijos.
+menu.version.line.36=• Los comandos admiten @s, @p, @r y @a. Las acciones del personal aparecen en el registro de contenido.
+menu.version.line.37=• El bot puede unirse al grupo contra el Custodio, disparar con arco en el entrenamiento y guiar a un jugador.
+menu.version.line.38=• Los logros y desafíos tienen listas separadas y hay nuevas recompensas por comprar en la isla VIP.
+menu.version.line.39=• Los nombres en ruso de objetos y encantamientos en menús e inventario siguen el glosario de Java Edition.
+menu.version.line.40=• Los temporizadores de los potenciadores comunes se trasladaron de los soportes para armadura. Se corrigió la recuperación de puntuaciones tras un reinicio.
 
 ## --- NIVELES, VIP Y REINICIO ---
 ##   chat.lvlup.*, menu.upgrades.*, chat.vip.*, chat.rebirth.*
