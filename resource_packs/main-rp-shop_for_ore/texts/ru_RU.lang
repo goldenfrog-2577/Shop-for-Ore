@@ -1,7 +1,7 @@
 ## =============================
 ##  Shop for Ore: РУССКАЯ ЛОКАЛИЗАЦИЯ
 ##  Автор: GoldenFrog & Claude
-##  Последнее обновление: 2026-10-31
+##  Последнее обновление: 2026-11-09
 ##  В этом файле все игровые тексты для карты Shop for Ore на русском языке.
 ##  Пожалуйста, сохраняйте секции и комментарии для удобной навигации!
 ##  Блоки — по функциям; строка под заголовком — префиксы ключей блока. Новый ключ пиши где угодно и запусти: python3 tools/lang.py sort
@@ -85,7 +85,7 @@ tile.warped_planks.name=Искажённые доски
 tile.blackstone.name=Чернит
 tile.clay.name=Глина
 tile.structure_block.name=Блок-конструктор
-tile.structure_void.name=Пустой блок
+tile.structure_void.name=Структурная пустота
 tile.repeating_command_block.name=Повторяющий командный блок
 tile.chain_command_block.name=Последовательный командный блок
 tile.end_portal_frame.name=Рамка портала Энда
