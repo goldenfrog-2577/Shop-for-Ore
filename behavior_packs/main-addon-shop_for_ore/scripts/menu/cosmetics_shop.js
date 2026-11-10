@@ -98,7 +98,7 @@ const vipMark = (player, text) => isVip(player) ? text : `${text}\n${VIP_ONLY}`;
 export function cosmeticsMenu(player, back) {
 	const again = () => cosmeticsMenu(player, back);
 	const section = (kind, icon, open) => ({ text: vipMark(player, `%menu.shop.cosmetics.button.${kind}`), icon, run: () => open(player, kind, again) });
-	showMenu(player, vipMark(player, '%menu.shop.cosmetics.title'), `%menu.shop.cosmetics.body\n%menu.shop.cosmetics.balance ${price(coins(player))}`, [
+	showMenu(player, vipMark(player, '%menu.shop.cosmetics.title'), `%menu.shop.cosmetics.body\n\n%menu.shop.cosmetics.balance ${price(coins(player))}`, [
 		section('name', 'textures/items/name_tag', colorMenu),
 		section('text', 'textures/items/book_writable', colorMenu),
 		section('trail', 'textures/items/blaze_powder', fxMenu),
@@ -110,7 +110,7 @@ export function cosmeticsMenu(player, back) {
 
 // Состояние кнопки: выбрано / куплено / цена
 const state = (selected, owned, cost) => selected ? '%menu.shop.cosmetics.selected' : owned ? '%menu.shop.cosmetics.owned' : price(cost);
-const body = (player, kind) => `%menu.shop.cosmetics.${kind}.body\n%menu.shop.cosmetics.balance ${price(coins(player))}`;
+const body = (player, kind) => `%menu.shop.cosmetics.${kind}.body\n\n%menu.shop.cosmetics.balance ${price(coins(player))}`;
 
 // --- Цвет ника / текста ---
 // После покупки, выбора или ошибки в чат приходит сообщение — и меню закрывается (menu/common/forms.js)

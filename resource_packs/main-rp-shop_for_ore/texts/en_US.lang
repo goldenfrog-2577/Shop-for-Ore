@@ -1,7 +1,7 @@
 ## =============================
 ##  Shop for Ore: ENGLISH LOCALE
 ##  Author: kapycta1231484 & Claude
-##  Last updated: 2026-10-31
+##  Last updated: 2026-11-10
 ##  This file contains all in-game texts for the Shop for Ore map in English.
 ##  Please keep sections and comments for easy navigation!
 ##  Sections are grouped by feature; the line under a header lists its key prefixes. Add a key anywhere, then run: python3 tools/lang.py sort
@@ -10,7 +10,7 @@
 ## --- PACK INFO ---
 ##   pack.*
 pack.name=Resource pack for map §lShop for Ore§r
-pack.description=Includes some small improvements for a smoother game. §cNot recommended to disable! §fVersion: §7[0.3.0_20261108_resources]
+pack.description=Includes some small improvements for a smoother game. §cNot recommended to disable! §fVersion: §7[0.3.0_20261110_resources]
 
 ## --- ITEMS & BLOCKS ---
 ##   item.*, tile.*, entity.*, container.shop.*
@@ -51,7 +51,7 @@ entity.server:warden_boss.name=Warden
 entity.server:floating_text.name=Hologram
 container.shop.feedback=§lPut your review here...
 container.shop.feedback_for_host=§lFeedback chest
-container.shop.mythic= §l§5Mythic
+container.shop.mythic= §l§5Mythic
 tile.gilded_blackstone.name=Gilded Blackstone
 item.minecraft.goat_horn.sound.6=Yearn
 entity.armor_stand.name=Armor Stand
@@ -610,7 +610,7 @@ menu.creators.title=§l§8Server Menu » §f§8 Creators
 menu.version.title=§l§8Server Menu » §r §8§lMap Version
 menu.version.line.1=§l§7Here you'll find info about the latest map update
 menu.version.label=§2Map Version:
-menu.version.line.2=§lUpdate 0.3.0 (in development)§r
+menu.version.line.2=§lRelease candidate 0.3.0 — November 10, 2026§r
 menu.version.line.3=• New chat message look: "icon Label » text", no more color noise
 menu.version.line.4=• Menus in one style: "Section » Subsection" titles, icons on buttons
 menu.version.line.5=• New: "Ore Magnet" in Shop » Boosts — nearby items fly to you for 5 minutes
@@ -635,6 +635,20 @@ menu.version.line.23=• VIP is now a separate status (from level 40), rebirth f
 menu.version.line.24=• Shooting range: shoot targets with a bow for coins; the Wandering Trader's shop on the VIP island
 menu.version.line.25=• Jail (!jail), reports (!report), timed bans and mutes
 menu.version.line.26=• 12 new achievements, new promo codes; falling into the void takes you back to spawn
+menu.version.line.27=• The backup menu and sign-in checks work when scripts are unavailable.
+menu.version.line.28=• The owner can edit regions with !worldedit. Errors show the failed step and its cause.
+menu.version.line.29=• The Nether pits were reordered and Gilded Blackstone was added.
+menu.version.line.30=• The Yearn goat horn awakens the Warden. The fight has phases, rewards and a leaderboard.
+menu.version.line.31=• Added the Leap of Faith feather and portable End crystals.
+menu.version.line.32=• Music changes by location. Choose tracks, adjust the volume and collect music discs.
+menu.version.line.33=• Menu clicks, success and errors have separate sound settings.
+menu.version.line.34=• A new welcome message and a «Forgot my password» request for the owner.
+menu.version.line.35=• Chat, private messages and prefixes are filtered.
+menu.version.line.36=• Commands support @s, @p, @r and @a. Staff actions appear in the Content Log.
+menu.version.line.37=• The bot can join Warden parties, shoot a bow in sparring and guide a selected player.
+menu.version.line.38=• Achievements and challenges have separate lists, with new rewards for VIP island purchases.
+menu.version.line.39=• Russian item and enchantment names in menus and inventory follow the Java Edition glossary.
+menu.version.line.40=• Shared boost timers were moved off armor stands. Player score recovery after a wipe was fixed.
 
 ## --- LEVELS, VIP & REBIRTH ---
 ##   chat.lvlup.*, menu.upgrades.*, chat.vip.*, chat.rebirth.*
@@ -685,7 +699,7 @@ chat.vip.error.requirements=§r §l§cERROR!§r §8» §eVIP§7 requires leve
 chat.rebirth.error.level=§r §l§cERROR!§r §8» §7Rebirth is available from level §e25§7 
 chat.vip.error.owned=§r §l§cERROR!§r §8» §7You already have §eVIP
 chat.rebirth.first=§r §dRebirth §8» §f%1$s§r§7 made their first §eRebirth§7!
-chat.rebirth.level=§r §dRebirth §8» §7Your Rebirth level: §e%1$s
+chat.rebirth.level=§r §dRebirth §8» §7Your Rebirth level: §e%1$s 
 chat.vip.bought=§r §aLvL UP §8» §f%1$s§r§7 bought §eVIP§7!
 chat.vip.welcome=§r §aLvL UP §8» §7Congratulations on getting §eVIP§7! To visit the §eVIP island§7, open the §eServer Menu §7» §eWarps
 chat.vip.migrated=§r §aLvL UP §8» §7VIP is now a separate status, and levels §e26–40§7 are the Cave. You keep VIP, your level is §e25§7: carry on in the Cave!
