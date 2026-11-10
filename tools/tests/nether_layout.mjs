@@ -38,12 +38,12 @@ ranges.forEach((r, i) => {
 	assert.equal(blocks.at(-1), 'amethyst_cluster');
 });
 assert.ok(!pick.includes('lvl=20..21'));
-// Старые кирки 17–21 ломали бы не те блоки — setup 9 выдаёт кирки заново
-assert.match(read('functions/system/setup.mcfunction'), /scoreboard players reset \* pick\nscoreboard players set setup system 10$/);
-assert.match(read('functions/system/timers.mcfunction'), /matches \.\.9 run function system\/setup/);
+// Старые кирки 17–21 ломали бы не те блоки — setup 9 выдаёт кирки заново (дальше — шаги новее)
+assert.match(read('functions/system/setup.mcfunction'), /scoreboard players reset \* pick\n# 10 /);
+assert.match(read('functions/system/timers.mcfunction'), /matches \.\.10 run function system\/setup/);
 assert.match(read('scripts/system/security/anticheat_checks.js'), /\|gilded_blackstone\|/);
 
-const names = { ru_RU: ['Кварц', 'Золотые самородки', 'Магма', 'Позолоченный чернит', 'Древние обломки'] };
+const names = { ru_RU: ['Незерский кварц', 'Кусочек золота', 'Магма', 'Позолоченный чернит', 'Древние обломки'] };
 const ru = fs.readFileSync(new URL('../../resource_packs/main-rp-shop_for_ore/texts/ru_RU.lang', import.meta.url), 'utf8');
 names.ru_RU.forEach((n, i) => assert.ok(ru.includes(`menu.levels.line.${17 + i}=${17 + i} уровень - ${n}\r\n`), n));
 console.log('PASS: Nether order — pits, autosale levels/prices, pickaxe lists and level menu agree; tenth pit empty; pickaxes reissued once.');

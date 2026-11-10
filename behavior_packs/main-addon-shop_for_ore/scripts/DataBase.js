@@ -607,7 +607,7 @@ export const commandsList = [
 		role: 'player'
 	},
 	{
-		command: '!top §7<§fmoney§8/§flvl§8/§frebirth§8/§fvip_coins§8/§fkd§8/§fpvp§8/§fspleef§7>',
+		command: '!top §7<§fmoney§8/§flvl§8/§frebirth§8/§fvip_coins§8/§fkd§8/§fpvp§8/§fspleef§8/§fboss§8/§fboss_time§7>',
 		description: '%chat.help.top',
 		role: 'player'
 	},

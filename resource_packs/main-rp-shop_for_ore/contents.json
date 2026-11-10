@@ -290,6 +290,12 @@
 		},
 		{
 			"path": "textures/ui/server/server_scoreboard_entry.json"
+		},
+		{
+			"path": "textures/ui/server/boss_bar_empty.png"
+		},
+		{
+			"path": "textures/ui/server/boss_bar_full.png"
 		}
 	],
 	"version": 1

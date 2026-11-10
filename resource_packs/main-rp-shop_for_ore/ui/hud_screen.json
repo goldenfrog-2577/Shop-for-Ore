@@ -327,5 +327,71 @@
 			"$offset": [0, "50%-55px"]
 		}],
 		"offset": "$offset"
+	},
+
+	// Босс-бар в стиле скалка (на карте босс один — Хранитель, scripts/system/boss/boss.js): своя рамка и заливка
+	// без перекраски в цвет босса, бирюзовое имя. Метка на 60 % — граница фазы 2. Текстуры — textures/ui/server/boss_bar_*.
+	// Размер и привязки — как у ванильного boss_health_panel (1.19.50), меняются только картинки и цвет имени.
+	"boss_health_panel": {
+		"type": "panel",
+		"size": [182, 20],
+		"anchor_from": "top_middle",
+		"anchor_to": "top_middle",
+		"controls": [
+			{
+				"sfo_boss_name": {
+					"type": "label",
+					"color": [0.55, 0.93, 0.95],
+					"text": "#bossName",
+					"anchor_from": "top_middle",
+					"anchor_to": "top_middle",
+					"shadow": true,
+					"bindings": [{
+						"binding_name": "#bossName",
+						"binding_type": "collection",
+						"binding_collection_name": "boss_bars"
+					}]
+				}
+			},
+			{
+				"sfo_boss_bar": {
+					"type": "panel",
+					"size": [182, 5],
+					"anchor_from": "top_middle",
+					"anchor_to": "top_middle",
+					"offset": [0, 10],
+					"controls": [
+						{
+							"sfo_boss_bar_empty": {
+								"type": "image",
+								"texture": "textures/ui/server/boss_bar_empty",
+								"layer": 1
+							}
+						},
+						{
+							"sfo_boss_bar_full": {
+								"type": "image",
+								"texture": "textures/ui/server/boss_bar_full",
+								"layer": 2,
+								"clip_direction": "left",
+								"clip_pixelperfect": false,
+								"bindings": [{
+									"binding_name": "#progress_percentage",
+									"binding_name_override": "#clip_ratio",
+									"binding_type": "collection",
+									"binding_collection_name": "boss_bars"
+								}]
+							}
+						}
+					]
+				}
+			}
+		],
+		"bindings": [{
+			"binding_name": "#bar_visible",
+			"binding_type": "collection",
+			"binding_collection_name": "boss_bars",
+			"binding_name_override": "#visible"
+		}]
 	}
 }

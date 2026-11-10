@@ -3,7 +3,7 @@
 # В Bedrock «execute if/unless score» с несуществующим счётом не срабатывает ни в одном варианте,
 # поэтому счёт сначала создаётся через «add 0».
 scoreboard players add setup system 0
-execute if score setup system matches ..9 run function system/setup
+execute if score setup system matches ..10 run function system/setup
 
 # Стойки нужны только до завершения разовой миграции.
 execute if score stand_timers_migrated system matches 0 run function system/migrate_timers

@@ -20,7 +20,7 @@ import { PROMOCODES, usedPromo } from '../economy/promo.js';
 
 export const ACH_TAG = 'ach:';
 // Счётчики достижений: создаёт functions/system/setup, сбрасывает вайп (system/core/wipe.js)
-export const STATS = ['stat_mined', 'stat_kills', 'stat_deaths', 'stat_playtime', 'stat_wins', 'stat_win_pvp_ffa', 'stat_win_spleef', 'stat_amethyst', 'stat_tir_hits'];
+export const STATS = ['stat_mined', 'stat_kills', 'stat_deaths', 'stat_playtime', 'stat_wins', 'stat_win_pvp_ffa', 'stat_win_spleef', 'stat_amethyst', 'stat_tir_hits', 'stat_win_boss', 'stat_boss_time'];
 // Головы из лавки торговца (system/economy/trader.js) — для «Коллекционера голов»
 export const TRADER_HEADS = ['skeleton_skull', 'wither_skull', 'zombie_head', 'player_head', 'creeper_head', 'dragon_head'];
 

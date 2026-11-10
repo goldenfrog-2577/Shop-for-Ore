@@ -24,7 +24,7 @@ async function startup(base,old=false){
  class ItemStack{constructor(type,amount){this.type=type;this.typeId=type?.id;this.amount=amount;}}
  class Enchantment{constructor(type,level){Object.assign(this,{type,level});}}
  const dictionary=new Proxy({}, {get:(o,k)=>({id:String(k),maxLevel:5})});
- const server={world,system,Location:Point,BlockLocation:Point,DynamicPropertiesDefinition,Items:{get:id=>({id})},ItemStack,Enchantment,EnchantmentList:class{},MinecraftEnchantmentTypes:dictionary,MinecraftEffectTypes:dictionary,MinecraftBlockTypes:dictionary,GameMode:{creative:'creative',survival:'survival',adventure:'adventure',spectator:'spectator'}};
+ const server={world,system,Location:Point,BlockLocation:Point,Vector:Point,DynamicPropertiesDefinition,Items:{get:id=>({id})},ItemStack,Enchantment,EnchantmentList:class{},MinecraftEnchantmentTypes:dictionary,MinecraftEffectTypes:dictionary,MinecraftBlockTypes:dictionary,GameMode:{creative:'creative',survival:'survival',adventure:'adventure',spectator:'spectator'}};
  const form=class{};const games=[];const chain={maxTicks(){return this;},structureName(){return this;}};
  const natives={'@minecraft/server':server,'@minecraft/server-ui':{ActionFormData:form,ModalFormData:form,MessageFormData:form},'@minecraft/server-gametest':{register:(namespace,name,fn)=>{games.push([namespace,name]);return chain;}}};
  const cache=new Map();
@@ -43,7 +43,7 @@ async function startup(base,old=false){
  return {load,commands,modules:evaluation.length,relativeImports:sourceFiles.reduce((n,f)=>n+[...fs.readFileSync(f,'utf8').matchAll(/(?:from\s+|import\s+)['"]\.[^'"]+['"]/g)].length,0)};
 }
 const actual=await startup(scripts);
-assert.equal(actual.modules,63);assert.equal(actual.relativeImports,216);
+assert.equal(actual.modules,63);assert.equal(actual.relativeImports,217);
 const index=JSON.parse(fs.readFileSync(path.join(bp,'contents.json'),'utf8')).content.map(e=>e.path);
 const files=walk(scripts).filter(p=>p.endsWith('.js')).map(p=>'scripts/'+rel(scripts,p));
 assert.deepEqual(index.filter(p=>p.startsWith('scripts/')&&p.endsWith('.js')).sort(),files.sort(),'index exactly covers scripts');

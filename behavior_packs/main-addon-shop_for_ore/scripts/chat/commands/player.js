@@ -6,7 +6,7 @@ import { world } from '@minecraft/server';
 import { commandsList, tell, hasRole, run, WARPS, warpAllowed, tellText, muteMinutesLeft, getScore, isVip, transferMoney, findPlayer, getRole, getWarns, ROLES, RULES_COUNT, emotesList, emotes } from '../../DataBase.js';
 import { isJailed, tellJailed } from '../../system/security/jail.js';
 import { combatSecondsLeft, teleportToArena } from '../../system/combat/pvp.js';
-import { bossBusy } from '../../system/boss/boss.js';
+import { bossBusy, mmss } from '../../system/boss/boss.js';
 import { canTeleport, listGames, joinGame, leaveGame, getGame, startGame, endGame } from '../../system/minigames/minigames.js';
 import { ChangePasswordUI } from '../../registration/change.js';
 import { resolveTarget, tellList } from './common.js';
@@ -33,7 +33,16 @@ const TOP = {
 		return { value: ratio, shown: { translate: 'chat.cmd.top.kd_value', with: [String(kills), String(deaths), ratio.toFixed(2)] } };
 	},
 	pvp: score('stat_win_pvp_ffa'),
-	spleef: score('stat_win_spleef')
+	spleef: score('stat_win_spleef'),
+	// Хранитель: победы (рядом — лучшее время); по времени — только те, кто уже побеждал, быстрее — выше
+	boss: (p) => {
+		const wins = getScore(p, 'stat_win_boss'), best = getScore(p, 'stat_boss_time');
+		return { value: wins, shown: best > 0 ? { translate: 'chat.cmd.top.boss_value', with: [String(wins), mmss(best)] } : undefined };
+	},
+	boss_time: (p) => {
+		const best = getScore(p, 'stat_boss_time');
+		return best > 0 ? { value: -best, shown: { text: mmss(best) } } : undefined;
+	}
 };
 
 // Сколько эмодзи в строке у !emotes (на телефоне 4 уже переносятся)
@@ -256,7 +265,8 @@ export const PLAYER_COMMANDS = {
 		}
 		const top = [...world.getPlayers()]
 			.filter(p => !p.hasTag('role:bot'))
-			.map(p => ({ name: p.name, ...source(p) }))
+			.map(p => ({ p, row: source(p) })).filter(({ row }) => row)
+			.map(({ p, row }) => ({ name: p.name, ...row }))
 			.sort((a, b) => b.value - a.value || a.name.localeCompare(b.name))
 			.slice(0, 5);
 		tellList(player, { translate: `chat.cmd.top.header.${by}` },

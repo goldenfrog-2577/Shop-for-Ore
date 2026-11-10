@@ -6,14 +6,17 @@
 //   follow — ходит за игроком, отстал больше чем на FOLLOW_TP блоков или в другом измерении — телепорт;
 //   stay   — держится точки, где включили режим (оттолкнули — возвращается);
 //   mirror — повторяет за игроком: поворот головы, присед и перемещение (на том же расстоянии);
-//   spar   — спарринг на PvP-арене: бьёт ближайшего игрока на арене, сложность 1–4 (скорость ударов, дальность);
+//   spar   — спарринг на PvP-арене: бьёт ближайшего игрока, с луком стреляет на расстоянии;
 //   game   — играет в мини-игре (добор игроков): PvP — как спарринг, сплиф — копает снег под соперниками.
 // Отдельно: присесть (sit), автототем (тотем во второй руке, если она пуста), возврат после перезахода.
+// Бой с Хранителем (system/boss/boss.js): поверх режима follow — пока идёт бой, бот в отряде бьёт ближайшую цель
+// (connectBot → assist), выбывший или не взятый в отряд ждёт на спавне (bench). Режим не меняется и не сохраняется:
+// после перезагрузки скриптов бой отменяется, и бот снова просто следует за игроком.
 // Состояние — в свойстве мира shop:bot_state (JSON), бот после перезахода в мир появляется на прежнем месте
 // с прежним режимом и предметами из «Управления слотами».
 // Победы и смерти бота в статистику и достижения не идут (achievements.js, minigames.js).
 
-import { world, Location, BlockLocation, DynamicPropertiesDefinition, MinecraftEffectTypes } from '@minecraft/server';
+import { world, Location, Vector, BlockLocation, DynamicPropertiesDefinition, MinecraftEffectTypes } from '@minecraft/server';
 import { run, findPlayer, getScore, isPending, isBot } from '../../DataBase.js';
 import { getBot, spawnBot, removeBot, onBotSpawned, onBotRemoved } from './spawnbot.js';
 import { isAir, isSolid } from '../security/anticheat_checks.js';
@@ -21,6 +24,7 @@ import { freezePlayer, unfreezePlayer } from '../security/freeze.js';
 import { showHudLine } from '../ui/toast.js';
 import { teleportToArena } from '../combat/pvp.js';
 import { getGame, gameOf, joinGame, leaveGame } from '../minigames/minigames.js';
+import { connectBot } from '../boss/boss.js';
 
 export const MODES = ['idle', 'dummy', 'follow', 'stay', 'mirror', 'spar', 'game'];
 export const SPAR_LEVELS = [1, 2, 3, 4];
@@ -133,6 +137,7 @@ function walkTo(bot, goal, { target, speed = 1, near = 1.2, recover = true } = {
 
 /** Выйти из прежнего режима: разморозить, остановить, выйти из мини-игры. */
 function leaveMode(bot) {
+	cancelBow(bot);
 	if (state.mode === 'dummy') unfreezePlayer(bot);
 	if (gameOf(bot)) leaveGame(bot, 'bot');
 	motion = undefined; guide = undefined;
@@ -210,6 +215,9 @@ onBotSpawned((bot) => {
 });
 
 onBotRemoved((bot) => {
+	cancelBow(bot);
+	guide = undefined;
+	motion = undefined;
 	if (bot && gameOf(bot)) leaveGame(bot, 'bot');
 	state.present = false;
 	if (state.mode === 'game') state.mode = 'idle';
@@ -259,9 +267,93 @@ function nearestOpponent(bot, among) {
 	return best;
 }
 
+const BOW_MIN_RANGE = 4, BOW_MAX_RANGE = 16;
+const BOW_DRAW_TICKS = 20, BOW_RETRY_TICKS = 10;
+let bowDraw;
+let nextBowAt = 0;
+
+function hasSelectedBow(bot, slot) {
+	return safe(() => bot.getComponent('inventory').container.getItem(slot)?.typeId) === 'minecraft:bow';
+}
+
+function bowLineClear(bot, target) {
+	return safe(() => {
+		const from = bot.headLocation, to = target.headLocation;
+		const dx = to.x - from.x, dy = to.y - from.y, dz = to.z - from.z;
+		const length = Math.hypot(dx, dy, dz);
+		if (length < 1) return false;
+		const direction = new Vector(dx / length, dy / length, dz / length);
+		return !bot.dimension.getBlockFromRay(from, direction, { maxDistance: length - 0.1 });
+	}) === true;
+}
+
+function cancelBow(bot) {
+	const draw = bowDraw;
+	bowDraw = undefined;
+	if (!draw || !bot) return;
+	nextBowAt = tick + BOW_RETRY_TICKS;
+	// Смена слота прерывает натяжение. Отпускать натянутый лук в прежнем слоте здесь нельзя.
+	safe(() => {
+		const slot = bot.selectedSlot;
+		if (slot !== draw.slot) {
+			bot.stopUsingItem();
+			return;
+		}
+		bot.selectedSlot = (slot + 1) % 9;
+		try { bot.stopUsingItem(); } finally { bot.selectedSlot = slot; }
+	});
+}
+
+function shootBow(bot, target, distance) {
+	const inRange = distance >= BOW_MIN_RANGE && distance <= BOW_MAX_RANGE;
+	const slot = bot.selectedSlot;
+	if (bowDraw) {
+		if (!inRange || bowDraw.target !== target.id || bowDraw.slot !== slot) {
+			cancelBow(bot);
+			return false;
+		}
+		if (!safe(() => { bot.lookAtEntity(target); return true; })) {
+			cancelBow(bot);
+			return false;
+		}
+		if (tick < bowDraw.releaseAt) return true;
+		if (!hasSelectedBow(bot, slot) || !bowLineClear(bot, target)) {
+			cancelBow(bot);
+			return false;
+		}
+		bowDraw = undefined;
+		nextBowAt = tick + BOW_RETRY_TICKS;
+		safe(() => bot.stopUsingItem());
+		return true;
+	}
+	if (!inRange || tick < nextBowAt) return false;
+	// Опрос инвентаря и луча ограничен. Подход и ближний бой работают и без стрел.
+	nextBowAt = tick + BOW_RETRY_TICKS;
+	if (!hasSelectedBow(bot, slot) || !bowLineClear(bot, target)) return false;
+	const started = safe(() => {
+		bot.lookAtEntity(target);
+		return bot.useItemInSlot(slot);
+	});
+	if (started !== true) return false;
+	bowDraw = { target: target.id, slot, releaseAt: tick + BOW_DRAW_TICKS };
+	safe(() => bot.stopMoving());
+	motion = undefined;
+	return true;
+}
+
 function fight(bot, among) {
 	const t = nearestOpponent(bot, among);
-	if (!t) { if (tick % 20 === 0) safe(() => bot.stopMoving()); return; }
+	if (!t) {
+		cancelBow(bot);
+		if (tick % 20 === 0) safe(() => bot.stopMoving());
+		return;
+	}
+	if (state.mode === 'spar' && shootBow(bot, t, dist(t.location, bot.location))) return;
+	attack(bot, t);
+}
+
+/** Подойти и бить цель со сложностью спарринга. */
+function attack(bot, t) {
 	const cfg = SPAR[state.level] ?? SPAR[2];
 	if (state.level === 4 && tick % 20 === 0) {
 		const effect = safe(() => bot.getEffect(MinecraftEffectTypes.speed));
@@ -293,6 +385,36 @@ function spleef(bot, among) {
 	}
 }
 
+// ===== Бой с Хранителем =====
+
+let assist;   // { targets: () => сущности, spawn: { x, y, z }, out } — только пока идёт бой
+connectBot({
+	name: () => getBot()?.name,
+	/** За кем следует бот (режим follow), иначе undefined. */
+	follows: () => state.mode === 'follow' ? state.target : undefined,
+	/** Начало боя: бить ближайшую из targets(); погибнет — появится в spawn и будет ждать конца боя. */
+	assist(targets, spawn) { assist = { targets, spawn, out: false }; motion = undefined; guide = undefined; },
+	/** Выбыл (или не взят в отряд): стоять, пока бой не кончится. */
+	bench() {
+		if (!assist) return;
+		assist.out = true;
+		const bot = getBot();
+		if (bot) safe(() => bot.stopMoving());
+	},
+	/** Бой кончился — снова обычный режим. */
+	end() { assist = undefined; motion = undefined; }
+});
+
+function bossFight(bot) {
+	let best, bestD = SEEK_RADIUS;
+	for (const e of safe(() => assist.targets()) ?? []) {
+		const d = safe(() => dist(e.location, bot.location));
+		if (d !== undefined && d < bestD) { best = e; bestD = d; }
+	}
+	if (best) attack(bot, best);
+	else if (tick % 20 === 0) safe(() => bot.stopMoving());
+}
+
 // ===== Каждый тик =====
 
 world.events.tick.subscribe(() => {
@@ -308,8 +430,9 @@ world.events.tick.subscribe(() => {
 		return;
 	}
 	if (bot && tick === respawnAt) {
-		// Погиб — убрать тело и призвать заново на прежнем месте (режим и предметы вернёт onBotSpawned)
-		const pos = state.pos, mode = state.mode;
+		// Погиб — убрать тело и призвать заново на прежнем месте (режим и предметы вернёт onBotSpawned); в бою с боссом — на спавне
+		const pos = assist ? assist.spawn : state.pos, mode = state.mode;
+		if (assist) assist.out = true;
 		removeBot();
 		state.mode = mode;
 		const someone = [...world.getPlayers()].find(p => !isPending(p) && !p.hasTag('role:bot'));
@@ -324,8 +447,8 @@ world.events.tick.subscribe(() => {
 		healNext = false;
 		safe(() => bot.getComponent('health').resetToMaxValue());
 	}
-	// Автототем: только в пустую вторую руку (keep), раз в секунду
-	if (state.totem && tick % 20 === 0) run(bot, 'replaceitem entity @s slot.weapon.offhand 0 keep totem_of_undying');
+	// Автототем: только в пустую вторую руку (keep), раз в секунду; в бою с боссом — нет (иначе бот почти бессмертен)
+	if (state.totem && !(assist && !assist.out) && tick % 20 === 0) run(bot, 'replaceitem entity @s slot.weapon.offhand 0 keep totem_of_undying');
 	// Где стоит — для возврата после перезахода (раз в 5 с)
 	if (tick % 100 === 0) {
 		const { x, y, z } = bot.location;
@@ -334,6 +457,12 @@ world.events.tick.subscribe(() => {
 	}
 	if (state.mode !== 'mirror') safe(() => { if (bot.isSneaking !== state.sit) bot.isSneaking = state.sit; });
 
+	if (state.mode !== 'spar' || assist) cancelBow(bot);
+	if (assist && (assist.out || state.mode === 'follow')) {
+		if (!assist.out) bossFight(bot);
+		else if (tick % 20 === 0) safe(() => bot.stopMoving());
+		return;
+	}
 	if (tick % 40 === 0) guideTick(bot);
 	if (guide) { guideStep(bot); return; }
 
@@ -384,36 +513,68 @@ world.events.tick.subscribe(() => {
 // режиме, стоит или ходит за кем-то) подходит к нему, говорит GUIDE_LINES реплик (bot.guide.1…4 на языке
 // игрока) и возвращается на место. Остальным игрокам тег ставится молча — гид им уже не нужен.
 
-let guide;   // { name, step, at, back }
+let guide;
 const busyModes = ['dummy', 'mirror', 'spar', 'game'];
+const GUIDE_TRAVEL_TICKS = 400;
+
+export function canGuidePlayer(player, bot) {
+	return !!player && !!bot && !isBot(player) && !isPending(player) &&
+		player.hasTag('auth:done') && player.dimension.id === bot.dimension.id;
+}
+
+function beginGuide(bot, player) {
+	player.addTag(GUIDED_TAG);
+	guide = { name: player.name, dimension: bot.dimension.id, step: 0, at: tick, back: { ...bot.location }, returning: false };
+	motion = undefined;
+	safe(() => bot.stopMoving());
+}
+
+/** Запустить знакомство с картой вручную, в том числе повторно. */
+export function startBotGuide(player) {
+	const bot = getBot();
+	if (!bot) return 'chat.admin.bot.error.absent';
+	if (guide || assist || busyModes.includes(state.mode)) return 'chat.admin.bot.error.guide_busy';
+	if (!canGuidePlayer(player, bot)) return 'chat.admin.bot.error.guide_target';
+	beginGuide(bot, player);
+}
 
 function guideTick(bot) {
 	for (const p of world.getPlayers()) {
-		if (p.hasTag(GUIDED_TAG) || isBot(p) || isPending(p) || !p.hasTag('auth:done')) continue;
+		if (p.hasTag(GUIDED_TAG) || !canGuidePlayer(p, bot)) continue;
 		const newbie = getScore(p, 'lvl') <= 1 && getScore(p, 'rebirth') === 0 && getScore(p, 'stat_playtime') < 5;
 		if (!newbie) { p.addTag(GUIDED_TAG); continue; }
 		if (guide || busyModes.includes(state.mode)) continue;
-		p.addTag(GUIDED_TAG);
-		guide = { name: p.name, step: 0, at: tick, back: { ...bot.location }, returning: false };
-		motion = undefined;
+		beginGuide(bot, p);
 		break;
 	}
 }
 
+function finishGuide(bot) {
+	guide = undefined;
+	motion = undefined;
+	safe(() => bot.stopMoving());
+}
+
 function guideStep(bot) {
-	if (!guide) return;
-	const p = findPlayer(guide.name);
-	if (!p || guide.step >= GUIDE_LINES) guide.returning = true;
-	if (guide.returning) {
-		if (dist(bot.location, guide.back) <= 1.5) { guide = undefined; motion = undefined; return; }
-		walkTo(bot, guide.back); return;
+	if (bot.dimension.id !== guide.dimension) return finishGuide(bot);
+	const player = guide.returning ? undefined : findPlayer(guide.name);
+	if (!guide.returning && (!canGuidePlayer(player, bot) || guide.step >= GUIDE_LINES || tick >= guide.at + GUIDE_TRAVEL_TICKS)) {
+		guide.returning = true;
+		guide.at = tick;
+		motion = undefined;
 	}
-	walkTo(bot, p.location, { target: p, near: 2.8 });
-	if (dist(bot.location, p.location) > 4 || tick < guide.at) return;
+	if (guide.returning) {
+		if (dist(bot.location, guide.back) <= 1.5 || tick >= guide.at + GUIDE_TRAVEL_TICKS) return finishGuide(bot);
+		walkTo(bot, guide.back);
+		return;
+	}
+	walkTo(bot, player.location, { target: player, near: 2.8 });
+	if (dist(bot.location, player.location) > 4 || tick < guide.at) return;
 	guide.step++;
-	safe(() => bot.lookAtEntity(p));
+	safe(() => bot.lookAtEntity(player));
 	const rawtext = [{ text: ' §8[' }, { translate: 'role.tag.bot' }, { text: `§r§8]§r §f${bot.name}  §f` },
-		{ translate: `bot.guide.${guide.step}`, with: [p.name, bot.name] }];
-	run(p, `tellraw @s ${JSON.stringify({ rawtext })}`); run(p, 'playsound random.pop @s');
+		{ translate: `bot.guide.${guide.step}`, with: [player.name, bot.name] }];
+	run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
+	run(player, 'playsound random.pop @s');
 	guide.at = tick + GUIDE_STEP_TICKS;
 }
