@@ -1,6 +1,7 @@
 // --- Босс: Хранитель (server:warden_boss) на арене Древнего города ---
 // Старт: игрок на резном сланце перед порталом (START) играет на козьем роге мелодию «Тосковать» (HORN_SOUND; рог выпадает
-// только из сундука мистика, system/combat/mythic.js), рог тратится, когда Хранитель появился. Нужны: нет боя, прошла общая перезарядка
+// только из сундука мистика, system/combat/mythic.js). Мелодия доигрывает до конца (HORN_MS ≈ 7 с), через полсекунды рог
+// пропадает из инвентаря и только тогда появляется Хранитель; проверки старта повторяются в этот момент. Нужны: нет боя, прошла общая перезарядка
 // (COOLDOWN_SECONDS, отметка boss_until в табло system — секунды Unix), на арене 1–4 игрока с уровнем ≥ MIN_LEVEL.
 // Остальных с арены (ниже уровня, бот) в начале боя переносит на спавн.
 // Бой: решётка в тоннеле закрывается, участники получают тег boss:fighter (по нему босс выбирает цель),
@@ -8,6 +9,8 @@
 // (у Хранителя рука не рисуется). Фазы: 1 — обычный бой; 2 (здоровье ≤ 60 %) — раз в WAVE_SECONDS «Тьма», визг
 // крикуна и 2 скелета; 3 — тотем сработал (у босса появилось Поглощение): ярость (server:rage), «Тьма» постоянно,
 // к скелетам добавляются скелеты-иссушители. Прислужников живых не больше MAX_MINIONS, иссушителей — MAX_WITHER.
+// Вампиризм: звуковой удар Хранителя по игроку или мобу лечит его на отнятое здоровье (цель погибла — на её полный запас;
+// «Поглощение» в здоровье не входит), в ярости — ×VAMPIRE_RAGE; лечение не поднимает выше порога фазы (vampireHeal).
 // Смерть участника: выпавшие вещи на арене уничтожаются, после возрождения (тег boss:clear) инвентарь очищается (/clear —
 // остаётся только то, что было с keep_on_death; меню и кирку уровня функции мира выдают заново), игрок выбывает.
 // Ушёл за решётку (тоннель — не арена боя) или вышел из игры — выбыл. Победа — босс погиб после тотема: каждому, кто дожил, монеты, VIP-монеты,
@@ -41,6 +44,9 @@ export const START = [528, -61, -68];          // резной сланец пе
 // только когда рог действительно звучит: на перезарядке (7 с) бывают лишь beforeItemUse/itemUse — проверено в игре
 export const HORN = 'minecraft:goat_horn';
 export const HORN_SOUND = 6;
+export const HORN_MS = 7000 + 500;          // мелодия «Тосковать» звучит ≈ 6,98 с (засёк владелец) + полсекунды
+export const VAMPIRE_RAGE = 1.5;            // в ярости лечится активнее
+export const PHASE2_SHARE = 0.6;            // фаза 2 — здоровье не выше 60 %
 export const SUMMON = [528, -60, -73];         // проём портала
 export const BARS = [[526, -55, -12], [530, -51, -12]];   // решётка в тоннеле
 export const CLEAR = 'boss:clear';             // погиб в бою: после возрождения стереть инвентарь (тег переживает конец боя и выход)
@@ -82,7 +88,22 @@ export function checkStart({ busy, now, until, players, starter }) {
 }
 
 /** Фаза: 3 — тотем сработал; 2 — здоровье не выше 60 %; иначе 1. */
-export const phaseOf = ({ current, max, totem }) => totem ? 3 : current <= max * 0.6 ? 2 : 1;
+export const phaseOf = ({ current, max, totem }) => totem ? 3 : current <= max * PHASE2_SHARE ? 2 : 1;
+
+/** Звуковой удар Хранителя: у него нет причины урона (в 1.19.50 нет такой) и бьёт он издалека; вблизи — entityAttack. */
+export const isSonic = (cause, distance) => cause !== 'entityAttack' || distance > 4;
+
+/**
+ * Вампиризм: новое здоровье Хранителя или null (лечить некуда). Отнял damage; цель погибла — лечится на её запас victimMax.
+ * Потолок — порог фазы: в фазе 1 — максимум, в фазах 2 и 3 — 60 % (фазу назад не откатить). В ярости (3) — ×VAMPIRE_RAGE.
+ */
+export function vampireHeal({ phase, current, max, damage, died, victimMax }) {
+	const cap = phase === 1 ? max : max * PHASE2_SHARE;
+	if (current >= cap) return null;
+	const amount = (died ? victimMax : damage) * (phase === 3 ? VAMPIRE_RAGE : 1);
+	if (!(amount > 0)) return null;
+	return Math.min(cap, current + amount);
+}
 
 /** Кого призвать в волне: число и типы с учётом живых прислужников. */
 export function waveSpawns(phase, alive, aliveWither, random = Math.random) {
@@ -260,7 +281,8 @@ function fightStep() {
 	if (!boss) return arenaLoaded() ? endFight(fight.totem ? 'victory' : 'abort') : undefined;
 	let current = fight.max;
 	try { current = boss.getComponent('minecraft:health').current; } catch {}
-	const phase = phaseOf({ current, max: fight.max, totem: fight.totem });
+	// фаза не откатывается назад (порог 60 % мог быть пройден и между проверками)
+	const phase = Math.max(fight.phase, phaseOf({ current, max: fight.max, totem: fight.totem }));
 	if (phase === 2 && fight.phase === 1) {
 		for (const name of fight.fighters) { const p = findOnline(name); if (p) tell(p, 'chat.boss.phase2'); }
 	}
@@ -353,6 +375,33 @@ system.runSchedule(() => {
 }, 20);
 
 // Рог «Тосковать» на плите у портала будит Хранителя (раньше — просто встать на плиту)
+/** Проверки старта прямо сейчас: { ok, fighters, inside } или { ok: false, reason, args }. */
+function tryStart(p) {
+	if (bossBusy()) return { ok: false, reason: 'busy', args: [] };   // идёт бой или уборка после перезагрузки
+	// участники — только за решёткой; всех остальных на арене и в тоннеле переносит на спавн
+	const inside = players().filter(q => inArena(q.location, q.dimension?.id));
+	// не вошедший в аккаунт (форма входа) в бой не идёт — иначе под чужим ником можно разбудить босса и потерять вещи владельца ника
+	const arena = inside.filter(q => inFight(q.location, q.dimension?.id) && !isPending(q));
+	const check = checkStart({
+		busy: false, now: now(), until, starter: p.name,
+		players: arena.map(q => ({ name: q.name, level: getScore(q, 'lvl'), bot: q.hasTag('role:bot') }))
+	});
+	if (!check.ok) return { ...check, args: check.minutes ? [String(check.minutes)] : check.reason === 'level' ? [String(MIN_LEVEL)] : check.reason === 'too_many' ? [String(MAX_FIGHTERS)] : [] };
+	return { ...check, inside };
+}
+
+const hasHorn = (p) => {
+	try {
+		const inv = p.getComponent('minecraft:inventory').container;
+		for (let i = 0; i < inv.size; i++) { const it = inv.getItem(i); if (it?.typeId === HORN && it.data === HORN_SOUND) return true; }
+	} catch {}
+	return false;
+};
+
+let summoning = false;   // рог забирается командой — до её ответа второй призыв не начинать
+let summon;   // { name, at } — «Тосковать» прозвучала, Хранитель появится в at (мс)
+
+// Рог «Тосковать» на плите у портала будит Хранителя (раньше — просто встать на плиту)
 world.events.itemStartCharge.subscribe((e) => {
 	const p = e.source;
 	if (p?.typeId !== 'minecraft:player' || p.hasTag('role:bot') || isPending(p) || !loaded) return;
@@ -360,23 +409,36 @@ world.events.itemStartCharge.subscribe((e) => {
 	const action = hornAction(e.itemStack?.typeId, e.itemStack?.data, onStart(p.location));
 	if (!action) return;
 	if (action !== 'start') return tell(p, `chat.boss.horn_${action}`);
-	if (bossBusy()) return tell(p, 'chat.boss.busy');   // идёт бой или уборка после перезагрузки
-	// участники — только за решёткой; всех остальных на арене и в тоннеле переносит на спавн
-	const inside = players().filter(q => inArena(q.location, q.dimension?.id));
-	// не вошедший в аккаунт (форма входа) в бой не идёт — иначе под чужим ником можно потерять вещи владельца ника
-	const arena = inside.filter(q => inFight(q.location, q.dimension?.id) && !isPending(q));
-	const check = checkStart({
-		busy: false, now: now(), until, starter: p.name,
-		players: arena.map(q => ({ name: q.name, level: getScore(q, 'lvl'), bot: q.hasTag('role:bot') }))
-	});
-	if (!check.ok) return tell(p, `chat.boss.${check.reason}`, ...(check.minutes ? [String(check.minutes)] : check.reason === 'level' ? [String(MIN_LEVEL)] : check.reason === 'too_many' ? [String(MAX_FIGHTERS)] : []));
-	startFight(check.fighters, inside.map(q => q.name).filter(n => !check.fighters.includes(n)));
-	// Рог тратится только после пробуждения
-	run(p, `clear @s ${HORN} ${HORN_SOUND} 1`);
+	if (summon || summoning) return tell(p, 'chat.boss.busy');
+	const check = tryStart(p);
+	if (!check.ok) return tell(p, `chat.boss.${check.reason}`, ...check.args);
+	summon = { name: p.name, at: Date.now() + HORN_MS };
+	tell(p, 'chat.boss.horn_heard');
 });
+
+// Мелодия доиграла, прошло полсекунды: проверить ещё раз, забрать рог, разбудить
+system.runSchedule(() => {
+	if (!summon || Date.now() < summon.at) return;
+	const { name } = summon;
+	summon = undefined;
+	const p = findOnline(name);
+	if (!p || isPending(p) || !inArena(p.location, p.dimension?.id)) return;
+	if (!hasHorn(p)) return tell(p, 'chat.boss.horn_lost');
+	const check = tryStart(p);
+	if (!check.ok) return tell(p, `chat.boss.${check.reason}`, ...check.args);
+	// бой — только если рог действительно забрали (run при ошибке команды возвращает undefined)
+	summoning = true;
+	run(p, `clear @s ${HORN} ${HORN_SOUND} 1`).then((result) => {
+		summoning = false;
+		if (!result) return tell(p, 'chat.boss.horn_lost');
+		if (bossBusy()) return;
+		startFight(check.fighters, check.inside.map(q => q.name).filter(n => !check.fighters.includes(n)));
+	});
+}, 2);
 
 // Смерть участника: отметить; выпавшее уничтожится в fightStep, остальное — после возрождения
 world.events.entityHurt.subscribe((e) => {
+	if (fight && e.damagingEntity?.typeId === BOSS) vampire(e);
 	// Удар по боссу: тотем отмечаем сразу (Поглощение или смертельный удар — умереть он может только после тотема)
 	if (fight && !fight.totem && e.hurtEntity?.typeId === BOSS) {
 		let absorbed = false, hp = 1;
@@ -394,7 +456,26 @@ world.events.entityHurt.subscribe((e) => {
 	}
 });
 
+/** Вампиризм: звуковой удар по игроку или мобу — Хранитель забирает отнятое здоровье (душу погибшего — целиком). */
+function vampire(e) {
+	const boss = e.damagingEntity, victim = e.hurtEntity;
+	const d = Math.hypot(boss.location.x - victim.location.x, boss.location.y - victim.location.y, boss.location.z - victim.location.z);
+	if (!isSonic(e.cause, d)) return;
+	let current, hp = 1, victimMax = 0;
+	try { current = boss.getComponent('minecraft:health').current; } catch { return; }
+	try { const h = victim.getComponent('minecraft:health'); hp = h.current; victimMax = h.value; } catch {}
+	// фаза — по здоровью прямо сейчас: игроки могли пробить 60 % после последней проверки fightStep (раз в секунду)
+	const phase = Math.max(fight.phase, phaseOf({ current, max: fight.max, totem: fight.totem }));
+	const next = vampireHeal({ phase, current, max: fight.max, damage: e.damage, died: hp <= 0, victimMax });
+	if (next === null) return;
+	try { boss.getComponent('minecraft:health').setCurrent(next); } catch { return; }
+	const { x, y, z } = boss.location;
+	cmd(`particle minecraft:sculk_soul_particle ${x.toFixed(1)} ${(y + 2).toFixed(1)} ${z.toFixed(1)}`);
+	if (hp <= 0) for (const name of fight.fighters) { const p = findOnline(name); if (p) tell(p, 'chat.boss.vampire'); }
+}
+
 world.events.playerLeave.subscribe((e) => {
 	hinted.delete(e.playerName);
+	if (summon?.name === e.playerName) summon = undefined;
 	if (fight?.fighters.has(e.playerName)) { fight.fighters.delete(e.playerName); fight.dead.delete(e.playerName); }
 });

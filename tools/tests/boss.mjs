@@ -7,7 +7,7 @@ const src = fs.readFileSync(new URL('scripts/system/boss/boss.js', bp), 'utf8');
 const pure = src.slice(0, src.indexOf('// ======== Состояние ========'))
 	.replace(/^import .*;\r?\n/gm, '').replace(/\bexport (?=(?:async )?function|const)/g, '');
 const ctx = { Math };
-vm.runInNewContext(pure + '\nglobalThis.B={inFight,CLEAR,onStart,hornAction,HORN,HORN_SOUND,checkStart,phaseOf,waveSpawns,discFor,DISCS:DISCS,MIN_LEVEL,MAX_FIGHTERS,HP,START,SUMMON,BARS,MINION_SPOTS,MAX_MINIONS,MAX_WITHER,DISCS};', ctx);
+vm.runInNewContext(pure + '\nglobalThis.B={inFight,CLEAR,onStart,hornAction,HORN,HORN_SOUND,HORN_MS,vampireHeal,isSonic,VAMPIRE_RAGE,checkStart,phaseOf,waveSpawns,discFor,DISCS:DISCS,MIN_LEVEL,MAX_FIGHTERS,HP,START,SUMMON,BARS,MINION_SPOTS,MAX_MINIONS,MAX_WITHER,DISCS};', ctx);
 const B = ctx.B;
 
 // Плита старта: резной сланец (528, −61, −68; владелец опустил на 1) — ноги на y −60
@@ -20,8 +20,23 @@ assert.equal(B.hornAction('minecraft:goat_horn', 6, false), 'place');
 assert.equal(B.hornAction('minecraft:goat_horn', 0, true), 'melody');
 assert.equal(B.hornAction('minecraft:goat_horn', 7, false), null);
 assert.equal(B.hornAction('minecraft:stick', 6, true), null);
-// Старт — по itemStartCharge (на перезарядке его нет), рог тратится после startFight; плита без рога больше не будит
-assert.match(src, /world\.events\.itemStartCharge\.subscribe[\s\S]*?startFight\(check\.fighters[\s\S]*?clear @s \$\{HORN\} \$\{HORN_SOUND\} 1/);
+// Старт — по itemStartCharge (на перезарядке его нет): мелодия доигрывает ≈ 7 с, через полсекунды проверки ещё раз,
+// рог забирается, и только потом startFight; рога уже нет — отказ; плита без рога больше не будит
+assert.equal(B.HORN_MS, 7500);
+assert.match(src, /world\.events\.itemStartCharge\.subscribe[\s\S]*?summon = \{ name: p\.name, at: Date\.now\(\) \+ HORN_MS \}/);
+assert.match(src, /Date\.now\(\) < summon\.at\) return;[\s\S]*?if \(!hasHorn\(p\)\) return tell\(p, 'chat\.boss\.horn_lost'\);[\s\S]*?const check = tryStart\(p\);[\s\S]*?clear @s \$\{HORN\} \$\{HORN_SOUND\} 1`\)\.then\(\(result\) => \{[\s\S]*?startFight\(/);
+// Вампиризм: звуковой удар (без причины или издалека), лечит на отнятое, за смерть — на запас цели; в ярости ×1,5; потолок — порог фазы
+assert.ok(B.isSonic(undefined, 12) && B.isSonic(undefined, 2) && B.isSonic('entityAttack', 9) && !B.isSonic('entityAttack', 1.9));
+assert.equal(B.vampireHeal({ phase: 1, current: 900, max: 1000, damage: 15, died: false, victimMax: 20 }), 915);
+assert.equal(B.vampireHeal({ phase: 1, current: 995, max: 1000, damage: 15, died: false, victimMax: 20 }), 1000);
+assert.equal(B.vampireHeal({ phase: 1, current: 1000, max: 1000, damage: 15, died: false, victimMax: 20 }), null);
+assert.equal(B.vampireHeal({ phase: 1, current: 500, max: 1000, damage: 15, died: true, victimMax: 20 }), 520);
+assert.equal(B.vampireHeal({ phase: 2, current: 590, max: 1000, damage: 15, died: false, victimMax: 20 }), 600);   // фаза 2 не откатывается
+assert.equal(B.vampireHeal({ phase: 2, current: 600, max: 1000, damage: 15, died: false, victimMax: 20 }), null);
+assert.equal(B.vampireHeal({ phase: 3, current: 100, max: 1000, damage: 15, died: false, victimMax: 20 }), 122.5);  // ярость ×1,5
+assert.equal(B.vampireHeal({ phase: 3, current: 100, max: 1000, damage: 15, died: true, victimMax: 20 }), 130);
+assert.equal(B.vampireHeal({ phase: 3, current: 100, max: 1000, damage: 0, died: false, victimMax: 20 }), null);
+assert.match(src, /if \(fight && e\.damagingEntity\?\.typeId === BOSS\) vampire\(e\);/);
 assert.ok(!/inside\.find\(p => onStart/.test(src));
 // Рог — только из мистика
 assert.match(fs.readFileSync(new URL('scripts/system/combat/mythic.js', bp), 'utf8'), /\{ w: 2, item: 'goat_horn', count: \[1, 1\], data: 6 \}/);
@@ -125,6 +140,13 @@ assert.match(src, /e\.hurtEntity\?\.typeId === BOSS\)[\s\S]*?if \(absorbed \|\| 
   assert.match(pvp, /hasTag\('boss:fighter'\) && inBossFight\(e\.source\.location, e\.source\.dimension\?\.id\)\) return;/);
   const fightBox = src.match(/export function inFight\(loc, dimensionId = 'minecraft:overworld'\) \{\s*return (.*);/)[1];
   assert.equal(pvp.match(/export const inBossFight = \(loc, dimensionId\) => (.*);/)[1], fightBox); }
+// Не вошедший в аккаунт (auth:login / auth:register) не будит Хранителя и не попадает в участники
+assert.match(src, /hasTag\('role:bot'\) \|\| isPending\(p\) \|\| !loaded\) return;/);
+assert.match(src, /if \(!p \|\| isPending\(p\) \|\| !inArena/);
+assert.match(src, /inFight\(q\.location, q\.dimension\?\.id\) && !isPending\(q\)/);
+// Вампиризм берёт фазу по текущему здоровью (не по снимку раз в секунду), фаза назад не откатывается
+assert.match(src, /const phase = Math\.max\(fight\.phase, phaseOf\(\{ current, max: fight\.max, totem: fight\.totem \}\)\);\n\tconst next = vampireHeal\(\{ phase,/);
+assert.equal(B.vampireHeal({ phase: Math.max(1, B.phaseOf({ current: 299, max: 500, totem: false })), current: 299, max: 500, damage: 10, died: false, victimMax: 20 }), 300);
 // Перезагрузка посреди боя: арену сначала грузим (tickingarea), убираем только когда чанки загружены; до этого бой не начать
 {
 	const load = src.slice(src.indexOf('function load()'), src.indexOf('const hinted'));
@@ -138,13 +160,13 @@ assert.match(src, /e\.hurtEntity\?\.typeId === BOSS\)[\s\S]*?if \(absorbed \|\| 
 	assert.match(src, /processClears\(\);\n\tif \(recovering\) return recoverStep\(\);/);
 	assert.match(src, /export const bossBusy = \(\) => !!fight \|\| recovering > 0;/);
 }
-assert.match(src, /if \(bossBusy\(\)\) return tell\(p, 'chat\.boss\.busy'\);/, 'horn waits for recovery cleanup');
-// Не вошедший в аккаунт не будит Хранителя и не идёт в бой; вайп снимает отметки пластинок; перо не берётся в мини-игру
-assert.match(src, /hasTag\('role:bot'\) \|\| isPending\(p\) \|\| !loaded\) return;/);
-assert.match(src, /inFight\(q\.location, q\.dimension\?\.id\) && !isPending\(q\)\)/);
+assert.match(src, /function tryStart\(p\) \{\n\tif \(bossBusy\(\)\) return \{ ok: false, reason: 'busy'/, 'horn waits for recovery cleanup');
 assert.match(fs.readFileSync(new URL('scripts/system/core/wipe.js', bp), 'utf8'), /'boss:disc:', WIPE_TAG\]/);
 { const mg = fs.readFileSync(new URL('scripts/system/minigames/minigames.js', bp), 'utf8');
 	assert.match(mg, /getEffect\(MinecraftEffectTypes\.levitation\) \|\| p\.getEffect\(MinecraftEffectTypes\.slowFalling\)/);
 	assert.match(mg, /if \(hasFeatherEffect\(player\)\) return fail\('chat\.game\.error\.feather'\);\n\tg\.players\.add/);
 	assert.ok(!mg.includes('effect @s clear'), 'only the feather effects — never clear bought ones'); }
+// Бой — только после того, как рог действительно забрали
+assert.match(src, /run\(p, `clear @s \$\{HORN\} \$\{HORN_SOUND\} 1`\)\.then\(\(result\) => \{\n\t\tsummoning = false;\n\t\tif \(!result\) return tell\(p, 'chat\.boss\.horn_lost'\);\n\t\tif \(bossBusy\(\)\) return;\n\t\tstartFight\(/);
+assert.match(src, /if \(summon \|\| summoning\) return tell\(p, 'chat\.boss\.busy'\);/);
 console.log('PASS: boss start rules, phases, minion waves, discs, spots, 4-locale keys, entity/sounds, warp level gate.');
