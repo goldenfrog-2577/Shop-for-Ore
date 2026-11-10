@@ -43,7 +43,7 @@ assert.match(read('functions/system/setup.mcfunction'), /scoreboard players rese
 assert.match(read('functions/system/timers.mcfunction'), /matches \.\.10 run function system\/setup/);
 assert.match(read('scripts/system/security/anticheat_checks.js'), /\|gilded_blackstone\|/);
 
-const names = { ru_RU: ['Кварц', 'Золотые самородки', 'Магма', 'Позолоченный чернит', 'Древние обломки'] };
+const names = { ru_RU: ['Незерский кварц', 'Кусочек золота', 'Магма', 'Позолоченный чернит', 'Древние обломки'] };
 const ru = fs.readFileSync(new URL('../../resource_packs/main-rp-shop_for_ore/texts/ru_RU.lang', import.meta.url), 'utf8');
 names.ru_RU.forEach((n, i) => assert.ok(ru.includes(`menu.levels.line.${17 + i}=${17 + i} уровень - ${n}\r\n`), n));
 console.log('PASS: Nether order — pits, autosale levels/prices, pickaxe lists and level menu agree; tenth pit empty; pickaxes reissued once.');
