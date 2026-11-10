@@ -85,7 +85,13 @@ let tickCounter = 0;
 world.events.tick.subscribe(() => {
 	tickCounter++;
 	for (const player of world.getPlayers()) {
-		if (isBot(player)) { waitTicks.delete(player.name); continue; }
+		if (isBot(player)) {
+			waitTicks.delete(player.name);
+			// Бот в свой первый тик мог получить тег входа от functions/system/session (тег бота ставится позже) — снять
+			if (player.hasTag('auth:login')) player.removeTag('auth:login');
+			if (player.hasTag('auth:register')) player.removeTag('auth:register');
+			continue;
+		}
 		const needLogin = player.hasTag('auth:login');
 		const needRegister = player.hasTag('auth:register');
 		if (!needLogin && !needRegister) {
