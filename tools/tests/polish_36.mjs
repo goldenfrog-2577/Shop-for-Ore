@@ -40,7 +40,8 @@ for (const l of LANGS) { assert.ok(!lang[l]['menu.promo.book'], l); assert.ok(!/
 const we = read(new URL('scripts/system/worldedit.js', bp));
 const lines = Number(we.match(/export const HELP_LINES=(\d+);/)[1]);
 for (const l of LANGS) {
-	assert.match(lang[l]['chat.cmd.worldedit.help.header'], /^§8-----§f .+ §8-----§f$/, l);
+	assert.ok(lang[l]['chat.cmd.worldedit.help.header'].length > 0, l);
+	assert.doesNotMatch(lang[l]['chat.cmd.worldedit.help.header'], /-{5}/, l);
 	for (let i = 1; i < lines; i++) {
 		const row = lang[l][`chat.cmd.worldedit.help.${i}`];
 		assert.match(row, /^§f!worldedit [a-z0-9]+ +§8- §7\S/, `${l} ${i}`);
@@ -48,7 +49,7 @@ for (const l of LANGS) {
 	}
 	assert.match(lang[l][`chat.cmd.worldedit.help.${lines}`], /^§7\S/, l);   // владелец: §7, как остальные строки assert.ok(!lang[l][`chat.cmd.worldedit.help.${lines + 1}`], l);
 }
-assert.ok(we.includes("rawtext.push({text:'\\n§8------------------------'})"));
+assert.ok(we.includes("tellList(player, { translate: 'chat.cmd.worldedit.help.header' }, lines)"));
 
 // Облако при продаже: точки вокруг игрока, от ног до макушки, не в нём самом
 const cos = read(new URL('scripts/menu/cosmetics_shop.js', bp));

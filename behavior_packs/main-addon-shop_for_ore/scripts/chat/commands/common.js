@@ -24,11 +24,13 @@ export function columnPadding(labels) {
  * @param {Player} player
  * @param {object} header — элемент rawtext заголовка
  * @param {object[]} lines — элементы rawtext строк
+ * @param {number} [dashCount=5] — число тире с каждой стороны заголовка
  */
-export function tellList(player, header, lines) {
-	const rawtext = [header];
+export function tellList(player, header, lines, dashCount = 5) {
+	const dashes = '-'.repeat(dashCount);
+	const rawtext = [{ text: `§8${dashes}§f ` }, header, { text: ` §r§8${dashes}§f` }];
 	for (const line of lines) rawtext.push({ text: '\n' }, line);
-	rawtext.push({ text: '\n§8------------------------' });
+	rawtext.push({ text: `\n§8${dashes.repeat(2)}§f` });
 	run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
 }
 

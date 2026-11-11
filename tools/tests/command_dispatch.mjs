@@ -39,7 +39,14 @@ command(owner,'resetpass',['Alice','Smith']);assert.equal(passwords[0],alice);co
 command(owner,'roles');const raw=JSON.parse(native.at(-1).slice('tellraw @s '.length));
 const roleNames=raw.rawtext.filter(p=>p.translate==='chat.cmd.roles.line').map(p=>p.with.rawtext[0].text);
 assert.equal(roleNames[0].trimEnd(),'Owner');
-const {textWidth}=cache.get('./common.js').namespace,roleWidths=roleNames.map(textWidth);
+const {textWidth,tellList}=cache.get('./common.js').namespace,roleWidths=roleNames.map(textWidth);
+const dashes = part => (part.text.match(/-/g) ?? []).length;
+assert.equal(dashes(raw.rawtext[0]),5);
+assert.equal(dashes(raw.rawtext[2]),5);
+assert.equal(dashes(raw.rawtext.at(-1)),dashes(raw.rawtext[0])+dashes(raw.rawtext[2]));
+tellList(owner,{translate:'chat.cmd.banlist.header'},[],6);
+const banFrame=JSON.parse(native.at(-1).slice('tellraw @s '.length)).rawtext;
+assert.deepEqual([dashes(banFrame[0]),dashes(banFrame[2]),dashes(banFrame.at(-1))],[6,6,12]);
 assert.ok(Math.max(...roleWidths)-Math.min(...roleWidths)<=3,'role descriptions align after player names');
 let data={sender:alice,message:'!HeLp  one two',cancel:false};handlers.beforeChat[0](data);assert.equal(data.cancel,true);assert.deepEqual(routed.at(-1),['help',alice,['one','two']]);alice.pending=true;const n=routed.length;handlers.beforeChat[0]({sender:alice,message:'!help'});assert.equal(routed.length,n);
 assert(!fs.existsSync(new URL('scripts/chat/commands/owner.js',bp)));

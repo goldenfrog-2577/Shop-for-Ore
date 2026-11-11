@@ -121,14 +121,12 @@ export const PLAYER_COMMANDS = {
 			return;
 		}
 		// Каждый видит только команды своей роли и ниже — сплошным списком в порядке commandsList
-		const rawtext = [{ translate: 'chat.help.header' }];
-		for (const cmd of commandsList.filter(cmd => hasRole(player, cmd.role))) {
-			rawtext.push({ text: `\n§f${cmd.command} - ` }, { translate: cmd.description.slice(1) });
-		}
+		const lines = commandsList.filter(cmd => hasRole(player, cmd.role)).map(cmd => ({
+			rawtext: [{ text: `§f${cmd.command} - ` }, { translate: cmd.description.slice(1) }]
+		}));
 		// Подсказка про селекторы вместо ника (chat/commands/selectors.js)
-		rawtext.push({ text: '\n' }, { translate: 'chat.help.selectors' });
-		rawtext.push({ text: '\n§8------------------------' });
-		run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
+		lines.push({ translate: 'chat.help.selectors' });
+		tellList(player, { translate: 'chat.help.header' }, lines);
 	},
 
 	warp(player, args) {
@@ -137,12 +135,12 @@ export const PLAYER_COMMANDS = {
 		// Точки своей роли; VIP-остров — только VIP и персоналу (warpAllowed)
 		const available = WARPS.filter(w => warpAllowed(player, w));
 		if (!args[0]) {
-			const rawtext = [{ translate: 'chat.cmd.warp.header' }];
 			const labels = available.map(w => `!warp ${w.id}`);
 			const padding = columnPadding(labels);
-			available.forEach((w, i) => rawtext.push({ text: `\n§f${labels[i]}${padding[i]} §8- ` }, { translate: `warp.${w.id}` }));
-			rawtext.push({ text: '\n§8------------------------' });
-			run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
+			const lines = available.map((w, i) => ({
+				rawtext: [{ text: `§f${labels[i]}${padding[i]} §8- ` }, { translate: `warp.${w.id}` }]
+			}));
+			tellList(player, { translate: 'chat.cmd.warp.header' }, lines);
 			return;
 		}
 		const id = args[0].toLowerCase();
@@ -202,7 +200,7 @@ export const PLAYER_COMMANDS = {
 
 	emotes(player, args) {
 		// Список эмодзи сеткой по 3 в ряд: значок, имя и пробелы до ширины колонки
-		tellText(player, `%chat.emotes.header\n${emoteGrid().join('\n')}\n§8------------------------§f`);
+		tellList(player, { translate: 'chat.emotes.header' }, emoteGrid().map(text => ({ text })));
 	},
 
 	msg(player, args) {
