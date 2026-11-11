@@ -2,6 +2,23 @@
 
 import { run, findPlayer, tell, hasRole, getRole } from '../../DataBase.js';
 
+// Ширина символов в пикселях. Цветовые коды не занимают места в чате.
+const SPACE_WIDTH = 4;
+const CHAR_WIDTH = { i: 2, l: 3, t: 4, f: 5, k: 5, j: 4, '!': 2, ':': 2, ' ': SPACE_WIDTH };
+const GLYPH_WIDTH = {
+	'\ue1f0': 6, '\ue1f1': 6, '\ue1f2': 6, '\ue1f3': 6, '\ue1f4': 6, '\ue1f5': 6, '\ue1f6': 6, '\ue1f9': 7,
+	'\ue1e0': 8, '\ue1e1': 8, '\ue1e2': 8, '\ue1e3': 7, '\ue1e4': 7,
+	'\ue10e': 6, '\ue10f': 6, '\ue151': 9, '\ue152': 7, '\ue153': 7, '\ue154': 6
+};
+export const textWidth = (text) => [...text.replace(/§[0-9a-z]/gi, '')]
+	.reduce((width, char) => width + (GLYPH_WIDTH[char] ?? CHAR_WIDTH[char] ?? 6), 0);
+
+export function columnPadding(labels) {
+	const widths = labels.map(textWidth);
+	const widest = widths.reduce((max, width) => Math.max(max, width), 0);
+	return widths.map(width => ' '.repeat(Math.round((widest - width) / SPACE_WIDTH)));
+}
+
 /**
  * Отправить игроку несколько строк одним tellraw: заголовок, строки, разделитель.
  * @param {Player} player

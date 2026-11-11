@@ -12,7 +12,7 @@ import { startMythic } from '../../system/combat/mythic.js';
 import { stopAdminBoosts, markAdminBoost, MAGNET_ADMIN_TAG, BOOST_TIMERS, boostSeconds, boostTimersReady } from '../../system/economy/boosts.js';
 import { ACHIEVEMENTS, has as hasAchievement, findAchievement, unlock, revoke } from '../../system/player/achievements.js';
 import { addBan, kickBanned, findBan, removeBan, getBans, banActive, banMinutesLeft } from '../../system/security/ban.js';
-import { resolveTarget, tellList, canPunish } from './common.js';
+import { columnPadding, resolveTarget, tellList, canPunish } from './common.js';
 import { censor } from '../censor.js';
 import { logAction } from '../../system/security/staff_log.js';
 
@@ -318,7 +318,9 @@ export const ADMIN_COMMANDS = {
 		// Служебные табло (таймеры, настройки) меняет только владелец — иначе собьются таймеры и setup
 		const sbUse = () => tell(player, 'chat.cmd.scoreboard.use');
 		if ((args[0] || '').toLowerCase() === 'objectives' && !args[1]) {
-			const lines = world.scoreboard.getObjectives().map(o => `§e${o.id}${o.displayName && o.displayName !== o.id ? ` §8— §7${o.displayName}` : ''}`);
+			const objectives = world.scoreboard.getObjectives();
+			const padding = columnPadding(objectives.map(o => o.id));
+			const lines = objectives.map((o, i) => `§e${o.id}${o.displayName && o.displayName !== o.id ? `${padding[i]} §8— §7${o.displayName}` : ''}`);
 			run(player, `tellraw @s ${JSON.stringify({ rawtext: [{ translate: 'chat.cmd.scoreboard.objectives' }, { text: `\n${lines.join('\n') || '—'}` }] })}`);
 			return;
 		}
@@ -332,7 +334,9 @@ export const ADMIN_COMMANDS = {
 		// Счёт игрока в табло или undefined (счёта нет)
 		const scoreOf = (objective) => { try { return objective.getScore(target.scoreboard); } catch { return undefined; } };
 		if (sbAction === 'list') {
-			const lines = world.scoreboard.getObjectives().map(o => [o.id, scoreOf(o)]).filter(([, v]) => v !== undefined).map(([id, v]) => `§e${id}§7: §f${v}`);
+			const scores = world.scoreboard.getObjectives().map(o => [o.id, scoreOf(o)]).filter(([, value]) => value !== undefined);
+			const padding = columnPadding(scores.map(([id]) => id));
+			const lines = scores.map(([id, value], i) => `§e${id}${padding[i]} §8— §f${value}`);
 			run(player, `tellraw @s ${JSON.stringify({ rawtext: [{ translate: 'chat.cmd.scoreboard.list', with: [target.name] }, { text: `\n${lines.join('\n') || '—'}` }] })}`);
 			return;
 		}

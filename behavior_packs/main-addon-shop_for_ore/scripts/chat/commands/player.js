@@ -9,8 +9,10 @@ import { combatSecondsLeft, teleportToArena } from '../../system/combat/pvp.js';
 import { bossBusy, mmss } from '../../system/boss/boss.js';
 import { canTeleport, listGames, joinGame, leaveGame, getGame, startGame, endGame } from '../../system/minigames/minigames.js';
 import { ChangePasswordUI } from '../../registration/change.js';
-import { resolveTarget, tellList } from './common.js';
+import { columnPadding, resolveTarget, tellList, textWidth } from './common.js';
 import { censor } from '../censor.js';
+
+export { textWidth };
 
 // С кем игрок последним переписывался в ЛС (для !r): имя → имя собеседника
 const lastPrivate = new Map();
@@ -47,18 +49,6 @@ const TOP = {
 
 // Сколько эмодзи в строке у !emotes (на телефоне 4 уже переносятся)
 const EMOTES_PER_ROW = 3;
-
-// --- Выравнивание !emotes ---
-// Шрифт чата не моноширинный: ширина в пикселях — по шрифту default8 (буква + 1 пиксель между буквами),
-// значки — по glyph_E1 (половина ширины рисунка + 1). Пробел — 4 пикселя, поэтому колонки
-// совпадают с точностью до 2 пикселей.
-const CHAR_WIDTH = { i: 2, l: 3, t: 4, f: 5, k: 5, j: 4, ':': 2, ' ': 4 };
-const GLYPH_WIDTH = {
-	'\ue1f0': 6, '\ue1f1': 6, '\ue1f2': 6, '\ue1f3': 6, '\ue1f4': 6, '\ue1f5': 6, '\ue1f6': 6, '\ue1f9': 7,
-	'\ue1e0': 8, '\ue1e1': 8, '\ue1e2': 8, '\ue1e3': 7, '\ue1e4': 7,
-	'\ue10e': 6, '\ue10f': 6, '\ue151': 9, '\ue152': 7, '\ue153': 7, '\ue154': 6
-};
-export const textWidth = (s) => [...s].reduce((w, ch) => w + (GLYPH_WIDTH[ch] ?? CHAR_WIDTH[ch] ?? 6), 0);
 
 /** Строки сетки эмодзи: «значок :имя:», дополненные пробелами до общей ширины колонки. */
 export function emoteGrid() {
@@ -148,7 +138,9 @@ export const PLAYER_COMMANDS = {
 		const available = WARPS.filter(w => warpAllowed(player, w));
 		if (!args[0]) {
 			const rawtext = [{ translate: 'chat.cmd.warp.header' }];
-			for (const w of available) rawtext.push({ text: `\n§f!warp ${w.id} §8- ` }, { translate: `warp.${w.id}` });
+			const labels = available.map(w => `!warp ${w.id}`);
+			const padding = columnPadding(labels);
+			available.forEach((w, i) => rawtext.push({ text: `\n§f${labels[i]}${padding[i]} §8- ` }, { translate: `warp.${w.id}` }));
 			rawtext.push({ text: '\n§8------------------------' });
 			run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
 			return;
@@ -269,8 +261,9 @@ export const PLAYER_COMMANDS = {
 			.map(({ p, row }) => ({ name: p.name, ...row }))
 			.sort((a, b) => b.value - a.value || a.name.localeCompare(b.name))
 			.slice(0, 5);
+		const padding = columnPadding(top.map(p => p.name));
 		tellList(player, { translate: `chat.cmd.top.header.${by}` },
-			top.map((p, i) => ({ translate: 'chat.cmd.top.line', with: { rawtext: [{ text: String(i + 1) }, { text: p.name }, p.shown ?? { text: String(p.value) }] } })));
+			top.map((p, i) => ({ translate: 'chat.cmd.top.line', with: { rawtext: [{ text: String(i + 1) }, { text: p.name + padding[i] }, p.shown ?? { text: String(p.value) }] } })));
 	},
 
 	stats(player, args) {
@@ -301,8 +294,9 @@ export const PLAYER_COMMANDS = {
 		const list = [...world.getPlayers()]
 			.map(p => ({ name: p.name, role: getRole(p), lvl: getScore(p, 'lvl') }))
 			.sort((a, b) => ROLES.indexOf(b.role) - ROLES.indexOf(a.role) || a.name.localeCompare(b.name));
+		const padding = columnPadding(list.map(p => p.name));
 		tellList(player, { translate: 'chat.cmd.online.header', with: [String(list.length)] },
-			list.map(p => ({ translate: 'chat.cmd.online.line', with: { rawtext: [{ text: p.name }, { translate: `role.${p.role}` }, { text: String(p.lvl) }] } })));
+			list.map((p, i) => ({ translate: 'chat.cmd.online.line', with: { rawtext: [{ text: p.name + padding[i] }, { translate: `role.${p.role}` }, { text: String(p.lvl) }] } })));
 	},
 
 	report(player, args) {
@@ -368,7 +362,9 @@ export const PLAYER_COMMANDS = {
 		// !game — список; join <игра> / leave; администратор: start / stop <игра>
 		const sub = (args[0] || '').toLowerCase();
 		if (!sub) {
-			const lines = listGames().map(g => ({ translate: 'chat.cmd.game.line', with: { rawtext: [{ text: g.def.id }, { translate: `minigame.${g.def.id}.name` }, { translate: `menu.games.phase.${g.phase}` }, { text: String(g.players.size) }, { text: String(g.def.maxPlayers) }] } }));
+			const games = listGames();
+			const padding = columnPadding(games.map(g => g.def.id));
+			const lines = games.map((g, i) => ({ translate: 'chat.cmd.game.line', with: { rawtext: [{ text: g.def.id + padding[i] }, { translate: `minigame.${g.def.id}.name` }, { translate: `menu.games.phase.${g.phase}` }, { text: String(g.players.size) }, { text: String(g.def.maxPlayers) }] } }));
 			tellList(player, { translate: 'chat.cmd.game.header' }, lines);
 			return;
 		}

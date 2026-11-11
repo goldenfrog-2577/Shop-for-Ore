@@ -23,7 +23,7 @@ const stubs={
  '../../system/security/staff_log.js':{logAction:(...a)=>logged.push(a)}
 };
 const context=vm.createContext({Date:class extends Date{static now(){return now;}}}),cache=new Map(),mod=new vm.SourceTextModule(source,{context,identifier:new URL('scripts/chat/commands/commands.js',bp).href});
-await mod.link(spec=>{assert(stubs[spec],'unresolved import '+spec);if(!cache.has(spec)){const values=stubs[spec];cache.set(spec,new vm.SyntheticModule(Object.keys(values),function(){for(const[k,v]of Object.entries(values))this.setExport(k,v);},{context,identifier:spec}));}return cache.get(spec);});await mod.evaluate();
+await mod.link(spec=>{if(spec==='./common.js'){const url=new URL('scripts/chat/commands/common.js',bp);const common=new vm.SourceTextModule(fs.readFileSync(url,'utf8'),{context,identifier:url.href});cache.set(spec,common);return common;}assert(stubs[spec],'unresolved import '+spec);if(!cache.has(spec)){const values=stubs[spec];cache.set(spec,new vm.SyntheticModule(Object.keys(values),function(){for(const[k,v]of Object.entries(values))this.setExport(k,v);},{context,identifier:spec}));}return cache.get(spec);});await mod.evaluate();
 assert.equal(handlers.beforeChat.length,1);assert.equal(handlers.playerLeave.length,1);const api=mod.namespace,command=(p,c,a=[])=>api.runChatCommand(p,c,a),last=()=>notices.at(-1)?.key;
 for(const key of ['textWidth','emoteGrid'])assert.equal(api[key],stubs['./player.js'][key]);assert.equal(api.isCoord,stubs['./moderator.js'].isCoord);for(const key of ['debugLines','giveOreMagnet','setMoney'])assert.equal(api[key],stubs['./admin.js'][key]);
 assert.deepEqual(Object.keys(api).sort(),['debugLines','emoteGrid','giveOreMagnet','isCoord','runChatCommand','setMoney','textWidth'].sort());
@@ -36,7 +36,11 @@ command(owner,'resetoffline',['confirm']);assert.equal(resets,0);command(owner,'
 command(owner,'resetoffline');now+=30001;command(owner,'resetoffline',['confirm']);assert.equal(resets,1);command(owner,'resetoffline');handlers.playerLeave[0]({playerName:owner.name});command(owner,'resetoffline',['confirm']);assert.equal(resets,1);
 command(owner,'role',[alice.name,'moder']);assert(alice.hasTag('role:moder'));command(owner,'role',[owner.name,'player']);assert(owner.hasTag('role:owner'));command(owner,'role',[bot.name,'admin']);assert(!bot.hasTag('role:admin'));
 command(owner,'resetpass',['Alice','Smith']);assert.equal(passwords[0],alice);command(owner,'resetpass',[owner.name]);assert.equal(passwords.length,1);command(owner,'resetpass',[bot.name]);assert.equal(passwords.length,1);
-command(owner,'roles');const raw=JSON.parse(native.at(-1).slice('tellraw @s '.length));assert.equal(raw.rawtext.find(p=>p.translate==='chat.cmd.roles.line').with.rawtext[0].text,'Owner');
+command(owner,'roles');const raw=JSON.parse(native.at(-1).slice('tellraw @s '.length));
+const roleNames=raw.rawtext.filter(p=>p.translate==='chat.cmd.roles.line').map(p=>p.with.rawtext[0].text);
+assert.equal(roleNames[0].trimEnd(),'Owner');
+const {textWidth}=cache.get('./common.js').namespace,roleWidths=roleNames.map(textWidth);
+assert.ok(Math.max(...roleWidths)-Math.min(...roleWidths)<=3,'role descriptions align after player names');
 let data={sender:alice,message:'!HeLp  one two',cancel:false};handlers.beforeChat[0](data);assert.equal(data.cancel,true);assert.deepEqual(routed.at(-1),['help',alice,['one','two']]);alice.pending=true;const n=routed.length;handlers.beforeChat[0]({sender:alice,message:'!help'});assert.equal(routed.length,n);
 assert(!fs.existsSync(new URL('scripts/chat/commands/owner.js',bp)));
 // Звук результата команды из чата: ошибка/успех по счётчикам сообщений, справка — без звука
