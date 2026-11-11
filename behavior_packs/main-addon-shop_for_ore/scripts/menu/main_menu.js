@@ -179,7 +179,7 @@ function musicSetting(player, back) {
 		const t = nowPlaying(player);
 		return ['%menu.settings.music.body', '',
 			`%menu.settings.state ${off ? '%menu.settings.state.off' : '%menu.settings.state.on'}`,
-			`%menu.music.now ${t ? `§f${t.title} §8— §7${t.author}` : '§8—'}`,
+			`%menu.music.now ${t ? `§f${t.title} §8— §f${t.author}§7` : '§8—'}`,
 			`%menu.music.source ${discMode ? '%menu.music.source.discs' : '%menu.music.source.server'}`,
 			`%menu.music.volume §f${getVolume(player)}§7 / 100`,
 			`%menu.music.discs §f${discs.length}§7 / ${DISCS.length}`].join('\n');
