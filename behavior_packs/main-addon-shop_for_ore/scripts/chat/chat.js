@@ -183,9 +183,12 @@ function statsText(player) {
 	const score = objective => metricNumbers(getScore(player, objective));
 	const need = getScore(player, 'xp_need');
 	const xp = vip ? '\ue128' : score('xp') + (need > 0 ? '/' + metricNumbers(need) : '');
-	return '§f - ' + (vip ? 'VIP' : score('lvl')) + '  §f - ' + xp
-		+ (vip ? '  §f - ' + score('vip_coins') : '  §f - ' + score('money'))
-		+ '  §f - ' + score('rebirth');
+	return [
+		'§f - ' + (vip ? 'VIP' : score('lvl')),
+		'§f - ' + xp,
+		vip ? '§f - ' + score('vip_coins') : '§f - ' + score('money'),
+		'§f - ' + score('rebirth')
+	].join('\n');
 }
 
 world.events.tick.subscribe(() => {
