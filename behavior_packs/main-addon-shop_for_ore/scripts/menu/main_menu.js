@@ -179,7 +179,7 @@ function musicSetting(player, back) {
 		const t = nowPlaying(player);
 		return ['%menu.settings.music.body', '',
 			`%menu.settings.state ${off ? '%menu.settings.state.off' : '%menu.settings.state.on'}`,
-			`%menu.music.now ${t ? `§f${t.title} §8— §7${t.author}` : '§8—'}`,
+			`%menu.music.now ${t ? `§f${t.title} §8— §f${t.author}§7` : '§8—'}`,
 			`%menu.music.source ${discMode ? '%menu.music.source.discs' : '%menu.music.source.server'}`,
 			`%menu.music.volume §f${getVolume(player)}§7 / 100`,
 			`%menu.music.discs §f${discs.length}§7 / ${DISCS.length}`].join('\n');
@@ -251,11 +251,11 @@ function menuSounds(player, back) {
 			tell(player, on ? 'chat.settings.enabled' : 'chat.settings.disabled');
 			menuSounds(player, back);
 		}, () => menuSounds(player, back));
-	// Иконки — ванильные текстуры 1.19.50: зелёная галочка, красный крест, курсор
+	// Галочка и крест используют ванильные текстуры, у кнопки «Клик» своя иконка.
 	showMenu(player, '%menu.settings.menu_sounds.title', '%menu.settings.menu_sounds.body', [
 		{ text: '%menu.settings.menu_sounds.success', icon: 'textures/ui/confirm', run: () => toggle('success') },
 		{ text: '%menu.settings.menu_sounds.error', icon: 'textures/ui/cancel', run: () => toggle('error') },
-		{ text: '%menu.settings.menu_sounds.click', icon: 'textures/ui/cursor', run: () => toggle('click') },
+		{ text: '%menu.settings.menu_sounds.click', icon: 'textures/server_icons/menu_click', run: () => toggle('click') },
 		backButton(back)
 	], back);
 }

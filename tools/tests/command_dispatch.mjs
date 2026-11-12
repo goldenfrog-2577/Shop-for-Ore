@@ -23,7 +23,7 @@ const stubs={
  '../../system/security/staff_log.js':{logAction:(...a)=>logged.push(a)}
 };
 const context=vm.createContext({Date:class extends Date{static now(){return now;}}}),cache=new Map(),mod=new vm.SourceTextModule(source,{context,identifier:new URL('scripts/chat/commands/commands.js',bp).href});
-await mod.link(spec=>{assert(stubs[spec],'unresolved import '+spec);if(!cache.has(spec)){const values=stubs[spec];cache.set(spec,new vm.SyntheticModule(Object.keys(values),function(){for(const[k,v]of Object.entries(values))this.setExport(k,v);},{context,identifier:spec}));}return cache.get(spec);});await mod.evaluate();
+await mod.link(spec=>{if(spec==='./common.js'){const url=new URL('scripts/chat/commands/common.js',bp);const common=new vm.SourceTextModule(fs.readFileSync(url,'utf8'),{context,identifier:url.href});cache.set(spec,common);return common;}assert(stubs[spec],'unresolved import '+spec);if(!cache.has(spec)){const values=stubs[spec];cache.set(spec,new vm.SyntheticModule(Object.keys(values),function(){for(const[k,v]of Object.entries(values))this.setExport(k,v);},{context,identifier:spec}));}return cache.get(spec);});await mod.evaluate();
 assert.equal(handlers.beforeChat.length,1);assert.equal(handlers.playerLeave.length,1);const api=mod.namespace,command=(p,c,a=[])=>api.runChatCommand(p,c,a),last=()=>notices.at(-1)?.key;
 for(const key of ['textWidth','emoteGrid'])assert.equal(api[key],stubs['./player.js'][key]);assert.equal(api.isCoord,stubs['./moderator.js'].isCoord);for(const key of ['debugLines','giveOreMagnet','setMoney'])assert.equal(api[key],stubs['./admin.js'][key]);
 assert.deepEqual(Object.keys(api).sort(),['debugLines','emoteGrid','giveOreMagnet','isCoord','runChatCommand','setMoney','textWidth'].sort());
@@ -36,7 +36,34 @@ command(owner,'resetoffline',['confirm']);assert.equal(resets,0);command(owner,'
 command(owner,'resetoffline');now+=30001;command(owner,'resetoffline',['confirm']);assert.equal(resets,1);command(owner,'resetoffline');handlers.playerLeave[0]({playerName:owner.name});command(owner,'resetoffline',['confirm']);assert.equal(resets,1);
 command(owner,'role',[alice.name,'moder']);assert(alice.hasTag('role:moder'));command(owner,'role',[owner.name,'player']);assert(owner.hasTag('role:owner'));command(owner,'role',[bot.name,'admin']);assert(!bot.hasTag('role:admin'));
 command(owner,'resetpass',['Alice','Smith']);assert.equal(passwords[0],alice);command(owner,'resetpass',[owner.name]);assert.equal(passwords.length,1);command(owner,'resetpass',[bot.name]);assert.equal(passwords.length,1);
-command(owner,'roles');const raw=JSON.parse(native.at(-1).slice('tellraw @s '.length));assert.equal(raw.rawtext.find(p=>p.translate==='chat.cmd.roles.line').with.rawtext[0].text,'Owner');
+command(owner,'roles');const raw=JSON.parse(native.at(-1).slice('tellraw @s '.length));
+const roleNames=raw.rawtext.filter(p=>p.translate==='chat.cmd.roles.line').map(p=>p.with.rawtext[0].text);
+assert.equal(roleNames[0].trimEnd(),'Owner');
+const {textWidth,tellList}=cache.get('./common.js').namespace,roleWidths=roleNames.map(textWidth);
+const dashes = part => (part.text.match(/-/g) ?? []).length;
+const readLocale = locale => Object.fromEntries(fs.readFileSync(new URL('../../resource_packs/main-rp-shop_for_ore/texts/'+locale+'.lang',import.meta.url),'utf8')
+	.split(/\r?\n/).filter(line=>line.includes('=')).map(line=>[line.slice(0,line.indexOf('=')),line.slice(line.indexOf('=')+1)]));
+const ru=readLocale('ru_RU'),en=readLocale('en_US');
+const footerCount=(frame,lang)=>dashes(frame.at(-3))+dashes({text:lang[frame.at(-2).translate]})+dashes(frame.at(-1));
+assert.deepEqual([dashes(raw.rawtext[0]),dashes(raw.rawtext[2])],[5,5]);
+assert.equal(raw.rawtext.at(-2).translate,'chat.cmd.roles.header.divider');
+assert.equal(footerCount(raw.rawtext,ru),23);
+assert.equal(footerCount(raw.rawtext,en),22);
+tellList(owner,{translate:'chat.cmd.worldedit.help.header'},[]);
+const weFrame=JSON.parse(native.at(-1).slice('tellraw @s '.length)).rawtext;
+assert.equal(footerCount(weFrame,ru),29);
+assert.equal(footerCount(weFrame,en),23);
+tellList(owner,{translate:'chat.cmd.banlist.header'},[],6);
+const banFrame=JSON.parse(native.at(-1).slice('tellraw @s '.length)).rawtext;
+assert.deepEqual([dashes(banFrame[0]),dashes(banFrame[2])],[6,6]);
+assert.ok(footerCount(banFrame,ru)>12);
+tellList(owner,{translate:'chat.cmd.stats.header',with:['Owner']},[]);
+const statsFrame=JSON.parse(native.at(-1).slice('tellraw @s '.length)).rawtext;
+assert.equal(statsFrame.at(-2).with.rawtext[0].text,'-----');
+tellList(owner,{translate:'chat.cmd.ac.header',with:{rawtext:[{translate:'anticheat.mode.kick'}]}},[]);
+const acFrame=JSON.parse(native.at(-1).slice('tellraw @s '.length)).rawtext;
+assert.equal(acFrame.at(-2).with.rawtext[0].translate,'anticheat.mode.kick.divider');
+assert.ok(Math.max(...roleWidths)-Math.min(...roleWidths)<=3,'role descriptions align after player names');
 let data={sender:alice,message:'!HeLp  one two',cancel:false};handlers.beforeChat[0](data);assert.equal(data.cancel,true);assert.deepEqual(routed.at(-1),['help',alice,['one','two']]);alice.pending=true;const n=routed.length;handlers.beforeChat[0]({sender:alice,message:'!help'});assert.equal(routed.length,n);
 assert(!fs.existsSync(new URL('scripts/chat/commands/owner.js',bp)));
 // Звук результата команды из чата: ошибка/успех по счётчикам сообщений, справка — без звука

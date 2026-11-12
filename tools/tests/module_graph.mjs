@@ -43,7 +43,7 @@ async function startup(base,old=false){
  return {load,commands,modules:evaluation.length,relativeImports:sourceFiles.reduce((n,f)=>n+[...fs.readFileSync(f,'utf8').matchAll(/(?:from\s+|import\s+)['"]\.[^'"]+['"]/g)].length,0)};
 }
 const actual=await startup(scripts);
-assert.equal(actual.modules,63);assert.equal(actual.relativeImports,217);
+assert.equal(actual.modules,63);assert.equal(actual.relativeImports,219);
 const index=JSON.parse(fs.readFileSync(path.join(bp,'contents.json'),'utf8')).content.map(e=>e.path);
 const files=walk(scripts).filter(p=>p.endsWith('.js')).map(p=>'scripts/'+rel(scripts,p));
 assert.deepEqual(index.filter(p=>p.startsWith('scripts/')&&p.endsWith('.js')).sort(),files.sort(),'index exactly covers scripts');
@@ -51,4 +51,4 @@ for(const [old,next]of Object.entries(mapping)){assert.ok(!fs.existsSync(path.jo
 assert.deepEqual(fs.readdirSync(path.join(scripts,'system')).filter(n=>n.endsWith('.js')),['worldedit.js']);
 assert.deepEqual(actual.load,fixture.startup,'module evaluation/subscription/schedule order unchanged');
 if(process.argv[2]){const baseline=await startup(path.resolve(process.argv[2]),true);assert.deepEqual(actual.load,baseline.load,'baseline startup order');assert.deepEqual(actual.commands,baseline.commands,'baseline first 40 empty-world ticks');}
-console.log('PASS: real ESM entry links/evaluates all 53 modules and 181 relative imports; preserved evaluation/subscription/schedule order, exact pack index, no old module copies and 40 empty-world ticks.');
+console.log('PASS: real ESM entry links/evaluates all 63 modules and 219 relative imports; preserved evaluation/subscription/schedule order, exact pack index, no old module copies and 40 empty-world ticks.');
