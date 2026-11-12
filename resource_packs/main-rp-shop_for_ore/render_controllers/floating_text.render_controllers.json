@@ -14,6 +14,22 @@
 				"*": "Material.other"
 			}],
 			"textures": ["Texture.other"]
+		},
+		"controller.render.player_stats": {
+			"geometry": "Geometry.default",
+			"materials": [
+				{
+					"*": "Material.default"
+				}
+			],
+			"textures": [
+				"Texture.default"
+			],
+			"part_visibility": [
+				{
+					"*": false
+				}
+			]
 		}
 	}
 }

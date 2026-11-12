@@ -1,0 +1,77 @@
+{
+	"format_version": "1.16.0",
+	"minecraft:entity": {
+		"description": {
+			"identifier": "server:player_stats",
+			"is_spawnable": false,
+			"is_summonable": true
+		},
+		"component_groups": {
+			"server:active": {
+				"minecraft:timer": {
+					"looping": false,
+					"time": 4,
+					"time_down_event": {
+						"event": "server:remove",
+						"target": "self"
+					}
+				}
+			},
+			"server:removed": {
+				"minecraft:instant_despawn": {}
+			}
+		},
+		"components": {
+			"minecraft:type_family": {
+				"family": [
+					"player_stats"
+				]
+			},
+			"minecraft:collision_box": {
+				"width": 0,
+				"height": 0
+			},
+			"minecraft:physics": {
+				"has_collision": false,
+				"has_gravity": false
+			},
+			"minecraft:pushable": {
+				"is_pushable": false,
+				"is_pushable_by_piston": false
+			},
+			"minecraft:damage_sensor": {
+				"triggers": {
+					"cause": "all",
+					"deals_damage": false
+				}
+			},
+			"minecraft:nameable": {
+				"allow_name_tag_renaming": false,
+				"always_show": true
+			}
+		},
+		"events": {
+			"minecraft:entity_spawned": {
+				"add": {
+					"component_groups": [
+						"server:active"
+					]
+				}
+			},
+			"server:refresh": {
+				"add": {
+					"component_groups": [
+						"server:active"
+					]
+				}
+			},
+			"server:remove": {
+				"add": {
+					"component_groups": [
+						"server:removed"
+					]
+				}
+			}
+		}
+	}
+}
