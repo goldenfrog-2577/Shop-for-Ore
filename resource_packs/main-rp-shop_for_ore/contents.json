@@ -229,9 +229,6 @@
 			"path": "entity/floating_text.json"
 		},
 		{
-			"path": "entity/player_stats.json"
-		},
-		{
 			"path": "textures/server_icons/structure_void.png"
 		},
 		{

@@ -1,5 +1,5 @@
 // --- Чат-логика и антиспам для Shop for Ore ---
-import { world, system, Location, MinecraftEffectTypes } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { getScore, metricNumbers, emotes, isPending, isBot, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor, impersonatedRole, tell, run, isVip } from '../DataBase.js';
 import { censor } from './censor.js';
 import { LEVEL_RANK_RE } from '../system/player/ranks.js';
@@ -15,10 +15,7 @@ const FLOOD_TIME = 10000;       // Период для антифлуда (мс)
 const playerMessages = new Map(); // Хранилище сообщений игроков
 
 // Игрок вышел — его история сообщений больше не нужна
-world.events.playerLeave.subscribe((data) => {
-	playerMessages.delete(data.playerName);
-	removeStatsLabel(data.playerName);
-});
+world.events.playerLeave.subscribe((data) => playerMessages.delete(data.playerName));
 
 /**
  * Проверка на спам и флуд.
@@ -166,72 +163,25 @@ export function sendChatMessage(sender, message) {
 	run(world.getDimension('overworld'), `tellraw @a ${JSON.stringify({ rawtext })}`);
 }
 
-// /say читает nameTag отправителя. Статистика под ником хранится на отдельной сущности.
-const STATS_ENTITY = 'server:player_stats';
-const statsLabels = new Map();
-let statsTick = 0;
-
-function removeStatsLabel(name) {
-	const entry = statsLabels.get(name);
-	if (!entry) return;
-	statsLabels.delete(name);
-	try { entry.entity.triggerEvent('server:remove'); } catch { /* Сущность уже выгружена. */ }
-}
-
-function statsText(player) {
-	const vip = isVip(player);
-	const score = objective => metricNumbers(getScore(player, objective));
-	const need = getScore(player, 'xp_need');
-	const xp = vip ? '\ue128' : score('xp') + (need > 0 ? '/' + metricNumbers(need) : '');
-	return [
-		'§f - ' + (vip ? 'VIP' : score('lvl')),
-		'§f - ' + xp,
-		vip ? '§f - ' + score('vip_coins') : '§f - ' + score('money'),
-		'§f - ' + score('rebirth')
-	].join('\n');
-}
-
+// --- Обновление nameTag игрока (отображение информации над головой) ---
+// Раз в секунду и только если текст изменился
+const NAMETAG_REFRESH_TICKS = 20;
+let nameTagTick = 0;
 world.events.tick.subscribe(() => {
-	++statsTick;
-	if (statsTick % 2 !== 0) return;
-	const refresh = statsTick % 20 === 0;
-
+	if (++nameTagTick % NAMETAG_REFRESH_TICKS !== 0) return;
 	for (const player of world.getPlayers()) {
-		const name = player.name;
-		try {
-			if (player.nameTag !== name) player.nameTag = name;
-			if (isBot(player) || isPending(player) || player.isSneaking || player.hasTag('state:invis')
-				|| player.getEffect(MinecraftEffectTypes.invisibility)
-				|| player.getComponent('minecraft:health')?.current === 0) {
-				removeStatsLabel(name);
-				continue;
-			}
-
-			const dimension = player.dimension;
-			const { x, y, z } = player.location;
-			const position = new Location(x, y + 1.58, z);
-			let entry = statsLabels.get(name);
-			if (entry && entry.dimension !== dimension.id) {
-				removeStatsLabel(name);
-				entry = undefined;
-			}
-			if (!entry) {
-				if (!refresh) continue;
-				const entity = dimension.spawnEntity(STATS_ENTITY, position);
-				entry = { entity, dimension: dimension.id, position };
-				statsLabels.set(name, entry);
-			} else if (x !== entry.position.x || position.y !== entry.position.y || z !== entry.position.z) {
-				entry.entity.teleport(position, dimension, 0, 0);
-				entry.position = position;
-			}
-			if (refresh) {
-				const text = statsText(player);
-				if (entry.entity.nameTag !== text) entry.entity.nameTag = text;
-				entry.entity.triggerEvent('server:refresh');
-			}
-		} catch {
-			removeStatsLabel(name);
+		// Бот: над головой только ник в цвете бота (уровня и денег у него нет)
+		if (isBot(player)) {
+			if (player.nameTag !== botNameColor(player) + player.name) player.nameTag = botNameColor(player) + player.name;
+			continue;
 		}
+		const role = getRole(player);
+		// Опыт: «350/72.0K»; на последнем уровне (xp_need 0) — только опыт, без «/0»
+		const need = getScore(player, 'xp_need');
+		const xp = `${metricNumbers(getScore(player, 'xp'))}${need > 0 ? `/${metricNumbers(need)}` : ''}`;
+		// Ник над головой: цвет из !color, иначе у игрока серый, у персонала — цвет роли. У VIP вместо монет — VIP-коины
+		const nameTag = `${getChatColor(player, 'name') ?? (role === 'player' ? '§7' : ROLE_COLORS[role])}${player.name}\n§f - ${isVip(player) ? 'VIP' : metricNumbers(getScore(player,'lvl'))}\n§f - ${isVip(player) ? '\ue128' : xp}\n${isVip(player) ? `§f - ${metricNumbers(getScore(player, 'vip_coins'))}` : `§f - ${metricNumbers(getScore(player, 'money'))}`}\n§f - ${metricNumbers(getScore(player,'rebirth'))}`;
+		if (player.nameTag !== nameTag) player.nameTag = nameTag;
 	}
 });
 

@@ -4,9 +4,6 @@
 			"path" : "entities/floating_text.json"
 		},
 		{
-			"path" : "entities/player_stats.json"
-		},
-		{
 			"path" : "entities/player.json"
 		},
 		{
