@@ -1,6 +1,6 @@
 // Суммарное время онлайн: один групповой счёт раз в секунду. Старые минуты сохраняются.
 import { world, system } from '@minecraft/server';
-import { getScore, isPending, run } from '../../DataBase.js';
+import { getScore, isPending, run } from '../../utils.js';
 
 export const PLAYTIME_OBJECTIVE = 'play_seconds';
 export function playedSeconds(player) {

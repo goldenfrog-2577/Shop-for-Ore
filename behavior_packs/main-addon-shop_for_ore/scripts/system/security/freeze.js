@@ -5,7 +5,7 @@
 // прыгучесть ведёт себя по-разному на разных устройствах.
 
 import { world } from '@minecraft/server';
-import { run, clearIssuer } from '../../DataBase.js';
+import { run, clearIssuer } from '../../utils.js';
 
 const POS_TAG = 'state:frozen_at:';
 const EPS = 0.05;

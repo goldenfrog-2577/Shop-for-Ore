@@ -154,7 +154,7 @@
 			"path" : "pack_icon.png"
 		},
 		{
-			"path" : "scripts/DataBase.js"
+			"path" : "scripts/utils.js"
 		},
 		{
 			"path" : "scripts/chat/chat.js"

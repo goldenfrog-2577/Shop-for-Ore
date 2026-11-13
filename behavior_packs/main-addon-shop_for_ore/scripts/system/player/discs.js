@@ -7,7 +7,7 @@
 // из Косметики (cosmetic:trail:note), сообщение всем. Проверка раз в 5 с — так же засчитываются пластинки из инвентаря.
 
 import { system, world } from '@minecraft/server';
-import { run, tell, getScore, isPending, rawTranslateRich } from '../../DataBase.js';
+import { run, tell, getScore, isPending, rawTranslateRich } from '../../utils.js';
 import { DISC_TAG, unlockedDiscs } from '../ui/music.js';
 import { DISCS, TRACK } from '../ui/music_tracks.js';
 import { showToast } from '../ui/toast.js';

@@ -13,7 +13,7 @@
 // погаснет плашка (иначе старый игрок при первом входе получил бы десяток сразу).
 
 import { world, system } from '@minecraft/server';
-import { getScore, run, isPending, rawTranslateRich, isVip } from '../../DataBase.js';
+import { getScore, run, isPending, rawTranslateRich, isVip } from '../../utils.js';
 import { TRAILS } from '../../menu/cosmetics_shop.js';
 import { showToast, TOAST_TICKS } from '../ui/toast.js';
 import { PROMOCODES, usedPromo } from '../economy/promo.js';
