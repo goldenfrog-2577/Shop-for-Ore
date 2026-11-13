@@ -292,7 +292,7 @@ function playerRegistryMenu(player, page = 0) {
 	page = Math.min(page, last);
 	const returnToList = () => playerRegistryMenu(player, page);
 	const items = records.slice(page * REGISTRY_PAGE_SIZE, (page + 1) * REGISTRY_PAGE_SIZE).map(({ name, status }) => ({
-		text: '§8' + name + '\n' + (status === 'offline' ? '§c' : '§2') + '●§r %admin.players.registry.status.' + status,
+		text: '§8' + name + '\n' + (status === 'offline' ? '§c' : '§2') + '■§r %admin.players.registry.status.' + status,
 		icon: 'textures/server_icons/steve',
 		run: () => playerProfileMenu(player, name, returnToList)
 	}));
@@ -382,7 +382,9 @@ function playerRegistryDetails(player, name, openProfile) {
 		const fresh = findPlayer(name);
 		if (!fresh) return reopen();
 		const values = groupProfileTags(fresh).groups.find(([key]) => key === group)?.[1] ?? [];
-		return showMenu(player, label(group), values.map(value => '§7' + value + '§r').join('\n'), [back(reopen)]);
+		const prefix = group ? group + ':' : '';
+		const body = values.map(value => '§8■ §7' + prefix + value + '§r').join('\n');
+		return showMenu(player, label(group), body, [back(reopen)]);
 	} }));
 	items.push(back(openProfile));
 	return showMenu(player, title, body.join('\n'), items);

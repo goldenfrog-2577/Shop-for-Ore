@@ -6,7 +6,7 @@ const bp = new URL('../../behavior_packs/main-addon-shop_for_ore/', import.meta.
 const source = file => fs.readFileSync(new URL('scripts/' + file, bp), 'utf8')
 	.replace(/^import .*;\r?\n/gm, '').replace(/^export /gm, '');
 const owner = { name: 'Owner', role: 'owner', tags: ['auth:done'] };
-const online = { name: 'Alice', role: 'player', tags: ['auth:done', 'auth:hash:secret', 'auth:salt:secret', 'password:secret', 'ach:welcome', 'sys:guided', 'player'] };
+const online = { name: 'Alice', role: 'player', tags: ['auth:done', 'auth:hash:secret', 'auth:salt:secret', 'password:secret', 'ach:welcome', 'sys:guided', 'sys:wipe:1', 'player'] };
 for (const player of [owner, online]) {
 	player.scoreboard = { displayName: player.name, type: 'Player' };
 	player.location = { x: -4.1, y: 1, z: 0 };
@@ -63,7 +63,9 @@ const click = part => {
 };
 context.openRegistry(owner);
 assert.match(menu.items[0].text,/Owner.*\n.*status\.self/);
-assert.ok(menu.items.some(item => item.text.includes('Former') && item.text.includes('.offline')));
+assert.match(menu.items[0].text, /§2■§r .*status\.self/);
+assert.ok(menu.items.some(item => item.text.includes('Alice') && item.text.includes('§2■§r %admin.players.registry.status.online')));
+assert.ok(menu.items.some(item => item.text.includes('Former') && item.text.includes('§c■§r %admin.players.registry.status.offline')));
 assert.ok(!menu.items.some(item => item.text.includes('Timer')));
 click('Alice');
 assert.match(menu.body, /§e0§7\/§e100/);
@@ -72,11 +74,17 @@ assert.match(menu.body, /-5, 1, 0/);
 assert.match(menu.body, /location_heading[\s\S]+dimension\.overworld[\s\S]+scores_heading[\s\S]+tags_heading/);
 assert.doesNotMatch(menu.body, /\bvip_coins§8:/);
 click('.tag.achievement');
-assert.match(menu.body, /welcome/);
+assert.equal(menu.body, '§8■ §7ach:welcome§r');
 click('back');
 click('.tag.auth');
-assert.match(menu.body, /done/);
+assert.equal(menu.body, '§8■ §7auth:done§r');
 assert.doesNotMatch(menu.body, /secret/);
+click('back');
+click('.tag.system');
+assert.equal(menu.body, '§8■ §7sys:guided§r\n§8■ §7sys:wipe:1§r');
+click('back');
+click('.tag.other');
+assert.equal(menu.body, '§8■ §7player§r');
 click('back');
 click('back');
 online.tags.push('player:vip');
