@@ -1,6 +1,6 @@
 // WorldEdit владельца: порции блоков, ожидание чанков и журнал собственных ресурсов.
 import { world, system, MinecraftBlockTypes, BlockLocation, DynamicPropertiesDefinition } from '@minecraft/server';
-import { hasRole, tell } from '../DataBase.js';
+import { hasRole, tell } from '../utils.js';
 import { tellList } from '../chat/commands/common.js';
 
 export const CHUNK = 8;

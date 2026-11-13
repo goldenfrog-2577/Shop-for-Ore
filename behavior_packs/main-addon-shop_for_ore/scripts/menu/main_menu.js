@@ -4,7 +4,7 @@
 
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed } from '../system/security/jail.js';
-import { isPending, tellText, tell, run, getScore, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed, shopBalance } from '../DataBase.js';
+import { isPending, tellText, tell, run, getScore, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed, shopBalance } from '../utils.js';
 import { showMenu, showModal, modal, backButton, toggleMenu } from './common/forms.js';
 import { enchantsMenu } from './enchant_shop.js';
 import { cosmeticsMenu } from './cosmetics_shop.js';
@@ -286,7 +286,7 @@ export function minigamesMenu(player, back) {
 
 // ===== Правила, промокоды, телепортации, прокачка =====
 
-// Пункты правил: menu.rules.line.1…RULES_COUNT в .lang (число — в DataBase.js, его же берёт !rules)
+// Пункты правил: menu.rules.line.1…RULES_COUNT в .lang (число — в utils.js, его же берёт !rules)
 export { RULES_COUNT };
 function rules(player) {
 	textPage(player, '%menu.rules.title', `%menu.rules.header\n\n${lines('menu.rules.line', RULES_COUNT)}\n\n%menu.rules.footer`, () => menu(player));
@@ -298,7 +298,7 @@ function promocodes(player) {
 	showModal(player, form, ([code]) => redeemPromo(player, code), () => menu(player));
 }
 
-// Телепортации: те же точки, что у !warp (WARPS в DataBase.js), кроме точек персонала; VIP-остров — только VIP.
+// Телепортации: те же точки, что у !warp (WARPS в utils.js), кроме точек персонала; VIP-остров — только VIP.
 // Телепорт — командой !warp: те же проверки (заморозка, режим боя, мини-игры) и сообщения
 function warps(player) {
 	const back = () => menu(player);

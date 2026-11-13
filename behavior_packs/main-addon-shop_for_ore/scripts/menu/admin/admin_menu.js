@@ -11,7 +11,7 @@ import { adminEnchantMenu } from './admin_enchant.js';
 import { boostSeconds } from '../../system/economy/boosts.js';
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed, jailMinutesLeft } from '../../system/security/jail.js';
-import { isPending, isBot, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS, isVip, VIP_TAG } from '../../DataBase.js';
+import { isPending, isBot, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS, isVip, VIP_TAG } from '../../utils.js';
 import { showMenu, showModal, modal, backButton, confirm, wipeConfirm, WARN_TITLE } from '../common/forms.js';
 import { runChatCommand, setMoney } from '../../chat/commands/commands.js';
 import { sendChatMessage } from '../../chat/chat.js';

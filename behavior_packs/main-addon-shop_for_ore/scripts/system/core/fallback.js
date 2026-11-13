@@ -3,7 +3,7 @@
 // если скрипты не отвечают 5 секунд, включается запасное меню (dialogue/fallback_menu.json, functions/fallback/*).
 
 import { system, world } from '@minecraft/server';
-import { run } from '../../DataBase.js';
+import { run } from '../../utils.js';
 
 export const HEARTBEAT = 'scoreboard players set scripts system 0';
 

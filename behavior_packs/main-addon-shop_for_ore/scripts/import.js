@@ -9,7 +9,7 @@
 */
 
 import { world, system } from '@minecraft/server';
-import { hasRole, tell } from './DataBase.js';
+import { hasRole, tell } from './utils.js';
 
 // Импорт модулей меню
 import './menu/main_menu.js';         // Основное меню магазина
@@ -66,8 +66,8 @@ import './system/core/player_scores.js'; // Восстановление отс�
 
 const loadedModules = [
 // BEGIN GENERATED MODULE LIST
-	"DataBase.js",
 	"import.js",
+	"utils.js",
 	"chat/censor.js",
 	"chat/chat.js",
 	"chat/commands/admin.js",

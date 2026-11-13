@@ -8,7 +8,7 @@
 //    на спавне и в шахтах им можно было бы взорвать игроков, которые не в бою.
 
 import { world, BlockLocation } from '@minecraft/server';
-import { run, tell } from '../../DataBase.js';
+import { run, tell } from '../../utils.js';
 
 export const PORTABLE_CRYSTAL = 'server:portable_ender_crystal';
 // Арена боя с Хранителем — те же границы, что inFight в system/boss/boss.js (за решёткой; тоннель — уже не арена).

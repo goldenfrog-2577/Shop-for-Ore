@@ -25,7 +25,7 @@
 // до этого бой не начать, решётка закрыта.
 
 import { system, world, Location, BlockLocation, MinecraftEffectTypes } from '@minecraft/server';
-import { getScore, run, tell, isPending } from '../../DataBase.js';
+import { getScore, run, tell, isPending } from '../../utils.js';
 import { inArena } from './arena.js';
 import { SPAWN } from '../player/void.js';
 

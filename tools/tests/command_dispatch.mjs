@@ -1,6 +1,6 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';import {spawnSync} from 'node:child_process';import {fileURLToPath} from 'node:url';
 if(!vm.SourceTextModule){const r=spawnSync(process.execPath,['--experimental-vm-modules','--no-warnings',fileURLToPath(import.meta.url)],{encoding:'utf8'});process.stdout.write(r.stdout);process.stderr.write(r.stderr);process.exit(r.status??1);}
-const bp=new URL('../../behavior_packs/main-addon-shop_for_ore/',import.meta.url),source=fs.readFileSync(new URL('scripts/chat/commands/commands.js',bp),'utf8'),db=fs.readFileSync(new URL('scripts/DataBase.js',bp),'utf8');
+const bp=new URL('../../behavior_packs/main-addon-shop_for_ore/',import.meta.url),source=fs.readFileSync(new URL('scripts/chat/commands/commands.js',bp),'utf8'),db=fs.readFileSync(new URL('scripts/utils.js',bp),'utf8');
 const section=db.slice(db.indexOf('export const commandsList = [')),commandsList=[...section.matchAll(/command:\s*['"]!([a-z0-9_]+)[^'"]*['"][\s\S]*?role:\s*['"](\w+)['"]/g)].map(m=>({command:'!'+m[1],role:m[2]}));
 for(const name of ['worldedit','wipe','resetoffline','role','roles','resetpass'])assert.equal(commandsList.find(x=>x.command==='!'+name)?.role,'owner');
 const ROLES=['player','helper','moder','admin','owner'],mk=(name,role='player')=>({name,tags:new Set(role==='player'?[]:['role:'+role]),hasTag(t){return this.tags.has(t);},addTag(t){this.tags.add(t);},removeTag(t){this.tags.delete(t);}});
@@ -11,7 +11,7 @@ const logged=[];
 let now=1000,wipes=0,resets=0;const notices=[],native=[],delegated=[],passwords=[],routed=[],sounds=[];let helpHook;const muted=[];
 const stubs={
  '@minecraft/server':{world},
- '../../DataBase.js':{commandsList,isPending:p=>!!p.pending,tell:(p,key,...args)=>notices.push({p,key,args}),hasRole,findPlayer:name=>people.find(p=>p.name===name),getRole,ROLES,run:(p,cmd)=>native.push(cmd),menuFeedback:(p,error)=>sounds.push([p.name,error]),settleCommands:async()=>{},toldErrorCount:p=>p.errs??0,toldSuccessCount:p=>p.oks??0},
+ '../../utils.js':{commandsList,isPending:p=>!!p.pending,tell:(p,key,...args)=>notices.push({p,key,args}),hasRole,findPlayer:name=>people.find(p=>p.name===name),getRole,ROLES,run:(p,cmd)=>native.push(cmd),menuFeedback:(p,error)=>sounds.push([p.name,error]),settleCommands:async()=>{},toldErrorCount:p=>p.errs??0,toldSuccessCount:p=>p.oks??0},
  './player.js':{PLAYER_COMMANDS:{help:(p,a)=>helpHook?helpHook(p):routed.push(['help',p,Array.from(a)])},textWidth:s=>s.length,emoteGrid:()=> 'grid'},
  './moderator.js':{MODERATION_COMMANDS:{mute:(p,a)=>muted.push([p.name,...Array.from(a)])},isCoord:()=>true},
  './admin.js':{ADMIN_COMMANDS:{},debugLines:()=>[],giveOreMagnet:()=>true,setMoney:()=>true},

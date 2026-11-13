@@ -11,7 +11,7 @@
 // Идея — по мотивам карты FearCube (с разрешения автора), код свой.
 
 import { world } from '@minecraft/server';
-import { run } from '../../DataBase.js';
+import { run } from '../../utils.js';
 import { registerGame, getGame } from './minigames.js';
 
 export const CENTER = [501, 502];

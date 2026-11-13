@@ -1,5 +1,6 @@
 {
 	"relocations": {
+		"DataBase.js": "utils.js",
 		"system/migrate.js": "system/core/migrate.js",
 		"system/player_scores.js": "system/core/player_scores.js",
 		"system/reset_history.js": "system/core/reset_history.js",
@@ -46,7 +47,7 @@
 	"startup": {
 		"evaluation": [
 			"system/ui/error_keys.js",
-			"DataBase.js",
+			"utils.js",
 			"system/security/jail.js",
 			"menu/common/forms.js",
 			"menu/enchant_shop.js",
@@ -111,7 +112,7 @@
 		],
 		"subscriptions": [
 			[
-				"DataBase.js",
+				"utils.js",
 				"playerLeave"
 			],
 			[
