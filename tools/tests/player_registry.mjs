@@ -69,6 +69,8 @@ assert.ok(menu.items.some(item => item.text.includes('Former') && item.text.incl
 assert.ok(!menu.items.some(item => item.text.includes('Timer')));
 click('Alice');
 assert.match(menu.body, /§e0§7\/§e100/);
+assert.equal(menu.items.find(item => item?.text.endsWith('.actions'))?.icon, 'textures/server_icons/command_block');
+assert.equal(menu.items.find(item => item?.text.endsWith('.refresh'))?.icon, 'textures/ui/refresh_light');
 click('.details');
 assert.match(menu.body, /-5, 1, 0/);
 assert.match(menu.body, /location_heading[\s\S]+dimension\.overworld[\s\S]+scores_heading[\s\S]+tags_heading/);

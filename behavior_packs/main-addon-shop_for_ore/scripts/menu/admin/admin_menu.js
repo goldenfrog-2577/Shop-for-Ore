@@ -332,12 +332,12 @@ function playerProfileMenu(player, name, returnToList = () => playerRegistryMenu
 	const openProfile = () => playerProfileMenu(player, name, returnToList);
 	return showMenu(player, '%admin.players.registry.profile §8' + name, body, [
 		{ text: '%admin.players.registry.details', icon: 'textures/items/book_writable', run: () => playerRegistryDetails(player, name, openProfile) },
-		live && { text: '%admin.players.registry.actions', run: () => {
+		live && { text: '%admin.players.registry.actions', icon: 'textures/server_icons/command_block', run: () => {
 			if (!registryAllowed(player)) return;
 			const target = findPlayer(name);
 			return target ? playerActions(player, target, openProfile) : openProfile();
 		} },
-		{ text: '%admin.players.registry.refresh', run: openProfile },
+		{ text: '%admin.players.registry.refresh', icon: 'textures/ui/refresh_light', run: openProfile },
 		back(returnToList)
 	]);
 }
