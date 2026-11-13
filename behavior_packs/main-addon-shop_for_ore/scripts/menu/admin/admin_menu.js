@@ -5,13 +5,14 @@
 // В 1.19.50 формы принимают только строки: ключи перевода пишутся как «%ключ», после ключа — пробел или перенос
 // (сразу после ключа не ставим ни скобок, ни §-кодов).
 
-import { playtimeText } from '../../system/player/playtime.js';
+import { durationText, playedSeconds, playtimeText } from '../../system/player/playtime.js';
+import { DEBUG_SCORES, groupProfileTags, offlineProfile, offlineProfiles, profilePosition, profileScores } from '../../system/player/registry.js';
 import { clearResetHistory } from '../../system/core/reset_history.js';
 import { adminEnchantMenu } from './admin_enchant.js';
 import { boostSeconds } from '../../system/economy/boosts.js';
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed, jailMinutesLeft } from '../../system/security/jail.js';
-import { isPending, isBot, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS, isVip, VIP_TAG } from '../../utils.js';
+import { isPending, isBot, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS, isVip, VIP_TAG, MAX_LEVEL } from '../../utils.js';
 import { showMenu, showModal, modal, backButton, confirm, wipeConfirm, WARN_TITLE } from '../common/forms.js';
 import { runChatCommand, setMoney } from '../../chat/commands/commands.js';
 import { sendChatMessage } from '../../chat/chat.js';
@@ -253,21 +254,104 @@ export function orderedPlayers(viewer, players = [...world.getPlayers()], random
 	}
 	return sorted;
 }
-function playersMenu(player) {
-	const names = orderedPlayers(player).map(p => p.name);
-	if (!names.length) return tell(player, 'chat.admin.error.no_players');
-	const form = modal('%admin.players.title')
-		.dropdown('%admin.players.choose', names, 0);
-	showModal(player, form, (values) => {
-		const name = names[values[0]];
-		const target = findPlayer(name);
-		if (!target) return tell(player, 'chat.cmd.error.offline', name);
-		playerActions(player, target);
-	}, () => admin_menu(player));
+const REGISTRY_PAGE_SIZE = 12;
+const PROFILE_TAG_TITLES = { ach: 'achievement', player: 'player', sys: 'system' };
+const profileValue = value => value === undefined ? '§8—' : '§e' + value;
+const registryTitle = '%admin.players.registry.title';
+
+function registryAllowed(player) {
+	return hasRole(player, 'admin') && !isPending(player);
+}
+
+function playersMenu(player, page = 0) {
+	if (!registryAllowed(player)) return;
+	const online = orderedPlayers(player);
+	const offline = [...offlineProfiles(new Set(online.map(p => p.name))).keys()].sort((a, b) => a.localeCompare(b));
+	const records = online.map(p => ({ name: p.name, status: p.name === player.name ? 'self' : 'online' }))
+		.concat(offline.map(name => ({ name, status: 'offline' })));
+	const last = Math.max(0, Math.ceil(records.length / REGISTRY_PAGE_SIZE) - 1);
+	page = Math.min(page, last);
+	const returnToList = () => playersMenu(player, page);
+	const items = records.slice(page * REGISTRY_PAGE_SIZE, (page + 1) * REGISTRY_PAGE_SIZE).map(({ name, status }) => ({
+		text: '§8' + name + '\n' + (status === 'offline' ? '§c' : '§2') + '●§r %admin.players.registry.status.' + status,
+		icon: 'textures/server_icons/steve',
+		run: () => playerProfileMenu(player, name, returnToList)
+	}));
+	if (page > 0) items.push({ text: '%admin.players.registry.prev', run: () => playersMenu(player, page - 1) });
+	if (page < last) items.push({ text: '%admin.players.registry.next', run: () => playersMenu(player, page + 1) });
+	items.push(back(() => admin_menu(player)));
+	return showMenu(player, registryTitle, '%admin.players.registry.body §f' + (page + 1) + '§7/§f' + (last + 1), items);
+}
+
+function playerProfileMenu(player, name, returnToList = () => playersMenu(player)) {
+	if (!registryAllowed(player)) return;
+	const live = findPlayer(name);
+	const identity = live ? undefined : offlineProfiles(new Set()).get(name);
+	const data = live ? {
+		scores: profileScores(live.scoreboard),
+		role: getRole(live), vip: isVip(live), warns: getWarns(live), seconds: playedSeconds(live)
+	} : identity ? offlineProfile(identity) : { scores: {} };
+	const { scores, vip } = data;
+	const role = live && isBot(live) ? 'role.tag.bot' : data.role ? 'role.' + data.role : undefined;
+	const xp = vip ? '§r\ue128' : scores.xp === undefined ? profileValue(undefined)
+		: profileValue(scores.xp) + (scores.xp_need > 0 ? '§7/' + profileValue(scores.xp_need)
+			: scores.xp_need === 0 && scores.lvl >= MAX_LEVEL ? ' %admin.players.registry.xp.max' : '');
+	const status = !live ? 'offline' : live.name === player.name ? 'self' : 'online';
+	const body = [
+		'%admin.players.registry.status_label %admin.players.registry.status.' + status + (status === 'self' ? ' §8· %admin.players.registry.status.online' : ''),
+		...(!live ? [data.role ? '%admin.players.registry.snapshot' : '%admin.players.registry.snapshot_missing'] : []),
+		'',
+		'%admin.players.body.role ' + (role ? '%' + role : profileValue(undefined)),
+		'%admin.players.body.lvl ' + (vip ? '§aVIP' : profileValue(scores.lvl)) + ' §r\ue153',
+		'%admin.players.registry.xp ' + xp + (vip ? '' : ' §r\ue154'),
+		'%admin.players.registry.money ' + profileValue(scores.money) + ' §r' + COIN_GLYPH,
+		...(vip ? ['%admin.players.body.vip_coins ' + profileValue(scores.vip_coins) + ' §r' + VIP_COIN_GLYPH] : []),
+		'%admin.players.registry.rebirth ' + profileValue(scores.rebirth) + ' §r\ue116',
+		'%admin.players.body.warns ' + (data.warns === undefined ? profileValue(undefined) : '§e' + data.warns + '§7/§f3'),
+		'%admin.players.body.playtime ' + (data.seconds === undefined ? profileValue(undefined) : durationText(data.seconds))
+	].join('\n');
+	const openProfile = () => playerProfileMenu(player, name, returnToList);
+	return showMenu(player, '%admin.players.registry.profile §8' + name, body, [
+		{ text: '%admin.players.registry.details', icon: 'textures/items/book_writable', run: () => playerRegistryDetails(player, name, openProfile) },
+		live && { text: '%admin.players.registry.actions', run: () => {
+			if (!registryAllowed(player)) return;
+			const target = findPlayer(name);
+			return target ? playerActions(player, target, openProfile) : openProfile();
+		} },
+		{ text: '%admin.players.registry.refresh', run: openProfile },
+		back(returnToList)
+	]);
+}
+
+function playerRegistryDetails(player, name, openProfile) {
+	if (!registryAllowed(player)) return;
+	const target = findPlayer(name);
+	const identity = target ? undefined : offlineProfiles(new Set()).get(name);
+	const scores = profileScores(target?.scoreboard ?? identity);
+	const body = DEBUG_SCORES.map(id => '§7' + id + '§8: ' + profileValue(scores[id]));
+	if (!target) return showMenu(player, '%admin.players.registry.details §8» ' + name, [
+		...body, '', '%admin.players.registry.offline_details'
+	].join('\n'), [back(openProfile)]);
+	const [position, dimension] = profilePosition(target);
+	const { count, groups } = groupProfileTags(target);
+	body.unshift('%admin.players.registry.position §f' + position + ' §8(' + dimension + ')', '');
+	body.push('', '%admin.players.registry.tag_count §f' + count);
+	const reopen = () => playerRegistryDetails(player, name, openProfile);
+	const label = group => !group ? '%chat.cmd.debug.other' : Object.prototype.hasOwnProperty.call(PROFILE_TAG_TITLES, group)
+		? '%admin.players.registry.tag.' + PROFILE_TAG_TITLES[group] : '§8' + group;
+	const items = groups.map(([group, tags]) => ({ text: label(group) + ' §8(' + tags.length + ')', run: () => {
+		if (!registryAllowed(player)) return;
+		const fresh = findPlayer(name);
+		if (!fresh) return reopen();
+		const values = groupProfileTags(fresh).groups.find(([key]) => key === group)?.[1] ?? [];
+		return showMenu(player, label(group), values.map(value => '§7' + value + '§r').join('\n'), [back(reopen)]);
+	} }));
+	items.push(back(openProfile));
+	return showMenu(player, '%admin.players.registry.details §8» ' + name, body.join('\n'), items);
 }
 
 // Действия над выбранным игроком. Права проверяет сама команда: например, модератора не может наказать модератор
-function playerActions(player, target) {
+function playerActions(player, target, openProfile = () => playerProfileMenu(player, target.name)) {
 	const name = target.name;
 	if (!findPlayer(name)) return tell(player, 'chat.cmd.error.offline', name);
 	const cmd = (command, ...args) => () => runChatCommand(player, command, [name, ...args]);
@@ -314,7 +398,7 @@ function playerActions(player, target) {
 	if (!self && hasRole(player, 'owner') && !target.hasTag('role:owner') && !target.hasTag('role:bot')) {
 		items.push({ text: '%admin.players.button.resetpass', icon: 'textures/ui/icon_lock', run: () => confirm(player, WARN_TITLE, '%admin.players.resetpass.body', () => runChatCommand(player, 'resetpass', [target.name]), () => playerActions(player, target)) });
 	}
-	items.push(back(() => playersMenu(player)));
+	items.push(back(openProfile));
 	const body = [
 		`%admin.players.body.name ${name}`,
 		`%admin.players.body.playtime ${playtimeText(target)}`,
@@ -329,7 +413,7 @@ function playerActions(player, target) {
 		// В тюрьме — сколько осталось
 		...(isJailed(target) ? [`%admin.players.body.jail ${jailMinutesLeft(target) === Infinity ? '%chat.term.permanent' : `${jailMinutesLeft(target)} %admin.common.min`}`] : [])
 	].join('\n');
-	showMenu(player, '%admin.players.title', body, items, () => playersMenu(player));
+	showMenu(player, '%admin.players.title', body, items, openProfile);
 }
 
 /** Выдать или снять VIP (тег player:vip). Игрок мог выйти, пока окно было открыто. */

@@ -113,6 +113,7 @@ const loadedModules = [
 	"system/player/discs.js",
 	"system/player/playtime.js",
 	"system/player/ranks.js",
+	"system/player/registry.js",
 	"system/player/tools.js",
 	"system/player/void.js",
 	"system/security/anticheat.js",

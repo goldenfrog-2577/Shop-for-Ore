@@ -424,6 +424,9 @@
 			"path" : "scripts/system/player/playtime.js"
 		},
 		{
+			"path" : "scripts/system/player/registry.js"
+		},
+		{
 			"path" : "scripts/system/core/reset_history.js"
 		},
 		{

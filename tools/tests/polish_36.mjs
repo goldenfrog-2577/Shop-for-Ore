@@ -18,12 +18,13 @@ assert.match(chat, /\{ translate: `role\.tag\.\$\{role\}` \}\];/);
 
 // Меню админа: «Сбросить пароль» — последняя кнопка перед «Назад»; «Убрать бота» — только когда бот в мире
 const admin = read(new URL('scripts/menu/admin/admin_menu.js', bp));
-const reset = admin.indexOf("'%admin.players.button.resetpass'"), vip = admin.indexOf("'%admin.players.button.vip_give'"), back = admin.indexOf('items.push(back(() => playersMenu(player)));');
+const reset = admin.indexOf("'%admin.players.button.resetpass'"), vip = admin.indexOf("'%admin.players.button.vip_give'"), back = admin.indexOf('items.push(back(openProfile));', reset);
 assert.ok(vip < reset && reset < back && admin.indexOf("'%admin.players.button.resetpass'", reset + 1) < 0);
 assert.ok(!/[^\n]*'%admin\.players\.button\.resetpass'[^\n]*\n[^\n]*\n[^\n]*vip_give/.test(admin));
 assert.match(admin, /\.\.\.\(bot \? \[\{ text: '%admin\.bot\.button\.remove'/);
 // Карточка игрока: «Предупреждения» → «Монет на балансе» → «VIP-монеты»
-const w = admin.indexOf('%admin.players.body.warns '), v = admin.indexOf('%admin.players.body.vip_coins '), m = admin.indexOf('%admin.players.body.money ');
+const actions = admin.indexOf('function playerActions(');
+const w = admin.indexOf('%admin.players.body.warns ', actions), v = admin.indexOf('%admin.players.body.vip_coins ', actions), m = admin.indexOf('%admin.players.body.money ', actions);
 assert.ok(w > 0 && w < m && m < v);
 
 // !boost stop: прочерк заменён словом «нет» на языке читателя

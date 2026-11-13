@@ -11,6 +11,7 @@ import { canTeleport, listGames, joinGame, leaveGame, getGame, startGame, endGam
 import { ChangePasswordUI } from '../../registration/change.js';
 import { columnPadding, resolveTarget, tellList, textWidth } from './common.js';
 import { censor } from '../censor.js';
+import { profileScores } from '../../system/player/registry.js';
 
 export { textWidth };
 
@@ -271,16 +272,17 @@ export const PLAYER_COMMANDS = {
 			tell(player, 'chat.cmd.error.offline', args[0]);
 			return;
 		}
-		const lvl = getScore(target, 'lvl');
+		const scores = profileScores(target.scoreboard);
+		const lvl = scores.lvl ?? 0;
 		const lines = [
 			{ translate: 'chat.cmd.stats.lvl', with: { rawtext: [isVip(target) ? { translate: 'chat.cmd.stats.vip', with: [String(lvl)] } : { text: String(lvl) }] } },
 			// Последний уровень (xp_need 0) — без «/ 0»
-			getScore(target, 'xp_need') > 0
-				? { translate: 'chat.cmd.stats.xp', with: [String(getScore(target, 'xp')), String(getScore(target, 'xp_need'))] }
-				: { translate: 'chat.cmd.stats.xp.max', with: [String(getScore(target, 'xp'))] },
-			{ translate: 'chat.cmd.stats.money', with: [String(getScore(target, 'money'))] },
-			{ translate: 'chat.cmd.stats.vip_coins', with: [String(getScore(target, 'vip_coins'))] },
-			{ translate: 'chat.cmd.stats.rebirth', with: [String(getScore(target, 'rebirth'))] },
+			(scores.xp_need ?? 0) > 0
+				? { translate: 'chat.cmd.stats.xp', with: [String((scores.xp ?? 0)), String((scores.xp_need ?? 0))] }
+				: { translate: 'chat.cmd.stats.xp.max', with: [String((scores.xp ?? 0))] },
+			{ translate: 'chat.cmd.stats.money', with: [String((scores.money ?? 0))] },
+			{ translate: 'chat.cmd.stats.vip_coins', with: [String((scores.vip_coins ?? 0))] },
+			{ translate: 'chat.cmd.stats.rebirth', with: [String((scores.rebirth ?? 0))] },
 			{ translate: 'chat.cmd.stats.role', with: { rawtext: [{ translate: `role.${getRole(target)}` }] } },
 			{ translate: 'chat.cmd.stats.warns', with: [String(getWarns(target))] }
 		];

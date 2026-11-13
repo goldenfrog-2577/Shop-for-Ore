@@ -60,21 +60,25 @@ async function startup(base, { fail, ready = false, limit = 40, heartbeat = true
  return {load,commands,log,timers,modules:evaluation.length,relativeImports:sourceFiles.reduce((n,f)=>n+[...fs.readFileSync(f,'utf8').matchAll(/(?:from\s+|import\s+)['"]\.[^'"]+['"]/g)].length,0)};
 }
 const actual=await startup(scripts);
-assert.equal(actual.modules,63);assert.equal(actual.relativeImports,219);
+assert.equal(actual.modules,64);assert.equal(actual.relativeImports,224);
 const index=JSON.parse(fs.readFileSync(path.join(bp,'contents.json'),'utf8')).content.map(e=>e.path);
 const files=walk(scripts).filter(p=>p.endsWith('.js')).map(p=>'scripts/'+rel(scripts,p));
 assert.deepEqual(index.filter(p=>p.startsWith('scripts/')&&p.endsWith('.js')).sort(),files.sort(),'index exactly covers scripts');
 for(const [old,next]of Object.entries(mapping)){assert.ok(!fs.existsSync(path.join(scripts,old)),'old module remains '+old);assert.ok(fs.existsSync(path.join(scripts,next)),'missing relocation '+next);}
 assert.deepEqual(fs.readdirSync(path.join(scripts,'system')).filter(n=>n.endsWith('.js')),['worldedit.js']);
+const withoutRegistry = ({ evaluation, timers, ...rest }) => ({ ...rest,
+ evaluation: evaluation.filter(id => id !== 'system/player/registry.js'),
+ timers: timers.filter(([id]) => id !== 'system/player/registry.js')
+});
 if (process.argv[2]) {
  const baseline=await startup(path.resolve(process.argv[2]));
- const { timers: actualTimers, ...actualLoad }=actual.load;
- assert.deepEqual({...actualLoad,timers:actualTimers.slice(0,-1)},baseline.load,'baseline startup order');
+ assert.deepEqual(withoutRegistry(actual.load),baseline.load,'baseline startup order');
  assert.deepEqual(actual.commands,baseline.commands,'baseline first 40 empty-world ticks');
 }
 const { timers: originalTimers, ...originalLoad } = actual.load;
-assert.deepEqual({...originalLoad, timers: originalTimers.slice(0,-1)}, fixture.startup, 'existing module evaluation/subscription/schedule order unchanged');
+assert.deepEqual(withoutRegistry({...originalLoad, timers: originalTimers.slice(0,-1)}), fixture.startup, 'existing module evaluation/subscription/schedule order unchanged');
 assert.deepEqual(originalTimers.at(-1), ['import.js',20], 'one new startup diagnostics timer');
+assert.deepEqual(originalTimers.filter(([id]) => id === 'system/player/registry.js'), [['system/player/registry.js',100]]);
 const unavailable = await startup(scripts,{limit:120,heartbeat:false});
 assert.equal(unavailable.timers.at(-1).active,false,'diagnostics stop after timeout');
 const moduleList = syncModuleList(scripts, {check:true});

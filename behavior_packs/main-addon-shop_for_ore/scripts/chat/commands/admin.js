@@ -3,6 +3,7 @@
 // runChatCommand в chat/commands/commands.js; return — команда выполнена или отказ уже сообщён игроку.
 
 import { playtimeRawtext } from '../../system/player/playtime.js';
+import { DEBUG_SCORES, groupProfileTags, profilePosition, profileScores } from '../../system/player/registry.js';
 import { world } from '@minecraft/server';
 import { run, tell, findPlayer, setChatColor, CHAT_COLORS, colorAllowed, impersonatedRole, hasRole, rawTranslate, emotes, parseTerm, rawTranslateRich, termText, getScore, getRole } from '../../utils.js';
 import { botMenu } from '../../menu/admin/admin_menu.js';
@@ -22,41 +23,24 @@ function denyImpersonation(player, target, role) {
 }
 
 // Служебные табло: !scoreboard меняет их только у владельца (таймеры, разовая настройка, ивенты, панель)
-const PROTECTED_OBJECTIVES = ['timer', 'system', 'settings', 'display', 'online', 'xp_need'];
+const PROTECTED_OBJECTIVES = ['timer', 'system', 'settings', 'display', 'online', 'xp_need', 'sfo_registry'];
 
-// Счета, которые показывает !debug (остальные — !scoreboard <ник> list)
-const DEBUG_SCORES = ['money', 'vip_coins', 'lvl', 'xp', 'rebirth'];
-
-/**
- * Строки !debug: роль, позиция, счета, теги по группам.
- * Теги паролей (auth:salt:, auth:hash:, password:) скрыты, как в !tag list.
- * @param {Player} target
- */
+/** Строки !debug. Секреты аккаунта исключаются в groupProfileTags. */
 export function debugLines(target) {
-	const { x, y, z } = target.location;
-	const scores = DEBUG_SCORES.map(id => `§e${id}§7: §f${getScore(target, id)}`).join('§8, ');
-	const tags = target.getTags().filter(t => !/^(auth:(salt|hash):|password:)/.test(t)).sort((a, b) => a.localeCompare(b));
-	const groups = new Map();
-	for (const tag of tags) {
-		const i = tag.indexOf(':');
-		const group = i > 0 ? tag.slice(0, i) : '';
-		if (!groups.has(group)) groups.set(group, []);
-		groups.get(group).push(i > 0 ? tag.slice(i + 1) : tag);
-	}
+	const data = profileScores(target.scoreboard);
+	const scores = DEBUG_SCORES.map(id => '§e' + id + '§7: §f' + (data[id] ?? 0)).join('§8, ');
+	const { count, groups } = groupProfileTags(target);
 	const lines = [
-		{ translate: 'chat.cmd.stats.role', with: { rawtext: [{ translate: `role.${getRole(target)}` }] } },
-		{ translate: 'chat.cmd.debug.pos', with: [`${Math.floor(x)} ${Math.floor(y)} ${Math.floor(z)}`, target.dimension.id.replace('minecraft:', '')] },
+		{ translate: 'chat.cmd.stats.role', with: { rawtext: [{ translate: 'role.' + getRole(target) }] } },
+		{ translate: 'chat.cmd.debug.pos', with: profilePosition(target) },
 		{ rawtext: [{ translate: 'admin.players.body.playtime' }, { text: ' ' }, ...playtimeRawtext(target)] },
 		{ translate: 'chat.cmd.debug.scores', with: [scores] },
-		{ translate: 'chat.cmd.debug.tags', with: [String(tags.length)] }
+		{ translate: 'chat.cmd.debug.tags', with: [String(count)] }
 	];
-	// Группы по алфавиту, теги без «:» — последними («прочие»)
-	const names = [...groups.keys()].filter(g => g).sort((a, b) => a.localeCompare(b));
-	if (groups.has('')) names.push('');
-	for (const g of names) {
-		const list = groups.get(g).join('§r§8, §7');
-		lines.push(g ? { text: `§6[${g}]§r §7${list}` }
-			: { rawtext: [{ text: '§6[' }, { translate: 'chat.cmd.debug.other' }, { text: `]§r §7${list}` }] });
+	for (const [group, values] of groups) {
+		const list = values.join('§r§8, §7');
+		lines.push(group ? { text: '§6[' + group + ']§r §7' + list }
+			: { rawtext: [{ text: '§6[' }, { translate: 'chat.cmd.debug.other' }, { text: ']§r §7' + list }] });
 	}
 	return lines;
 }
