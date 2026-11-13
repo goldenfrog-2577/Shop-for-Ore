@@ -26,9 +26,9 @@ export function groupProfileTags(player) {
 	const tags = player.getTags().filter(t => !/^(auth:(salt|hash):|password:)/i.test(t)).sort((a, b) => a.localeCompare(b));
 	for (const tag of tags) {
 		const colon = tag.indexOf(':');
-		const group = colon > 0 ? tag.slice(0, colon) : '';
+		const group = tag === 'player' ? 'player' : colon > 0 ? tag.slice(0, colon) : '';
 		if (!groups.has(group)) groups.set(group, []);
-		groups.get(group).push(colon > 0 ? tag.slice(colon + 1) : tag);
+		groups.get(group).push(tag);
 	}
 	const names = [...groups.keys()].filter(Boolean).sort((a, b) => a.localeCompare(b));
 	if (groups.has('')) names.push('');

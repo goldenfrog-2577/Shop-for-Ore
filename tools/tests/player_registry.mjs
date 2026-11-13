@@ -6,7 +6,7 @@ const bp = new URL('../../behavior_packs/main-addon-shop_for_ore/', import.meta.
 const source = file => fs.readFileSync(new URL('scripts/' + file, bp), 'utf8')
 	.replace(/^import .*;\r?\n/gm, '').replace(/^export /gm, '');
 const owner = { name: 'Owner', role: 'owner', tags: ['auth:done'] };
-const online = { name: 'Alice', role: 'player', tags: ['auth:done', 'auth:hash:secret', 'auth:salt:secret', 'password:secret', 'ach:welcome', 'sys:guided', 'sys:wipe:1', 'player'] };
+const online = { name: 'Alice', role: 'player', tags: ['auth:done', 'auth:hash:secret', 'auth:salt:secret', 'password:secret', 'ach:welcome', 'sys:guided', 'sys:wipe:1', 'player', 'player:board', 'unprefixed_tag'] };
 for (const player of [owner, online]) {
 	player.scoreboard = { displayName: player.name, type: 'Player' };
 	player.location = { x: -4.1, y: 1, z: 0 };
@@ -83,8 +83,11 @@ click('back');
 click('.tag.system');
 assert.equal(menu.body, '§8■ §7sys:guided§r\n§8■ §7sys:wipe:1§r');
 click('back');
+click('.tag.player');
+assert.equal(menu.body, '§8■ §7player§r\n§8■ §7player:board§r');
+click('back');
 click('.tag.other');
-assert.equal(menu.body, '§8■ §7player§r');
+assert.equal(menu.body, '§8■ §7unprefixed_tag§r');
 click('back');
 click('back');
 online.tags.push('player:vip');

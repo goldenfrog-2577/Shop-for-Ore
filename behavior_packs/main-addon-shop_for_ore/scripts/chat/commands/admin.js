@@ -38,7 +38,8 @@ export function debugLines(target) {
 		{ translate: 'chat.cmd.debug.tags', with: [String(count)] }
 	];
 	for (const [group, values] of groups) {
-		const list = values.join('§r§8, §7');
+		const prefix = group + ':';
+		const list = values.map(tag => group && tag.startsWith(prefix) ? tag.slice(prefix.length) : tag).join('§r§8, §7');
 		lines.push(group ? { text: '§6[' + group + ']§r §7' + list }
 			: { rawtext: [{ text: '§6[' }, { translate: 'chat.cmd.debug.other' }, { text: ']§r §7' + list }] });
 	}

@@ -382,8 +382,7 @@ function playerRegistryDetails(player, name, openProfile) {
 		const fresh = findPlayer(name);
 		if (!fresh) return reopen();
 		const values = groupProfileTags(fresh).groups.find(([key]) => key === group)?.[1] ?? [];
-		const prefix = group ? group + ':' : '';
-		const body = values.map(value => '§8■ §7' + prefix + value + '§r').join('\n');
+		const body = values.map(tag => '§8■ §7' + tag + '§r').join('\n');
 		return showMenu(player, label(group), body, [back(reopen)]);
 	} }));
 	items.push(back(openProfile));
