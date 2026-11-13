@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
+import { syncModuleList } from '../module_list.mjs';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
@@ -10,14 +11,14 @@ const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?
 const rel=(base,p)=>path.relative(base,p).split(path.sep).join('/');
 const fixture=JSON.parse(fs.readFileSync(new URL('fixtures/system-layout.json',import.meta.url),'utf8'));
 const mapping=fixture.relocations,identity=p=>mapping[p]??p;
-async function startup(base,old=false){
- const evaluation=[],subscriptions=[],timers=[],oneShots=[],commands=[],events={},properties=new Map();let current;
- const context=vm.createContext({console:{log(){},warn(){}},__enter:id=>{current=identity(id);evaluation.push(current);}});
+async function startup(base, { fail, ready = false, limit = 40, heartbeat = true } = {}) {
+ const evaluation=[],subscriptions=[],timers=[],oneShots=[],commands=[],events={},properties=new Map(),log=[];let current;
+ const context=vm.createContext({console:{log(){},warn(message){log.push(message);}},__enter:id=>{current=identity(id);evaluation.push(current);}});
  const sourceFiles=walk(base).filter(f=>f.endsWith('.js'));
  const names=new Set(sourceFiles.flatMap(f=>[...fs.readFileSync(f,'utf8').matchAll(/world\.events\.(\w+)/g)].map(m=>m[1])));
  for(const key of names)events[key]={handlers:[],subscribe(fn){assert.equal(typeof fn,'function');this.handlers.push(fn);subscriptions.push([current,key]);return fn;},unsubscribe(fn){const i=this.handlers.indexOf(fn);if(i>=0)this.handlers.splice(i,1);}};
- const dimension={id:'minecraft:overworld',runCommandAsync:async c=>{commands.push(c);return {successCount:1,statusMessage:c.includes('maxcommandchainlength')?'65536':'10000'};},getEntities:()=>[],getPlayers:()=>[].values(),getBlock:()=>undefined};
- const world={events,getPlayers:()=>[].values(),getDimension:()=>dimension,scoreboard:{getObjective:()=>undefined,getObjectives:()=>[],addObjective:id=>({id})},getDynamicProperty:k=>properties.get(k),setDynamicProperty:(k,v)=>properties.set(k,v)};
+ const dimension={id:'minecraft:overworld',runCommandAsync:async c=>{commands.push(c);return {successCount:!heartbeat && c === 'scoreboard players set scripts system 0' ? 0 : 1,statusMessage:c.includes('maxcommandchainlength')?'65536':'10000'};},getEntities:()=>[],getPlayers:()=>[].values(),getBlock:()=>undefined};
+ const world={events,getPlayers:()=>[].values(),getDimension:()=>dimension,scoreboard:{getObjective:id=>ready && ['system','money','lvl','xp','xp_need'].includes(id) ? {id} : undefined,getObjectives:()=>[],addObjective:id=>({id})},getDynamicProperty:k=>properties.get(k),setDynamicProperty:(k,v)=>properties.set(k,v)};
  const system={run(fn){oneShots.push(fn);return oneShots.length;},runSchedule(fn,interval=1){timers.push({fn,interval,owner:current,active:true});return timers.length;},clearRunSchedule(id){if(timers[id-1])timers[id-1].active=false;}};
  class Point{constructor(x,y,z){Object.assign(this,{x,y,z});}}
  class DynamicPropertiesDefinition{defineString(){}defineNumber(){}defineBoolean(){}}
@@ -31,6 +32,22 @@ async function startup(base,old=false){
  function native(spec){if(cache.has(spec))return cache.get(spec);assert.ok(natives[spec],'unsupported API module '+spec);const values=natives[spec];const m=new vm.SyntheticModule(Object.keys(values),function(){for(const[k,v]of Object.entries(values))this.setExport(k,v);},{context,identifier:spec});cache.set(spec,m);return m;}
  function module(file){file=path.resolve(file);if(cache.has(file))return cache.get(file);assert.ok(fs.existsSync(file),'missing module '+file);assert.ok(file.startsWith(path.resolve(base)+path.sep),'import escapes scripts');const id=rel(base,file);const s='globalThis.__enter('+JSON.stringify(id)+');\n'+fs.readFileSync(file,'utf8');const m=new vm.SourceTextModule(s,{context,identifier:file});cache.set(file,m);return m;}
  const entry=module(path.join(base,'import.js'));
+ if (fail === 'missing') {
+  await assert.rejects(entry.link((spec, ref) => {
+   if (spec === './system/core/fallback.js') throw new Error('missing module');
+   return spec.startsWith('.') ? module(path.resolve(path.dirname(ref.identifier), spec)) : native(spec);
+  }), /missing module/);
+  assert.ok(!log.some(line => line.includes('Загрузка завершена')));
+  return;
+ }
+ if (fail === 'evaluate') {
+  const dependency = new vm.SourceTextModule('export const heartbeatConfirmed = false; throw new Error("dependency failed");', {context});
+  await entry.link((spec, ref) => spec === './system/core/fallback.js' ? dependency :
+   spec.startsWith('.') ? module(path.resolve(path.dirname(ref.identifier), spec)) : native(spec));
+  await assert.rejects(entry.evaluate(), /dependency failed/);
+  assert.ok(!log.some(line => line.includes('Загрузка завершена')));
+  return;
+ }
  await entry.link((spec,ref)=>spec.startsWith('.')?module(path.resolve(path.dirname(ref.identifier),spec)):native(spec));
  await entry.evaluate();
  assert.equal(evaluation.length,sourceFiles.length,'all modules loaded from entry');assert.equal(new Set(evaluation).size,sourceFiles.length,'each module evaluated once');
@@ -38,17 +55,43 @@ async function startup(base,old=false){
  const registry={registerWorldDynamicProperties(){},registerEntityTypeDynamicProperties(){}};
  for(const fn of events.worldInitialize?.handlers??[])fn({propertyRegistry:registry});
  for(const fn of oneShots.splice(0))await fn();
- for(let tick=1;tick<=40;tick++){for(const fn of events.tick?.handlers??[])fn({});for(const t of [...timers])if(t.active&&tick%t.interval===0)t.fn();for(let i=0;i<12;i++)await Promise.resolve();}
+ for(let tick=1;tick<=limit;tick++){for(const fn of events.tick?.handlers??[])fn({});for(const t of [...timers])if(t.active&&tick%t.interval===0)t.fn();for(let i=0;i<12;i++)await Promise.resolve();}
  assert.ok([...cache.values()].every(m=>m.status==='evaluated'),'linked modules remain evaluated');
- return {load,commands,modules:evaluation.length,relativeImports:sourceFiles.reduce((n,f)=>n+[...fs.readFileSync(f,'utf8').matchAll(/(?:from\s+|import\s+)['"]\.[^'"]+['"]/g)].length,0)};
+ return {load,commands,log,timers,modules:evaluation.length,relativeImports:sourceFiles.reduce((n,f)=>n+[...fs.readFileSync(f,'utf8').matchAll(/(?:from\s+|import\s+)['"]\.[^'"]+['"]/g)].length,0)};
 }
 const actual=await startup(scripts);
-assert.equal(actual.modules,63);assert.equal(actual.relativeImports,217);
+assert.equal(actual.modules,63);assert.equal(actual.relativeImports,219);
 const index=JSON.parse(fs.readFileSync(path.join(bp,'contents.json'),'utf8')).content.map(e=>e.path);
 const files=walk(scripts).filter(p=>p.endsWith('.js')).map(p=>'scripts/'+rel(scripts,p));
 assert.deepEqual(index.filter(p=>p.startsWith('scripts/')&&p.endsWith('.js')).sort(),files.sort(),'index exactly covers scripts');
 for(const [old,next]of Object.entries(mapping)){assert.ok(!fs.existsSync(path.join(scripts,old)),'old module remains '+old);assert.ok(fs.existsSync(path.join(scripts,next)),'missing relocation '+next);}
 assert.deepEqual(fs.readdirSync(path.join(scripts,'system')).filter(n=>n.endsWith('.js')),['worldedit.js']);
-assert.deepEqual(actual.load,fixture.startup,'module evaluation/subscription/schedule order unchanged');
-if(process.argv[2]){const baseline=await startup(path.resolve(process.argv[2]),true);assert.deepEqual(actual.load,baseline.load,'baseline startup order');assert.deepEqual(actual.commands,baseline.commands,'baseline first 40 empty-world ticks');}
-console.log('PASS: real ESM entry links/evaluates all 53 modules and 181 relative imports; preserved evaluation/subscription/schedule order, exact pack index, no old module copies and 40 empty-world ticks.');
+if (process.argv[2]) {
+ const baseline=await startup(path.resolve(process.argv[2]));
+ const { timers: actualTimers, ...actualLoad }=actual.load;
+ assert.deepEqual({...actualLoad,timers:actualTimers.slice(0,-1)},baseline.load,'baseline startup order');
+ assert.deepEqual(actual.commands,baseline.commands,'baseline first 40 empty-world ticks');
+}
+const { timers: originalTimers, ...originalLoad } = actual.load;
+assert.deepEqual({...originalLoad, timers: originalTimers.slice(0,-1)}, fixture.startup, 'existing module evaluation/subscription/schedule order unchanged');
+assert.deepEqual(originalTimers.at(-1), ['import.js',20], 'one new startup diagnostics timer');
+const unavailable = await startup(scripts,{limit:120,heartbeat:false});
+assert.equal(unavailable.timers.at(-1).active,false,'diagnostics stop after timeout');
+const moduleList = syncModuleList(scripts, {check:true});
+const report = actual.log.filter(line => line.endsWith(' — загружен'))
+ .map(line => line.slice('[Shop for Ore]     '.length,-' — загружен'.length));
+assert.deepEqual(report.slice().sort(), actual.load.evaluation.slice().sort(), 'report matches evaluated modules');
+assert.deepEqual(report, moduleList, 'report matches generated module list');
+const groups = actual.log.filter(line => /^\[Shop for Ore\] {3}\S+\/$/.test(line));
+assert.ok(groups.length > 1 && new Set(groups).size === groups.length, 'each group appears once');
+assert.equal(actual.log.filter(line => line === '[Shop for Ore] Загрузка завершена · файлов: '+moduleList.length).length,1);
+assert.ok(unavailable.log.includes('[Shop for Ore] Проверка legacy · сигнал не подтверждён'));
+assert.equal(unavailable.log.filter(line => line.includes('Проверка табло · отсутствуют:')).length,1);
+const reloaded = await startup(scripts,{ready:true});
+assert.equal(reloaded.log.filter(line => line.includes('Загрузка завершена')).length,1);
+assert.ok(reloaded.log.includes('[Shop for Ore] Проверка табло · доступны'));
+assert.ok(reloaded.log.includes('[Shop for Ore] Проверка legacy · сигнал обновляется'));
+assert.equal(reloaded.timers.at(-1).active,false,'diagnostics stop after success');
+await startup(scripts,{fail:'missing'});
+await startup(scripts,{fail:'evaluate'});
+console.log('PASS: ESM graph, pack index, startup order, generated Content Log report, readiness and failed imports.');

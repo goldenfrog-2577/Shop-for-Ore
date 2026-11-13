@@ -108,7 +108,7 @@ for (const ev of ['hurt', 'death', 'step', 'roar', 'emerge']) assert.ok(sounds.e
 assert.ok(fs.existsSync(new URL('entity/warden_boss.entity.json', rp)));
 
 // Варп boss: игрокам с 26 уровня, персоналу — всегда; во время боя чужих не пускает
-const db = fs.readFileSync(new URL('scripts/DataBase.js', bp), 'utf8');
+const db = fs.readFileSync(new URL('scripts/utils.js', bp), 'utf8');
 assert.match(db, /\{ id: 'boss', role: 'player', minLevel: 26, pos: \[528, -55, -5\] \}/);
 const wa = db.match(/export const warpAllowed = [^;]+;/)[0].replace('export const', 'const');
 const roles = ['player', 'helper', 'moder', 'admin', 'owner'];

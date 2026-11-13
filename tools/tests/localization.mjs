@@ -69,7 +69,7 @@ for(const a of roles)for(const b of roles){
  if(!allowed)assert.equal(sent[1],'chat.cmd.error.role');
  assert.equal(guard.punish(actor,actor),false,'self punishment');
 }
-const db=load('scripts/DataBase.js'),begin=db.indexOf('function canLift('),end=db.indexOf('\n}',begin)+2;
+const db=load('scripts/utils.js'),begin=db.indexOf('function canLift('),end=db.indexOf('\n}',begin)+2;
 const lift={hasRole:guard.hasRole,getIssuer:p=>p.issuer,run:(p,s)=>{sent=s;},rawTranslateRich:(k,p)=>{assert.equal(k,'chat.cmd.error.issuer');assert.ok(p.translate.startsWith('role.'));return '{}';}};
 vm.runInNewContext(db.slice(begin,end)+'\nglobalThis.lift=canLift;',lift);
 for(const a of roles)for(const issuer of [null,...roles])assert.equal(lift.lift({role:a},{issuer},'mute'),!issuer||roles.indexOf(a)>=roles.indexOf(issuer),'issuer role boundary');

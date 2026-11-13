@@ -7,7 +7,7 @@
 // пока видна плашка или заголовок по центру, строка CPS не отправляется (isBusy).
 
 import { world } from '@minecraft/server';
-import { run } from '../../DataBase.js';
+import { run } from '../../utils.js';
 
 // Невидимая метка: коды форматирования §s§f§o (Shop for Ore). Та же строка — в hud_screen.json
 export const TOAST_MARK = '§s§f§o';
