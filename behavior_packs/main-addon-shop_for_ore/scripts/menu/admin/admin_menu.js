@@ -6,7 +6,7 @@
 // (сразу после ключа не ставим ни скобок, ни §-кодов).
 
 import { durationText, playedSeconds, playtimeText } from '../../system/player/playtime.js';
-import { DEBUG_SCORES, groupProfileTags, offlineProfile, offlineProfiles, profilePosition, profileScores } from '../../system/player/registry.js';
+import { groupProfileTags, offlineProfile, offlineProfiles, profilePosition, profileScores } from '../../system/player/registry.js';
 import { clearResetHistory } from '../../system/core/reset_history.js';
 import { adminEnchantMenu } from './admin_enchant.js';
 import { boostSeconds } from '../../system/economy/boosts.js';
@@ -63,6 +63,7 @@ const back = (run) => backButton(run, '%admin.common.back', BACK_ICON);
 export function admin_menu(player) {
 	const items = [
 		{ text: '%admin.main.button.players' + OPEN, icon: 'textures/ui/FriendsIcon', run: () => playersMenu(player) },
+		{ text: '%admin.players.registry.title' + OPEN, icon: 'textures/items/book_writable', run: () => playerRegistryMenu(player) },
 		{ text: '%admin.main.button.money' + OPEN, icon: 'textures/items/gold_ingot', run: () => moneyPlayers(player) },
 		{ text: '%admin.main.button.boosts' + OPEN, icon: 'textures/items/experience_bottle', run: () => boostsMenu(player) },
 		{ text: '%admin.main.button.server' + OPEN, icon: 'textures/ui/icon_setting', run: () => serverMenu(player) },
@@ -255,7 +256,10 @@ export function orderedPlayers(viewer, players = [...world.getPlayers()], random
 	return sorted;
 }
 const REGISTRY_PAGE_SIZE = 12;
-const PROFILE_TAG_TITLES = { ach: 'achievement', player: 'player', sys: 'system' };
+const PROFILE_TAG_TITLES = {
+	ach: 'achievement', auth: 'auth', boss: 'boss', cosmetic: 'cosmetic', fx: 'fx', music: 'music',
+	player: 'player', rank: 'rank', role: 'role', stat: 'stat', sys: 'system', '': 'other'
+};
 const profileValue = value => value === undefined ? '§8—' : '§e' + value;
 const registryTitle = '%admin.players.registry.title';
 
@@ -263,27 +267,42 @@ function registryAllowed(player) {
 	return hasRole(player, 'admin') && !isPending(player);
 }
 
-function playersMenu(player, page = 0) {
+function playersMenu(player) {
+	const names = orderedPlayers(player).map(p => p.name);
+	if (!names.length) return tell(player, 'chat.admin.error.no_players');
+	const form = modal('%admin.players.title')
+		.dropdown('%admin.players.choose', names, 0);
+	showModal(player, form, (values) => {
+		const name = names[values[0]];
+		const target = findPlayer(name);
+		if (!target) return tell(player, 'chat.cmd.error.offline', name);
+		playerActions(player, target);
+	}, () => admin_menu(player));
+}
+
+function playerRegistryMenu(player, page = 0) {
 	if (!registryAllowed(player)) return;
-	const online = orderedPlayers(player);
-	const offline = [...offlineProfiles(new Set(online.map(p => p.name))).keys()].sort((a, b) => a.localeCompare(b));
+	const connected = [...world.getPlayers()];
+	const online = connected.filter(p => !isBot(p)).sort((a, b) =>
+		Number(b.name === player.name) - Number(a.name === player.name) || a.name.localeCompare(b.name));
+	const offline = [...offlineProfiles(new Set(connected.map(p => p.name))).keys()].sort((a, b) => a.localeCompare(b));
 	const records = online.map(p => ({ name: p.name, status: p.name === player.name ? 'self' : 'online' }))
 		.concat(offline.map(name => ({ name, status: 'offline' })));
 	const last = Math.max(0, Math.ceil(records.length / REGISTRY_PAGE_SIZE) - 1);
 	page = Math.min(page, last);
-	const returnToList = () => playersMenu(player, page);
+	const returnToList = () => playerRegistryMenu(player, page);
 	const items = records.slice(page * REGISTRY_PAGE_SIZE, (page + 1) * REGISTRY_PAGE_SIZE).map(({ name, status }) => ({
 		text: '§8' + name + '\n' + (status === 'offline' ? '§c' : '§2') + '●§r %admin.players.registry.status.' + status,
 		icon: 'textures/server_icons/steve',
 		run: () => playerProfileMenu(player, name, returnToList)
 	}));
-	if (page > 0) items.push({ text: '%admin.players.registry.prev', run: () => playersMenu(player, page - 1) });
-	if (page < last) items.push({ text: '%admin.players.registry.next', run: () => playersMenu(player, page + 1) });
+	if (page > 0) items.push({ text: '%admin.players.registry.prev', run: () => playerRegistryMenu(player, page - 1) });
+	if (page < last) items.push({ text: '%admin.players.registry.next', run: () => playerRegistryMenu(player, page + 1) });
 	items.push(back(() => admin_menu(player)));
 	return showMenu(player, registryTitle, '%admin.players.registry.body §f' + (page + 1) + '§7/§f' + (last + 1), items);
 }
 
-function playerProfileMenu(player, name, returnToList = () => playersMenu(player)) {
+function playerProfileMenu(player, name, returnToList = () => playerRegistryMenu(player)) {
 	if (!registryAllowed(player)) return;
 	const live = findPlayer(name);
 	const identity = live ? undefined : offlineProfiles(new Set()).get(name);
@@ -328,16 +347,35 @@ function playerRegistryDetails(player, name, openProfile) {
 	const target = findPlayer(name);
 	const identity = target ? undefined : offlineProfiles(new Set()).get(name);
 	const scores = profileScores(target?.scoreboard ?? identity);
-	const body = DEBUG_SCORES.map(id => '§7' + id + '§8: ' + profileValue(scores[id]));
-	if (!target) return showMenu(player, '%admin.players.registry.details §8» ' + name, [
-		...body, '', '%admin.players.registry.offline_details'
+	const scoreLine = (label, id, glyph, color = '§e') =>
+		glyph + ' %admin.players.' + label + ' ' + (scores[id] === undefined ? '§8—' : color + scores[id]) + '§r';
+	const scoreBlock = [
+		'%admin.players.registry.scores_heading',
+		scoreLine('registry.money', 'money', COIN_GLYPH),
+		scoreLine('body.vip_coins', 'vip_coins', VIP_COIN_GLYPH, '§g'),
+		scoreLine('body.lvl', 'lvl', '\ue153'),
+		scoreLine('registry.xp', 'xp', XP_GLYPH),
+		scoreLine('registry.rebirth', 'rebirth', '\ue116')
+	];
+	const title = '%admin.players.registry.details §8» ' + name;
+	if (!target) return showMenu(player, title, [
+		'%admin.players.registry.snapshot', '', ...scoreBlock, '', '%admin.players.registry.offline_details'
 	].join('\n'), [back(openProfile)]);
 	const [position, dimension] = profilePosition(target);
+	const dimensionText = ['overworld', 'nether', 'the_end'].includes(dimension)
+		? '%admin.players.registry.dimension.' + dimension : '§f' + dimension;
 	const { count, groups } = groupProfileTags(target);
-	body.unshift('%admin.players.registry.position §f' + position + ' §8(' + dimension + ')', '');
-	body.push('', '%admin.players.registry.tag_count §f' + count);
+	const body = [
+		'%admin.players.registry.location_heading',
+		'%admin.players.registry.position §f' + position.replaceAll(' ', ', ') + '§r',
+		'%admin.players.registry.dimension ' + dimensionText,
+		'',
+		...scoreBlock,
+		'',
+		'%admin.players.registry.tags_heading §7(' + count + ')'
+	];
 	const reopen = () => playerRegistryDetails(player, name, openProfile);
-	const label = group => !group ? '%chat.cmd.debug.other' : Object.prototype.hasOwnProperty.call(PROFILE_TAG_TITLES, group)
+	const label = group => Object.prototype.hasOwnProperty.call(PROFILE_TAG_TITLES, group)
 		? '%admin.players.registry.tag.' + PROFILE_TAG_TITLES[group] : '§8' + group;
 	const items = groups.map(([group, tags]) => ({ text: label(group) + ' §8(' + tags.length + ')', run: () => {
 		if (!registryAllowed(player)) return;
@@ -347,11 +385,11 @@ function playerRegistryDetails(player, name, openProfile) {
 		return showMenu(player, label(group), values.map(value => '§7' + value + '§r').join('\n'), [back(reopen)]);
 	} }));
 	items.push(back(openProfile));
-	return showMenu(player, '%admin.players.registry.details §8» ' + name, body.join('\n'), items);
+	return showMenu(player, title, body.join('\n'), items);
 }
 
 // Действия над выбранным игроком. Права проверяет сама команда: например, модератора не может наказать модератор
-function playerActions(player, target, openProfile = () => playerProfileMenu(player, target.name)) {
+function playerActions(player, target, openProfile = () => playersMenu(player)) {
 	const name = target.name;
 	if (!findPlayer(name)) return tell(player, 'chat.cmd.error.offline', name);
 	const cmd = (command, ...args) => () => runChatCommand(player, command, [name, ...args]);

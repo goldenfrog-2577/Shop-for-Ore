@@ -54,7 +54,7 @@ const context = {
 	backButton: run => ({ text: 'back', run })
 };
 vm.runInNewContext(source('system/player/registry.js'), context);
-vm.runInNewContext(source('menu/admin/admin_menu.js') + '\nglobalThis.openRegistry = playersMenu;', context);
+vm.runInNewContext(source('menu/admin/admin_menu.js') + '\nglobalThis.openRegistry = playerRegistryMenu;', context);
 
 const click = part => {
 	const item = menu.items.find(item => item?.text.includes(part));
@@ -62,16 +62,19 @@ const click = part => {
 	item.run();
 };
 context.openRegistry(owner);
+assert.match(menu.items[0].text,/Owner.*\n.*status\.self/);
 assert.ok(menu.items.some(item => item.text.includes('Former') && item.text.includes('.offline')));
 assert.ok(!menu.items.some(item => item.text.includes('Timer')));
 click('Alice');
 assert.match(menu.body, /§e0§7\/§e100/);
 click('.details');
-assert.match(menu.body, /-5 1 0/);
+assert.match(menu.body, /-5, 1, 0/);
+assert.match(menu.body, /location_heading[\s\S]+dimension\.overworld[\s\S]+scores_heading[\s\S]+tags_heading/);
+assert.doesNotMatch(menu.body, /\bvip_coins§8:/);
 click('.tag.achievement');
 assert.match(menu.body, /welcome/);
 click('back');
-click('auth');
+click('.tag.auth');
 assert.match(menu.body, /done/);
 assert.doesNotMatch(menu.body, /secret/);
 click('back');
@@ -92,7 +95,7 @@ click('Former');
 assert.match(menu.body, /350 %admin\.players\.registry\.xp\.max/);
 assert.match(menu.body, /\.snapshot_missing/);
 click('.details');
-assert.match(menu.body, /money§8: §e0/);
+assert.match(menu.body, /registry\.money §e0/);
 assert.match(menu.body, /offline_details/);
 const previous = menu;
 context.openRegistry(online);
