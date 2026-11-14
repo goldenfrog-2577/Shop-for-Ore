@@ -8,7 +8,7 @@ function system/session
 execute as @a[x=0,y=1,z=-20,r=3,scores={lvl=1..15}] at @s run tp @s 0 5 0
 execute as @a[x=0,y=1,z=-56,r=3,scores={lvl=1..25}] at @s run tp @s 0 5 -33
 # VIP-остров (x −86…−34, z −70…−43: VIP-шахта и лавка торговца) — только VIP (тег player:vip) и персоналу.
-# Попасть туда — !warp vip или Меню сервера → Телепортации (scripts/DataBase.js, WARPS)
+# Попасть туда — !warp vip или Меню сервера → Телепортации (scripts/utils.js, WARPS)
 execute as @a[x=-87,y=-8,z=-71,dx=54,dy=30,dz=29,tag=!player:vip,tag=!role:owner,tag=!role:admin,tag=!role:moder,tag=!role:helper,tag=!role:bot,tag=!sys:bot] at @s run tp @s 0 5 0
 # Зона командных блоков — владельцу, администраторам и боту (тег role:bot, scripts/system/spawnbot.js)
 execute as @a[x=50,y=0,z=50,r=25,tag=!role:owner,tag=!role:admin,tag=!role:bot,tag=!sys:bot] at @s run tp @s 0 5 0

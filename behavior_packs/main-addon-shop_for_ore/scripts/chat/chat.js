@@ -179,8 +179,8 @@ world.events.tick.subscribe(() => {
 		// Опыт: «350/72.0K»; на последнем уровне (xp_need 0) — только опыт, без «/0»
 		const need = getScore(player, 'xp_need');
 		const xp = `${metricNumbers(getScore(player, 'xp'))}${need > 0 ? `/${metricNumbers(need)}` : ''}`;
-		// Ник над головой: цвет из !color, иначе у игрока серый, у персонала — цвет роли. У VIP вместо монет — VIP-коины
-		const nameTag = `${getChatColor(player, 'name') ?? (role === 'player' ? '§7' : ROLE_COLORS[role])}${player.name}\n§f - ${isVip(player) ? 'VIP' : metricNumbers(getScore(player,'lvl'))}\n§f - ${isVip(player) ? '\ue128' : xp}\n${isVip(player) ? `§f - ${metricNumbers(getScore(player, 'vip_coins'))}` : `§f - ${metricNumbers(getScore(player, 'money'))}`}\n§f - ${metricNumbers(getScore(player,'rebirth'))}`;
+		// Ник над головой: цвет из !color, иначе у игрока белый, у персонала — цвет роли. У VIP вместо монет — VIP-коины
+		const nameTag = `${getChatColor(player, 'name') ?? (role === 'player' ? '§f' : ROLE_COLORS[role])}${player.name}\n§f - ${isVip(player) ? 'VIP' : metricNumbers(getScore(player,'lvl'))}\n§f - ${isVip(player) ? '\ue128' : xp}\n${isVip(player) ? `§f - ${metricNumbers(getScore(player, 'vip_coins'))}` : `§f - ${metricNumbers(getScore(player, 'money'))}`}\n§f - ${metricNumbers(getScore(player,'rebirth'))}`;
 		if (player.nameTag !== nameTag) player.nameTag = nameTag;
 	}
 });
