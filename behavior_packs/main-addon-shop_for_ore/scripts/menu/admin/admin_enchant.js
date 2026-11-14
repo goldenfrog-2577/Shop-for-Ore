@@ -1,6 +1,6 @@
 // Зачарование предмета из инвентаря без магазина; доступны только персоналу с правами администратора.
 import { MinecraftEnchantmentTypes, Enchantment } from '@minecraft/server';
-import { hasRole, tell } from '../../DataBase.js';
+import { hasRole, tell } from '../../utils.js';
 import { showMenu, showModal, modal, backButton } from '../common/forms.js';
 import { ITEM_ENCHANTS, PICKAXE_ENCHANTS, nameKey } from '../enchant_shop.js';
 

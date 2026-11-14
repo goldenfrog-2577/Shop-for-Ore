@@ -14,7 +14,7 @@
 // Покупки через функции (.mcfunction) пишут в чат сами, скрипт этих сообщений не видит — после них окно закрывается.
 
 import { ActionFormData, ModalFormData, MessageFormData } from '@minecraft/server-ui';
-import { closedByPlayer, showWhenFree, toldCount, toldErrorCount, settleCommands, hasPendingCommands, menuFeedback, menuCommandCount, menuSoundCount, failedCommandCount, beginMenuAction, endMenuAction } from '../../DataBase.js';
+import { closedByPlayer, showWhenFree, toldCount, toldErrorCount, settleCommands, hasPendingCommands, menuFeedback, menuCommandCount, menuSoundCount, failedCommandCount, beginMenuAction, endMenuAction } from '../../utils.js';
 
 // Ник → { told, errors } до нажатия и opened — действие уже открыло форму после сообщения
 const acting = new Map();

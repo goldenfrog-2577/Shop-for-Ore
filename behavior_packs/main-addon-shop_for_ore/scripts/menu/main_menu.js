@@ -4,8 +4,8 @@
 
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed } from '../system/security/jail.js';
-import { isPending, tellText, tell, run, getScore, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed, shopBalance } from '../DataBase.js';
-import { showMenu, showModal, modal, backButton, toggleMenu } from './common/forms.js';
+import { isPending, tellText, tell, run, findPlayer, getScore, isBot, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed, shopBalance } from '../utils.js';
+import { showMenu, showModal, modal, backButton, confirm, toggleMenu } from './common/forms.js';
 import { enchantsMenu } from './enchant_shop.js';
 import { cosmeticsMenu } from './cosmetics_shop.js';
 import { achievementsMenu } from './achievements_menu.js';
@@ -16,6 +16,7 @@ import { TRACK, DISCS } from '../system/ui/music_tracks.js';
 import { BOSS_DISCS } from '../system/player/discs.js';
 import { ChangePasswordUI } from '../registration/change.js';
 import { redeemPromo } from '../system/economy/promo.js';
+import { bankAmount, exchangeCoins, inventoryCoins } from '../system/economy/bank.js';
 
 const OPEN = '\n%menu.common.tap_to_open';
 const COIN = '', LVL = '';
@@ -179,7 +180,7 @@ function musicSetting(player, back) {
 		const t = nowPlaying(player);
 		return ['%menu.settings.music.body', '',
 			`%menu.settings.state ${off ? '%menu.settings.state.off' : '%menu.settings.state.on'}`,
-			`%menu.music.now ${t ? `§f${t.title} §8— §7${t.author}` : '§8—'}`,
+			`%menu.music.now ${t ? `§f${t.title} §8— §f${t.author}§7` : '§8—'}`,
 			`%menu.music.source ${discMode ? '%menu.music.source.discs' : '%menu.music.source.server'}`,
 			`%menu.music.volume §f${getVolume(player)}§7 / 100`,
 			`%menu.music.discs §f${discs.length}§7 / ${DISCS.length}`].join('\n');
@@ -251,11 +252,11 @@ function menuSounds(player, back) {
 			tell(player, on ? 'chat.settings.enabled' : 'chat.settings.disabled');
 			menuSounds(player, back);
 		}, () => menuSounds(player, back));
-	// Иконки — ванильные текстуры 1.19.50: зелёная галочка, красный крест, курсор
+	// Галочка и крест используют ванильные текстуры, у кнопки «Клик» своя иконка.
 	showMenu(player, '%menu.settings.menu_sounds.title', '%menu.settings.menu_sounds.body', [
 		{ text: '%menu.settings.menu_sounds.success', icon: 'textures/ui/confirm', run: () => toggle('success') },
 		{ text: '%menu.settings.menu_sounds.error', icon: 'textures/ui/cancel', run: () => toggle('error') },
-		{ text: '%menu.settings.menu_sounds.click', icon: 'textures/ui/cursor', run: () => toggle('click') },
+		{ text: '%menu.settings.menu_sounds.click', icon: 'textures/server_icons/menu_click', run: () => toggle('click') },
 		backButton(back)
 	], back);
 }
@@ -263,13 +264,41 @@ function menuSounds(player, back) {
 // ===== Банк и мини-игры =====
 
 export function bank(player) {
-	// Получатели — игроки в сети, кроме себя и бота (себе перевести нельзя, у бота денег нет)
-	const names = [...world.getPlayers()].filter(p => p.name !== player.name && !p.hasTag('role:bot')).map(p => p.name);
+	const reopen = () => bank(player);
+	const body = () => '%menu.bank.welcome\n\n%menu.bank.description\n\n%menu.bank.balance §e' + getScore(player, 'money') + ' §r' + COIN
+		+ '\n%menu.bank.inventory §e' + inventoryCoins(player) + ' §r' + COIN;
+	return showMenu(player, '%menu.bank.title', body, [
+		{ text: '%menu.bank.deposit', icon: 'textures/items/gold_ingot', run: () => bankExchange(player, true, reopen) },
+		{ text: '%menu.bank.withdraw', icon: 'textures/items/gold_ingot', run: () => bankExchange(player, false, reopen) },
+		{ text: '%menu.bank.transfer', icon: 'textures/server_icons/steve', run: () => bankTransfer(player, reopen) },
+		backButton(() => menu(player))
+	]);
+}
+
+function bankExchange(player, deposit, back) {
+	const key = deposit ? 'deposit' : 'withdraw';
+	const title = '%menu.bank.' + key + '.title';
+	const form = modal(title).textField('%menu.bank.' + key + '.amount', '%menu.bank.amount_placeholder');
+	return showModal(player, form, ([raw]) => {
+		const amount = bankAmount(raw);
+		if (!amount) return exchangeCoins(player, raw, deposit);
+		const summary = '%menu.bank.' + key + '.confirm §e' + amount + ' §r' + COIN + '§7?';
+		return confirm(player, title, summary, () => exchangeCoins(player, amount, deposit), back);
+	}, back);
+}
+
+function bankTransfer(player, back) {
+	const eligible = target => target && target.name !== player.name && !isBot(target) && !isPending(target);
+	const names = [...world.getPlayers()].filter(eligible).map(target => target.name);
 	if (!names.length) return tell(player, 'chat.bank.error.no_players');
-	const form = modal('%menu.bank.title')
-		.dropdown(`\n%menu.bank.balance §e${getScore(player, 'money')} §f\ue152\n%menu.bank.player`, names, 0)
+	const form = modal('%menu.bank.transfer.title')
+		.dropdown('\n%menu.bank.balance §e' + getScore(player, 'money') + ' §r' + COIN + '\n%menu.bank.player', names, 0)
 		.textField('%menu.bank.amount', '%menu.bank.amount_placeholder');
-	showModal(player, form, ([target, amount]) => transferMoney(player, names[target], amount), () => menu(player));
+	return showModal(player, form, ([index, amount]) => {
+		const name = names[index];
+		if (!eligible(findPlayer(name))) return tell(player, 'chat.cmd.error.offline', name ?? '—');
+		return transferMoney(player, name, amount);
+	}, back);
 }
 
 const gameStateLine = (g) => `§8 %menu.games.phase.${g.phase} §7(${g.players.size}/${g.def.maxPlayers})`;
@@ -286,7 +315,7 @@ export function minigamesMenu(player, back) {
 
 // ===== Правила, промокоды, телепортации, прокачка =====
 
-// Пункты правил: menu.rules.line.1…RULES_COUNT в .lang (число — в DataBase.js, его же берёт !rules)
+// Пункты правил: menu.rules.line.1…RULES_COUNT в .lang (число — в utils.js, его же берёт !rules)
 export { RULES_COUNT };
 function rules(player) {
 	textPage(player, '%menu.rules.title', `%menu.rules.header\n\n${lines('menu.rules.line', RULES_COUNT)}\n\n%menu.rules.footer`, () => menu(player));
@@ -298,7 +327,7 @@ function promocodes(player) {
 	showModal(player, form, ([code]) => redeemPromo(player, code), () => menu(player));
 }
 
-// Телепортации: те же точки, что у !warp (WARPS в DataBase.js), кроме точек персонала; VIP-остров — только VIP.
+// Телепортации: те же точки, что у !warp (WARPS в utils.js), кроме точек персонала; VIP-остров — только VIP.
 // Телепорт — командой !warp: те же проверки (заморозка, режим боя, мини-игры) и сообщения
 function warps(player) {
 	const back = () => menu(player);

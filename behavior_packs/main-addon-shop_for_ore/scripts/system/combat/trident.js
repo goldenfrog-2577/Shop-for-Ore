@@ -5,7 +5,7 @@
 // уже пуста, а попадание приходит через долю секунды — запомненное действует MEMORY_TICKS тиков.
 
 import { world, MinecraftEnchantmentTypes } from '@minecraft/server';
-import { run } from '../../DataBase.js';
+import { run } from '../../utils.js';
 
 const TRACK_TICKS = 5;
 const MEMORY_TICKS = 200;

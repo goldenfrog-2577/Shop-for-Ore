@@ -9,7 +9,7 @@
 import { world, DynamicPropertiesDefinition } from '@minecraft/server';
 import { syncResetEpoch } from './reset_history.js';
 import { ensurePlayerScores } from './player_scores.js';
-import { run, tell } from '../../DataBase.js';
+import { run, tell } from '../../utils.js';
 import { STATS } from '../player/achievements.js';
 import { logAction } from '../security/staff_log.js';
 

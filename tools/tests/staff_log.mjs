@@ -26,8 +26,8 @@ assert.ok(formatEntry(0, 'a', 'b', 'c', 'x'.repeat(300)).endsWith('x'.repeat(79)
 
 // Где пишется журнал
 const calls = {
-	'scripts/chat/commands/moderator.js': ['kick', 'mute', 'jail', 'unjail', 'unmute', 'warn', 'unwarn', 'freeze', 'unfreeze'],
-	'scripts/chat/commands/admin.js': ['boost', 'ban', 'unban'],
+	'scripts/chat/commands/ranks/moderator.js': ['kick', 'mute', 'jail', 'unjail', 'unmute', 'warn', 'unwarn', 'freeze', 'unfreeze'],
+	'scripts/chat/commands/ranks/admin.js': ['boost', 'ban', 'unban'],
 	'scripts/chat/commands/commands.js': ['role'],
 	'scripts/registration/change.js': ['resetpass'],
 	'scripts/system/core/wipe.js': ['wipe'],
@@ -39,7 +39,7 @@ for (const [file, cmds] of Object.entries(calls)) {
 }
 assert.match(read('scripts/registration/change.js'), /export function resetPassword[\s\S]*?logAction\(owner, 'resetpass'[\s\S]*?return true;/);
 // Команды !logs и хранилища больше нет
-assert.ok(!read('scripts/DataBase.js').includes('!logs'));
+assert.ok(!read('scripts/utils.js').includes('!logs'));
 assert.ok(!/\blogs\(player, args\)|readLog/.test(read('scripts/chat/commands/commands.js')));
 for (const l of ['ru_RU', 'en_US', 'uk_UA', 'es_ES']) {
 	const t = fs.readFileSync(new URL(`../../resource_packs/main-rp-shop_for_ore/texts/${l}.lang`, import.meta.url), 'utf8');

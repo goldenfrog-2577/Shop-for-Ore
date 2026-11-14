@@ -2,7 +2,7 @@
 // Список: получено — цветом (зелёное — достижение, фиолетовое — испытание), нет — серым с прогрессом.
 // Нажатие — описание, прогресс и награда.
 
-import { metricNumbers } from '../DataBase.js';
+import { metricNumbers } from '../utils.js';
 import { showMenu, backButton } from './common/forms.js';
 import { ACHIEVEMENTS, GLYPH, has, progressOf, countOf, rewardText } from '../system/player/achievements.js';
 
