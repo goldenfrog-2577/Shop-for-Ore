@@ -607,36 +607,43 @@ function autoEventsForm(player, onBack) {
 
 // ===== Сервер: сводка =====
 
-/** Общие бусты: служебные таймеры в system, в секундах. */
-function activeBoosts() {
-	const list = [];
-	for (const type of ['x2', 'x4']) {
-		const left = boostSeconds(type);
-		if (left > 0) list.push({ type, minutes: Math.ceil(left / 60) });
+function serverStatusLines() {
+	let online = 0, staff = 0, moders = 0, helpers = 0;
+	const magnets = [];
+	for (const player of world.getPlayers()) {
+		online++;
+		switch (getRole(player)) {
+			case 'owner':
+			case 'admin': staff++; break;
+			case 'moder': moders++; break;
+			case 'helper': helpers++; break;
+		}
+		if (player.hasTag('boost:magnet')) magnets.push(player.name);
 	}
-	return list;
-}
-
-function serverMenu(player) {
-	const players = [...world.getPlayers()];
-	const count = (...roles) => players.filter(p => roles.includes(getRole(p))).length;
-	const boosts = activeBoosts();
-	const lines = [
-		`%admin.server.online §f${players.length}`,
-		`%admin.server.staff §f${count('owner', 'admin')}`,
-		`%admin.server.moders §f${count('moder')}`,
-		`%admin.server.helpers §f${count('helper')}`,
+	magnets.sort((a, b) => a.localeCompare(b));
+	return [
+		`%admin.server.online §f${online}`,
+		`%admin.server.staff §f${staff}`,
+		`%admin.server.moders §f${moders}`,
+		`%admin.server.helpers §f${helpers}`,
 		'',
 		...['x2', 'x4'].map(type => {
-			const active = boosts.find(b => b.type === type);
-			return `%admin.server.boost ${type} §8— ${active ? '%admin.server.on %admin.server.left ' + active.minutes + ' %admin.common.min' : '%admin.server.off'}`;
+			const seconds = boostSeconds(type);
+			const status = seconds > 0
+				? `%admin.server.on %admin.server.left ${Math.ceil(seconds / 60)} %admin.common.min`
+				: '%admin.server.off';
+			return `%admin.server.boost ${type} §8— ${status}`;
 		}),
 		'',
-		`%admin.server.magnets §f${players.filter(p => p.hasTag('boost:magnet')).map(p => p.name).sort((a,b) => a.localeCompare(b)).join('§7, §f') || '%admin.server.none'}`,
+		`%admin.server.magnets §f${magnets.join('§7, §f') || '%admin.server.none'}`,
 		'',
 		'%admin.server.auto',
 		...EVENTS.map(ev => `§8• %chat.cmd.event.name.${ev} §8— ${getSetting(ev) === 1 ? '%admin.server.on' : '%admin.server.off'}`)
 	];
+}
+
+function serverMenu(player) {
+	const lines = serverStatusLines();
 	showMenu(player, '%admin.server.title', lines.join('\n'), [
 		{ text: '%admin.server.button.online', icon: 'textures/ui/FriendsIcon', run: () => runChatCommand(player, 'online', []) },
 		{ text: '%admin.server.button.top_money', icon: 'textures/items/gold_ingot', run: () => runChatCommand(player, 'top', ['money']) },

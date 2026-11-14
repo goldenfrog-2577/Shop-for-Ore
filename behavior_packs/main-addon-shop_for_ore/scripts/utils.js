@@ -371,6 +371,11 @@ export const CHAT_COLORS = {
 	dark_gray: '8', blue: '9', green: 'a', aqua: 'b', red: 'c', light_purple: 'd', yellow: 'e', white: 'f', minecoin_gold: 'g'
 };
 const COLOR_TAG = { name: 'chat:name_color:', text: 'chat:text_color:' };
+const CHAT_COLOR_CODES = new Set(Object.values(CHAT_COLORS));
+
+function removeTagsWithPrefix(player, prefix) {
+	for (const tag of player.getTags()) if (tag.startsWith(prefix)) player.removeTag(tag);
+}
 
 /**
  * Цвет игрока ('§b') для kind = 'name' | 'text' или undefined, если не задан.
@@ -379,12 +384,12 @@ const COLOR_TAG = { name: 'chat:name_color:', text: 'chat:text_color:' };
 export function getChatColor(player, kind) {
 	const tag = player.getTags().find(t => t.startsWith(COLOR_TAG[kind]));
 	const code = tag?.slice(COLOR_TAG[kind].length);
-	return code && Object.values(CHAT_COLORS).includes(code) && colorAllowed(player, code) ? `§${code}` : undefined;
+	return code && CHAT_COLOR_CODES.has(code) && colorAllowed(player, code) ? `§${code}` : undefined;
 }
 
 /** Задать цвет (код '0'–'g') или снять (undefined). */
 export function setChatColor(player, kind, code) {
-	player.getTags().filter(t => t.startsWith(COLOR_TAG[kind])).forEach(t => player.removeTag(t));
+	removeTagsWithPrefix(player, COLOR_TAG[kind]);
 	if (code) player.addTag(COLOR_TAG[kind] + code);
 }
 
@@ -487,12 +492,12 @@ const issuerTag = (kind) => `state:${kind}_by:`;
 
 /** Роль, выдавшая ограничение, или undefined (старые ограничения — без записи). */
 export function getIssuer(target, kind) {
-	const tag = target.getTags().find(t => t.startsWith(issuerTag(kind)));
-	return tag ? tag.slice(issuerTag(kind).length) : undefined;
+	const prefix = issuerTag(kind);
+	return target.getTags().find(t => t.startsWith(prefix))?.slice(prefix.length);
 }
 
 export function clearIssuer(target, kind) {
-	target.getTags().filter(t => t.startsWith(issuerTag(kind))).forEach(t => target.removeTag(t));
+	removeTagsWithPrefix(target, issuerTag(kind));
 }
 
 /** Запомнить роль выдавшего. keepHigher — оставить прежнюю, если она старше (предупреждения копятся). */
