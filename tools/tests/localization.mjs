@@ -5,6 +5,16 @@ const repo=new URL('../../',import.meta.url),bp=new URL('behavior_packs/main-add
 const langs=['ru_RU','en_US','uk_UA','es_ES'];
 const parse=s=>new Map(s.replace(/^\uFEFF/,'').split(/\r?\n/).filter(s=>!s.startsWith('#')&&s.includes('=')).map(s=>{const i=s.indexOf('=');return[s.slice(0,i),s.slice(i+1)];}));
 const maps=langs.map(l=>parse(fs.readFileSync(new URL('resource_packs/main-rp-shop_for_ore/texts/'+l+'.lang',repo),'utf8')));
+const styledMenus = /^(menu\.(creators|bank)|admin\.players\.registry)\./;
+for (const dict of maps) {
+	for (const [key, value] of dict) {
+		if (styledMenus.test(key) && key.endsWith('.title')) assert.ok(value.startsWith('§l§8'), key);
+		if (/^(menu\.(about\.button\.creators|creators\.links|bank\.(deposit|withdraw|transfer))|admin\.(main\.button\.registry|players\.registry\.(prev|next|details|actions|refresh|tag\.[a-z]+)))$/.test(key)) {
+			assert.match(value, /^§[87]/, key);
+		}
+	}
+	assert.ok(dict.get('admin.players.registry.profile').startsWith('§l§8'));
+}
 const params=s=>s.match(/%(?:\d+\$)?[sdif]/g)||[];
 const identity=s=>{const a=params(s);return {indexed:a.filter(t=>/^%\d/.test(t)).sort(),positional:a.filter(t=>!/^%\d/.test(t))};};
 for(let i=0;i<4;i++){
