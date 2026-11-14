@@ -12,7 +12,7 @@ import { startMythic } from '../../system/combat/mythic.js';
 import { stopAdminBoosts, markAdminBoost, MAGNET_ADMIN_TAG, BOOST_TIMERS, boostSeconds, boostTimersReady } from '../../system/economy/boosts.js';
 import { ACHIEVEMENTS, has as hasAchievement, findAchievement, unlock, revoke } from '../../system/player/achievements.js';
 import { addBan, kickBanned, findBan, removeBan, getBans, banActive, banMinutesLeft } from '../../system/security/ban.js';
-import { resolveTarget, tellList, canPunish } from './common.js';
+import { columnPadding, resolveTarget, tellList, canPunish } from './common.js';
 import { censor } from '../censor.js';
 import { logAction } from '../../system/security/staff_log.js';
 
@@ -318,8 +318,10 @@ export const ADMIN_COMMANDS = {
 		// Служебные табло (таймеры, настройки) меняет только владелец — иначе собьются таймеры и setup
 		const sbUse = () => tell(player, 'chat.cmd.scoreboard.use');
 		if ((args[0] || '').toLowerCase() === 'objectives' && !args[1]) {
-			const lines = world.scoreboard.getObjectives().map(o => `§e${o.id}${o.displayName && o.displayName !== o.id ? ` §8— §7${o.displayName}` : ''}`);
-			run(player, `tellraw @s ${JSON.stringify({ rawtext: [{ translate: 'chat.cmd.scoreboard.objectives' }, { text: `\n${lines.join('\n') || '—'}` }] })}`);
+			const objectives = world.scoreboard.getObjectives();
+			const padding = columnPadding(objectives.map(o => o.id));
+			const lines = objectives.map((o, i) => `§e${o.id}${o.displayName && o.displayName !== o.id ? `${padding[i]} §8— §7${o.displayName}` : ''}`);
+			tellList(player, { translate: 'chat.cmd.scoreboard.objectives' }, (lines.length ? lines : ['—']).map(text => ({ text })));
 			return;
 		}
 		const sbAction = (args[1] || '').toLowerCase();
@@ -332,8 +334,10 @@ export const ADMIN_COMMANDS = {
 		// Счёт игрока в табло или undefined (счёта нет)
 		const scoreOf = (objective) => { try { return objective.getScore(target.scoreboard); } catch { return undefined; } };
 		if (sbAction === 'list') {
-			const lines = world.scoreboard.getObjectives().map(o => [o.id, scoreOf(o)]).filter(([, v]) => v !== undefined).map(([id, v]) => `§e${id}§7: §f${v}`);
-			run(player, `tellraw @s ${JSON.stringify({ rawtext: [{ translate: 'chat.cmd.scoreboard.list', with: [target.name] }, { text: `\n${lines.join('\n') || '—'}` }] })}`);
+			const scores = world.scoreboard.getObjectives().map(o => [o.id, scoreOf(o)]).filter(([, value]) => value !== undefined);
+			const padding = columnPadding(scores.map(([id]) => id));
+			const lines = scores.map(([id, value], i) => `§e${id}${padding[i]} §8— §f${value}`);
+			tellList(player, { translate: 'chat.cmd.scoreboard.list', with: [target.name] }, (lines.length ? lines : ['—']).map(text => ({ text })));
 			return;
 		}
 		const sbObjective = args[2];
@@ -543,15 +547,14 @@ export const ADMIN_COMMANDS = {
 	banlist(player, args) {
 		// Только действующие баны; номер — тот же, что принимает !unban <номер> (system/security/ban.js, removeBan)
 		const bans = getBans().filter(b => banActive(b));
-		const rawtext = [{ translate: 'chat.cmd.banlist.header' }];
-		if (!bans.length) rawtext.push({ text: '\n' }, { translate: 'chat.cmd.banlist.empty' });
-		bans.forEach((b, i) => {
-			rawtext.push({ text: `\n§e${i + 1}. §f${b.names.join('§7, §f')} §8— §7${b.by}${b.reason ? ' §8— §7' + b.reason : ''}` });
+		const lines = bans.map((b, i) => {
+			const rawtext = [{ text: `§e${i + 1}. §f${b.names.join('§7, §f')} §8— §7${b.by}${b.reason ? ' §8— §7' + b.reason : ''}` }];
 			// Бан только по нику (игрок не заходил после бана) — пометка на языке игрока
 			if (!b.id) rawtext.push({ text: ' §8' }, { translate: 'chat.cmd.banlist.by_nick' });
 			rawtext.push({ text: ' §8— §c' }, termText(banMinutesLeft(b)));
+			return { rawtext };
 		});
-		rawtext.push({ text: '\n§8------------------------' });
-		run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
+		if (!lines.length) lines.push({ translate: 'chat.cmd.banlist.empty' });
+		tellList(player, { translate: 'chat.cmd.banlist.header' }, lines, 6);
 	}
 };

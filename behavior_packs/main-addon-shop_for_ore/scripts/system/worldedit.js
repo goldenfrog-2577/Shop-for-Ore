@@ -1,6 +1,7 @@
 // WorldEdit владельца: порции блоков, ожидание чанков и журнал собственных ресурсов.
 import { world, system, MinecraftBlockTypes, BlockLocation, DynamicPropertiesDefinition } from '@minecraft/server';
 import { hasRole, tell } from '../DataBase.js';
+import { tellList } from '../chat/commands/common.js';
 
 export const CHUNK = 8;
 const selections = new Map(), clipboards = new Map(), undos = new Map(), queue = [];
@@ -287,9 +288,9 @@ export function worldEditCommand(player,args=[]) {
 	const action=String(args[0]??'help').toLowerCase(),rest=args.slice(1);
 	try {
 		if(action==='help'||action==='?') {
-			// Как !help: заголовок, команды «§f!команда - §7описание», примечание и линия снизу
-			const rawtext=[{translate:'chat.cmd.worldedit.help.header'}];for(let i=1;i<=HELP_LINES;i++)rawtext.push({text:'\n'},{translate:'chat.cmd.worldedit.help.'+i});rawtext.push({text:'\n§8------------------------'});
-			void player.runCommandAsync('tellraw @s '+JSON.stringify({rawtext})).catch(()=>{});return;
+			const lines = Array.from({ length: HELP_LINES }, (_, i) => ({ translate: 'chat.cmd.worldedit.help.' + (i + 1) }));
+			tellList(player, { translate: 'chat.cmd.worldedit.help.header' }, lines);
+			return;
 		}
 		if(action==='cancel'){
 			if(!active||active.owner!==player.name)fail('idle');active.cancelled=true;return;
