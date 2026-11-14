@@ -1,14 +1,14 @@
 // --- Команды чата (!help, !warp, !tp, !ban …) ---
-// Список команд и роли — commandsList в utils.js; runChatCommand вызывают и чат, и меню администратора.
+// Список команд и роли — commandsList в DataBase.js; runChatCommand вызывают и чат, и меню администратора.
 // Обработчики — по ролям в chat/commands/: player.js (игрок), moderation.js (хелпер, модератор),
 // admin.js (администратор; там же !gm6). Команды владельца — ниже в этом файле; общие помощники — commands/common.js.
 // Новая команда: строка в commandsList и метод в объекте своей роли (имя — без «!»).
 
 import { world } from '@minecraft/server';
 import { commandsList, isPending, tell, hasRole, findPlayer, getRole, ROLES, run, menuFeedback, settleCommands, toldErrorCount, toldSuccessCount } from '../../utils.js';
-import { PLAYER_COMMANDS } from './player.js';
-import { MODERATION_COMMANDS } from './moderator.js';
-import { ADMIN_COMMANDS } from './admin.js';
+import { PLAYER_COMMANDS } from './ranks/player.js';
+import { MODERATION_COMMANDS } from './ranks/moderator.js';
+import { ADMIN_COMMANDS } from './ranks/admin.js';
 import { worldEditCommand } from '../../system/worldedit.js';
 import { resetOffline, offlineCounts } from '../../system/core/offline_reset.js';
 import { wipeAll, wipeCounts } from '../../system/core/wipe.js';
@@ -18,9 +18,9 @@ import { logAction } from '../../system/security/staff_log.js';
 import { columnPadding, tellList } from './common.js';
 
 // Помощники, которые нужны меню администратора и тестам
-export { textWidth, emoteGrid } from './player.js';
-export { isCoord } from './moderator.js';
-export { debugLines, giveOreMagnet, setMoney } from './admin.js';
+export { textWidth, emoteGrid } from './ranks/player.js';
+export { isCoord } from './ranks/moderator.js';
+export { debugLines, giveOreMagnet, setMoney } from './ranks/admin.js';
 
 // --- Команды владельца и подтверждения сбросов ---
 // Запросы на вайп, ждущие «!wipe confirm»: имя → время запроса

@@ -12,9 +12,9 @@ let now=1000,wipes=0,resets=0;const notices=[],native=[],delegated=[],passwords=
 const stubs={
  '@minecraft/server':{world},
  '../../utils.js':{commandsList,isPending:p=>!!p.pending,tell:(p,key,...args)=>notices.push({p,key,args}),hasRole,findPlayer:name=>people.find(p=>p.name===name),getRole,ROLES,run:(p,cmd)=>native.push(cmd),menuFeedback:(p,error)=>sounds.push([p.name,error]),settleCommands:async()=>{},toldErrorCount:p=>p.errs??0,toldSuccessCount:p=>p.oks??0},
- './player.js':{PLAYER_COMMANDS:{help:(p,a)=>helpHook?helpHook(p):routed.push(['help',p,Array.from(a)])},textWidth:s=>s.length,emoteGrid:()=> 'grid'},
- './moderator.js':{MODERATION_COMMANDS:{mute:(p,a)=>muted.push([p.name,...Array.from(a)])},isCoord:()=>true},
- './admin.js':{ADMIN_COMMANDS:{},debugLines:()=>[],giveOreMagnet:()=>true,setMoney:()=>true},
+ './ranks/player.js':{PLAYER_COMMANDS:{help:(p,a)=>helpHook?helpHook(p):routed.push(['help',p,Array.from(a)])},textWidth:s=>s.length,emoteGrid:()=> 'grid'},
+ './ranks/moderator.js':{MODERATION_COMMANDS:{mute:(p,a)=>muted.push([p.name,...Array.from(a)])},isCoord:()=>true},
+ './ranks/admin.js':{ADMIN_COMMANDS:{},debugLines:()=>[],giveOreMagnet:()=>true,setMoney:()=>true},
  '../../system/worldedit.js':{worldEditCommand:(p,a)=>delegated.push([p,Array.from(a)])},
  '../../system/core/offline_reset.js':{resetOffline:()=>resets++,offlineCounts:()=>({offline:2,online:4})},
  '../../system/core/wipe.js':{wipeAll:async()=>wipes++,wipeCounts:()=>({all:6,online:4})},
@@ -25,7 +25,7 @@ const stubs={
 const context=vm.createContext({Date:class extends Date{static now(){return now;}}}),cache=new Map(),mod=new vm.SourceTextModule(source,{context,identifier:new URL('scripts/chat/commands/commands.js',bp).href});
 await mod.link(spec=>{if(spec==='./common.js'){const url=new URL('scripts/chat/commands/common.js',bp);const common=new vm.SourceTextModule(fs.readFileSync(url,'utf8'),{context,identifier:url.href});cache.set(spec,common);return common;}assert(stubs[spec],'unresolved import '+spec);if(!cache.has(spec)){const values=stubs[spec];cache.set(spec,new vm.SyntheticModule(Object.keys(values),function(){for(const[k,v]of Object.entries(values))this.setExport(k,v);},{context,identifier:spec}));}return cache.get(spec);});await mod.evaluate();
 assert.equal(handlers.beforeChat.length,1);assert.equal(handlers.playerLeave.length,1);const api=mod.namespace,command=(p,c,a=[])=>api.runChatCommand(p,c,a),last=()=>notices.at(-1)?.key;
-for(const key of ['textWidth','emoteGrid'])assert.equal(api[key],stubs['./player.js'][key]);assert.equal(api.isCoord,stubs['./moderator.js'].isCoord);for(const key of ['debugLines','giveOreMagnet','setMoney'])assert.equal(api[key],stubs['./admin.js'][key]);
+for(const key of ['textWidth','emoteGrid'])assert.equal(api[key],stubs['./ranks/player.js'][key]);assert.equal(api.isCoord,stubs['./ranks/moderator.js'].isCoord);for(const key of ['debugLines','giveOreMagnet','setMoney'])assert.equal(api[key],stubs['./ranks/admin.js'][key]);
 assert.deepEqual(Object.keys(api).sort(),['debugLines','emoteGrid','giveOreMagnet','isCoord','runChatCommand','setMoney','textWidth'].sort());
 for(const role of ROLES.filter(r=>r!=='owner')){const p=mk(role,role);for(const name of ['worldedit','wipe','resetoffline','role','roles','resetpass']){command(p,name);assert.equal(last(),'chat.cmd.error.no_permission');}}assert.equal(wipes,0);assert.equal(resets,0);assert.equal(delegated.length,0);
 command(owner,'worldedit',['pos1','1','2','3']);assert.deepEqual(delegated[0],[owner,['pos1','1','2','3']]);command(owner,'w');assert.equal(last(),'chat.cmd.error.unknown');command(owner,'constructor');assert.equal(last(),'chat.cmd.error.unknown');

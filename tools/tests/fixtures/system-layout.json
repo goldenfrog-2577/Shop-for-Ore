@@ -33,7 +33,7 @@
 		"system/minigames.js": "system/minigames/minigames.js",
 		"system/spleef.js": "system/minigames/spleef.js",
 		"system/tir.js": "system/minigames/tir.js",
-		"chat/commands/moderation.js": "chat/commands/moderator.js",
+		"chat/commands/moderation.js": "chat/commands/ranks/moderator.js",
 		"chat/commands.js": "chat/commands/commands.js",
 		"menu/admin_enchant.js": "menu/admin/admin_enchant.js",
 		"menu/admin_menu.js": "menu/admin/admin_menu.js",
@@ -69,11 +69,11 @@
 			"registration/change.js",
 			"chat/commands/common.js",
 			"chat/censor.js",
-			"chat/commands/player.js",
+			"chat/commands/ranks/player.js",
 			"system/security/freeze.js",
 			"system/security/cps.js",
 			"system/security/anticheat.js",
-			"chat/commands/moderator.js",
+			"chat/commands/ranks/moderator.js",
 			"system/player/playtime.js",
 			"system/core/reset_history.js",
 			"menu/admin/admin_enchant.js",
@@ -89,7 +89,7 @@
 			"menu/admin/admin_menu.js",
 			"system/combat/mythic.js",
 			"system/security/ban.js",
-			"chat/commands/admin.js",
+			"chat/commands/ranks/admin.js",
 			"system/worldedit.js",
 			"chat/commands/selectors.js",
 			"chat/commands/commands.js",
@@ -200,7 +200,7 @@
 				"playerLeave"
 			],
 			[
-				"chat/commands/player.js",
+				"chat/commands/ranks/player.js",
 				"playerLeave"
 			],
 			[

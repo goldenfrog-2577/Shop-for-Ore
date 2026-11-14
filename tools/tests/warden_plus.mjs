@@ -91,7 +91,7 @@ assert.ok(!calls.some(c => c[0] === 'attackEntity' || c[0] === 'navigateToLocati
 link.end();
 
 // ===== Топ, табло, меню, тексты =====
-const playerSrc = read(bp, 'scripts/chat/commands/player.js');
+const playerSrc = read(bp, 'scripts/chat/commands/ranks/player.js');
 assert.match(playerSrc, /\bboss: \(p\) =>/); assert.match(playerSrc, /\bboss_time: \(p\) =>/);
 assert.match(playerSrc, /\.filter\(\(\{ row \}\) => row\)/, 'players without a Warden time are left out of !top boss_time');
 assert.match(read(bp, 'scripts/system/player/achievements.js'), /'stat_win_boss', 'stat_boss_time'\]/, 'wipe resets the new counters');

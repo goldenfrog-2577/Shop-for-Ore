@@ -117,7 +117,7 @@ const w = vm.runInNewContext(wa + ';warpAllowed', {
 });
 const warp = { id: 'boss', role: 'player', minLevel: 26 };
 assert.ok(!w({ role: 'player', lvl: 25 }, warp) && w({ role: 'player', lvl: 26 }, warp) && w({ role: 'helper', lvl: 1 }, warp));
-assert.match(fs.readFileSync(new URL('scripts/chat/commands/player.js', bp), 'utf8'), /warp\.id === 'boss' && bossBusy\(\)\) \{/);
+assert.match(fs.readFileSync(new URL('scripts/chat/commands/ranks/player.js', bp), 'utf8'), /warp\.id === 'boss' && bossBusy\(\)\) \{/);
 
 // world.getPlayers() в 1.19.50 возвращает PlayerIterator — методы массива на нём падают «not a function»
 // (так было в boss.js:283 — ошибка каждую секунду). Проверяем все скрипты.
