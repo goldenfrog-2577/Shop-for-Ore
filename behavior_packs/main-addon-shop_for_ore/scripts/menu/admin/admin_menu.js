@@ -326,7 +326,7 @@ function playerProfileMenu(player, name, returnToList = () => playerRegistryMenu
 		'%admin.players.registry.money ' + profileValue(scores.money) + ' §r' + COIN_GLYPH,
 		...(vip ? ['%admin.players.body.vip_coins ' + profileValue(scores.vip_coins) + ' §r' + VIP_COIN_GLYPH] : []),
 		'%admin.players.registry.rebirth ' + profileValue(scores.rebirth) + ' §r\ue116',
-		'%admin.players.body.warns ' + (data.warns === undefined ? profileValue(undefined) : '§e' + data.warns + '§7/§f3'),
+		'%admin.players.body.warns ' + (data.warns === undefined ? profileValue(undefined) : '§e' + data.warns + '§7/§e3'),
 		'%admin.players.body.playtime ' + (data.seconds === undefined ? profileValue(undefined) : durationText(data.seconds))
 	].join('\n');
 	const openProfile = () => playerProfileMenu(player, name, returnToList);
@@ -357,7 +357,7 @@ function playerRegistryDetails(player, name, openProfile) {
 		scoreLine('registry.xp', 'xp', XP_GLYPH),
 		scoreLine('registry.rebirth', 'rebirth', '\ue116')
 	];
-	const title = '%admin.players.registry.details §8» ' + name;
+	const title = '§l %admin.players.registry.details §r§8» ' + name;
 	if (!target) return showMenu(player, title, [
 		'%admin.players.registry.snapshot', '', ...scoreBlock, '', '%admin.players.registry.offline_details'
 	].join('\n'), [back(openProfile)]);
