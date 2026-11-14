@@ -357,7 +357,7 @@ function playerRegistryDetails(player, name, openProfile) {
 		scoreLine('registry.xp', 'xp', XP_GLYPH),
 		scoreLine('registry.rebirth', 'rebirth', '\ue116')
 	];
-	const title = '§l %admin.players.registry.details §r§8» ' + name;
+	const title = '%admin.players.registry.details.title §8» ' + name;
 	if (!target) return showMenu(player, title, [
 		'%admin.players.registry.snapshot', '', ...scoreBlock, '', '%admin.players.registry.offline_details'
 	].join('\n'), [back(openProfile)]);
@@ -375,15 +375,16 @@ function playerRegistryDetails(player, name, openProfile) {
 		'%admin.players.registry.tags_heading §7(' + count + ')'
 	];
 	const reopen = () => playerRegistryDetails(player, name, openProfile);
-	const label = group => Object.prototype.hasOwnProperty.call(PROFILE_TAG_TITLES, group)
-		? '%admin.players.registry.tag.' + PROFILE_TAG_TITLES[group] : '§8' + group;
+	const label = (group, title = false) => Object.prototype.hasOwnProperty.call(PROFILE_TAG_TITLES, group)
+		? '%admin.players.registry.tag.' + PROFILE_TAG_TITLES[group] + (title ? '.title' : '')
+		: (title ? '§l§8' : '§8') + group;
 	const items = groups.map(([group, tags]) => ({ text: label(group) + ' §8(' + tags.length + ')', run: () => {
 		if (!registryAllowed(player)) return;
 		const fresh = findPlayer(name);
 		if (!fresh) return reopen();
 		const values = groupProfileTags(fresh).groups.find(([key]) => key === group)?.[1] ?? [];
 		const body = values.map(tag => '§8■ §7' + tag + '§r').join('\n');
-		return showMenu(player, label(group), body, [back(reopen)]);
+		return showMenu(player, label(group, true), body, [back(reopen)]);
 	} }));
 	items.push(back(openProfile));
 	return showMenu(player, title, body.join('\n'), items);
