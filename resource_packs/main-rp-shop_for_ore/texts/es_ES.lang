@@ -1,7 +1,7 @@
 ﻿## =============================
 ##  Shop for Ore: LOCALIZACIÓN ESPAÑOLA
 ##  Autor: kapycta1231484 & Claude
-##  Última actualización: 2026-11-10
+##  Última actualización: 2026-11-14
 ##  Este archivo contiene todos los textos del mapa Shop for Ore en español.
 ##  ¡Por favor, mantén las secciones y comentarios para facilitar la navegación!
 ##  Las secciones van por funciones; la línea bajo el título indica sus prefijos. Añade una clave donde sea y ejecuta: python3 tools/lang.py sort
@@ -10,7 +10,7 @@
 ## --- INFORMACIÓN DEL PACK ---
 ##   pack.*
 pack.name=Paquete de recursos para el mapa §lShop for Ore§r
-pack.description=Incluye pequeñas mejoras para una experiencia más cómoda. §c¡No se recomienda desactivar! §fVersión: §7[0.3.0_20261110_resources]
+pack.description=Incluye pequeñas mejoras para una experiencia más cómoda. §c¡No se recomienda desactivar! §fVersión: §7[0.3.0_20261114r_resources]
 
 ## --- OBJETOS Y BLOQUES ---
 ##   item.*, tile.*, entity.*, container.shop.*
@@ -630,7 +630,7 @@ menu.creators.link.planet_minecraft=§r §fPlanet Minecraft
 menu.version.title=§l§8Menú del servidor » §r §8§lVersión del mapa
 menu.version.line.1=§l§7Aquí encontrarás información sobre la última actualización del mapa
 menu.version.label=§2Versión del mapa:
-menu.version.line.2=§lVersión candidata 0.3.0 del 10 de noviembre de 2026§r
+menu.version.line.2=§lVersión 0.3.0 del 14 de noviembre de 2026§r
 menu.version.line.3=• Nuevo aspecto de los mensajes del chat: «icono Etiqueta » texto», sin exceso de colores
 menu.version.line.4=• Menús con un mismo estilo: títulos «Sección » Subsección», iconos en los botones
 menu.version.line.5=• Nuevo: «Imán de mineral» en Tienda » Potenciadores — los objetos cercanos vuelan hacia ti durante 5 minutos
@@ -650,7 +650,7 @@ menu.version.line.18=• La arena PvP ya no te teletransporta sobre las hojas de
 menu.version.line.19=• Logros y desafíos con recompensas: Menú del servidor » Logros
 menu.version.line.20=• Minijuegos (PvP: el último en pie), interruptor de música en Ajustes, control de CPS
 menu.version.line.21=• Reinicio con resumen, CPS sobre la barra rápida en la arena, ajustes con su estado actual
-menu.version.line.22=• La Cueva — la tercera zona (niveles 26–40): 10 pozos en forma de U, los picos empiezan de nuevo desde madera, una cúpula
+menu.version.line.22=• La Cueva es la tercera zona, con diez minas bajo una cúpula. Se abre en el nivel 26.
 menu.version.line.23=• VIP ahora es un estatus aparte (desde el nivel 40), reinicio desde el nivel 25; el reinicio conserva las monedas VIP
 menu.version.line.24=• Galería de tiro: dispara con arco a las dianas por monedas; la tienda del comerciante errante en la isla VIP
 menu.version.line.25=• Cárcel (!jail), denuncias (!report), baneos y silencios temporales
@@ -669,6 +669,13 @@ menu.version.line.37=• El bot puede unirse al grupo contra el Custodio, dispar
 menu.version.line.38=• Los logros y desafíos tienen listas separadas y hay nuevas recompensas por comprar en la isla VIP.
 menu.version.line.39=• Los nombres en ruso de objetos y encantamientos en menús e inventario siguen el glosario de Java Edition.
 menu.version.line.40=• Los temporizadores de los potenciadores comunes se trasladaron de los soportes para armadura. Se corrigió la recuperación de puntuaciones tras un reinicio.
+menu.version.line.41=• Las monedas del evento «Lluvia de monedas» se quedan en el inventario. Puedes dárselas a otros jugadores como objetos.
+menu.version.line.42=• En el Banco puedes depositar y retirar monedas a una tasa de 1:1, además de transferirlas a otro jugador.
+menu.version.line.43=• Se han ajustado los precios y los requisitos de experiencia. Para el primer ascenso siguen haciendo falta 100 puntos de experiencia.
+menu.version.line.44=• El Registro de jugadores permite a los administradores consultar estadísticas guardadas y datos de depuración.
+menu.version.line.45=• El menú «Creadores» incluye fichas individuales con sus aportaciones y enlaces que puedes copiar.
+menu.version.line.46=• Las cabezas de colección ya no aparecen en la tienda de encantamientos. Los picos de netherita de los niveles 26–40 vuelven a minar bloques de las minas anteriores.
+menu.version.line.47=• ContentLog muestra la lista de módulos al iniciar y los detalles de errores en scripts y funciones.
 
 ## --- NIVELES, VIP Y REINICIO ---
 ##   chat.lvlup.*, menu.upgrades.*, chat.vip.*, chat.rebirth.*

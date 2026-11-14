@@ -1,7 +1,7 @@
 ## =============================
 ##  Shop for Ore: ENGLISH LOCALE
 ##  Author: kapycta1231484 & Claude
-##  Last updated: 2026-11-10
+##  Last updated: 2026-11-14
 ##  This file contains all in-game texts for the Shop for Ore map in English.
 ##  Please keep sections and comments for easy navigation!
 ##  Sections are grouped by feature; the line under a header lists its key prefixes. Add a key anywhere, then run: python3 tools/lang.py sort
@@ -10,7 +10,7 @@
 ## --- PACK INFO ---
 ##   pack.*
 pack.name=Resource pack for map §lShop for Ore§r
-pack.description=Includes some small improvements for a smoother game. §cNot recommended to disable! §fVersion: §7[0.3.0_20261110_resources]
+pack.description=Includes some small improvements for a smoother game. §cNot recommended to disable! §fVersion: §7[0.3.0_20261114r_resources]
 
 ## --- ITEMS & BLOCKS ---
 ##   item.*, tile.*, entity.*, container.shop.*
@@ -630,7 +630,7 @@ menu.creators.link.planet_minecraft=§r §fPlanet Minecraft
 menu.version.title=§l§8Server Menu » §r §8§lMap Version
 menu.version.line.1=§l§7Here you'll find info about the latest map update
 menu.version.label=§2Map Version:
-menu.version.line.2=§lRelease candidate 0.3.0 — November 10, 2026§r
+menu.version.line.2=§lRelease 0.3.0 — November 14, 2026§r
 menu.version.line.3=• New chat message look: "icon Label » text", no more color noise
 menu.version.line.4=• Menus in one style: "Section » Subsection" titles, icons on buttons
 menu.version.line.5=• New: "Ore Magnet" in Shop » Boosts — nearby items fly to you for 5 minutes
@@ -650,7 +650,7 @@ menu.version.line.18=• The PvP arena no longer teleports you onto tree leaves
 menu.version.line.19=• Achievements and challenges with rewards — Server menu » Achievements
 menu.version.line.20=• Minigames (PvP: Last One Standing), a music switch in Settings, CPS check
 menu.version.line.21=• Wipe with a summary, CPS above the hotbar in the arena, settings showing their current state
-menu.version.line.22=• The Cave — the third location (levels 26–40): 10 pits in a U shape, pickaxes start again from wooden, a dome
+menu.version.line.22=• The Cave is the third location, with ten mines beneath a dome. It opens at level 26.
 menu.version.line.23=• VIP is now a separate status (from level 40), rebirth from level 25; rebirth keeps VIP coins
 menu.version.line.24=• Shooting range: shoot targets with a bow for coins; the Wandering Trader's shop on the VIP island
 menu.version.line.25=• Jail (!jail), reports (!report), timed bans and mutes
@@ -669,6 +669,13 @@ menu.version.line.37=• The bot can join Warden parties, shoot a bow in sparrin
 menu.version.line.38=• Achievements and challenges have separate lists, with new rewards for VIP island purchases.
 menu.version.line.39=• Russian item and enchantment names in menus and inventory follow the Java Edition glossary.
 menu.version.line.40=• Shared boost timers were moved off armor stands. Player score recovery after a wipe was fixed.
+menu.version.line.41=• Coins from the Coin Rain event stay in your inventory. You can hand them to other players as items.
+menu.version.line.42=• The Bank lets you deposit and withdraw coins at a 1:1 rate and transfer coins to another player.
+menu.version.line.43=• Prices and XP requirements have been rebalanced. The first level-up still costs 100 XP.
+menu.version.line.44=• The Player Registry gives admins access to saved player stats and debug information.
+menu.version.line.45=• The Creators menu now has individual profiles with credits and links you can copy.
+menu.version.line.46=• Collectible heads no longer appear in the enchantment shop. Netherite pickaxes at levels 26–40 can mine blocks from earlier mines again.
+menu.version.line.47=• ContentLog lists modules at startup and reports details for script and function errors.
 
 ## --- LEVELS, VIP & REBIRTH ---
 ##   chat.lvlup.*, menu.upgrades.*, chat.vip.*, chat.rebirth.*
