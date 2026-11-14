@@ -14,7 +14,7 @@ ctx.api.playerActions(owner,owner);assert.ok(captured.items.some(i=>i.text==='%a
 captured.items.find(i=>i.text==='%admin.players.button.vip_give').run();assert.ok(owner.hasTag('player:vip'));
 ctx.api.playerActions(owner,owner);assert.ok(captured.body.includes('%admin.players.body.vip_coins 50'));assert.ok(captured.body.includes('%admin.players.body.mute 15'));
 captured.items.find(i=>i.text==='%admin.players.button.vip_take').run();assert.ok(!owner.hasTag('player:vip'));
-const admin=load('scripts/chat/commands/admin.js');const start=admin.indexOf('async function setMoney('),end=admin.indexOf('\n}',start)+2;
+const admin=load('scripts/chat/commands/ranks/admin.js');const start=admin.indexOf('async function setMoney('),end=admin.indexOf('\n}',start)+2;
 const notices=[];const money={hasRole:ctx.hasRole,getScore:ctx.getScore,tell:(...args)=>notices.push(args),run:async(p,cmd)=>{const m=cmd.match(/set @s (\w+) (\d+)/);p.scores[m[1]]=Number(m[2]);return{};}};
 vm.runInNewContext(admin.slice(start,end)+'\nglobalThis.setMoney=setMoney;',money);
 assert.equal(await money.setMoney(owner,a,'add','25','vip_coins'),true);assert.equal(a.scores.vip_coins,75);assert.equal(a.scores.money,100);

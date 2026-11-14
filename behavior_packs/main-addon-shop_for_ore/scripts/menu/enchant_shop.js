@@ -8,7 +8,7 @@
 // функции shop/enchants/*, цены и максимумы — там же (здесь только для показа).
 
 import { MinecraftEnchantmentTypes, Enchantment } from '@minecraft/server';
-import { getScore, shopBalance, metricNumbers, run, tell } from '../DataBase.js';
+import { getScore, shopBalance, metricNumbers, run, tell } from '../utils.js';
 import { showMenu, backButton } from './common/forms.js';
 
 // id — ключ в MinecraftEnchantmentTypes, name — ванильный ключ перевода (переводится на языке игрока)

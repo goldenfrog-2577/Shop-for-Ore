@@ -36,6 +36,7 @@
 							"type": "label",
 							"size": ["100%-8px", "default"],
 							"text": "#dialogtext",
+							"color": [1.0, 1.0, 1.0],
 							"bindings": [{
 								"binding_name": "#dialogtext"
 							}]

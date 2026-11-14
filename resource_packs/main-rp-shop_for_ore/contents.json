@@ -262,10 +262,19 @@
 			"path": "textures/server_icons/alex.png"
 		},
 		{
+			"path": "textures/server_icons/creator_claude.png"
+		},
+		{
+			"path": "textures/server_icons/creator_codex.png"
+		},
+		{
 			"path": "textures/server_icons/steve.png"
 		},
 		{
 			"path": "textures/server_icons/note_block.png"
+		},
+		{
+			"path": "textures/server_icons/menu_click.png"
 		},
 		{
 			"path": "textures/server_icons/soul_sand.png"

@@ -4,8 +4,8 @@
 
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed } from '../system/security/jail.js';
-import { isPending, tellText, tell, run, getScore, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed, shopBalance } from '../DataBase.js';
-import { showMenu, showModal, modal, backButton, toggleMenu } from './common/forms.js';
+import { isPending, tellText, tell, run, findPlayer, getScore, isBot, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed, shopBalance } from '../utils.js';
+import { showMenu, showModal, modal, backButton, confirm, toggleMenu } from './common/forms.js';
 import { enchantsMenu } from './enchant_shop.js';
 import { cosmeticsMenu } from './cosmetics_shop.js';
 import { achievementsMenu } from './achievements_menu.js';
@@ -16,6 +16,7 @@ import { TRACK, DISCS } from '../system/ui/music_tracks.js';
 import { BOSS_DISCS } from '../system/player/discs.js';
 import { ChangePasswordUI } from '../registration/change.js';
 import { redeemPromo } from '../system/economy/promo.js';
+import { bankAmount, exchangeCoins, inventoryCoins } from '../system/economy/bank.js';
 
 const OPEN = '\n%menu.common.tap_to_open';
 const COIN = '', LVL = '';
@@ -92,18 +93,53 @@ function textPage(player, title, body, back) {
 	showMenu(player, title, body, [backButton(back)], back);
 }
 
-// Создатели: любая кнопка возвращает в «О карте»
+const CREATOR_ICONS = 'textures/server_icons/';
+const CREATOR_BACK = 'textures/ui/icon_import';
+const CREATORS = [
+	{ id: 'goldenfrog', name: 'kapycta1231484', icon: 'steve', links: [
+		['github', 'https://github.com/goldenfrog-2577'],
+		['telegram', 'https://t.me/goldenfrog_2577'],
+		['discord', '@goldenfrog_2577'],
+		['twitter', 'https://twitter.com/goldenfrog_2577'],
+		['planet_minecraft', 'https://www.planetminecraft.com/member/goldenfrog/']
+	] },
+	{ id: 'nastya', name: 'NastyaXs00', icon: 'alex' },
+	{ id: 'claude', name: 'Claude', model: 'Opus 5.5', company: 'Anthropic', icon: 'creator_claude', links: [['site', 'https://claude.ai/']] },
+	{ id: 'codex', name: 'Codex', model: 'GPT-6.1 Sol', company: 'OpenAI', icon: 'creator_codex', links: [['site', 'https://openai.com/codex/']] }
+];
+
 function creators(player) {
 	const back = () => mapInfo(player);
-	showMenu(player, '%menu.creators.title', '', [
-		['§8Creator\n§8kapycta1231484', 'textures/server_icons/steve'],
-		// Соавтор карты: иконки шрифта (glyph_E1) подписаны «BY'NASTYA»
-		['§5Co-creator\n§8NastyaXs00', 'textures/server_icons/alex'],
-		['§6Omlet Arcade\n§8@waxenjaguar2209', 'textures/server_icons/omlet'],
-		['§9Discord\n§8GoldenFrog#2577', 'textures/server_icons/discord'],
-		['§3Telegram\n§8@goldenfrog_2577', 'textures/server_icons/telegram'],
-		['§2Xbox\n§8kapycta123#1484', 'textures/server_icons/xbox']
-	].map(([text, icon]) => ({ text, icon, run: back })), back);
+	const reopen = () => creators(player);
+	const items = CREATORS.map(creator => ({
+		text: '§8' + creator.name + '\n' + (creator.model ? '§8' + creator.model : '%menu.creators.' + creator.id + '.role'),
+		icon: CREATOR_ICONS + creator.icon,
+		run: () => creatorCard(player, creator, reopen)
+	}));
+	return showMenu(player, '%menu.creators.title', '%menu.creators.body', [
+		...items, backButton(back, '%admin.common.back', CREATOR_BACK)
+	]);
+}
+
+function creatorCard(player, creator, back) {
+	const title = '§l§8' + creator.name;
+	const heading = creator.company ? '§f' + creator.company + ' §8· §f' + creator.model + '§r'
+		: '%menu.creators.' + creator.id + '.heading';
+	const body = heading + '\n\n%menu.creators.' + creator.id + '.bio';
+	const reopen = () => creatorCard(player, creator, back);
+	return showMenu(player, title, body, [
+		creator.links && { text: '%menu.creators.links', icon: 'textures/items/book_writable', run: () => creatorLinks(player, creator, reopen) },
+		backButton(back, '%admin.common.back', CREATOR_BACK)
+	]);
+}
+
+function creatorLinks(player, creator, back) {
+	const form = modal('%menu.creators.links.title §8» ' + creator.name);
+	for (const [index, [key, url]] of creator.links.entries()) {
+		const label = '%menu.creators.link.' + key;
+		form.textField(index === 0 ? '%menu.creators.copy_hint\n\n' + label : label, url, url);
+	}
+	return showModal(player, form, back, back);
 }
 
 // ===== Магазин =====
@@ -179,7 +215,7 @@ function musicSetting(player, back) {
 		const t = nowPlaying(player);
 		return ['%menu.settings.music.body', '',
 			`%menu.settings.state ${off ? '%menu.settings.state.off' : '%menu.settings.state.on'}`,
-			`%menu.music.now ${t ? `§f${t.title} §8— §7${t.author}` : '§8—'}`,
+			`%menu.music.now ${t ? `§f${t.title} §8— §f${t.author}§7` : '§8—'}`,
 			`%menu.music.source ${discMode ? '%menu.music.source.discs' : '%menu.music.source.server'}`,
 			`%menu.music.volume §f${getVolume(player)}§7 / 100`,
 			`%menu.music.discs §f${discs.length}§7 / ${DISCS.length}`].join('\n');
@@ -251,11 +287,11 @@ function menuSounds(player, back) {
 			tell(player, on ? 'chat.settings.enabled' : 'chat.settings.disabled');
 			menuSounds(player, back);
 		}, () => menuSounds(player, back));
-	// Иконки — ванильные текстуры 1.19.50: зелёная галочка, красный крест, курсор
+	// Галочка и крест используют ванильные текстуры, у кнопки «Клик» своя иконка.
 	showMenu(player, '%menu.settings.menu_sounds.title', '%menu.settings.menu_sounds.body', [
 		{ text: '%menu.settings.menu_sounds.success', icon: 'textures/ui/confirm', run: () => toggle('success') },
 		{ text: '%menu.settings.menu_sounds.error', icon: 'textures/ui/cancel', run: () => toggle('error') },
-		{ text: '%menu.settings.menu_sounds.click', icon: 'textures/ui/cursor', run: () => toggle('click') },
+		{ text: '%menu.settings.menu_sounds.click', icon: 'textures/server_icons/menu_click', run: () => toggle('click') },
 		backButton(back)
 	], back);
 }
@@ -263,13 +299,41 @@ function menuSounds(player, back) {
 // ===== Банк и мини-игры =====
 
 export function bank(player) {
-	// Получатели — игроки в сети, кроме себя и бота (себе перевести нельзя, у бота денег нет)
-	const names = [...world.getPlayers()].filter(p => p.name !== player.name && !p.hasTag('role:bot')).map(p => p.name);
+	const reopen = () => bank(player);
+	const body = () => '%menu.bank.welcome\n\n%menu.bank.description\n\n%menu.bank.balance §e' + getScore(player, 'money') + ' §r' + COIN
+		+ '\n%menu.bank.inventory §e' + inventoryCoins(player) + ' §r' + COIN;
+	return showMenu(player, '%menu.bank.title', body, [
+		{ text: '%menu.bank.deposit', icon: 'textures/items/gold_ingot', run: () => bankExchange(player, true, reopen) },
+		{ text: '%menu.bank.withdraw', icon: 'textures/items/gold_ingot', run: () => bankExchange(player, false, reopen) },
+		{ text: '%menu.bank.transfer', icon: 'textures/server_icons/steve', run: () => bankTransfer(player, reopen) },
+		backButton(() => menu(player))
+	]);
+}
+
+function bankExchange(player, deposit, back) {
+	const key = deposit ? 'deposit' : 'withdraw';
+	const title = '%menu.bank.' + key + '.title';
+	const form = modal(title).textField('%menu.bank.' + key + '.amount', '%menu.bank.amount_placeholder');
+	return showModal(player, form, ([raw]) => {
+		const amount = bankAmount(raw);
+		if (!amount) return exchangeCoins(player, raw, deposit);
+		const summary = '%menu.bank.' + key + '.confirm §e' + amount + ' §r' + COIN + '§7?';
+		return confirm(player, title, summary, () => exchangeCoins(player, amount, deposit), back);
+	}, back);
+}
+
+function bankTransfer(player, back) {
+	const eligible = target => target && target.name !== player.name && !isBot(target) && !isPending(target);
+	const names = [...world.getPlayers()].filter(eligible).map(target => target.name);
 	if (!names.length) return tell(player, 'chat.bank.error.no_players');
-	const form = modal('%menu.bank.title')
-		.dropdown(`\n%menu.bank.balance §e${getScore(player, 'money')} §f\ue152\n%menu.bank.player`, names, 0)
+	const form = modal('%menu.bank.transfer.title')
+		.dropdown('\n%menu.bank.balance §e' + getScore(player, 'money') + ' §r' + COIN + '\n%menu.bank.player', names, 0)
 		.textField('%menu.bank.amount', '%menu.bank.amount_placeholder');
-	showModal(player, form, ([target, amount]) => transferMoney(player, names[target], amount), () => menu(player));
+	return showModal(player, form, ([index, amount]) => {
+		const name = names[index];
+		if (!eligible(findPlayer(name))) return tell(player, 'chat.cmd.error.offline', name ?? '—');
+		return transferMoney(player, name, amount);
+	}, back);
 }
 
 const gameStateLine = (g) => `§8 %menu.games.phase.${g.phase} §7(${g.players.size}/${g.def.maxPlayers})`;
@@ -286,7 +350,7 @@ export function minigamesMenu(player, back) {
 
 // ===== Правила, промокоды, телепортации, прокачка =====
 
-// Пункты правил: menu.rules.line.1…RULES_COUNT в .lang (число — в DataBase.js, его же берёт !rules)
+// Пункты правил: menu.rules.line.1…RULES_COUNT в .lang (число — в utils.js, его же берёт !rules)
 export { RULES_COUNT };
 function rules(player) {
 	textPage(player, '%menu.rules.title', `%menu.rules.header\n\n${lines('menu.rules.line', RULES_COUNT)}\n\n%menu.rules.footer`, () => menu(player));
@@ -298,7 +362,7 @@ function promocodes(player) {
 	showModal(player, form, ([code]) => redeemPromo(player, code), () => menu(player));
 }
 
-// Телепортации: те же точки, что у !warp (WARPS в DataBase.js), кроме точек персонала; VIP-остров — только VIP.
+// Телепортации: те же точки, что у !warp (WARPS в utils.js), кроме точек персонала; VIP-остров — только VIP.
 // Телепорт — командой !warp: те же проверки (заморозка, режим боя, мини-игры) и сообщения
 function warps(player) {
 	const back = () => menu(player);

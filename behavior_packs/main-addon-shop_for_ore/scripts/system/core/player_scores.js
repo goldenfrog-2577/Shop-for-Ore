@@ -1,7 +1,7 @@
 // Восстановление только отсутствующих счетов: после reset запись исчезает, а не становится нулём.
 // Деньги, VIP и прочий уже существующий прогресс при повторной проверке не меняются.
 import { world, system, DynamicPropertiesDefinition } from '@minecraft/server';
-import { run, getScore } from '../../DataBase.js';
+import { run, getScore } from '../../utils.js';
 
 const CORE = { xp: 0, money: 0, vip_coins: 0, lvl: 1, rebirth: 0, efficiency: 0, fortune: 0, pick: 0, magnet: 0 };
 const pending = new Map();
