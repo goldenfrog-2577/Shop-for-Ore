@@ -50,22 +50,27 @@ export const modeName = (mode = acMode()) => MODE_NAMES[mode];
 /** Откатывать ли нарушение (режимы «откат» и «кик»). */
 export const rollbackEnabled = () => acMode() >= MODE.rollback;
 
+const hasExemptRole = player => player.hasTag('role:bot') || hasRole(player, 'admin');
+
 /** Игрок не проверяется: владелец, администратор, бот, творческий режим, наблюдатель. */
 export function isExempt(player) {
-	if (player.hasTag('role:bot') || hasRole(player, 'admin')) return true;
-	return !checkedNames().has(player.name);
+	if (hasExemptRole(player)) return true;
+	return !checkedPlayers().has(player.name);
 }
 
-// Игроки не в творческом режиме и не наблюдатели — один запрос на тик
-let checkedTick = -1, checked = new Set();
-function checkedNames() {
+// Инвентарь и проверки из событий используют один снимок игровых режимов на тик.
+let checkedTick = -1, checked = new Map();
+function checkedPlayers() {
 	if (checkedTick === tick) return checked;
-	checkedTick = tick;
+	const players = new Map();
 	try {
-		checked = new Set([...world.getPlayers({ excludeGameModes: [GameMode.creative, GameMode.spectator] })].map(p => p.name));
+		for (const player of world.getPlayers({ excludeGameModes: [GameMode.creative, GameMode.spectator] })) players.set(player.name, player);
 	} catch {
-		checked = new Set([...world.getPlayers()].map(p => p.name));
+		players.clear();
+		for (const player of world.getPlayers()) players.set(player.name, player);
 	}
+	checked = players;
+	checkedTick = tick;
 	return checked;
 }
 
@@ -263,10 +268,10 @@ system.runSchedule(() => {
 		}
 	}
 	if (tick % CHECK_EVERY_TICKS !== 0) return;
-	for (const player of world.getPlayers()) {
+	for (const player of checkedPlayers().values()) {
 		// Администратор и владелец не проверяются: им нужны командные блоки и т. п. из админ-меню;
 		// в творческом режиме предметы берутся из меню режима
-		if (isExempt(player)) continue;
+		if (hasExemptRole(player)) continue;
 		const container = player.getComponent('inventory').container;
 		for (let i = 0; i < container.size; i++) {
 			const item = container.getItem(i);
