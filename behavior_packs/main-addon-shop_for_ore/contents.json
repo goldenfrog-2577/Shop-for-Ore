@@ -394,6 +394,9 @@
 			"path" : "entities/warden_boss.json"
 		},
 		{
+			"path" : "scripts/system/economy/bank.js"
+		},
+		{
 			"path" : "scripts/system/economy/boosts.js"
 		},
 		{

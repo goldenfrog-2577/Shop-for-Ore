@@ -103,6 +103,7 @@ const loadedModules = [
 	"system/core/player_scores.js",
 	"system/core/reset_history.js",
 	"system/core/wipe.js",
+	"system/economy/bank.js",
 	"system/economy/boosts.js",
 	"system/economy/promo.js",
 	"system/economy/trader.js",

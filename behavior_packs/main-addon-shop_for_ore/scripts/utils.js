@@ -263,6 +263,17 @@ export function showWhenFree(player, form, tries = 60) {
 
 // ======== Деньги: перевод игроку (!pay, Банк) ========
 
+/** Проверка границ и изменение баланса одной командой, между ними нет другого списания. */
+export async function changeMoney(player, amount) {
+	const range = amount > 0 ? '..' + (2147483647 - amount) : -amount + '..';
+	const op = amount > 0 ? 'add' : 'remove';
+	try {
+		const result = await run(player, 'execute if score @s money matches ' + range
+			+ ' run scoreboard players ' + op + ' @s money ' + Math.abs(amount));
+		return (result?.successCount ?? 0) > 0;
+	} catch { return false; }
+}
+
 /**
  * Перевод денег (табло money) другому игроку в сети — общий для меню банка и !pay.
  * Сумма — целое положительное число (строка из формы или чата). Сначала списание у отправителя,
@@ -294,14 +305,21 @@ export function transferMoney(player, targetName, rawAmount) {
 		tell(player, 'chat.error.no_money');
 		return false;
 	}
-	run(player, `scoreboard players remove @s money ${amount}`).then((res) => {
-		if (res === undefined) return;
-		run(target, `scoreboard players add @s money ${amount}`);
+	if (getScore(target, 'money') > 2147483647 - amount) {
+		tell(player, 'chat.bank.error.recipient_limit');
+		return false;
+	}
+	changeMoney(player, -amount).then(async debited => {
+		if (!debited) return tell(player, 'chat.error.no_money');
+		if (!await changeMoney(target, amount)) {
+			if (!await changeMoney(player, amount)) console.warn('[Shop for Ore] Bank could not refund ' + amount + ' coins to ' + player.name);
+			return tell(player, 'chat.bank.error.exchange');
+		}
 		player.addTag('stat:paid');   // достижение «Щедрая душа» (system/player/achievements.js)
-		run(player, `tellraw @s ${rawTranslate('chat.bank.sent', target.name, amount)}`);
-		run(target, `tellraw @s ${rawTranslate('chat.bank.received', player.name, amount)}`);
+		tell(player, 'chat.bank.sent', target.name, amount);
+		tell(target, 'chat.bank.received', player.name, amount);
 		run(player, 'playsound note.bell @s');
-	});
+	}).catch(error => console.warn('[Shop for Ore] Bank transfer: ' + error));
 	return true;
 }
 
