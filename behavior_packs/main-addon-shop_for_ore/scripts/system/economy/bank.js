@@ -1,10 +1,9 @@
 import { Items, ItemStack } from '@minecraft/server';
-import { changeMoney, getScore, isPending, tell } from '../../utils.js';
+import { changeMoney, getScore, isPending, lockMoneyOperation, run, tell } from '../../utils.js';
 
 const COIN_ID = 'minecraft:gold_ingot';
 const STACK_SIZE = 64;
 const MAX_BALANCE = 2147483647;
-const exchanging = new Set();
 const pendingRefunds = new Map();
 
 function inventory(player) {
@@ -103,10 +102,10 @@ async function restoreExchange(player) {
 export async function exchangeCoins(player, raw, deposit) {
 	if (isPending(player)) return tell(player, 'chat.account.error.login_required');
 	const name = player.name;
-	if (exchanging.has(name)) return tell(player, 'chat.bank.error.busy');
 	const amount = bankAmount(raw);
 	if (!amount) return tell(player, 'chat.cmd.error.number', String(raw ?? '').trim() || '—', 1, MAX_BALANCE);
-	exchanging.add(name);
+	const unlock = lockMoneyOperation(player);
+	if (!unlock) return tell(player, 'chat.bank.error.busy');
 	try {
 		if (!await restoreExchange(player)) return tell(player, 'chat.bank.error.exchange');
 		const balance = getScore(player, 'money');
@@ -132,6 +131,20 @@ export async function exchangeCoins(player, raw, deposit) {
 		if (!await restoreExchange(player)) console.warn('[Shop for Ore] Bank refund pending for ' + name + ': ' + error);
 		return tell(player, 'chat.bank.error.exchange');
 	} finally {
-		exchanging.delete(name);
+		unlock();
+	}
+}
+
+// Ребитх и обмен монет используют одну блокировку, в том числе пока выполняется команда.
+export async function rebirth(player) {
+	if (isPending(player)) return tell(player, 'chat.account.error.login_required');
+	const unlock = lockMoneyOperation(player);
+	if (!unlock) return tell(player, 'chat.bank.error.busy');
+	try {
+		const before = getScore(player, 'rebirth');
+		const result = await run(player, 'function upgrade/upgrade_rebirth');
+		if (result && getScore(player, 'rebirth') === before + 1) pendingRefunds.delete(player.name);
+	} finally {
+		unlock();
 	}
 }

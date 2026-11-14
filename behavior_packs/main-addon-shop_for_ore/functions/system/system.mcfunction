@@ -32,10 +32,9 @@ xp -100l @a[lm=1]
 kill @e[type=xp_orb]
 
 ## --- Новичок (без тега player; его ставит timers/ticks_20) ---
-# Так же — после ребитха (upgrade/upgrade_rebirth снимает player): прогресс заново
 scoreboard players set @a[tag=!player] xp 0
 scoreboard players set @a[tag=!player] money 0
-# VIP-коины переживают ребитх: «add 0» создаёт счёт новичку и не трогает накопленное
+# «add 0» создаёт счёт новичку и не трогает накопленное
 scoreboard players add @a[tag=!player] vip_coins 0
 scoreboard players set @a[tag=!player] lvl 1
 scoreboard players set @a[tag=!player] efficiency 0

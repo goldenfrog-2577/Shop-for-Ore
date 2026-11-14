@@ -121,8 +121,8 @@ export function buyEnchant(player, slot, typeId, enchantId) {
 
 // Кирка уровня: табло, функция покупки, максимум и цена (как в functions/shop/enchants/*), ванильное название
 export const PICKAXE_ENCHANTS = [
-	{ id: 'efficiency', name: 'enchantment.digging', max: 5, price: 25000 },
-	{ id: 'fortune', name: 'enchantment.lootBonusDigger', max: 3, price: 10000 }
+	{ id: 'efficiency', name: 'enchantment.digging', max: 5, price: 18000 },
+	{ id: 'fortune', name: 'enchantment.lootBonusDigger', max: 3, price: 8000 }
 ];
 
 const coin = (n) => `§8${metricNumbers(n)} \ue152`;

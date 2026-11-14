@@ -18,7 +18,6 @@ export function ensurePlayerScores(player, onlineCount) {
 async function repair(player, onlineCount) {
 	const level = Math.max(1, getScore(player, 'lvl'));
 	// След уже выполненного вайпа: не даём старому «новичку» снова обнулить новые деньги.
-	// У ребитха здесь ещё уровень 25+, его сигнал снятым тегом player оставляем функции.
 	const afterWipe = level === 1 && player.getTags().some(t => t.startsWith('sys:wipe:'));
 	if (afterWipe && !player.hasTag('player')) player.addTag('player');
 	const defaults = { ...CORE, online: onlineCount ?? [...world.getPlayers()].length, xp_need: level === 1 ? 100 : 0 };

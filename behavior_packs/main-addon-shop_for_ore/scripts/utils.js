@@ -263,6 +263,15 @@ export function showWhenFree(player, form, tries = 60) {
 
 // ======== Деньги: перевод игроку (!pay, Банк) ========
 
+/** Общая блокировка денежных операций банка и ребитха для всех участников. */
+const activeMoneyOperations = new Set();
+export function lockMoneyOperation(...players) {
+	const names = players.map(player => player.name);
+	if (names.some(name => activeMoneyOperations.has(name))) return;
+	for (const name of names) activeMoneyOperations.add(name);
+	return () => { for (const name of names) activeMoneyOperations.delete(name); };
+}
+
 /** Проверка границ и изменение баланса одной командой, между ними нет другого списания. */
 export async function changeMoney(player, amount) {
 	const range = amount > 0 ? '..' + (2147483647 - amount) : -amount + '..';
@@ -309,6 +318,11 @@ export function transferMoney(player, targetName, rawAmount) {
 		tell(player, 'chat.bank.error.recipient_limit');
 		return false;
 	}
+	const unlock = lockMoneyOperation(player, target);
+	if (!unlock) {
+		tell(player, 'chat.bank.error.busy');
+		return false;
+	}
 	changeMoney(player, -amount).then(async debited => {
 		if (!debited) return tell(player, 'chat.error.no_money');
 		if (!await changeMoney(target, amount)) {
@@ -319,7 +333,7 @@ export function transferMoney(player, targetName, rawAmount) {
 		tell(player, 'chat.bank.sent', target.name, amount);
 		tell(target, 'chat.bank.received', player.name, amount);
 		run(player, 'playsound note.bell @s');
-	}).catch(error => console.warn('[Shop for Ore] Bank transfer: ' + error));
+	}).catch(error => console.warn('[Shop for Ore] Bank transfer: ' + error)).finally(unlock);
 	return true;
 }
 
