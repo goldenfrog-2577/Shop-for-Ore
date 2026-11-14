@@ -46,7 +46,10 @@ export function offlineProfiles(online) {
 	const records = new Map();
 	for (const id of ['money', REGISTRY]) {
 		for (const identity of participants(id)) {
-			if (!online.has(identity.displayName)) records.set(identity.displayName, identity);
+			const name = identity.displayName;
+			// Bedrock может вернуть ключ локализации вместо ника участника табло.
+			if (!name || /^%?commands\.scoreboard\.players\.offlinePlayerName\b/.test(name) || online.has(name)) continue;
+			records.set(name, identity);
 		}
 	}
 	return records;

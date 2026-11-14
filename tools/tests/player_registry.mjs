@@ -15,11 +15,18 @@ for (const player of [owner, online]) {
 	player.getTags = () => player.tags;
 }
 const former = { displayName: 'Former', type: 'player' };
+const botIdentity = { displayName: 'TestBot', type: 'player' };
+const bot = { name: 'TestBot', scoreboard: botIdentity, hasTag: tag => tag === 'sys:bot' };
+const unnamed = { displayName: 'commands.scoreboard.players.offlinePlayerName', type: 'player' };
+const unnamedTranslated = { displayName: '%commands.scoreboard.players.offlinePlayerName', type: 'player' };
 const fake = { displayName: 'Timer', type: 'FakePlayer' };
 const tables = new Map();
 for (const [id, current, previous] of [['money', 100, 0], ['lvl', 1, 40], ['xp', 0, 350], ['xp_need', 100, 0], ['vip_coins', 20, 508], ['rebirth', 0, 1], ['play_seconds', 65, 151617]]) {
 	tables.set(id, new Map([[online.scoreboard, current], [former, previous], [fake, 1]]));
 }
+tables.get('money').set(botIdentity, 0);
+tables.get('money').set(unnamed, 0);
+tables.set('sfo_registry', new Map([[unnamedTranslated, 1]]));
 const objective = id => tables.has(id) ? {
 	getParticipants: () => [...tables.get(id).keys()],
 	getScore: identity => {
@@ -28,7 +35,7 @@ const objective = id => tables.has(id) ? {
 		return value;
 	}
 } : undefined;
-let players = [owner, online], menu, snapshot;
+let players = [owner, online, bot], menu, snapshot;
 const context = {
 	world: { getPlayers: () => players.values(), events: { beforeItemUse: { subscribe() {} } }, scoreboard: {
 		getObjective: objective, addObjective: id => tables.set(id, new Map())
@@ -39,7 +46,7 @@ const context = {
 	getRole: player => player.role,
 	hasRole: player => player.role === 'owner',
 	getWarns: () => 0,
-	isBot: () => false,
+	isBot: player => player.hasTag('sys:bot') || player.hasTag('role:bot'),
 	isPending: player => player.hasTag('auth:login'),
 	isVip: player => player.hasTag('player:vip'),
 	playedSeconds: () => 65,
@@ -66,7 +73,12 @@ assert.match(menu.items[0].text,/Owner.*\n.*status\.self/);
 assert.match(menu.items[0].text, /§2■§r .*status\.self/);
 assert.ok(menu.items.some(item => item.text.includes('Alice') && item.text.includes('§2■§r %admin.players.registry.status.online')));
 assert.ok(menu.items.some(item => item.text.includes('Former') && item.text.includes('§c■§r %admin.players.registry.status.offline')));
-assert.ok(!menu.items.some(item => item.text.includes('Timer')));
+assert.ok(!menu.items.some(item => /Timer|TestBot|offlinePlayerName/.test(item.text)));
+players = [owner, online];
+tables.get('money').delete(botIdentity);
+context.openRegistry(owner);
+assert.ok(!menu.items.some(item => /TestBot|offlinePlayerName/.test(item.text)));
+assert.ok(menu.items.some(item => item.text.includes('Former')));
 click('Alice');
 assert.match(menu.body, /§e0§7\/§e100/);
 assert.equal(menu.items.find(item => item?.text.endsWith('.actions'))?.icon, 'textures/server_icons/command_block');
