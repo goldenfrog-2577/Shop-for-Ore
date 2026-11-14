@@ -6,7 +6,7 @@
 // Пока игрок копает этой киркой, замену не делаем, чтобы не сбить копание.
 
 import { world, system } from '@minecraft/server';
-import { run } from '../../DataBase.js';
+import { run } from '../../utils.js';
 
 const CHECK_EVERY_TICKS = 20;
 const FORCE_RATIO = 0.9;

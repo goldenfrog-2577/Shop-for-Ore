@@ -8,7 +8,7 @@
 // одно перо пропадает. В мини-играх (теги game:…) перо не работает — левитация ломала бы их правила.
 
 import { world, GameMode } from '@minecraft/server';
-import { run, tell } from '../../DataBase.js';
+import { run, tell } from '../../utils.js';
 
 export const VOID_Y = -64;
 export const FEATHER_SECONDS = 10;

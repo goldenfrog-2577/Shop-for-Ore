@@ -154,7 +154,7 @@
 			"path" : "pack_icon.png"
 		},
 		{
-			"path" : "scripts/DataBase.js"
+			"path" : "scripts/utils.js"
 		},
 		{
 			"path" : "scripts/chat/chat.js"
@@ -169,13 +169,13 @@
 			"path" : "scripts/chat/commands/common.js"
 		},
 		{
-			"path" : "scripts/chat/commands/player.js"
+			"path" : "scripts/chat/commands/ranks/player.js"
 		},
 		{
-			"path" : "scripts/chat/commands/moderator.js"
+			"path" : "scripts/chat/commands/ranks/moderator.js"
 		},
 		{
-			"path" : "scripts/chat/commands/admin.js"
+			"path" : "scripts/chat/commands/ranks/admin.js"
 		},
 		{
 			"path" : "scripts/chat/commands/selectors.js"
@@ -422,6 +422,9 @@
 		},
 		{
 			"path" : "scripts/system/player/playtime.js"
+		},
+		{
+			"path" : "scripts/system/player/registry.js"
 		},
 		{
 			"path" : "scripts/system/core/reset_history.js"

@@ -1,7 +1,7 @@
 // --- UI авторизации игрока при входе ---
 // Форму вызывает registration/system.js
 
-import { tellText, run, tell, menuFeedback } from '../DataBase.js';
+import { tellText, run, tell, menuFeedback } from '../utils.js';
 import { modal } from '../menu/common/forms.js';
 import { checkPassword } from './password.js';
 import { unlockPlayer } from './system.js';

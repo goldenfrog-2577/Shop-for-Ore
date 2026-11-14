@@ -91,7 +91,7 @@ assert.ok(!calls.some(c => c[0] === 'attackEntity' || c[0] === 'navigateToLocati
 link.end();
 
 // ===== Топ, табло, меню, тексты =====
-const playerSrc = read(bp, 'scripts/chat/commands/player.js');
+const playerSrc = read(bp, 'scripts/chat/commands/ranks/player.js');
 assert.match(playerSrc, /\bboss: \(p\) =>/); assert.match(playerSrc, /\bboss_time: \(p\) =>/);
 assert.match(playerSrc, /\.filter\(\(\{ row \}\) => row\)/, 'players without a Warden time are left out of !top boss_time');
 assert.match(read(bp, 'scripts/system/player/achievements.js'), /'stat_win_boss', 'stat_boss_time'\]/, 'wipe resets the new counters');
@@ -100,7 +100,7 @@ assert.match(setup, /scoreboard objectives add stat_win_boss dummy\nscoreboard o
 assert.match(read(bp, 'functions/system/timers.mcfunction'), /matches \.\.10 run function system\/setup/);
 const admin = read(bp, 'scripts/menu/admin/admin_menu.js');
 assert.match(admin, /top_boss'.*runChatCommand\(player, 'top', \['boss'\]\)/); assert.match(admin, /top_boss_time'.*\['boss_time'\]/);
-assert.match(read(bp, 'scripts/DataBase.js'), /§fboss§8\/§fboss_time§7>/);
+assert.match(read(bp, 'scripts/utils.js'), /§fboss§8\/§fboss_time§7>/);
 for (const l of ['ru_RU', 'en_US', 'uk_UA', 'es_ES']) {
 	const t = read(rp, `texts/${l}.lang`);
 	for (const k of ['chat.cmd.top.header.boss', 'chat.cmd.top.header.boss_time', 'admin.server.button.top_boss', 'admin.server.button.top_boss_time'])

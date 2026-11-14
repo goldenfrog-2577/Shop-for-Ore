@@ -9,10 +9,7 @@
 */
 
 import { world, system } from '@minecraft/server';
-import { hasRole, tell } from './DataBase.js';
-
-// Лог о запуске скриптов аддона
-console.warn('[Shop for Ore] Addon scripts are working properly');
+import { hasRole, tell } from './utils.js';
 
 // Импорт модулей меню
 import './menu/main_menu.js';         // Основное меню магазина
@@ -53,7 +50,7 @@ import './system/boss/boss.js';          // Босс Хранитель: ста�
 import './system/boss/portal.js';        // Бирюзовый портал в мини-играх → арена (проверки как у !warp boss)
 import './system/player/ranks.js';       // Префикс уровня в чате (rank:§rN, у VIP — rank:§aVIP)
 import './system/ui/hud.js';         // Панель слева (actionbar)
-import './system/core/fallback.js';    // Пульс скриптов: без него включается запасное меню на NPC
+import { heartbeatConfirmed } from './system/core/fallback.js';    // Пульс скриптов: без него включается запасное меню на NPC
 import './registration/system.js'; // Вход и регистрация в аккаунт: проверка, запись, смена пароля, сброс пароля
 
 // После загрузки уведомить администраторов в сети.
@@ -66,3 +63,95 @@ system.run(() => {
 import './system/player/playtime.js'; // Суммарное время в мире
 import './system/core/reset_history.js'; // Очистка служебных номеров без повторного вайпа
 import './system/core/player_scores.js'; // Восстановление отсутствующих счетов после сброса
+
+const loadedModules = [
+// BEGIN GENERATED MODULE LIST
+	"import.js",
+	"utils.js",
+	"chat/censor.js",
+	"chat/chat.js",
+	"chat/commands/commands.js",
+	"chat/commands/common.js",
+	"chat/commands/ranks/admin.js",
+	"chat/commands/ranks/moderator.js",
+	"chat/commands/ranks/player.js",
+	"chat/commands/selectors.js",
+	"menu/achievements_menu.js",
+	"menu/admin/admin_enchant.js",
+	"menu/admin/admin_menu.js",
+	"menu/common/forms.js",
+	"menu/cosmetics_shop.js",
+	"menu/enchant_shop.js",
+	"menu/main_menu.js",
+	"registration/change.js",
+	"registration/forgot.js",
+	"registration/login.js",
+	"registration/password.js",
+	"registration/register.js",
+	"registration/system.js",
+	"system/boss/arena.js",
+	"system/boss/boss.js",
+	"system/boss/portal.js",
+	"system/bot/bot.js",
+	"system/bot/spawnbot.js",
+	"system/combat/mythic.js",
+	"system/combat/pvp.js",
+	"system/combat/trident.js",
+	"system/core/fallback.js",
+	"system/core/migrate.js",
+	"system/core/offline_reset.js",
+	"system/core/player_scores.js",
+	"system/core/reset_history.js",
+	"system/core/wipe.js",
+	"system/economy/boosts.js",
+	"system/economy/promo.js",
+	"system/economy/trader.js",
+	"system/minigames/minigames.js",
+	"system/minigames/spleef.js",
+	"system/minigames/tir.js",
+	"system/player/achievements.js",
+	"system/player/discs.js",
+	"system/player/playtime.js",
+	"system/player/ranks.js",
+	"system/player/registry.js",
+	"system/player/tools.js",
+	"system/player/void.js",
+	"system/security/anticheat.js",
+	"system/security/anticheat_checks.js",
+	"system/security/ban.js",
+	"system/security/cps.js",
+	"system/security/freeze.js",
+	"system/security/jail.js",
+	"system/security/portals.js",
+	"system/security/staff_log.js",
+	"system/ui/error_keys.js",
+	"system/ui/hud.js",
+	"system/ui/music.js",
+	"system/ui/music_tracks.js",
+	"system/ui/toast.js",
+	"system/worldedit.js",
+// END GENERATED MODULE LIST
+];
+
+console.warn('[Shop for Ore] Загрузка модулей...');
+let lastGroup;
+for (const file of loadedModules) {
+	const parts = file.split('/');
+	const group = parts.length === 1 ? 'scripts/' : parts.slice(0, parts[0] === 'system' && parts.length > 2 ? 2 : 1).join('/') + '/';
+	if (lastGroup !== group) {
+		console.warn('[Shop for Ore]   ' + group);
+		lastGroup = group;
+	}
+	console.warn('[Shop for Ore]     ' + file + ' — загружен');
+}
+console.warn('[Shop for Ore] Загрузка завершена · файлов: ' + loadedModules.length);
+
+// При первом запуске табло может появиться после начала работы нативных функций.
+let readinessChecks = 0;
+const readinessTimer = system.runSchedule(() => {
+	const missing = ['system', 'money', 'lvl', 'xp', 'xp_need'].filter(id => !world.scoreboard.getObjective(id));
+	if (++readinessChecks < 5 && (missing.length || !heartbeatConfirmed)) return;
+	system.clearRunSchedule(readinessTimer);
+	console.warn('[Shop for Ore] Проверка табло · ' + (missing.length ? 'отсутствуют: ' + missing.join(', ') : 'доступны'));
+	console.warn('[Shop for Ore] Проверка legacy · ' + (heartbeatConfirmed ? 'сигнал обновляется' : 'сигнал не подтверждён'));
+}, 20);

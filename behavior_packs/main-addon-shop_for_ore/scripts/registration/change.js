@@ -5,7 +5,7 @@
 // без пароля (карту играют и с пиратских клиентов, ник может занять кто угодно).
 
 import { world } from '@minecraft/server';
-import { tellText, run, tell, menuFeedback } from '../DataBase.js';
+import { tellText, run, tell, menuFeedback } from '../utils.js';
 import { showModal, modal } from '../menu/common/forms.js';
 import { PASSWORD_MIN, PASSWORD_MAX, setPassword, checkPassword, clearPassword } from './password.js';
 import { logAction } from '../system/security/staff_log.js';

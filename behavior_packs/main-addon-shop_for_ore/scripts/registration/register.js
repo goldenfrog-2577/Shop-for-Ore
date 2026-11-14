@@ -1,7 +1,7 @@
 // --- UI регистрации нового игрока ---
 // Форму вызывает registration/system.js
 
-import { tellText, run, menuFeedback } from '../DataBase.js';
+import { tellText, run, menuFeedback } from '../utils.js';
 import { modal } from '../menu/common/forms.js';
 import { PASSWORD_MIN, PASSWORD_MAX, setPassword } from './password.js';
 import { unlockPlayer } from './system.js';
