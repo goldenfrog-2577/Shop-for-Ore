@@ -6,21 +6,21 @@ import { run, getScore } from '../../utils.js';
 const CORE = { xp: 0, money: 0, vip_coins: 0, lvl: 1, rebirth: 0, efficiency: 0, fortune: 0, pick: 0, magnet: 0 };
 const pending = new Map();
 
-export function ensurePlayerScores(player) {
+// При пакетной проверке все игроки используют один снимок онлайна.
+export function ensurePlayerScores(player, onlineCount) {
 	const name = player.name;
 	if (pending.has(name)) return pending.get(name);
-	const task = repair(player).catch(error => console.warn('[Shop for Ore] Score recovery: ' + error)).finally(() => pending.delete(name));
+	const task = repair(player, onlineCount).catch(error => console.warn('[Shop for Ore] Score recovery: ' + error)).finally(() => pending.delete(name));
 	pending.set(name, task);
 	return task;
 }
 
-async function repair(player) {
+async function repair(player, onlineCount) {
 	const level = Math.max(1, getScore(player, 'lvl'));
 	// След уже выполненного вайпа: не даём старому «новичку» снова обнулить новые деньги.
-	// У ребитха здесь ещё уровень 25+, его сигнал снятым тегом player оставляем функции.
 	const afterWipe = level === 1 && player.getTags().some(t => t.startsWith('sys:wipe:'));
 	if (afterWipe && !player.hasTag('player')) player.addTag('player');
-	const defaults = { ...CORE, online: [...world.getPlayers()].length, xp_need: level === 1 ? 100 : 0 };
+	const defaults = { ...CORE, online: onlineCount ?? [...world.getPlayers()].length, xp_need: level === 1 ? 100 : 0 };
 	let needCost = false;
 	for (const [id, initial] of Object.entries(defaults)) {
 		let objective = world.scoreboard.getObjective(id);
@@ -42,7 +42,8 @@ async function repair(player) {
 let tick = 0;
 world.events.tick.subscribe(() => {
 	if (++tick % 20 !== 0) return;
-	for (const player of world.getPlayers()) ensurePlayerScores(player);
+	const players = [...world.getPlayers()];
+	for (const player of players) ensurePlayerScores(player, players.length);
 	if (!limitsTask) ensureFunctionLimits();
 });
 
@@ -66,8 +67,9 @@ async function restoreFunctionLimits() {
 	try { if (world.getDynamicProperty(LIMITS_FIXED) === true) return true; } catch {}
 	// Сначала восстанавливаем player у уже сброшенного игрока, иначе system/system
 	// после включения функций ещё раз обнулит его новые деньги как «новичку».
-	for (const player of world.getPlayers()) {
-		if (await ensurePlayerScores(player) !== true) { limitsTask = undefined; return false; }
+	const players = [...world.getPlayers()];
+	for (const player of players) {
+		if (await ensurePlayerScores(player, players.length) !== true) { limitsTask = undefined; return false; }
 	}
 	const dim = world.getDimension('overworld');
 	try {

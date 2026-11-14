@@ -119,7 +119,7 @@ assert.equal(e.events.filter(s => s.includes('chat.boost.x2_end')).length, 1);
 e.run('events/rain_start'); assert.equal(e.get('rain_event'), 30); e.set('t20', 0, 'timer'); e.advance(600); e.advance(1);
 assert.equal(e.get('rain_event'), -1); assert.equal(e.events.filter(s => s.includes('chat.event.rain_end')).length, 1);
 assert.ok(e.events.some(s => s.includes('structure load "gold_')));
-e.run('boost/x4_boost', joined); assert.equal(e.get('boost_x4'), 300); assert.equal(e.get(joined, 'money'), 10000);
+e.run('boost/x4_boost', joined); assert.equal(e.get('boost_x4'), 300); assert.equal(e.get(joined, 'money'), 30000);
 
 const withoutImports = file => fs.readFileSync(file, 'utf8').replace(/^import .*;\r?\n/gm, '').replace(/\bexport (const|function)/g, '$1');
 const scores = () => [...e.scores].filter(([key]) => key.startsWith('system|')).map(([key, score]) => ({ participant: { displayName: key.slice(7), type: 'fakePlayer' }, score }));

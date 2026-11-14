@@ -12,14 +12,14 @@ export const PROMO_TAG = 'promo:';
 
 export const PROMOCODES = [
 	// Стартовые: на табличке у спавна и на финише паркура
-	{ code: 'kapycta', reward: { xp: 500 } },
+	{ code: 'kapycta', reward: { xp: 80 } },
 	{ code: 'parkour', reward: { money: 500 } },
 	{ code: 'sweetHome', reward: { money: 1000 } },
 	{ code: 'pvpFighter', reward: { items: [['golden_apple', 4]] } },
 	{ code: 'tir', reward: { items: [['bow', 1], ['arrow', 16]] } },
 	// По уровню и VIP
-	{ code: 'hellbonus', minLevel: 16, reward: { xp: 25000 } },
-	{ code: 'cavebonus', minLevel: 26, reward: { xp: 50000 } },
+	{ code: 'hellbonus', minLevel: 16, reward: { xp: 4500 } },
+	{ code: 'cavebonus', minLevel: 26, reward: { xp: 12000 } },
 	{ code: 'VIPbonus', vip: true, reward: { vip_coins: 100 } }
 ];
 

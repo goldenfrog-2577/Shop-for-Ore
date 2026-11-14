@@ -16,7 +16,7 @@ import { TRACK, DISCS } from '../system/ui/music_tracks.js';
 import { BOSS_DISCS } from '../system/player/discs.js';
 import { ChangePasswordUI } from '../registration/change.js';
 import { redeemPromo } from '../system/economy/promo.js';
-import { bankAmount, exchangeCoins, inventoryCoins } from '../system/economy/bank.js';
+import { bankAmount, exchangeCoins, inventoryCoins, rebirth } from '../system/economy/bank.js';
 
 const OPEN = '\n%menu.common.tap_to_open';
 const COIN = '', LVL = '';
@@ -172,9 +172,9 @@ function boosts(player) {
 	const back = () => shop(player);
 	showMenu(player, '%menu.shop.boosts.title', () => shopBalance(player, '%menu.shop.boosts.body\n\n%menu.shop.boosts.x2\n%menu.shop.boosts.x4\n%menu.shop.boosts.magnet'), [
 		product(player, '%menu.shop.boosts.button.x2', '10.0K', COIN, 'boost/x2_boost'),
-		product(player, '%menu.shop.boosts.button.x4', '50.0K', COIN, 'boost/x4_boost'),
+		product(player, '%menu.shop.boosts.button.x4', '30.0K', COIN, 'boost/x4_boost'),
 		// «Магнит руды» — личный, на 5 минут
-		product(player, '%menu.shop.boosts.button.ore_magnet', '20.0K', COIN, 'shop/ore_magnet/ore_magnet'),
+		product(player, '%menu.shop.boosts.button.ore_magnet', '12.0K', COIN, 'shop/ore_magnet/ore_magnet'),
 		backButton(back)
 	], back);
 }
@@ -381,8 +381,21 @@ function warps(player) {
 function upgrading(player) {
 	const back = () => menu(player);
 	showMenu(player, '%menu.upgrades.title', '%menu.upgrades.body', [
-		product(player, '%menu.upgrades.button.vip', '125.0K', COIN, 'upgrade/upgrade_vip'),
-		product(player, '%menu.upgrades.button.rebirth', `25 - ${MAX_LEVEL}`, LVL, 'upgrade/upgrade_rebirth'),
+		product(player, '%menu.upgrades.button.vip', '300.0K', COIN, 'upgrade/upgrade_vip'),
+		{ text: `%menu.upgrades.button.rebirth\n§8 25 - ${MAX_LEVEL} ${LVL}`, run: () => confirmRebirth(player, () => upgrading(player)) },
 		backButton(back)
 	], back);
+}
+
+function confirmRebirth(player, back) {
+	if (getScore(player, 'lvl') < 25) return tell(player, 'chat.rebirth.error.level');
+	if (getScore(player, 'rebirth') >= 5) return tell(player, 'chat.rebirth.error.max');
+	const balance = getScore(player, 'money');
+	const coins = inventoryCoins(player);
+	const body = '%menu.upgrades.rebirth.confirm\n\n%menu.bank.balance §e' + balance + ' §r' + COIN
+		+ '\n%menu.bank.inventory §e' + coins + ' §r' + COIN;
+	return confirm(player, '%menu.upgrades.rebirth.title', body, () => {
+		if (getScore(player, 'money') !== balance || inventoryCoins(player) !== coins) return confirmRebirth(player, back);
+		return rebirth(player);
+	}, back);
 }

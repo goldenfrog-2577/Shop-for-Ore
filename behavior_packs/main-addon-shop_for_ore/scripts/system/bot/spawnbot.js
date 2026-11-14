@@ -26,12 +26,19 @@ export function setBotName(name) {
 	return true;
 }
 export function getBot() {
+	// Сохраняем GameTest-объект с методами управления, пока бот есть в списке игроков.
 	try {
-		if (state.bot) for (const p of world.getPlayers()) if (p.name === state.bot.name) return state.bot;
-	} catch { /* исчезнувший native-объект после смерти/перезахода */ }
+		const trackedName = state.bot?.name;
+		if (trackedName !== undefined) {
+			for (const player of world.getPlayers()) if (player.name === trackedName) return state.bot;
+		}
+	} catch { /* После выхода или смерти сохранённый объект может стать невалидным. */ }
+
 	state.bot = undefined;
-	for (const p of world.getPlayers()) {
-		if (p.hasTag('sys:bot') && p.hasTag('role:bot')) { state.bot = p; return p; }
+	for (const player of world.getPlayers()) {
+		if (!player.hasTag('sys:bot') || !player.hasTag('role:bot')) continue;
+		state.bot = player;
+		return player;
 	}
 	return undefined;
 }

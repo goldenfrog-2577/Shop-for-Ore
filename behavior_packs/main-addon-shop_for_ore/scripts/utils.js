@@ -263,6 +263,15 @@ export function showWhenFree(player, form, tries = 60) {
 
 // ======== Деньги: перевод игроку (!pay, Банк) ========
 
+/** Общая блокировка денежных операций банка и ребитха для всех участников. */
+const activeMoneyOperations = new Set();
+export function lockMoneyOperation(...players) {
+	const names = players.map(player => player.name);
+	if (names.some(name => activeMoneyOperations.has(name))) return;
+	for (const name of names) activeMoneyOperations.add(name);
+	return () => { for (const name of names) activeMoneyOperations.delete(name); };
+}
+
 /** Проверка границ и изменение баланса одной командой, между ними нет другого списания. */
 export async function changeMoney(player, amount) {
 	const range = amount > 0 ? '..' + (2147483647 - amount) : -amount + '..';
@@ -309,6 +318,11 @@ export function transferMoney(player, targetName, rawAmount) {
 		tell(player, 'chat.bank.error.recipient_limit');
 		return false;
 	}
+	const unlock = lockMoneyOperation(player, target);
+	if (!unlock) {
+		tell(player, 'chat.bank.error.busy');
+		return false;
+	}
 	changeMoney(player, -amount).then(async debited => {
 		if (!debited) return tell(player, 'chat.error.no_money');
 		if (!await changeMoney(target, amount)) {
@@ -319,7 +333,7 @@ export function transferMoney(player, targetName, rawAmount) {
 		tell(player, 'chat.bank.sent', target.name, amount);
 		tell(target, 'chat.bank.received', player.name, amount);
 		run(player, 'playsound note.bell @s');
-	}).catch(error => console.warn('[Shop for Ore] Bank transfer: ' + error));
+	}).catch(error => console.warn('[Shop for Ore] Bank transfer: ' + error)).finally(unlock);
 	return true;
 }
 
@@ -371,6 +385,11 @@ export const CHAT_COLORS = {
 	dark_gray: '8', blue: '9', green: 'a', aqua: 'b', red: 'c', light_purple: 'd', yellow: 'e', white: 'f', minecoin_gold: 'g'
 };
 const COLOR_TAG = { name: 'chat:name_color:', text: 'chat:text_color:' };
+const CHAT_COLOR_CODES = new Set(Object.values(CHAT_COLORS));
+
+function removeTagsWithPrefix(player, prefix) {
+	for (const tag of player.getTags()) if (tag.startsWith(prefix)) player.removeTag(tag);
+}
 
 /**
  * Цвет игрока ('§b') для kind = 'name' | 'text' или undefined, если не задан.
@@ -379,12 +398,12 @@ const COLOR_TAG = { name: 'chat:name_color:', text: 'chat:text_color:' };
 export function getChatColor(player, kind) {
 	const tag = player.getTags().find(t => t.startsWith(COLOR_TAG[kind]));
 	const code = tag?.slice(COLOR_TAG[kind].length);
-	return code && Object.values(CHAT_COLORS).includes(code) && colorAllowed(player, code) ? `§${code}` : undefined;
+	return code && CHAT_COLOR_CODES.has(code) && colorAllowed(player, code) ? `§${code}` : undefined;
 }
 
 /** Задать цвет (код '0'–'g') или снять (undefined). */
 export function setChatColor(player, kind, code) {
-	player.getTags().filter(t => t.startsWith(COLOR_TAG[kind])).forEach(t => player.removeTag(t));
+	removeTagsWithPrefix(player, COLOR_TAG[kind]);
 	if (code) player.addTag(COLOR_TAG[kind] + code);
 }
 
@@ -487,12 +506,12 @@ const issuerTag = (kind) => `state:${kind}_by:`;
 
 /** Роль, выдавшая ограничение, или undefined (старые ограничения — без записи). */
 export function getIssuer(target, kind) {
-	const tag = target.getTags().find(t => t.startsWith(issuerTag(kind)));
-	return tag ? tag.slice(issuerTag(kind).length) : undefined;
+	const prefix = issuerTag(kind);
+	return target.getTags().find(t => t.startsWith(prefix))?.slice(prefix.length);
 }
 
 export function clearIssuer(target, kind) {
-	target.getTags().filter(t => t.startsWith(issuerTag(kind))).forEach(t => target.removeTag(t));
+	removeTagsWithPrefix(target, issuerTag(kind));
 }
 
 /** Запомнить роль выдавшего. keepHigher — оставить прежнюю, если она старше (предупреждения копятся). */
