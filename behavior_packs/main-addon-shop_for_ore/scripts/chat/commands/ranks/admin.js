@@ -2,20 +2,20 @@
 // Обработчик: имя команды без «!» → (player, args, command). Права (роль из commandsList) проверяет
 // runChatCommand в chat/commands/commands.js; return — команда выполнена или отказ уже сообщён игроку.
 
-import { playtimeRawtext } from '../../system/player/playtime.js';
-import { DEBUG_SCORES, groupProfileTags, profilePosition, profileScores } from '../../system/player/registry.js';
+import { playtimeRawtext } from '../../../system/player/playtime.js';
+import { DEBUG_SCORES, groupProfileTags, profilePosition, profileScores } from '../../../system/player/registry.js';
 import { world } from '@minecraft/server';
-import { run, tell, findPlayer, setChatColor, CHAT_COLORS, colorAllowed, impersonatedRole, hasRole, rawTranslate, emotes, parseTerm, rawTranslateRich, termText, getScore, getRole } from '../../utils.js';
-import { botMenu } from '../../menu/admin/admin_menu.js';
-import { getBot, spawnBot, getBotName } from '../../system/bot/spawnbot.js';
-import { LEVEL_RANK_RE } from '../../system/player/ranks.js';
-import { startMythic } from '../../system/combat/mythic.js';
-import { stopAdminBoosts, markAdminBoost, MAGNET_ADMIN_TAG, BOOST_TIMERS, boostSeconds, boostTimersReady } from '../../system/economy/boosts.js';
-import { ACHIEVEMENTS, has as hasAchievement, findAchievement, unlock, revoke } from '../../system/player/achievements.js';
-import { addBan, kickBanned, findBan, removeBan, getBans, banActive, banMinutesLeft } from '../../system/security/ban.js';
-import { columnPadding, resolveTarget, tellList, canPunish } from './common.js';
-import { censor } from '../censor.js';
-import { logAction } from '../../system/security/staff_log.js';
+import { run, tell, findPlayer, setChatColor, CHAT_COLORS, colorAllowed, impersonatedRole, hasRole, rawTranslate, emotes, parseTerm, rawTranslateRich, termText, getScore, getRole } from '../../../utils.js';
+import { botMenu } from '../../../menu/admin/admin_menu.js';
+import { getBot, spawnBot, getBotName } from '../../../system/bot/spawnbot.js';
+import { LEVEL_RANK_RE } from '../../../system/player/ranks.js';
+import { startMythic } from '../../../system/combat/mythic.js';
+import { stopAdminBoosts, markAdminBoost, MAGNET_ADMIN_TAG, BOOST_TIMERS, boostSeconds, boostTimersReady } from '../../../system/economy/boosts.js';
+import { ACHIEVEMENTS, has as hasAchievement, findAchievement, unlock, revoke } from '../../../system/player/achievements.js';
+import { addBan, kickBanned, findBan, removeBan, getBans, banActive, banMinutesLeft } from '../../../system/security/ban.js';
+import { columnPadding, resolveTarget, tellList, canPunish } from '../common.js';
+import { censor } from '../../censor.js';
+import { logAction } from '../../../system/security/staff_log.js';
 
 // Отказ: цвет, префикс или тег выдают игрока за роль, которой у него нет (role — owner/admin/moder/bot)
 function denyImpersonation(player, target, role) {

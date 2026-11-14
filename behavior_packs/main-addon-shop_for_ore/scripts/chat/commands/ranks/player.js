@@ -3,15 +3,15 @@
 // runChatCommand в chat/commands/commands.js; return — команда выполнена или отказ уже сообщён игроку.
 
 import { world } from '@minecraft/server';
-import { commandsList, tell, hasRole, run, WARPS, warpAllowed, tellText, muteMinutesLeft, getScore, isVip, transferMoney, findPlayer, getRole, getWarns, ROLES, RULES_COUNT, emotesList, emotes } from '../../utils.js';
-import { isJailed, tellJailed } from '../../system/security/jail.js';
-import { combatSecondsLeft, teleportToArena } from '../../system/combat/pvp.js';
-import { bossBusy, mmss } from '../../system/boss/boss.js';
-import { canTeleport, listGames, joinGame, leaveGame, getGame, startGame, endGame } from '../../system/minigames/minigames.js';
-import { ChangePasswordUI } from '../../registration/change.js';
-import { columnPadding, resolveTarget, tellList, textWidth } from './common.js';
-import { censor } from '../censor.js';
-import { profileScores } from '../../system/player/registry.js';
+import { commandsList, tell, hasRole, run, WARPS, warpAllowed, tellText, muteMinutesLeft, getScore, isVip, transferMoney, findPlayer, getRole, getWarns, ROLES, RULES_COUNT, emotesList, emotes } from '../../../utils.js';
+import { isJailed, tellJailed } from '../../../system/security/jail.js';
+import { combatSecondsLeft, teleportToArena } from '../../../system/combat/pvp.js';
+import { bossBusy, mmss } from '../../../system/boss/boss.js';
+import { canTeleport, listGames, joinGame, leaveGame, getGame, startGame, endGame } from '../../../system/minigames/minigames.js';
+import { ChangePasswordUI } from '../../../registration/change.js';
+import { columnPadding, resolveTarget, tellList, textWidth } from '../common.js';
+import { censor } from '../../censor.js';
+import { profileScores } from '../../../system/player/registry.js';
 
 export { textWidth };
 

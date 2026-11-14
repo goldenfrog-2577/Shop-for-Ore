@@ -147,5 +147,5 @@ vm.runInNewContext(withoutImports(bp + 'scripts/system/core/offline_reset.js') +
 context.resetOfflineForTest(player);
 assert.equal(e.get('boost_x2'), 47); assert.equal(e.get('rain_event'), 12); assert.equal(e.get('stand_timers_migrated'), 1);
 
-for (const file of ['scripts/chat/commands/admin.js', 'scripts/menu/admin/admin_menu.js', 'scripts/system/economy/boosts.js']) assert.ok(!/X2Boost|X4Boost|rainEvent|\$\{stand\}/.test(fs.readFileSync(bp + file, 'utf8')), file);
+for (const file of ['scripts/chat/commands/ranks/admin.js', 'scripts/menu/admin/admin_menu.js', 'scripts/system/economy/boosts.js']) assert.ok(!/X2Boost|X4Boost|rainEvent|\$\{stand\}/.test(fs.readFileSync(bp + file, 'utf8')), file);
 console.log('PASS: missing scores, delayed/partial loading, active transfer, idempotency, no-stand purchases/countdown/expiry/rain, join tags, mutual exclusion, admin stop ownership, offline-reset preservation.');

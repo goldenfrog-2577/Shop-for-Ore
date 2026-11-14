@@ -28,7 +28,7 @@ const w = admin.indexOf('%admin.players.body.warns ', actions), v = admin.indexO
 assert.ok(w > 0 && w < m && m < v);
 
 // !boost stop: прочерк заменён словом «нет» на языке читателя
-assert.match(read(new URL('scripts/chat/commands/admin.js', bp)), /boost \?\? \{ translate: 'chat\.cmd\.boost\.stop\.no' \}/);
+assert.match(read(new URL('scripts/chat/commands/ranks/admin.js', bp)), /boost \?\? \{ translate: 'chat\.cmd\.boost\.stop\.no' \}/);
 assert.deepEqual(LANGS.map(l => lang[l]['chat.cmd.boost.stop.no']), ['нет', 'none', 'немає', 'ninguno']);
 
 // Промокоды книгой — не в меню промокодов (скрипты работают), а в запасном меню; в списке «недоступно» промокодов нет

@@ -70,11 +70,11 @@ const loadedModules = [
 	"utils.js",
 	"chat/censor.js",
 	"chat/chat.js",
-	"chat/commands/admin.js",
 	"chat/commands/commands.js",
 	"chat/commands/common.js",
-	"chat/commands/moderator.js",
-	"chat/commands/player.js",
+	"chat/commands/ranks/admin.js",
+	"chat/commands/ranks/moderator.js",
+	"chat/commands/ranks/player.js",
 	"chat/commands/selectors.js",
 	"menu/achievements_menu.js",
 	"menu/admin/admin_enchant.js",
@@ -133,7 +133,7 @@ const loadedModules = [
 // END GENERATED MODULE LIST
 ];
 
-console.warn('[Shop for Ore] Загрузка модулей');
+console.warn('[Shop for Ore] Загрузка модулей...');
 let lastGroup;
 for (const file of loadedModules) {
 	const parts = file.split('/');
