@@ -13,7 +13,7 @@
 // !ac <ник> — очки игрока по проверкам; !ac — режим и игроки с очками (хелпер и выше).
 
 import { world, system, Items, ItemStack, GameMode, EnchantmentList, Enchantment } from '@minecraft/server';
-import { hasRole, run } from '../../DataBase.js';
+import { hasRole, run } from '../../utils.js';
 
 // --- Проверки: порог сигнала (VL) ---
 export const CHECKS = {

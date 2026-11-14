@@ -1,7 +1,8 @@
 // --- Система регистрации и логина игроков ---
 // Добавляет нужные теги при входе и блокирует действия до прохождения логина/регистрации
 
-import { tellText, run, isBot } from '../DataBase.js';
+import { tellText, run, isBot } from '../utils.js';
+import { saveRegistryProfile } from '../system/player/registry.js';
 import { world } from '@minecraft/server';
 import { LoginUI, loginLockSeconds } from './login.js';
 import { RegisterUI } from './register.js';
@@ -27,6 +28,7 @@ const formOpen = new Set();
  * это его наказание, а не блокировка входа.
  */
 export function unlockPlayer(player) {
+	saveRegistryProfile(player);
 	run(player, 'effect @s blindness 0');
 	if (!player.hasTag('state:frozen')) run(player, 'effect @s slowness 0');
 }

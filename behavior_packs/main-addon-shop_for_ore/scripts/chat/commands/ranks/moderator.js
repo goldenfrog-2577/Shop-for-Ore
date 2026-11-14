@@ -2,14 +2,14 @@
 // Обработчик: имя команды без «!» → (player, args, command). Права (роль из commandsList) проверяет
 // runChatCommand в chat/commands/commands.js; return — команда выполнена или отказ уже сообщён игроку.
 
-import { tell, run, findPlayer, getRole, hasRole, parseTerm, muteMinutesLeft, canLift, setIssuer, rawTranslateRich, termText, rawTranslate, clearIssuer, getWarns } from '../../DataBase.js';
-import { isJailed, jail, release, tellJailed } from '../../system/security/jail.js';
-import { leaveGame, canTeleport } from '../../system/minigames/minigames.js';
-import { freezePlayer, unfreezePlayer } from '../../system/security/freeze.js';
-import { cpsOf, cpsLimit } from '../../system/security/cps.js';
-import { MODE, modeName, clearViolations, flaggedPlayers, acMode, violationsOf, CHECKS } from '../../system/security/anticheat.js';
-import { canPunish, tellList } from './common.js';
-import { logAction } from '../../system/security/staff_log.js';
+import { tell, run, findPlayer, getRole, hasRole, parseTerm, muteMinutesLeft, canLift, setIssuer, rawTranslateRich, termText, rawTranslate, clearIssuer, getWarns } from '../../../utils.js';
+import { isJailed, jail, release, tellJailed } from '../../../system/security/jail.js';
+import { leaveGame, canTeleport } from '../../../system/minigames/minigames.js';
+import { freezePlayer, unfreezePlayer } from '../../../system/security/freeze.js';
+import { cpsOf, cpsLimit } from '../../../system/security/cps.js';
+import { MODE, modeName, clearViolations, flaggedPlayers, acMode, violationsOf, CHECKS } from '../../../system/security/anticheat.js';
+import { canPunish, tellList } from '../common.js';
+import { logAction } from '../../../system/security/staff_log.js';
 
 /** Координата для !tp: число (можно с дробью и минусом) или относительная ~ / ~-3.5. */
 export const isCoord = (a) => /^(~?-?\d+(\.\d+)?|~)$/.test(a);

@@ -7,7 +7,7 @@
 // Набору нужно столько свободных слотов, сколько в нём вещей (slots).
 
 import { world } from '@minecraft/server';
-import { getScore, isVip, run, tell } from '../../DataBase.js';
+import { getScore, isVip, run, tell } from '../../utils.js';
 import { TRADER_HEADS } from '../player/achievements.js';
 
 /** Товары: кнопка (x, y, z) → id, цена, что выдать. */

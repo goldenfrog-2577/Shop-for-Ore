@@ -5,21 +5,22 @@
 // Новая команда: строка в commandsList и метод в объекте своей роли (имя — без «!»).
 
 import { world } from '@minecraft/server';
-import { commandsList, isPending, tell, hasRole, findPlayer, getRole, ROLES, run, menuFeedback, settleCommands, toldErrorCount, toldSuccessCount } from '../../DataBase.js';
-import { PLAYER_COMMANDS } from './player.js';
-import { MODERATION_COMMANDS } from './moderator.js';
-import { ADMIN_COMMANDS } from './admin.js';
+import { commandsList, isPending, tell, hasRole, findPlayer, getRole, ROLES, run, menuFeedback, settleCommands, toldErrorCount, toldSuccessCount } from '../../utils.js';
+import { PLAYER_COMMANDS } from './ranks/player.js';
+import { MODERATION_COMMANDS } from './ranks/moderator.js';
+import { ADMIN_COMMANDS } from './ranks/admin.js';
 import { worldEditCommand } from '../../system/worldedit.js';
 import { resetOffline, offlineCounts } from '../../system/core/offline_reset.js';
 import { wipeAll, wipeCounts } from '../../system/core/wipe.js';
 import { resetPassword } from '../../registration/change.js';
 import { playerArgPos, isSelector, selectTargets } from './selectors.js';
 import { logAction } from '../../system/security/staff_log.js';
+import { columnPadding, tellList } from './common.js';
 
 // Помощники, которые нужны меню администратора и тестам
-export { textWidth, emoteGrid } from './player.js';
-export { isCoord } from './moderator.js';
-export { debugLines, giveOreMagnet, setMoney } from './admin.js';
+export { textWidth, emoteGrid } from './ranks/player.js';
+export { isCoord } from './ranks/moderator.js';
+export { debugLines, giveOreMagnet, setMoney } from './ranks/admin.js';
 
 // --- Команды владельца и подтверждения сбросов ---
 // Запросы на вайп, ждущие «!wipe confirm»: имя → время запроса
@@ -129,14 +130,12 @@ const OWNER_COMMANDS = {
 	roles(player, args) {
 		// Роли игроков в сети: сначала старшие.
 		// В 1.19.50 getPlayers() возвращает итератор, а не массив — у него нет .map, поэтому [...]
-		const lines = [...world.getPlayers()]
+		const players = [...world.getPlayers()]
 			.map(p => ({ name: p.name, role: getRole(p) }))
-			.sort((a, b) => ROLES.indexOf(b.role) - ROLES.indexOf(a.role) || a.name.localeCompare(b.name))
-			.map(p => ({ translate: 'chat.cmd.roles.line', with: { rawtext: [{ text: p.name }, { translate: `role.${p.role}` }] } }));
-		const rawtext = [{ translate: 'chat.cmd.roles.header' }];
-		for (const line of lines) rawtext.push({ text: '\n' }, line);
-		rawtext.push({ text: '\n§8------------------------' });
-		run(player, `tellraw @s ${JSON.stringify({ rawtext })}`);
+			.sort((a, b) => ROLES.indexOf(b.role) - ROLES.indexOf(a.role) || a.name.localeCompare(b.name));
+		const padding = columnPadding(players.map(p => p.name));
+		tellList(player, { translate: 'chat.cmd.roles.header' },
+			players.map((p, i) => ({ translate: 'chat.cmd.roles.line', with: { rawtext: [{ text: p.name + padding[i] }, { translate: `role.${p.role}` }] } })));
 	}
 };
 

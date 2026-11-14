@@ -9,7 +9,7 @@
 // (последний, кого ты ударил или кто ударил тебя, 10 секунд; обновляется дважды в секунду).
 
 import { world } from '@minecraft/server';
-import { hasRole, tell } from '../../DataBase.js';
+import { hasRole, tell } from '../../utils.js';
 import { showHudLine } from '../ui/toast.js';
 
 export const DEFAULT_LIMIT = 16;

@@ -5,7 +5,7 @@
 // Здесь же — перенос VIP с уровня 26 на тег (migrateVip, ниже) и промокодов из табло в теги (system/economy/promo.js).
 
 import { world, system } from '@minecraft/server';
-import { getScore, run, tell, VIP_TAG } from '../../DataBase.js';
+import { getScore, run, tell, VIP_TAG } from '../../utils.js';
 import { migrateLegacyPromos } from '../economy/promo.js';
 
 // Старый тег → новый

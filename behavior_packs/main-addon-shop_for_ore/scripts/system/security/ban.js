@@ -8,7 +8,7 @@
 
 import { world } from '@minecraft/server';
 import { DynamicPropertiesDefinition } from '@minecraft/server';
-import { run } from '../../DataBase.js';
+import { run } from '../../utils.js';
 
 const PARTS = 4;
 const PART_LEN = 1000;

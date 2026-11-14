@@ -18,16 +18,17 @@ assert.match(chat, /\{ translate: `role\.tag\.\$\{role\}` \}\];/);
 
 // Меню админа: «Сбросить пароль» — последняя кнопка перед «Назад»; «Убрать бота» — только когда бот в мире
 const admin = read(new URL('scripts/menu/admin/admin_menu.js', bp));
-const reset = admin.indexOf("'%admin.players.button.resetpass'"), vip = admin.indexOf("'%admin.players.button.vip_give'"), back = admin.indexOf('items.push(back(() => playersMenu(player)));');
+const reset = admin.indexOf("'%admin.players.button.resetpass'"), vip = admin.indexOf("'%admin.players.button.vip_give'"), back = admin.indexOf('items.push(back(openProfile));', reset);
 assert.ok(vip < reset && reset < back && admin.indexOf("'%admin.players.button.resetpass'", reset + 1) < 0);
 assert.ok(!/[^\n]*'%admin\.players\.button\.resetpass'[^\n]*\n[^\n]*\n[^\n]*vip_give/.test(admin));
 assert.match(admin, /\.\.\.\(bot \? \[\{ text: '%admin\.bot\.button\.remove'/);
-// Карточка игрока: «Предупреждения» → «VIP-монеты» → «Монет на балансе»
-const w = admin.indexOf('%admin.players.body.warns '), v = admin.indexOf('%admin.players.body.vip_coins '), m = admin.indexOf('%admin.players.body.money ');
-assert.ok(w > 0 && w < v && v < m);
+// Карточка игрока: «Предупреждения» → «Монет на балансе» → «VIP-монеты»
+const actions = admin.indexOf('function playerActions(');
+const w = admin.indexOf('%admin.players.body.warns ', actions), v = admin.indexOf('%admin.players.body.vip_coins ', actions), m = admin.indexOf('%admin.players.body.money ', actions);
+assert.ok(w > 0 && w < m && m < v);
 
 // !boost stop: прочерк заменён словом «нет» на языке читателя
-assert.match(read(new URL('scripts/chat/commands/admin.js', bp)), /boost \?\? \{ translate: 'chat\.cmd\.boost\.stop\.no' \}/);
+assert.match(read(new URL('scripts/chat/commands/ranks/admin.js', bp)), /boost \?\? \{ translate: 'chat\.cmd\.boost\.stop\.no' \}/);
 assert.deepEqual(LANGS.map(l => lang[l]['chat.cmd.boost.stop.no']), ['нет', 'none', 'немає', 'ninguno']);
 
 // Промокоды книгой — не в меню промокодов (скрипты работают), а в запасном меню; в списке «недоступно» промокодов нет
@@ -36,15 +37,20 @@ const dialogue = read(new URL('dialogue/fallback_menu.json', bp));
 assert.ok(dialogue.includes('"legacy_menu.notice"') && dialogue.includes('"legacy_menu.promo"'));
 for (const l of LANGS) { assert.ok(!lang[l]['menu.promo.book'], l); assert.ok(!/промокод|promo code|промокоди|códigos promocionales/i.test(lang[l]['legacy_menu.notice']), l); }
 
-// Справка !worldedit: заголовок, HELP_LINES строк «§f!worldedit … - §7…» (последняя — примечание) и линия снизу, как у !help
+// Справка !worldedit: команда слева, синтаксис и описание справа.
 const we = read(new URL('scripts/system/worldedit.js', bp));
 const lines = Number(we.match(/export const HELP_LINES=(\d+);/)[1]);
 for (const l of LANGS) {
-	assert.match(lang[l]['chat.cmd.worldedit.help.header'], /^§8-----§f .+ §8-----§f$/, l);
-	for (let i = 1; i < lines; i++) assert.match(lang[l][`chat.cmd.worldedit.help.${i}`], /^§f!worldedit [a-z0-9]+.* - §7\S/, `${l} ${i}`);
+	assert.ok(lang[l]['chat.cmd.worldedit.help.header'].length > 0, l);
+	assert.doesNotMatch(lang[l]['chat.cmd.worldedit.help.header'], /-{5}/, l);
+	for (let i = 1; i < lines; i++) {
+		const row = lang[l][`chat.cmd.worldedit.help.${i}`];
+		assert.match(row, /^§f!worldedit [a-z0-9]+ +§8- §7\S/, `${l} ${i}`);
+		assert.equal(row.split('§8-')[0], lang.en_US[`chat.cmd.worldedit.help.${i}`].split('§8-')[0], `${l} ${i}`);
+	}
 	assert.match(lang[l][`chat.cmd.worldedit.help.${lines}`], /^§7\S/, l);   // владелец: §7, как остальные строки assert.ok(!lang[l][`chat.cmd.worldedit.help.${lines + 1}`], l);
 }
-assert.ok(we.includes("rawtext.push({text:'\\n§8------------------------'})"));
+assert.ok(we.includes("tellList(player, { translate: 'chat.cmd.worldedit.help.header' }, lines)"));
 
 // Облако при продаже: точки вокруг игрока, от ног до макушки, не в нём самом
 const cos = read(new URL('scripts/menu/cosmetics_shop.js', bp));

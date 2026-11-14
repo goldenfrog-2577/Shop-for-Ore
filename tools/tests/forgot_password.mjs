@@ -52,7 +52,7 @@ for (const l of ['ru_RU', 'en_US', 'uk_UA', 'es_ES']) {
 	assert.ok(lang['chat.account.reset_request'].includes('Telegram'), l);
 }
 // Цифры приветствия совпадают с картой: Незер с 16, Пещера с 26 (WARPS mine), босс с 26 (MIN_LEVEL), VIP с 40 (MAX_LEVEL)
-const db = read(new URL('scripts/DataBase.js', bp));
+const db = read(new URL('scripts/utils.js', bp));
 assert.match(db, /if \(lvl >= 26\) return \[0, 5, -69\];\s*if \(lvl >= 16\) return \[0, 5, -33\];/);
 assert.match(read(new URL('scripts/system/boss/boss.js', bp)), /export const MIN_LEVEL = 26;/);
 assert.match(db, /MAX_LEVEL = 40/);

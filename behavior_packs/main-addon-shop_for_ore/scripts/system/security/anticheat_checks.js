@@ -15,7 +15,7 @@
 // Ограничение: в 1.19.50 скрипт не видит, едет ли игрок в лодке или вагонетке.
 
 import { world, BlockLocation, MinecraftEffectTypes, MinecraftEnchantmentTypes } from '@minecraft/server';
-import { run } from '../../DataBase.js';
+import { run } from '../../utils.js';
 import { flag, isExempt, rollbackEnabled } from './anticheat.js';
 
 export const REACH = 6;

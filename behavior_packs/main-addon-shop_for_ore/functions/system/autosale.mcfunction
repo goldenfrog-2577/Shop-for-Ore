@@ -280,11 +280,6 @@ execute as @a[tag=player:vip,hasitem={item=amethyst_shard},tag=player:sound] at 
 execute as @a[tag=player:vip,hasitem={item=amethyst_shard}] at @s if block ~~-1~ gold_block run clear @s amethyst_shard 0 1
 
 ## --- Особые предметы ---
-# --- Золотой слиток (с 1 уровня) ---
-# Слитки «золотого дождя» продаются сразу, без золотого блока
-execute as @a[scores={lvl=1..40},hasitem={item=gold_ingot}] run scoreboard players add @s money 3
-execute as @a[scores={lvl=1..40},hasitem={item=gold_ingot}] run clear @s gold_ingot 0 1
-
 # --- Изумрудный блок ---
 # Подарок из events/gift_event: первый, кто подобрал, объявляется всем (gift system > 0, пока подарок не найден).
 # Продаётся сразу, без золотого блока, за 150

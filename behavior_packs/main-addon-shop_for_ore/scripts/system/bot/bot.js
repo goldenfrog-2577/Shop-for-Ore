@@ -17,7 +17,7 @@
 // Победы и смерти бота в статистику и достижения не идут (achievements.js, minigames.js).
 
 import { world, Location, Vector, BlockLocation, DynamicPropertiesDefinition, MinecraftEffectTypes } from '@minecraft/server';
-import { run, findPlayer, getScore, isPending, isBot } from '../../DataBase.js';
+import { run, findPlayer, getScore, isPending, isBot } from '../../utils.js';
 import { getBot, spawnBot, removeBot, onBotSpawned, onBotRemoved } from './spawnbot.js';
 import { isAir, isSolid } from '../security/anticheat_checks.js';
 import { freezePlayer, unfreezePlayer } from '../security/freeze.js';

@@ -5,7 +5,7 @@
 // items: [[id, количество], …] (название предмета — ключ ach.item.<id> в .lang).
 // До 0.3.0 отметки хранились в табло promo1…promo4 — migrateLegacyPromos переносит их в теги при входе игрока.
 
-import { getScore, isVip, run, rawTranslateRich, tell } from '../../DataBase.js';
+import { getScore, isVip, run, rawTranslateRich, tell } from '../../utils.js';
 import { rewardText } from '../player/achievements.js';
 
 export const PROMO_TAG = 'promo:';

@@ -18,7 +18,7 @@ assert.deepEqual(names(S.selectTargets(me, '@r', 'ban', all, () => 0)), ['Near']
 assert.equal(S.selectTargets(me, '@a', 'mute', [me, bot]).error, 'chat.cmd.error.selector_empty');
 assert.ok(S.isSelector('@a') && S.isSelector('*') && S.isSelector('@e') && !S.isSelector('Alice') && !S.isSelector('a*b'));
 // Позиции ников: у каждой команды из PLAYER_ARG в синтаксисе на этом месте — «player»
-const db = fs.readFileSync(new URL('scripts/DataBase.js', bp), 'utf8');
+const db = fs.readFileSync(new URL('scripts/utils.js', bp), 'utf8');
 const usage = Object.fromEntries([...db.matchAll(/command: '!([a-z0-9]+)([^']*)'/g)].map(m => [m[1], m[2].replace(/§./g, '').trim().split(/\s+/)]));
 for (const [cmd, pos] of Object.entries(S.PLAYER_ARG)) {
 	assert.ok(usage[cmd], `нет команды !${cmd}`);

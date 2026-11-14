@@ -1,7 +1,7 @@
 // GameTest запускается в загруженной площадке Верхнего мира; успех — только после появления бота.
 import * as GT from '@minecraft/server-gametest';
 import { world, system, BlockLocation, DynamicPropertiesDefinition } from '@minecraft/server';
-import { run } from '../../DataBase.js';
+import { run } from '../../utils.js';
 import { ensureFunctionLimits } from '../core/player_scores.js';
 
 const BOT_NAME_PROPERTY = 'shop:bot_name';
