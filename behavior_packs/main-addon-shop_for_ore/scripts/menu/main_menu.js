@@ -74,7 +74,7 @@ function mapInfo(player) {
 	showMenu(player, '%menu.about.title', '%menu.about.body', [
 		{ text: '%menu.about.button.levels', run: () => textPage(player, '%menu.levels.title', lines('menu.levels.line', MAX_LEVEL), () => mapInfo(player)) },
 		{ text: '%menu.about.button.howtoplay', run: () => textPage(player, '%menu.howtoplay.title', HOWTOPLAY, () => mapInfo(player)) },
-		{ text: '%menu.about.button.creators', run: () => creators(player) },
+		{ text: '%menu.about.button.creators', icon: 'textures/items/book_writable', run: () => creators(player) },
 		{ text: '%menu.about.button.version', run: () => textPage(player, '%menu.version.title', VERSION, () => mapInfo(player)) },
 		backButton(back)
 	], back);
@@ -93,18 +93,50 @@ function textPage(player, title, body, back) {
 	showMenu(player, title, body, [backButton(back)], back);
 }
 
-// Создатели: любая кнопка возвращает в «О карте»
+const CREATOR_ICONS = 'textures/server_icons/';
+const CREATOR_BACK = 'textures/ui/icon_import';
+const CREATORS = [
+	{ id: 'goldenfrog', name: 'kapycta1231484', icon: 'steve', links: [
+		['github', 'https://github.com/goldenfrog-2577'],
+		['telegram', 'https://t.me/goldenfrog_2577']
+	] },
+	{ id: 'nastya', name: 'NastyaXs00', icon: 'alex' },
+	{ id: 'claude', name: 'Claude', model: 'Opus 5.5', company: 'Anthropic', icon: 'creator_claude', links: [['site', 'https://claude.com/']] },
+	{ id: 'codex', name: 'Codex', model: 'GPT 6.1 Sol', company: 'OpenAI', icon: 'creator_codex', links: [['site', 'https://openai.com/codex/']] }
+];
+
 function creators(player) {
 	const back = () => mapInfo(player);
-	showMenu(player, '%menu.creators.title', '', [
-		['§8Creator\n§8kapycta1231484', 'textures/server_icons/steve'],
-		// Соавтор карты: иконки шрифта (glyph_E1) подписаны «BY'NASTYA»
-		['§5Co-creator\n§8NastyaXs00', 'textures/server_icons/alex'],
-		['§6Omlet Arcade\n§8@waxenjaguar2209', 'textures/server_icons/omlet'],
-		['§9Discord\n§8GoldenFrog#2577', 'textures/server_icons/discord'],
-		['§3Telegram\n§8@goldenfrog_2577', 'textures/server_icons/telegram'],
-		['§2Xbox\n§8kapycta123#1484', 'textures/server_icons/xbox']
-	].map(([text, icon]) => ({ text, icon, run: back })), back);
+	const reopen = () => creators(player);
+	const items = CREATORS.map(creator => ({
+		text: '§8' + creator.name + '\n' + (creator.model ? '§8' + creator.model : '%menu.creators.' + creator.id + '.role'),
+		icon: CREATOR_ICONS + creator.icon,
+		run: () => creatorCard(player, creator, reopen)
+	}));
+	return showMenu(player, '%menu.creators.title', '%menu.creators.body', [
+		...items, backButton(back, '%menu.common.back', CREATOR_BACK)
+	]);
+}
+
+function creatorCard(player, creator, back) {
+	const title = '§l§8' + creator.name;
+	const heading = creator.company ? '§f' + creator.company + ' §8· §f' + creator.model + '§r'
+		: '%menu.creators.' + creator.id + '.heading';
+	const body = heading + '\n\n%menu.creators.' + creator.id + '.bio';
+	const reopen = () => creatorCard(player, creator, back);
+	return showMenu(player, title, body, [
+		creator.links && { text: '%menu.creators.links', icon: 'textures/items/book_writable', run: () => creatorLinks(player, creator, reopen) },
+		backButton(back, '%menu.common.back', CREATOR_BACK)
+	]);
+}
+
+function creatorLinks(player, creator, back) {
+	const form = modal('%menu.creators.links §8» ' + creator.name);
+	for (const [index, [key, url]] of creator.links.entries()) {
+		const label = '%menu.creators.link.' + key;
+		form.textField(index === 0 ? '%menu.creators.copy_hint\n\n' + label : label, url, url);
+	}
+	return showModal(player, form, back, back);
 }
 
 // ===== Магазин =====
