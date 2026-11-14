@@ -36,8 +36,12 @@ function errorText(error) {
 	return parts.length?parts.join('; '):plain(error);
 }
 function failure(job, phase, text, error, reason) {
-	const result=new Error(errorText(error));
-	result.wePhase=phase;result.weCommand=text;result.weDetail=errorText(error);result.weReason=reason;
+	const detail = errorText(error);
+	const result = new Error(detail);
+	result.wePhase = phase;
+	result.weCommand = text;
+	result.weDetail = detail;
+	result.weReason = reason;
 	return result;
 }
 function report(job,error) {
@@ -74,7 +78,10 @@ const NATIVE_MESSAGES={
 	]
 };
 const nativePatterns=Object.fromEntries(Object.entries(NATIVE_MESSAGES).map(([key,values])=>[key,values.map(s=>new RegExp(s.split(/%(?:\d+\$)?[sdif]/g).map(escapePattern).join('.*?'),'i'))]));
-const matches=(error,key)=>errorText(error).includes(key)||nativePatterns[key].some(re=>re.test(errorText(error)));
+function matches(error, key) {
+	const message = errorText(error);
+	return message.includes(key) || nativePatterns[key].some(pattern => pattern.test(message));
+}
 // 1.19.5x отклоняет fill без изменённых блоков текстом commands.fill.success с числом 0 («Заполнено блоков: 0»).
 const ZERO_FILL=[/(^|\D)0 blocks filled/i,/Заполнено блоков: 0(\D|$)/i,/Заповнено 0 блоків/i,/(^|\D)0 bloques llenados/i];
 const zeroFill=error=>ZERO_FILL.some(re=>re.test(errorText(error)));
@@ -162,7 +169,7 @@ const waitTicks=(job,ticks)=>new Promise((resolve,reject)=>queue.push({job,wait:
 function notify(job,key,...args) {
 	try { for(const player of world.getPlayers())if(player.name===job.owner){tell(player,key,...args);break;} } catch {}
 }
-// At most one native command per tick, including cleanup and recovery.
+// Не более одной команды за тик. Откат и очистка идут через ту же очередь, что и правки.
 system.runSchedule(()=>{
 	if(executing||!queue.length)return;
 	const task=queue.shift();
