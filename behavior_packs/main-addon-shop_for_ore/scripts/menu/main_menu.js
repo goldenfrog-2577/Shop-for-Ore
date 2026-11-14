@@ -282,7 +282,7 @@ function bankExchange(player, deposit, back) {
 	return showModal(player, form, ([raw]) => {
 		const amount = bankAmount(raw);
 		if (!amount) return exchangeCoins(player, raw, deposit);
-		const summary = '%menu.bank.' + key + '.confirm §e' + amount + ' §r' + COIN;
+		const summary = '%menu.bank.' + key + '.confirm §e' + amount + ' §r' + COIN + '§7?';
 		return confirm(player, title, summary, () => exchangeCoins(player, amount, deposit), back);
 	}, back);
 }
