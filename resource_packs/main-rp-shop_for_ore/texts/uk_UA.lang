@@ -1484,6 +1484,7 @@ admin.main.button.players=§8Гравці
 admin.main.button.money=§8Монети
 admin.main.button.boosts=§8Бустери та івенти
 admin.main.button.server=§8Сервер
+admin.main.button.registry=§8Реєстр гравців
 admin.gamemode.title=§l§8Меню адміна » Режим гри
 admin.gamemode.body=§7Вибери режим гри:
 admin.gamemode.button.creative=§8Креатив

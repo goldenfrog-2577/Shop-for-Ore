@@ -1484,6 +1484,7 @@ admin.main.button.players=§8Jugadores
 admin.main.button.money=§8Monedas
 admin.main.button.boosts=§8Potenciadores y eventos
 admin.main.button.server=§8Servidor
+admin.main.button.registry=§8Registro de jugadores
 admin.gamemode.title=§l§8Admin » Modo de juego
 admin.gamemode.body=§7Elige un modo de juego:
 admin.gamemode.button.creative=§8Creativo

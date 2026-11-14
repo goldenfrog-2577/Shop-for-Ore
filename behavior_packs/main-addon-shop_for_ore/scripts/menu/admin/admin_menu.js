@@ -63,7 +63,7 @@ const back = (run) => backButton(run, '%admin.common.back', BACK_ICON);
 export function admin_menu(player) {
 	const items = [
 		{ text: '%admin.main.button.players' + OPEN, icon: 'textures/ui/FriendsIcon', run: () => playersMenu(player) },
-		{ text: '%admin.players.registry.title' + OPEN, icon: 'textures/items/book_writable', run: () => playerRegistryMenu(player) },
+		{ text: '%admin.main.button.registry' + OPEN, icon: 'textures/items/book_writable', run: () => playerRegistryMenu(player) },
 		{ text: '%admin.main.button.money' + OPEN, icon: 'textures/items/gold_ingot', run: () => moneyPlayers(player) },
 		{ text: '%admin.main.button.boosts' + OPEN, icon: 'textures/items/experience_bottle', run: () => boostsMenu(player) },
 		{ text: '%admin.main.button.server' + OPEN, icon: 'textures/ui/icon_setting', run: () => serverMenu(player) },
