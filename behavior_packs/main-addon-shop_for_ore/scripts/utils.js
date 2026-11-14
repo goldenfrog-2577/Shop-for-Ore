@@ -118,7 +118,7 @@ export function menuFeedback(player, error = false) {
 	return run(player, `playsound ${error ? 'note.bass' : 'random.orb'} @s`);
 }
 
-export function run(entity, command) {
+export function run(entity, command, diagnostic) {
 	if (entity.name && menuActions.has(entity.name) && command.startsWith('playsound ')) {
 		const error = toldErrorCount(entity) > menuActions.get(entity.name);
 		if (entity.hasTag(error ? 'player:menu_error_off' : 'player:menu_success_off')) return Promise.resolve({});
@@ -130,7 +130,11 @@ export function run(entity, command) {
 		if (isErrorMessage(command)) toldErrors.set(entity.name, toldErrorCount(entity) + 1);
 		else if (isSuccessMessage(command)) toldSuccess.set(entity.name, toldSuccessCount(entity) + 1);
 	}
-	const task = entity.runCommandAsync(command).then((r) => r ?? {}, () => { if (entity.name) failedTotals.set(entity.name, failedCommandCount(entity) + 1); return undefined; });
+	const task = entity.runCommandAsync(command).then((r) => r ?? {}, error => {
+		if (entity.name) failedTotals.set(entity.name, failedCommandCount(entity) + 1);
+		diagnostic?.(error);
+		return undefined;
+	});
 	if (entity.name) {
 		let pending = pendingCommands.get(entity.name);
 		if (!pending) pendingCommands.set(entity.name, pending = new Set());

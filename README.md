@@ -239,6 +239,15 @@ VIP-покупки: «Осыпь меня алмазами» (достижени
 Пользовательские переименования меню, регистрации, обработчика команд и функций уровня/таймеров/призыва бота учтены в импортах и индексах. Полная карта — [переименования аддона](docs/addon-renames.md). Идентификатор GameTest остаётся server:spawnbot; имя его функции — system/spawn_bot. Для последующих переносов запускайте все tools/tests/*.mjs: addon_references.mjs дополнительно проверяет нативные функции и индекс.
 
 ## 🛠 Установка и разработка
+
+Разбор ошибок Content Log:
+
+```powershell
+node tools/content_log.mjs 'C:\\path\\to\\ContentLog.txt'
+node tools/content_log.mjs 'C:\\path\\to\\ContentLog.txt' --follow
+```
+
+`--json` выводит по одному JSON-объекту на группу ошибок.
 Репозиторий содержит два пака — их нужно разложить по своим папкам, а не клонировать целиком в одну:
 
 1. `behavior_packs/main-addon-shop_for_ore` → `development_behavior_packs/` (или `behavior_packs/` внутри папки мира).

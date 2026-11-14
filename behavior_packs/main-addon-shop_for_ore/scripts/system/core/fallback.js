@@ -9,8 +9,17 @@ export const HEARTBEAT = 'scoreboard players set scripts system 0';
 
 export let heartbeatConfirmed = false;
 
+let heartbeatFailureLogged = false;
+
 system.runSchedule(() => {
-	const pulse = run(world.getDimension('overworld'), HEARTBEAT);
+	const pulse = run(world.getDimension('overworld'), HEARTBEAT, error => {
+		if (heartbeatFailureLogged) return;
+		heartbeatFailureLogged = true;
+		console.warn('[Shop for Ore] Command legacy heartbeat: ' + (error?.message ?? error));
+	});
+	pulse.then(result => {
+		if (result?.successCount > 0) heartbeatFailureLogged = false;
+	});
 	if (!heartbeatConfirmed) pulse.then(result => {
 		heartbeatConfirmed ||= result?.successCount > 0;
 	});
