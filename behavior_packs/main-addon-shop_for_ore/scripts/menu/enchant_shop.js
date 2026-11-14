@@ -65,13 +65,16 @@ export const nameKey = (typeId) => `item.${NAME_KEYS[shortId(typeId)] ?? shortId
 const itemIcon = (typeId) => shortId(typeId) === 'shield' ? undefined
 	: `textures/items/${shortId(typeId).replace(/^golden_/, 'gold_').replace(/^wooden_/, 'wood_').replace(/^bow$/, 'bow_standby').replace(/^fishing_rod$/, 'fishing_rod_uncast').replace(/^crossbow$/, 'crossbow_standby')}`;
 
+// Коллекционные головы уже зачарованы у VIP-торговца и не входят в ассортимент чар.
+const MOB_HEADS = new Set(['skull', 'skeleton_skull', 'wither_skull', 'wither_skeleton_skull', 'zombie_head', 'player_head', 'creeper_head', 'dragon_head', 'piglin_head']);
+
 /**
  * Что можно купить для предмета: [{ e, level (текущий), next (или undefined, если максимум) }].
  * Пустой список — предмет не зачаровывается (или это кирка уровня).
  */
 export function optionsFor(item) {
 	// Кирка уровня зачаровывается отдельно; лопаты не продаём (в сплифе лопата игры — её зачаровать нельзя)
-	if (!item || item.typeId.endsWith('_pickaxe') || item.typeId.endsWith('_shovel')) return [];
+	if (!item || item.typeId.endsWith('_pickaxe') || item.typeId.endsWith('_shovel') || MOB_HEADS.has(shortId(item.typeId))) return [];
 	const comp = item.getComponent('enchantments');
 	if (!comp) return [];
 	const list = comp.enchantments;
