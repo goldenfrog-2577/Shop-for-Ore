@@ -5,7 +5,7 @@
 // Столбец сундука держит прогруженным ticking area «mythic», иначе без игроков на арене сундук не заполнить.
 
 import { world, BlockLocation } from '@minecraft/server';
-import { run } from '../../DataBase.js';
+import { run } from '../../utils.js';
 
 const CHEST_X = 300, CHEST_Z = 300;
 const SEARCH_Y = [0, -32];

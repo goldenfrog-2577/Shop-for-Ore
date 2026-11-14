@@ -7,7 +7,7 @@
 // купленное раньше (например, до ребитха) выбирается и без VIP, кроме частиц при продаже — они действуют только у VIP.
 
 import { world, BlockLocation } from '@minecraft/server';
-import { CHAT_COLORS, getChatColor, setChatColor, colorAllowed, getScore, metricNumbers, run, tell, isVip } from '../DataBase.js';
+import { CHAT_COLORS, getChatColor, setChatColor, colorAllowed, getScore, metricNumbers, run, tell, isVip } from '../utils.js';
 import { showMenu, backButton } from './common/forms.js';
 
 const VIP_COIN = '';

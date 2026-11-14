@@ -1,5 +1,5 @@
 # --- Запасное меню на NPC: включено ли (раз в секунду, из timers/ticks_20) ---
-# Скрипты (scripts/system/fallback.js) раз в секунду обнуляют «scripts system», здесь он растёт на 1.
+# Скрипты (scripts/system/core/fallback.js) раз в секунду обнуляют «scripts system», здесь он растёт на 1.
 # Не отвечают 5 секунд — меню включается (fallback system = 1); ожили — выключается само.
 # Проверка без поломки скриптов: /scoreboard players set fallback_test settings 1 (выключить — 0).
 scoreboard players add scripts system 1

@@ -6,7 +6,7 @@
 // (как при заморозке). Кто посадил — тег state:jail_by:<роль>: выпустить раньше может только роль не ниже.
 
 import { world } from '@minecraft/server';
-import { run, tell, clearIssuer } from '../../DataBase.js';
+import { run, tell, clearIssuer } from '../../utils.js';
 
 export const JAIL_TAG = 'state:jail:';
 // Внутренность камеры (блоки x −19…−17, z −3…−1, y 1…3) — проверка по координатам игрока

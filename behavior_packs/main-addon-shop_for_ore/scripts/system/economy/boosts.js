@@ -6,7 +6,7 @@
 // ни покупкой, ни командой, поэтому запись не может «накрыть» купленный буст.
 
 import { world, DynamicPropertiesDefinition } from '@minecraft/server';
-import { run } from '../../DataBase.js';
+import { run } from '../../utils.js';
 
 const ADMIN_BOOST = 'shop:admin_boost';
 export const MAGNET_ADMIN_TAG = 'boost:magnet_admin';

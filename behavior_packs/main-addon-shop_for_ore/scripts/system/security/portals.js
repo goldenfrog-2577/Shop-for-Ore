@@ -10,7 +10,7 @@
 // Декоративных порталов на карте нет (владелец, 0.3.0) — исключений по координатам не нужно.
 
 import { world } from '@minecraft/server';
-import { tell } from '../../DataBase.js';
+import { tell } from '../../utils.js';
 import { SPAWN } from '../player/void.js';
 
 export const RADIUS = 15;

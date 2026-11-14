@@ -1,6 +1,6 @@
 // Эпоха не даёт старой отметке sys:wipe:1 совпасть с новым вайпом №1 после очистки истории.
 import { world, DynamicPropertiesDefinition } from '@minecraft/server';
-import { hasRole, tell } from '../../DataBase.js';
+import { hasRole, tell } from '../../utils.js';
 
 const EPOCH = 'shop:reset_epoch', TAG = 'sys:reset_epoch:';
 const IDS = ['shop:offline_reset_id', 'shop:wipe_id'];

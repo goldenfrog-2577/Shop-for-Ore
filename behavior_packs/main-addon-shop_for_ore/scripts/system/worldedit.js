@@ -1,6 +1,7 @@
 // WorldEdit владельца: порции блоков, ожидание чанков и журнал собственных ресурсов.
 import { world, system, MinecraftBlockTypes, BlockLocation, DynamicPropertiesDefinition } from '@minecraft/server';
-import { hasRole, tell } from '../DataBase.js';
+import { hasRole, tell } from '../utils.js';
+import { tellList } from '../chat/commands/common.js';
 
 export const CHUNK = 8;
 const selections = new Map(), clipboards = new Map(), undos = new Map(), queue = [];
@@ -36,8 +37,12 @@ function errorText(error) {
 	return parts.length?parts.join('; '):plain(error);
 }
 function failure(job, phase, text, error, reason) {
-	const result=new Error(errorText(error));
-	result.wePhase=phase;result.weCommand=text;result.weDetail=errorText(error);result.weReason=reason;
+	const detail = errorText(error);
+	const result = new Error(detail);
+	result.wePhase = phase;
+	result.weCommand = text;
+	result.weDetail = detail;
+	result.weReason = reason;
 	return result;
 }
 function report(job,error) {
@@ -74,7 +79,10 @@ const NATIVE_MESSAGES={
 	]
 };
 const nativePatterns=Object.fromEntries(Object.entries(NATIVE_MESSAGES).map(([key,values])=>[key,values.map(s=>new RegExp(s.split(/%(?:\d+\$)?[sdif]/g).map(escapePattern).join('.*?'),'i'))]));
-const matches=(error,key)=>errorText(error).includes(key)||nativePatterns[key].some(re=>re.test(errorText(error)));
+function matches(error, key) {
+	const message = errorText(error);
+	return message.includes(key) || nativePatterns[key].some(pattern => pattern.test(message));
+}
 // 1.19.5x отклоняет fill без изменённых блоков текстом commands.fill.success с числом 0 («Заполнено блоков: 0»).
 const ZERO_FILL=[/(^|\D)0 blocks filled/i,/Заполнено блоков: 0(\D|$)/i,/Заповнено 0 блоків/i,/(^|\D)0 bloques llenados/i];
 const zeroFill=error=>ZERO_FILL.some(re=>re.test(errorText(error)));
@@ -162,7 +170,7 @@ const waitTicks=(job,ticks)=>new Promise((resolve,reject)=>queue.push({job,wait:
 function notify(job,key,...args) {
 	try { for(const player of world.getPlayers())if(player.name===job.owner){tell(player,key,...args);break;} } catch {}
 }
-// At most one native command per tick, including cleanup and recovery.
+// Не более одной команды за тик. Откат и очистка идут через ту же очередь, что и правки.
 system.runSchedule(()=>{
 	if(executing||!queue.length)return;
 	const task=queue.shift();
@@ -287,9 +295,9 @@ export function worldEditCommand(player,args=[]) {
 	const action=String(args[0]??'help').toLowerCase(),rest=args.slice(1);
 	try {
 		if(action==='help'||action==='?') {
-			// Как !help: заголовок, команды «§f!команда - §7описание», примечание и линия снизу
-			const rawtext=[{translate:'chat.cmd.worldedit.help.header'}];for(let i=1;i<=HELP_LINES;i++)rawtext.push({text:'\n'},{translate:'chat.cmd.worldedit.help.'+i});rawtext.push({text:'\n§8------------------------'});
-			void player.runCommandAsync('tellraw @s '+JSON.stringify({rawtext})).catch(()=>{});return;
+			const lines = Array.from({ length: HELP_LINES }, (_, i) => ({ translate: 'chat.cmd.worldedit.help.' + (i + 1) }));
+			tellList(player, { translate: 'chat.cmd.worldedit.help.header' }, lines);
+			return;
 		}
 		if(action==='cancel'){
 			if(!active||active.owner!==player.name)fail('idle');active.cancelled=true;return;

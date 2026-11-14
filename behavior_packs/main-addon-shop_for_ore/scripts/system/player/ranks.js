@@ -5,7 +5,7 @@
 // Раз в секунду.
 
 import { world } from '@minecraft/server';
-import { getScore, isVip, MAX_LEVEL } from '../../DataBase.js';
+import { getScore, isVip, MAX_LEVEL } from '../../utils.js';
 
 export const VIP_RANK = 'rank:§aVIP';
 const LEVEL_GLYPH = '\ue153';

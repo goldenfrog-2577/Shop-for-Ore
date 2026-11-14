@@ -17,7 +17,7 @@
 // Победы и смерти бота в статистику и достижения не идут (achievements.js, minigames.js).
 
 import { world, Location, Vector, BlockLocation, DynamicPropertiesDefinition, MinecraftEffectTypes } from '@minecraft/server';
-import { run, findPlayer, getScore, isPending, isBot } from '../../DataBase.js';
+import { run, findPlayer, getScore, isPending, isBot } from '../../utils.js';
 import { getBot, spawnBot, removeBot, onBotSpawned, onBotRemoved } from './spawnbot.js';
 import { isAir, isSolid } from '../security/anticheat_checks.js';
 import { freezePlayer, unfreezePlayer } from '../security/freeze.js';
@@ -417,6 +417,12 @@ function bossFight(bot) {
 
 // ===== Каждый тик =====
 
+function findBotSummoner() {
+	for (const player of world.getPlayers()) {
+		if (!isPending(player) && !player.hasTag('role:bot')) return player;
+	}
+}
+
 world.events.tick.subscribe(() => {
 	tick++;
 	if (!loaded && tick >= 2) loadState();
@@ -425,7 +431,7 @@ world.events.tick.subscribe(() => {
 
 	// Возврат после перезахода в мир и после гибели
 	if (!bot && state.present && state.returnOnLoad && (tick === LOAD_DELAY_TICKS || tick === respawnAt || (tick > LOAD_DELAY_TICKS && tick % 200 === 0))) {
-		const someone = [...world.getPlayers()].find(p => !isPending(p) && !p.hasTag('role:bot'));
+		const someone = findBotSummoner();
 		if (someone) spawnBot(someone, state.pos);
 		return;
 	}
@@ -435,7 +441,7 @@ world.events.tick.subscribe(() => {
 		if (assist) assist.out = true;
 		removeBot();
 		state.mode = mode;
-		const someone = [...world.getPlayers()].find(p => !isPending(p) && !p.hasTag('role:bot'));
+		const someone = findBotSummoner();
 		if (someone) spawnBot(someone, pos);
 		return;
 	}

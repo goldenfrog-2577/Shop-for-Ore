@@ -1,6 +1,6 @@
 // Суммарное время онлайн: один групповой счёт раз в секунду. Старые минуты сохраняются.
 import { world, system } from '@minecraft/server';
-import { getScore, isPending, run } from '../../DataBase.js';
+import { getScore, isPending, run } from '../../utils.js';
 
 export const PLAYTIME_OBJECTIVE = 'play_seconds';
 export function playedSeconds(player) {
@@ -17,7 +17,8 @@ export function durationParts(seconds) {
 	return UNITS.map(([unit, size]) => { const n = Math.floor(left / size); left %= size; return [unit, n]; });
 }
 const displayParts = seconds => durationParts(seconds).filter(([, n], i) => i >= 3 || n > 0);
-export const playtimeText = player => displayParts(playedSeconds(player)).map(([u,n]) => `${n} %menu.common.time.${u}`).join(' ');
+export const playtimeText = player => durationText(playedSeconds(player));
+export const durationText = seconds => displayParts(seconds).map(([u,n]) => `${n} %menu.common.time.${u}`).join(' ');
 export const playtimeRawtext = player => displayParts(playedSeconds(player)).flatMap(([u,n], i) => [
 	{ text: (i ? ' ' : '') + n + ' ' }, { translate: 'menu.common.time.' + u }
 ]);

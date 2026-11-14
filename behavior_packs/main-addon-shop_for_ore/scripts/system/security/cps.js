@@ -9,7 +9,7 @@
 // (последний, кого ты ударил или кто ударил тебя, 10 секунд; обновляется дважды в секунду).
 
 import { world } from '@minecraft/server';
-import { hasRole, tell } from '../../DataBase.js';
+import { hasRole, tell } from '../../utils.js';
 import { showHudLine } from '../ui/toast.js';
 
 export const DEFAULT_LIMIT = 16;
@@ -73,11 +73,18 @@ world.events.entityHurt.subscribe((e) => {
 	opponent.set(v.name, { name: a.name, tick });
 });
 
+function findOnlinePlayer(name) {
+	for (const player of world.getPlayers()) {
+		if (player.name === name) return player;
+	}
+	return undefined;
+}
+
 /** Здоровье противника для строки над хотбаром: '§a17' (цвет по доле от максимума) или undefined. */
-export function opponentHp(player) {
+export function opponentHp(player, onlineByName) {
 	const o = opponent.get(player.name);
 	if (!o || o.tick < tick - OPPONENT_SECONDS * 20) return undefined;
-	const target = [...world.getPlayers()].find(p => p.name === o.name);
+	const target = onlineByName ? onlineByName.get(o.name) : findOnlinePlayer(o.name);
 	if (!target || !target.hasTag('player:pvp')) return undefined;
 	try {
 		const health = target.getComponent('health');
@@ -91,9 +98,8 @@ export function opponentHp(player) {
 }
 
 /** Строка над хотбаром: CPS, скорость и — если есть противник — его здоровье. */
-function renderHud(player) {
+function renderHud(player, hp) {
 	const [cps, speed] = shown.get(player.name) ?? ['§a0', '—'];
-	const hp = opponentHp(player);
 	showHudLine(player, [hp === undefined
 		? { translate: 'hud.cps', with: [cps, speed] }
 		: { translate: 'hud.cps.hp', with: [cps, speed, hp] }]);
@@ -101,15 +107,21 @@ function renderHud(player) {
 
 world.events.tick.subscribe(() => {
 	tick++;
-	// Здоровье меняется быстрее, чем раз в секунду: между секундными пересчётами строка обновляется на полсекунде
-	if (tick % 20 === 10) {
-		for (const player of world.getPlayers()) {
-			if (player.hasTag('player:pvp') && !player.hasTag('role:bot') && opponentHp(player) !== undefined) renderHud(player);
+	if (tick % 10 !== 0) return;
+	const players = [...world.getPlayers()];
+	const onlineByName = new Map(players.map(player => [player.name, player]));
+	// Между пересчётами CPS обновляем здоровье противника и переиспользуем его при отрисовке.
+	if (tick % 20 !== 0) {
+		for (const player of players) {
+			if (!player.hasTag('player:pvp') || player.hasTag('role:bot')) continue;
+			const hp = opponentHp(player, onlineByName);
+			if (hp !== undefined) renderHud(player, hp);
 		}
+		return;
 	}
-	if (tick % 20 !== 0) return;
 	const limit = cpsLimit();
-	for (const player of world.getPlayers()) {
+	let staff;
+	for (const player of players) {
 		const name = player.name;
 		const list = (hits.get(name) ?? []).filter(t => t > tick - 20);
 		hits.set(name, list);
@@ -122,16 +134,15 @@ world.events.tick.subscribe(() => {
 		if (player.hasTag('player:pvp') && !player.hasTag('role:bot')) {
 			const color = cps >= limit ? '§c' : cps >= limit * 0.75 ? '§6' : '§a';
 			shown.set(name, [`${color}${cps}`, speedOf(player)]);
-			renderHud(player);
+			renderHud(player, opponentHp(player, onlineByName));
 		} else { lastPos.delete(name); shown.delete(name); opponent.delete(name); }
 		const s = cps >= limit ? (streak.get(name) ?? 0) + 1 : 0;
 		streak.set(name, s);
 		if (s < ALERT_SECONDS || player.hasTag('role:bot')) continue;
 		if ((lastAlert.get(name) ?? -Infinity) > tick - ALERT_COOLDOWN * 20) continue;
 		lastAlert.set(name, tick);
-		for (const staff of world.getPlayers()) {
-			if (hasRole(staff, 'helper')) tell(staff, 'chat.cps.alert', name, cps, s, limit);
-		}
+		staff ??= players.filter(candidate => hasRole(candidate, 'helper'));
+		for (const recipient of staff) tell(recipient, 'chat.cps.alert', name, cps, s, limit);
 	}
 });
 

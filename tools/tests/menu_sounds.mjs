@@ -4,7 +4,7 @@ import fs from 'node:fs'; import vm from 'node:vm'; import assert from 'node:ass
 const bp = new URL('../../behavior_packs/main-addon-shop_for_ore/', import.meta.url), rp = new URL('../../resource_packs/main-rp-shop_for_ore/', import.meta.url);
 const read = (u) => fs.readFileSync(u, 'utf8');
 // Ключи успеха: …done…, «Настройка изменена»; ошибки и справка — нет
-const db = read(new URL('scripts/DataBase.js', bp));
+const db = read(new URL('scripts/utils.js', bp));
 const S = vm.runInNewContext(db.match(/const TRANSLATE = [^\n]+/)[0] + '\n' + db.match(/const SUCCESS_KEY = [^\n]+/)[0] + '\n' +
 	db.slice(db.indexOf('export function isSuccessMessage')).replace('export ', '').split('\n}\n')[0] + '\n}\nisSuccessMessage');
 const tr = (k) => `tellraw @s {"rawtext":[{"translate":"${k}","with":[]}]}`;
@@ -31,10 +31,16 @@ for (const f of ['registration/login.js', 'registration/register.js', 'registrat
 	assert.ok(!/run\(player, 'playsound random\.levelup @s'\)/.test(s.replace(/if \(!player\.hasTag\('player:menu_success_off'\)\) run\(player, 'playsound random\.levelup @s'\)/g, '')), f);
 }
 // Настройки: третий переключатель «Клик» на 4 языках
-// Кнопки «Звуки в меню» — с ванильными текстурами (решение владельца: текстуры, не глифы)
+// Галочка и крест ванильные. Курсор берётся из ресурспака карты.
 { const mm = read(new URL('scripts/menu/main_menu.js', bp));
-  for (const [k, ic] of [['success', 'confirm'], ['error', 'cancel'], ['click', 'cursor']])
-    assert.ok(mm.includes(`{ text: '%menu.settings.menu_sounds.${k}', icon: 'textures/ui/${ic}', run: () => toggle('${k}') }`), k); }
+  for (const [k, ic] of [['success', 'ui/confirm'], ['error', 'ui/cancel'], ['click', 'server_icons/menu_click']])
+    assert.ok(mm.includes(`{ text: '%menu.settings.menu_sounds.${k}', icon: 'textures/${ic}', run: () => toggle('${k}') }`), k); }
+const clickPath = 'textures/server_icons/menu_click.png';
+const contents = JSON.parse(read(new URL('contents.json', rp))).content;
+assert.equal(contents.filter(entry => entry.path === clickPath).length, 1);
+const icon = fs.readFileSync(new URL(clickPath, rp));
+assert.equal(icon.readUInt32BE(16), 16);
+assert.equal(icon.readUInt32BE(20), 16);
 for (const l of ['ru_RU', 'en_US', 'uk_UA', 'es_ES']) {
 	const keys = new Set(read(new URL(`texts/${l}.lang`, rp)).split(/\r?\n/).map(x => x.split('=')[0]));
 	for (const k of ['menu.settings.menu_sounds.click', 'menu.settings.menu_sounds.click.title']) assert.ok(keys.has(k), `${l} ${k}`);

@@ -8,7 +8,7 @@
 //    на спавне и в шахтах им можно было бы взорвать игроков, которые не в бою.
 
 import { world, BlockLocation } from '@minecraft/server';
-import { run, tell } from '../../DataBase.js';
+import { run, tell } from '../../utils.js';
 
 export const PORTABLE_CRYSTAL = 'server:portable_ender_crystal';
 // Арена боя с Хранителем — те же границы, что inFight в system/boss/boss.js (за решёткой; тоннель — уже не арена).
@@ -75,7 +75,12 @@ export function teleportToArena(player) {
 
 /** Высота, на которой можно стоять в столбце x,z (ближайшая к START_Y), или undefined. */
 function findStandY(dimension, x, z) {
-	const type = (y) => dimension.getBlock(new BlockLocation(x, y, z)).typeId;
+	// Соседние кандидаты используют те же блоки пола и свободного пространства.
+	const column = new Map();
+	const type = y => {
+		if (!column.has(y)) column.set(y, dimension.getBlock(new BlockLocation(x, y, z)).typeId);
+		return column.get(y);
+	};
 	let best;
 	for (let y = FLOOR_Y[0] + 1; y <= FLOOR_Y[1]; y++) {
 		const floor = type(y - 1);
