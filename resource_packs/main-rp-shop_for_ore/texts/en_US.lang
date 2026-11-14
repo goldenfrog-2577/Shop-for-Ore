@@ -922,6 +922,8 @@ chat.settings.icons_only=§r §3Settings §8» §7Setting changed: §eIcons o
 ## --- BANK & MONEY ---
 ##   menu.bank.*, chat.bank.*, chat.cmd.pay.*, chat.cmd.balance*, chat.cmd.money.*
 menu.bank.title=§l§8Server Menu » §r §8§lBank
+menu.bank.welcome=§7Welcome to the §fShop for Ore Bank§7!
+menu.bank.description=§7You can keep coins in your account, withdraw them to your inventory, and transfer them to players who are online. Deposits and withdrawals use a §e1:1§7 exchange rate.
 menu.bank.amount=§7Amount you want to send:
 menu.bank.amount_placeholder=§7Enter here...
 chat.bank.sent=§r §2Bank §8» §7Sent to §f%1$s§r§7: §e%2$s§7§r

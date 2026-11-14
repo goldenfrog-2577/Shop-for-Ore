@@ -922,6 +922,8 @@ chat.settings.icons_only=§r §3Налаштування §8» §7Налаш�
 ## --- БАНК І ГРОШІ ---
 ##   menu.bank.*, chat.bank.*, chat.cmd.pay.*, chat.cmd.balance*, chat.cmd.money.*
 menu.bank.title=§l§8Меню сервера » §r §8§lБанк
+menu.bank.welcome=§7Вітаємо в §fБанку Shop for Ore§7!
+menu.bank.description=§7Тут можна зберігати монети на рахунку, знімати їх назад до інвентарю та переказувати гравцям у мережі. Покласти й зняти монети можна за курсом §e1:1§7.
 menu.bank.amount=§7Сума, яку ти хочеш відправити:
 menu.bank.amount_placeholder=§7Введи сюди...
 chat.bank.sent=§r §2Банк §8» §7Переказ гравцю §f%1$s§r§7: §e%2$s§7§r

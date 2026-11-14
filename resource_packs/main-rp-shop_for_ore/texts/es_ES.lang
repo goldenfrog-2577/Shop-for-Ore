@@ -922,6 +922,8 @@ chat.settings.icons_only=§r §3Ajustes §8» §7Ajuste cambiado: §eSolo ico
 ## --- BANCO Y DINERO ---
 ##   menu.bank.*, chat.bank.*, chat.cmd.pay.*, chat.cmd.balance*, chat.cmd.money.*
 menu.bank.title=§l§8Menú del servidor » §r §8§lBanco
+menu.bank.welcome=§7¡Te damos la bienvenida al §fBanco de Shop for Ore§7!
+menu.bank.description=§7Aquí puedes guardar monedas en tu cuenta, retirarlas a tu inventario y transferirlas a jugadores conectados. Los ingresos y las retiradas se realizan a un tipo de cambio de §e1:1§7.
 menu.bank.amount=§7Cantidad que quieres enviar:
 menu.bank.amount_placeholder=§7Escribe aquí...
 chat.bank.sent=§r §2Banco §8» §7Enviado a §f%1$s§r§7: §e%2$s§7§r

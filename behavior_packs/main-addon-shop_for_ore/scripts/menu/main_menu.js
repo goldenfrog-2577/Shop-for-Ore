@@ -300,7 +300,7 @@ function menuSounds(player, back) {
 
 export function bank(player) {
 	const reopen = () => bank(player);
-	const body = () => '%menu.bank.balance §e' + getScore(player, 'money') + ' §r' + COIN
+	const body = () => '%menu.bank.welcome\n\n%menu.bank.description\n\n%menu.bank.balance §e' + getScore(player, 'money') + ' §r' + COIN
 		+ '\n%menu.bank.inventory §e' + inventoryCoins(player) + ' §r' + COIN;
 	return showMenu(player, '%menu.bank.title', body, [
 		{ text: '%menu.bank.deposit', icon: 'textures/items/gold_ingot', run: () => bankExchange(player, true, reopen) },
