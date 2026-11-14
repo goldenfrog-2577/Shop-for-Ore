@@ -1500,6 +1500,7 @@ admin.main.button.players=§8Players
 admin.main.button.money=§8Coins
 admin.main.button.boosts=§8Boosts and events
 admin.main.button.server=§8Server
+admin.main.button.registry=§8Player Registry
 admin.gamemode.title=§l§8Admin Menu » Gamemode
 admin.gamemode.body=§7Choose a game mode:
 admin.gamemode.button.creative=§8Creative
