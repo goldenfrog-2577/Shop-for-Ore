@@ -4,8 +4,8 @@
 
 import { world } from '@minecraft/server';
 import { isJailed, tellJailed } from '../system/security/jail.js';
-import { isPending, tellText, tell, run, getScore, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed, shopBalance } from '../utils.js';
-import { showMenu, showModal, modal, backButton, toggleMenu } from './common/forms.js';
+import { isPending, tellText, tell, run, findPlayer, getScore, isBot, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed, shopBalance } from '../utils.js';
+import { showMenu, showModal, modal, backButton, confirm, toggleMenu } from './common/forms.js';
 import { enchantsMenu } from './enchant_shop.js';
 import { cosmeticsMenu } from './cosmetics_shop.js';
 import { achievementsMenu } from './achievements_menu.js';
@@ -16,6 +16,7 @@ import { TRACK, DISCS } from '../system/ui/music_tracks.js';
 import { BOSS_DISCS } from '../system/player/discs.js';
 import { ChangePasswordUI } from '../registration/change.js';
 import { redeemPromo } from '../system/economy/promo.js';
+import { bankAmount, exchangeCoins, inventoryCoins } from '../system/economy/bank.js';
 
 const OPEN = '\n%menu.common.tap_to_open';
 const COIN = '', LVL = '';
@@ -263,13 +264,41 @@ function menuSounds(player, back) {
 // ===== Банк и мини-игры =====
 
 export function bank(player) {
-	// Получатели — игроки в сети, кроме себя и бота (себе перевести нельзя, у бота денег нет)
-	const names = [...world.getPlayers()].filter(p => p.name !== player.name && !p.hasTag('role:bot')).map(p => p.name);
+	const reopen = () => bank(player);
+	const body = () => '%menu.bank.balance §e' + getScore(player, 'money') + ' §r' + COIN
+		+ '\n%menu.bank.inventory §e' + inventoryCoins(player) + ' §r' + COIN;
+	return showMenu(player, '%menu.bank.title', body, [
+		{ text: '%menu.bank.deposit', icon: 'textures/items/gold_ingot', run: () => bankExchange(player, true, reopen) },
+		{ text: '%menu.bank.withdraw', icon: 'textures/items/gold_ingot', run: () => bankExchange(player, false, reopen) },
+		{ text: '%menu.bank.transfer', icon: 'textures/server_icons/steve', run: () => bankTransfer(player, reopen) },
+		backButton(() => menu(player))
+	]);
+}
+
+function bankExchange(player, deposit, back) {
+	const key = deposit ? 'deposit' : 'withdraw';
+	const title = '%menu.bank.' + key;
+	const form = modal(title).textField('%menu.bank.' + key + '.amount', '%menu.bank.amount_placeholder');
+	return showModal(player, form, ([raw]) => {
+		const amount = bankAmount(raw);
+		if (!amount) return exchangeCoins(player, raw, deposit);
+		const summary = '%menu.bank.' + key + '.confirm §e' + amount + ' §r' + COIN;
+		return confirm(player, title, summary, () => exchangeCoins(player, amount, deposit), back);
+	}, back);
+}
+
+function bankTransfer(player, back) {
+	const eligible = target => target && target.name !== player.name && !isBot(target) && !isPending(target);
+	const names = [...world.getPlayers()].filter(eligible).map(target => target.name);
 	if (!names.length) return tell(player, 'chat.bank.error.no_players');
-	const form = modal('%menu.bank.title')
-		.dropdown(`\n%menu.bank.balance §e${getScore(player, 'money')} §f\ue152\n%menu.bank.player`, names, 0)
+	const form = modal('%menu.bank.transfer')
+		.dropdown('\n%menu.bank.balance §e' + getScore(player, 'money') + ' §r' + COIN + '\n%menu.bank.player', names, 0)
 		.textField('%menu.bank.amount', '%menu.bank.amount_placeholder');
-	showModal(player, form, ([target, amount]) => transferMoney(player, names[target], amount), () => menu(player));
+	return showModal(player, form, ([index, amount]) => {
+		const name = names[index];
+		if (!eligible(findPlayer(name))) return tell(player, 'chat.cmd.error.offline', name ?? '—');
+		return transferMoney(player, name, amount);
+	}, back);
 }
 
 const gameStateLine = (g) => `§8 %menu.games.phase.${g.phase} §7(${g.players.size}/${g.def.maxPlayers})`;
