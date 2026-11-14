@@ -7,7 +7,7 @@
 // Раз в HUD_TICKS тиков проверяем данные; отправляем при изменении или для продления показа.
 
 import { world } from '@minecraft/server';
-import { getScore, isVip, metricNumbers, run, MAX_LEVEL } from '../../DataBase.js';
+import { getScore, isVip, metricNumbers, run, MAX_LEVEL } from '../../utils.js';
 
 export const ICONS_TAG = 'player:board_icons';
 export const OFF_TAG = 'player:board_no';

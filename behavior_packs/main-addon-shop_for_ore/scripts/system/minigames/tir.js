@@ -9,7 +9,7 @@
 // Сообщение — строкой над хотбаром (system/ui/toast.js), звук — колокольчик (в яблочко — уровень).
 
 import { world } from '@minecraft/server';
-import { run, tell } from '../../DataBase.js';
+import { run, tell } from '../../utils.js';
 import { showHudLine } from '../ui/toast.js';
 
 export const TIR_TAG = 'zone:tir';

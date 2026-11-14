@@ -6,7 +6,7 @@
 // Сброс делает владелец сам (!resetpass или карточка игрока), заявка снимается там же (change.js) или при удачном входе.
 
 import { world } from '@minecraft/server';
-import { tell } from '../DataBase.js';
+import { tell } from '../utils.js';
 import { modal } from '../menu/common/forms.js';
 
 export const RESET_REQUEST = 'auth:reset_request';

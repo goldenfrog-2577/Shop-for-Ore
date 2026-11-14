@@ -2,7 +2,7 @@
 // Обработчик: имя команды без «!» → (player, args, command). Права (роль из commandsList) проверяет
 // runChatCommand в chat/commands/commands.js; return — команда выполнена или отказ уже сообщён игроку.
 
-import { tell, run, findPlayer, getRole, hasRole, parseTerm, muteMinutesLeft, canLift, setIssuer, rawTranslateRich, termText, rawTranslate, clearIssuer, getWarns } from '../../DataBase.js';
+import { tell, run, findPlayer, getRole, hasRole, parseTerm, muteMinutesLeft, canLift, setIssuer, rawTranslateRich, termText, rawTranslate, clearIssuer, getWarns } from '../../utils.js';
 import { isJailed, jail, release, tellJailed } from '../../system/security/jail.js';
 import { leaveGame, canTeleport } from '../../system/minigames/minigames.js';
 import { freezePlayer, unfreezePlayer } from '../../system/security/freeze.js';

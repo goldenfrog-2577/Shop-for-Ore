@@ -9,7 +9,7 @@
 
 import { world, DynamicPropertiesDefinition } from '@minecraft/server';
 import { syncResetEpoch, markResetEpoch } from './reset_history.js';
-import { run, tell, isBot } from '../../DataBase.js';
+import { run, tell, isBot } from '../../utils.js';
 import { logAction } from '../security/staff_log.js';
 
 const RESET_ID = 'shop:offline_reset_id';

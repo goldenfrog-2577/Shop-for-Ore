@@ -9,7 +9,7 @@
 
 import { isJailed, jailMinutesLeft } from '../security/jail.js';
 import { world, system, MinecraftEffectTypes } from '@minecraft/server';
-import { run, rawTranslateRich, isPending, isBot, findPlayer, tell } from '../../DataBase.js';
+import { run, rawTranslateRich, isPending, isBot, findPlayer, tell } from '../../utils.js';
 import { teleportToArena, combatSecondsLeft } from '../combat/pvp.js';
 import { showTitle } from '../ui/toast.js';
 import { rollWinDisc } from '../player/discs.js';

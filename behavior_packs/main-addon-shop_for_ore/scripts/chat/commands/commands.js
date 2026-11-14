@@ -1,11 +1,11 @@
 // --- Команды чата (!help, !warp, !tp, !ban …) ---
-// Список команд и роли — commandsList в DataBase.js; runChatCommand вызывают и чат, и меню администратора.
+// Список команд и роли — commandsList в utils.js; runChatCommand вызывают и чат, и меню администратора.
 // Обработчики — по ролям в chat/commands/: player.js (игрок), moderation.js (хелпер, модератор),
 // admin.js (администратор; там же !gm6). Команды владельца — ниже в этом файле; общие помощники — commands/common.js.
 // Новая команда: строка в commandsList и метод в объекте своей роли (имя — без «!»).
 
 import { world } from '@minecraft/server';
-import { commandsList, isPending, tell, hasRole, findPlayer, getRole, ROLES, run, menuFeedback, settleCommands, toldErrorCount, toldSuccessCount } from '../../DataBase.js';
+import { commandsList, isPending, tell, hasRole, findPlayer, getRole, ROLES, run, menuFeedback, settleCommands, toldErrorCount, toldSuccessCount } from '../../utils.js';
 import { PLAYER_COMMANDS } from './player.js';
 import { MODERATION_COMMANDS } from './moderator.js';
 import { ADMIN_COMMANDS } from './admin.js';

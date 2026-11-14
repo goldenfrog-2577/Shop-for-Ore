@@ -1,6 +1,6 @@
 // --- Чат-логика и антиспам для Shop for Ore ---
 import { world, system } from '@minecraft/server';
-import { getScore, metricNumbers, emotes, isPending, isBot, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor, impersonatedRole, tell, run, isVip } from '../DataBase.js';
+import { getScore, metricNumbers, emotes, isPending, isBot, getRole, ROLE_COLORS, BOT_COLOR, muteMinutesLeft, getChatColor, impersonatedRole, tell, run, isVip } from '../utils.js';
 import { censor } from './censor.js';
 import { LEVEL_RANK_RE } from '../system/player/ranks.js';
 

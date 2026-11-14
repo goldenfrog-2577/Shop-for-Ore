@@ -1,6 +1,6 @@
 // --- Общие помощники команд чата (chat/commands/*.js) ---
 
-import { run, findPlayer, tell, hasRole, getRole } from '../../DataBase.js';
+import { run, findPlayer, tell, hasRole, getRole } from '../../utils.js';
 
 // Ширина символов в пикселях. Цветовые коды не занимают места в чате.
 const SPACE_WIDTH = 4;

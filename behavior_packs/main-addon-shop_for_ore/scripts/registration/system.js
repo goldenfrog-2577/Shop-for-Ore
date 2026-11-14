@@ -1,7 +1,7 @@
 // --- Система регистрации и логина игроков ---
 // Добавляет нужные теги при входе и блокирует действия до прохождения логина/регистрации
 
-import { tellText, run, isBot } from '../DataBase.js';
+import { tellText, run, isBot } from '../utils.js';
 import { world } from '@minecraft/server';
 import { LoginUI, loginLockSeconds } from './login.js';
 import { RegisterUI } from './register.js';

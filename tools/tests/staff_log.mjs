@@ -39,7 +39,7 @@ for (const [file, cmds] of Object.entries(calls)) {
 }
 assert.match(read('scripts/registration/change.js'), /export function resetPassword[\s\S]*?logAction\(owner, 'resetpass'[\s\S]*?return true;/);
 // Команды !logs и хранилища больше нет
-assert.ok(!read('scripts/DataBase.js').includes('!logs'));
+assert.ok(!read('scripts/utils.js').includes('!logs'));
 assert.ok(!/\blogs\(player, args\)|readLog/.test(read('scripts/chat/commands/commands.js')));
 for (const l of ['ru_RU', 'en_US', 'uk_UA', 'es_ES']) {
 	const t = fs.readFileSync(new URL(`../../resource_packs/main-rp-shop_for_ore/texts/${l}.lang`, import.meta.url), 'utf8');

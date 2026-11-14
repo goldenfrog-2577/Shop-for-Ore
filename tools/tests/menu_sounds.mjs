@@ -4,7 +4,7 @@ import fs from 'node:fs'; import vm from 'node:vm'; import assert from 'node:ass
 const bp = new URL('../../behavior_packs/main-addon-shop_for_ore/', import.meta.url), rp = new URL('../../resource_packs/main-rp-shop_for_ore/', import.meta.url);
 const read = (u) => fs.readFileSync(u, 'utf8');
 // Ключи успеха: …done…, «Настройка изменена»; ошибки и справка — нет
-const db = read(new URL('scripts/DataBase.js', bp));
+const db = read(new URL('scripts/utils.js', bp));
 const S = vm.runInNewContext(db.match(/const TRANSLATE = [^\n]+/)[0] + '\n' + db.match(/const SUCCESS_KEY = [^\n]+/)[0] + '\n' +
 	db.slice(db.indexOf('export function isSuccessMessage')).replace('export ', '').split('\n}\n')[0] + '\n}\nisSuccessMessage');
 const tr = (k) => `tellraw @s {"rawtext":[{"translate":"${k}","with":[]}]}`;

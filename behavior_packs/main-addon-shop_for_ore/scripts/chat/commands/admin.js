@@ -4,7 +4,7 @@
 
 import { playtimeRawtext } from '../../system/player/playtime.js';
 import { world } from '@minecraft/server';
-import { run, tell, findPlayer, setChatColor, CHAT_COLORS, colorAllowed, impersonatedRole, hasRole, rawTranslate, emotes, parseTerm, rawTranslateRich, termText, getScore, getRole } from '../../DataBase.js';
+import { run, tell, findPlayer, setChatColor, CHAT_COLORS, colorAllowed, impersonatedRole, hasRole, rawTranslate, emotes, parseTerm, rawTranslateRich, termText, getScore, getRole } from '../../utils.js';
 import { botMenu } from '../../menu/admin/admin_menu.js';
 import { getBot, spawnBot, getBotName } from '../../system/bot/spawnbot.js';
 import { LEVEL_RANK_RE } from '../../system/player/ranks.js';
