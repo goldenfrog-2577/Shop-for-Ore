@@ -74,7 +74,7 @@ function mapInfo(player) {
 	showMenu(player, '%menu.about.title', '%menu.about.body', [
 		{ text: '%menu.about.button.levels', run: () => textPage(player, '%menu.levels.title', lines('menu.levels.line', MAX_LEVEL), () => mapInfo(player)) },
 		{ text: '%menu.about.button.howtoplay', run: () => textPage(player, '%menu.howtoplay.title', HOWTOPLAY, () => mapInfo(player)) },
-		{ text: '%menu.about.button.creators', icon: 'textures/items/book_writable', run: () => creators(player) },
+		{ text: '%menu.about.button.creators', run: () => creators(player) },
 		{ text: '%menu.about.button.version', run: () => textPage(player, '%menu.version.title', VERSION, () => mapInfo(player)) },
 		backButton(back)
 	], back);
@@ -98,11 +98,14 @@ const CREATOR_BACK = 'textures/ui/icon_import';
 const CREATORS = [
 	{ id: 'goldenfrog', name: 'kapycta1231484', icon: 'steve', links: [
 		['github', 'https://github.com/goldenfrog-2577'],
-		['telegram', 'https://t.me/goldenfrog_2577']
+		['telegram', 'https://t.me/goldenfrog_2577'],
+		['discord', '@goldenfrog_2577'],
+		['twitter', 'https://twitter.com/goldenfrog_2577'],
+		['planet_minecraft', 'https://www.planetminecraft.com/member/goldenfrog/']
 	] },
 	{ id: 'nastya', name: 'NastyaXs00', icon: 'alex' },
-	{ id: 'claude', name: 'Claude', model: 'Opus 5.5', company: 'Anthropic', icon: 'creator_claude', links: [['site', 'https://claude.com/']] },
-	{ id: 'codex', name: 'Codex', model: 'GPT 6.1 Sol', company: 'OpenAI', icon: 'creator_codex', links: [['site', 'https://openai.com/codex/']] }
+	{ id: 'claude', name: 'Claude', model: 'Opus 5.5', company: 'Anthropic', icon: 'creator_claude', links: [['site', 'https://claude.ai/']] },
+	{ id: 'codex', name: 'Codex', model: 'GPT-6.1 Sol', company: 'OpenAI', icon: 'creator_codex', links: [['site', 'https://openai.com/codex/']] }
 ];
 
 function creators(player) {
@@ -114,7 +117,7 @@ function creators(player) {
 		run: () => creatorCard(player, creator, reopen)
 	}));
 	return showMenu(player, '%menu.creators.title', '%menu.creators.body', [
-		...items, backButton(back, '%menu.common.back', CREATOR_BACK)
+		...items, backButton(back, '%admin.common.back', CREATOR_BACK)
 	]);
 }
 
@@ -126,12 +129,12 @@ function creatorCard(player, creator, back) {
 	const reopen = () => creatorCard(player, creator, back);
 	return showMenu(player, title, body, [
 		creator.links && { text: '%menu.creators.links', icon: 'textures/items/book_writable', run: () => creatorLinks(player, creator, reopen) },
-		backButton(back, '%menu.common.back', CREATOR_BACK)
+		backButton(back, '%admin.common.back', CREATOR_BACK)
 	]);
 }
 
 function creatorLinks(player, creator, back) {
-	const form = modal('%menu.creators.links §8» ' + creator.name);
+	const form = modal('§l %menu.creators.links §r§8» ' + creator.name);
 	for (const [index, [key, url]] of creator.links.entries()) {
 		const label = '%menu.creators.link.' + key;
 		form.textField(index === 0 ? '%menu.creators.copy_hint\n\n' + label : label, url, url);

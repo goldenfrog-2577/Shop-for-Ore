@@ -18,9 +18,9 @@ vm.runInNewContext(code, context);
 const player = { name: 'Test' };
 const names = ['kapycta1231484', 'NastyaXs00', 'Claude', 'Codex'];
 const urls = [
-	['https://github.com/goldenfrog-2577', 'https://t.me/goldenfrog_2577'],
+	['https://github.com/goldenfrog-2577', 'https://t.me/goldenfrog_2577', '@goldenfrog_2577', 'https://twitter.com/goldenfrog_2577', 'https://www.planetminecraft.com/member/goldenfrog/'],
 	[],
-	['https://claude.com/'],
+	['https://claude.ai/'],
 	['https://openai.com/codex/']
 ];
 context.creators(player);
@@ -59,5 +59,11 @@ for (const name of ['claude', 'codex']) {
 	assert.equal(png.readUInt32BE(16), 32);
 	assert.equal(png.readUInt32BE(20), 32);
 	assert.equal(png[25], 6);
+}
+for (const locale of ['ru_RU', 'en_US', 'uk_UA', 'es_ES']) {
+	const dictionary = read(rp + 'texts/' + locale + '.lang');
+	const labels = Object.fromEntries([...dictionary.matchAll(/^menu\.creators\.link\.(\w+)=§r([\uE000-\uF8FF]) §f[^\r\n]+$/gm)]
+		.map(([, key, glyph]) => [key, glyph.charCodeAt(0)]));
+	assert.deepEqual(labels, { site: 0xe20d, github: 0xe209, telegram: 0xe1bc, discord: 0xe20a, twitter: 0xe20b, planet_minecraft: 0xe20c });
 }
 console.log('PASS: creator cards, icons, copyable links and navigation.');
