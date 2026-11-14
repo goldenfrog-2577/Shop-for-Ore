@@ -277,7 +277,7 @@ export function bank(player) {
 
 function bankExchange(player, deposit, back) {
 	const key = deposit ? 'deposit' : 'withdraw';
-	const title = '%menu.bank.' + key;
+	const title = '%menu.bank.' + key + '.title';
 	const form = modal(title).textField('%menu.bank.' + key + '.amount', '%menu.bank.amount_placeholder');
 	return showModal(player, form, ([raw]) => {
 		const amount = bankAmount(raw);
@@ -291,7 +291,7 @@ function bankTransfer(player, back) {
 	const eligible = target => target && target.name !== player.name && !isBot(target) && !isPending(target);
 	const names = [...world.getPlayers()].filter(eligible).map(target => target.name);
 	if (!names.length) return tell(player, 'chat.bank.error.no_players');
-	const form = modal('%menu.bank.transfer')
+	const form = modal('%menu.bank.transfer.title')
 		.dropdown('\n%menu.bank.balance §e' + getScore(player, 'money') + ' §r' + COIN + '\n%menu.bank.player', names, 0)
 		.textField('%menu.bank.amount', '%menu.bank.amount_placeholder');
 	return showModal(player, form, ([index, amount]) => {
