@@ -61,6 +61,7 @@ const bankClick = id => menu.items.find(i => i.text.endsWith('.' + id)).run();
 
 reset(10, [coin(2), other(), coin(4), undefined]);
 bank(player);
+assert.ok(menu.body.startsWith('%menu.bank.welcome\n\n%menu.bank.description\n\n'));
 assert.match(menu.body, /balance §e10[^\n]*\n%menu\.bank\.inventory §e6/);
 assert.deepEqual(Array.from(menu.items, i => i.text), ['%menu.bank.deposit', '%menu.bank.withdraw', '%menu.bank.transfer', 'back']);
 assert.ok(menu.items.slice(0, 3).every(i => i.icon));
