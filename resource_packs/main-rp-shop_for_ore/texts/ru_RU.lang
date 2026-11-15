@@ -1911,3 +1911,18 @@ bot.guide.3=Хватает опыта на уровень — снова вст�
 bot.guide.4=Предмет в последнем слоте — меню сервера, там магазин, телепортации, достижения и настройки. Удачи в раскопках!
 effect.badOmen=Дурной знак
 effect.darkness=Тьма
+
+## 26.60 - Core menu
+sfo.port.item.menu=§eМеню сервера §7[Нажми, чтобы открыть§7]§r
+sfo.port.menu.title=§l§8Меню сервера
+sfo.port.menu.teleports=§8Телепортации
+sfo.port.teleports.title=§l§8Меню сервера » Телепортации
+sfo.port.teleports.mine=§8Шахта (по уровню)
+sfo.port.back=§8Назад
+sfo.port.mine.arrived=§7Ты у входа в первую шахту.
+sfo.port.mine.unavailable=§cНе удалось телепортироваться. Попробуй ещё раз рядом со спавном.
+sfo.port.inventory_full=§eОсвободи слот и перезайди, чтобы получить меню сервера.
+
+sfo.port.account.registered=§9Аккаунт §8» §7Аккаунт создан. Добро пожаловать!
+sfo.port.account.reset_request=§9Аккаунт §8» §7Игрок §f%1$s§7 просит сбросить пароль. Сверь заявку в Telegram, затем используй §e/sfo:resetpass§7.
+sfo.port.account.reset_failed=§cНе удалось сбросить пароль. Повтори попытку.

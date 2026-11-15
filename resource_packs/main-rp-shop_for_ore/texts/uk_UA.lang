@@ -1911,3 +1911,18 @@ bot.guide.3=Вистачає досвіду на рівень — знову с�
 bot.guide.4=Предмет в останньому слоті — меню сервера, там магазин, телепортації, досягнення й налаштування. Успіхів у копанні!
 effect.badOmen=Погане знамення
 effect.darkness=Темрява
+
+## 26.60 - Core menu
+sfo.port.item.menu=§eМеню сервера §7[Натисни, щоб відкрити§7]§r
+sfo.port.menu.title=§l§8Меню сервера
+sfo.port.menu.teleports=§8Телепортації
+sfo.port.teleports.title=§l§8Меню сервера » Телепортації
+sfo.port.teleports.mine=§8Шахта (за рівнем)
+sfo.port.back=§8Назад
+sfo.port.mine.arrived=§7Ти біля входу до першої шахти.
+sfo.port.mine.unavailable=§cНе вдалося телепортуватися. Спробуй ще раз біля спавну.
+sfo.port.inventory_full=§eЗвільни слот і зайди знову, щоб отримати меню сервера.
+
+sfo.port.account.registered=§9Акаунт §8» §7Акаунт створено. Ласкаво просимо!
+sfo.port.account.reset_request=§9Акаунт §8» §7Гравець §f%1$s§7 просить скинути пароль. Перевір заявку в Telegram, потім скористайся §e/sfo:resetpass§7.
+sfo.port.account.reset_failed=§cНе вдалося скинути пароль. Спробуй ще раз.

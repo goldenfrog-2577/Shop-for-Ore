@@ -15,7 +15,7 @@ execute as @a[x=50,y=0,z=50,r=25,tag=!role:owner,tag=!role:admin,tag=!role:bot,t
 
 ## --- Телепорты-площадки ---
 # Тёмные дубовые доски — на спавн; багровые и искажённые — в адскую шахту
-execute as @a[tag=!role:bot,tag=!sys:bot] at @s if block ~~~ planks 5 run tp @s 0 5 0
+execute as @a[tag=!role:bot,tag=!sys:bot] at @s if block ~~~ minecraft:dark_oak_planks run tp @s 0 5 0
 execute as @a[tag=!role:bot,tag=!sys:bot] at @s if block ~~~ crimson_planks run tp @s 0 5 -33
 execute as @a[tag=!role:bot,tag=!sys:bot] at @s if block ~~~ warped_planks run tp @s 0 5 -33
 # Порталы мини-игр. PvP-арена: случайную точку площадки выбирает scripts/system/pvp.js по тегу sys:warp_pvp
@@ -40,14 +40,6 @@ scoreboard players set @a[tag=!player] lvl 1
 scoreboard players set @a[tag=!player] efficiency 0
 scoreboard players set @a[tag=!player] fortune 0
 scoreboard players set @a[tag=!player:rebirth] rebirth 0
-
-## --- Меню в хотбаре ---
-# Выдаётся, только если его нет в слоте; меню администратора — владельцу и администраторам
-replaceitem entity @a[tag=role:owner,hasitem={item=server:admin_menu,location=slot.hotbar,slot=7,quantity=0}] slot.hotbar 7 server:admin_menu 1 0 {"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
-replaceitem entity @a[tag=role:admin,hasitem={item=server:admin_menu,location=slot.hotbar,slot=7,quantity=0}] slot.hotbar 7 server:admin_menu 1 0 {"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
-# Роль сняли — забираем меню администратора
-clear @a[tag=!role:owner,tag=!role:admin,hasitem={item=server:admin_menu}] server:admin_menu
-replaceitem entity @a[hasitem={item=server:menu,location=slot.hotbar,slot=8,quantity=0}] slot.hotbar 8 server:menu 1 0 {"minecraft:item_lock":{"mode":"lock_in_slot"},"minecraft:keep_on_death":{}}
 
 ## --- PvP-арена (x 236…363, y −32…0, z 240…367) ---
 # Урон между игроками блокирует minecraft:damage_sensor в entities/player.json: игрок может ранить игрока,

@@ -1,7 +1,8 @@
 {
-	"frame" : {
-		"blockshape" : "invisible",
-		"textures" : "itemframe_background",
+	"format_version": "1.1.0",
+	"frame": {
+		"blockshape": "invisible",
+		"textures": "itemframe_background",
 		"sound": "itemframe"
 	}
 }

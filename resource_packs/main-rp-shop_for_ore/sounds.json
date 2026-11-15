@@ -33,16 +33,6 @@
 						"sound": "mob.warden.death",
 						"volume": 1.0
 					},
-					"dig": {
-						"pitch": 1.0,
-						"sound": "mob.warden.dig",
-						"volume": 5.0
-					},
-					"emerge": {
-						"pitch": 1.0,
-						"sound": "mob.warden.emerge",
-						"volume": 5.0
-					},
 					"heartbeat": {
 						"pitch": 1.0,
 						"sound": "mob.warden.heartbeat",
@@ -55,11 +45,6 @@
 						],
 						"sound": "mob.warden.hurt",
 						"volume": 1.0
-					},
-					"idle": {
-						"pitch": 1.0,
-						"sound": "mob.warden.idle",
-						"volume": 3.0
 					},
 					"listening": {
 						"pitch": [
@@ -105,11 +90,6 @@
 						"pitch": 1.0,
 						"sound": "mob.warden.roar",
 						"volume": 10.0
-					},
-					"sniff": {
-						"pitch": 1.0,
-						"sound": "mob.warden.sniff",
-						"volume": 5.0
 					},
 					"step": {
 						"pitch": 1.0,

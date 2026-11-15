@@ -306,7 +306,7 @@
 				}
 			},
 			"server:kick": {
-				"run_command": {
+				"queue_command": {
 					"command": [
 						"tellraw @a {\"rawtext\":[{\"translate\":\"chat.server.kicked\",\"with\":{\"rawtext\":[{\"selector\":\"@s\"}]}}]}",
 						"tag @s add state:kick"

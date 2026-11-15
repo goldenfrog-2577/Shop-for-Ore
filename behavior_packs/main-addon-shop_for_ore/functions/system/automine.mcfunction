@@ -42,25 +42,25 @@ fill 10 0 -47 12 -4 -49 netherite_block
 fill 10 0 -42 12 -4 -40 obsidian
 fill 10 0 -35 12 -4 -33 crying_obsidian
 fill -37 -1 -68 -35 -1 -66 amethyst_cluster
-# Пещера: пол и стенки ям — обычный камень, а гранит, андезит и диорит в 1.19.50 тоже «stone»,
-# поэтому кирка 26+ уровня ломает и их. Перед заливкой ям: дыры в полу (y 0) — снова камень (декор не трогаем:
+# Пещера: пол и стенки ям — обычный камень. Гранит, андезит и диорит заливаются отдельными блоками.
+# Перед заливкой ям: дыры в полу (y 0) — снова камень (декор не трогаем:
 # replace air), стенки ям (кольцо 5×5, y −4…−1; под полом пустота) — заново камнем.
-fill -15 0 -87 15 0 -58 stone 0 replace air
-fill -12 -4 -64 -8 -1 -60 stone 0
-fill 9 -4 -64 13 -1 -60 stone 0
-fill -12 -4 -71 -8 -1 -67 stone 0
-fill 9 -4 -71 13 -1 -67 stone 0
-fill -12 -4 -78 -8 -1 -74 stone 0
-fill 9 -4 -78 13 -1 -74 stone 0
-fill -12 -4 -85 -8 -1 -81 stone 0
-fill -5 -4 -85 -1 -1 -81 stone 0
-fill 2 -4 -85 6 -1 -81 stone 0
-fill 9 -4 -85 13 -1 -81 stone 0
+fill -15 0 -87 15 0 -58 minecraft:stone replace air
+fill -12 -4 -64 -8 -1 -60 minecraft:stone
+fill 9 -4 -64 13 -1 -60 minecraft:stone
+fill -12 -4 -71 -8 -1 -67 minecraft:stone
+fill 9 -4 -71 13 -1 -67 minecraft:stone
+fill -12 -4 -78 -8 -1 -74 minecraft:stone
+fill 9 -4 -78 13 -1 -74 minecraft:stone
+fill -12 -4 -85 -8 -1 -81 minecraft:stone
+fill -5 -4 -85 -1 -1 -81 minecraft:stone
+fill 2 -4 -85 6 -1 -81 minecraft:stone
+fill 9 -4 -85 13 -1 -81 minecraft:stone
 # Пещера (уровни 26–40): 10 ям буквой «П», как у спавна и в Незере — от входа вверх по левому ряду,
 # через дальний ряд и вниз по правому: от гранита до аметиста
-fill -11 -4 -63 -9 0 -61 stone 1
-fill -11 -4 -70 -9 0 -68 stone 5
-fill -11 -4 -77 -9 0 -75 stone 3
+fill -11 -4 -63 -9 0 -61 minecraft:granite
+fill -11 -4 -70 -9 0 -68 minecraft:andesite
+fill -11 -4 -77 -9 0 -75 minecraft:diorite
 fill -11 -4 -84 -9 0 -82 deepslate
 fill -4 -4 -84 -2 0 -82 tuff
 fill 3 -4 -84 5 0 -82 calcite

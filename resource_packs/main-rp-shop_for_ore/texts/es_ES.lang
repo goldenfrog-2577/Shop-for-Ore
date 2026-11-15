@@ -1911,3 +1911,18 @@ bot.guide.3=¿Tienes experiencia para subir de nivel? Vuelve al bloque de oro. L
 bot.guide.4=El objeto del último espacio es el menú del servidor: ahí están la tienda, los teletransportes, los logros y los ajustes. ¡Suerte excavando!
 effect.badOmen=Mal presagio
 effect.darkness=Oscuridad
+
+## 26.60 - Core menu
+sfo.port.item.menu=§eMenú del servidor §7[Pulsa para abrir§7]§r
+sfo.port.menu.title=§l§8Menú del servidor
+sfo.port.menu.teleports=§8Teletransportes
+sfo.port.teleports.title=§l§8Menú del servidor » Teletransportes
+sfo.port.teleports.mine=§8Mina (por nivel)
+sfo.port.back=§8Atrás
+sfo.port.mine.arrived=§7Estás en la entrada de la primera mina.
+sfo.port.mine.unavailable=§cNo se pudo teletransportar. Inténtalo de nuevo cerca del punto de aparición.
+sfo.port.inventory_full=§eLibera un espacio del inventario y vuelve a entrar para recibir el menú del servidor.
+
+sfo.port.account.registered=§9Cuenta §8» §7Cuenta creada. ¡Te damos la bienvenida!
+sfo.port.account.reset_request=§9Cuenta §8» §7El jugador §f%1$s§7 ha solicitado restablecer su contraseña. Verifica la solicitud en Telegram y usa §e/sfo:resetpass§7.
+sfo.port.account.reset_failed=§cNo se pudo restablecer la contraseña. Inténtalo de nuevo.

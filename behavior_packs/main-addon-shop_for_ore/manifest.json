@@ -4,31 +4,47 @@
 		"name": "pack.name",
 		"description": "pack.description",
 		"uuid": "94413a4c-8e80-11ed-a1eb-0242ac120002",
-		"version": [0,3,0],
-		"min_engine_version": [1,19,50]
+		"version": [
+			0,
+			4,
+			0
+		],
+		"min_engine_version": [
+			1,
+			26,
+			60
+		]
 	},
-	"modules": [{
-		"type": "data",
-		"uuid": "a92ad5df-9788-4c41-8d4f-717206775200",
-		"version": [1,0,0]
-	},
+	"modules": [
 		{
-			"uuid": "37385aaa-2ef4-4a30-87c8-3b786ea9d092",
-			"version": [1,0,0],
-			"type": "script",
-			"language": "javascript",
-			"entry": "scripts/import.js"
-		}],
-	"dependencies": [{
-		"module_name": "@minecraft/server",
-		"version": "1.1.0-beta"
-	},
-		{
-			"module_name": "@minecraft/server-ui",
-			"version": "1.0.0-beta"
+			"type": "data",
+			"uuid": "a92ad5df-9788-4c41-8d4f-717206775200",
+			"version": [
+				1,
+				0,
+				0
+			]
 		},
 		{
-			"module_name": "@minecraft/server-gametest",
-			"version": "1.0.0-beta"
-		}]
+			"uuid": "37385aaa-2ef4-4a30-87c8-3b786ea9d092",
+			"version": [
+				1,
+				0,
+				0
+			],
+			"type": "script",
+			"language": "javascript",
+			"entry": "scripts/port/main.js"
+		}
+	],
+	"dependencies": [
+		{
+			"module_name": "@minecraft/server",
+			"version": "2.11.0"
+		},
+		{
+			"module_name": "@minecraft/server-ui",
+			"version": "2.3.0"
+		}
+	]
 }

@@ -1,5 +1,5 @@
 {
-	"format_version": "1.19.0",
+	"format_version": "1.21.90",
 	"minecraft:item": {
 		"description": {
 			"identifier": "server:admin_menu"
@@ -8,7 +8,9 @@
 			"minecraft:hand_equipped": false,
 			"minecraft:max_stack_size": 1,
 			"minecraft:icon": {
-				"texture": "admin_menu"
+				"textures": {
+					"default": "admin_menu"
+				}
 			}
 		}
 	}
