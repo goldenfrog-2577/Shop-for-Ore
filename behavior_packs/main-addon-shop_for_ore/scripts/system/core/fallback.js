@@ -18,9 +18,8 @@ system.runSchedule(() => {
 		console.warn('[Shop for Ore] Command legacy heartbeat: ' + (error?.message ?? error));
 	});
 	pulse.then(result => {
-		if (result?.successCount > 0) heartbeatFailureLogged = false;
-	});
-	if (!heartbeatConfirmed) pulse.then(result => {
-		heartbeatConfirmed ||= result?.successCount > 0;
+		if (!(result?.successCount > 0)) return;
+		heartbeatConfirmed = true;
+		heartbeatFailureLogged = false;
 	});
 }, 20);

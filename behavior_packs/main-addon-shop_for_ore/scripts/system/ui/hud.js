@@ -24,7 +24,7 @@ const nextLevel = (n) => NEXT_LEVEL_COLOR[n] ? `${NEXT_LEVEL_COLOR[n]}${n}§f` :
 function iconsRawtext(vip, coins) {
 	return [
 		{ text: '§l\ue101 ➠ §r' }, { selector: '@s' },
-		line(`${vip ? '\ue186' : '§l\ue152'} ➠ `), score(coins),
+		line(`${vip ? '§l\ue186' : '§l\ue152'} ➠ `), score(coins),
 		line('\ue154 ➠ '), vip ? { text: '\ue128' } : score('xp'),
 		line('\ue153 ➠ '), vip ? { text: '§aVIP§f' } : score('lvl'),
 		{ text: ' \n\ue116 ➠ ' }, score('rebirth'),

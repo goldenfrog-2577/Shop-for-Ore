@@ -44,7 +44,7 @@ export function adminEnchantMenu(player, back) {
 	for (let slot = 0; slot < container.size; slot++) {
 		const item = container.getItem(slot);
 		if (!adminEnchantOptions(item).length) continue;
-		items.push({ text: `${item.nameTag || '%' + nameKey(item.typeId)}\n%admin.enchant.slot ${slot + 1}`, icon: 'textures/items/book_enchanted', run: () => choose(player, slot, item.typeId, () => adminEnchantMenu(player, back)) });
+		items.push({ text: `${item.nameTag || '%' + nameKey(item.typeId)}\n§r%admin.enchant.slot ${slot + 1}`, icon: 'textures/items/book_enchanted', run: () => choose(player, slot, item.typeId, () => adminEnchantMenu(player, back)) });
 	}
 	showMenu(player, '%admin.enchant.title', items.length ? '%admin.enchant.body' : '%admin.enchant.empty', [...items, backButton(back)], back);
 }

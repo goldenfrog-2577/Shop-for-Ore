@@ -5,10 +5,10 @@
 scoreboard players add @s magnet 0
 execute as @s[scores={magnet=1..}] run tellraw @s {"rawtext":[{"translate":"chat.ore_magnet.error.active","with":{"rawtext":[{"score":{"name":"@s","objective":"magnet"}}]}}]}
 execute as @s[scores={magnet=1..}] run function ui/menu_error
-execute as @s[scores={magnet=..0,money=..19999}] run tellraw @s {"rawtext":[{"translate":"chat.error.no_money"}]}
-execute as @s[scores={magnet=..0,money=..19999}] run function ui/menu_error
-execute as @s[scores={magnet=..0,money=20000..}] run tag @s add sys:buy_ok
-scoreboard players remove @s[tag=sys:buy_ok] money 20000
+execute as @s[scores={magnet=..0,money=..11999}] run tellraw @s {"rawtext":[{"translate":"chat.error.no_money"}]}
+execute as @s[scores={magnet=..0,money=..11999}] run function ui/menu_error
+execute as @s[scores={magnet=..0,money=12000..}] run tag @s add sys:buy_ok
+scoreboard players remove @s[tag=sys:buy_ok] money 12000
 scoreboard players set @s[tag=sys:buy_ok] magnet 300
 tag @s[tag=sys:buy_ok] add boost:magnet
 # Купленный магнит — не «выданный администратором» (его не снимет «Отключить выданные бусты»)
