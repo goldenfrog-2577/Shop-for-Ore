@@ -1,5 +1,5 @@
 import * as serverApi from '@minecraft/server';
-import { ActionFormData, ModalFormData } from '@minecraft/server-ui';
+import { ActionFormData, MessageFormData, ModalFormData } from '@minecraft/server-ui';
 
 const { CommandPermissionLevel, CustomCommandParamType, CustomCommandStatus,
 	InputPermissionCategory, ItemStack, system, world } = serverApi;
@@ -881,7 +881,7 @@ world.afterEvents.worldLoad.subscribe(() => {
 	system.runInterval(pollAccountSessions, 10);
 	system.runInterval(syncPlayerState, 20);
 	startMining();
-	console.log(logPrefix + ' Loaded: accounts, HUD, server menu, mines, ore sale.');
+	console.log(logPrefix + ' Loaded: accounts, HUD, server menu, mines, ore sale, bank.');
 });
 
 world.afterEvents.playerSpawn.subscribe(({ player, initialSpawn }) => {
@@ -957,6 +957,218 @@ function requestMenu(player) {
 	});
 }
 
+// Банк: физические монеты и баланс используют тот же курс, что в релизе 1.19.50.
+const bankCoin = 'minecraft:gold_ingot';
+const bankLimit = 2147483647;
+const bankGoldGlyph = '\ue152';
+
+function parseBankAmount(raw) {
+	const value = String(raw ?? '').trim();
+	const amount = Number(value);
+	return /^\d+$/.test(value) && Number.isSafeInteger(amount) && amount > 0 && amount <= bankLimit ? amount : undefined;
+}
+
+function getBankInventory(player) {
+	return player.getComponent('minecraft:inventory')?.container;
+}
+
+function bankCoins(container) {
+	if (!container) return 0;
+	let total = 0;
+	for (let slot = 0; slot < container.size; slot++) {
+		const item = container.getItem(slot);
+		if (item?.typeId === bankCoin) total += item.amount;
+	}
+	return total;
+}
+
+function planBankExchange(container, amount, deposit) {
+	const changes = [];
+	const empty = [];
+	const plainCoin = new ItemStack(bankCoin);
+	for (let slot = 0; slot < container.size && amount > 0; slot++) {
+		const item = container.getItem(slot);
+		if (!item) {
+			if (!deposit) empty.push(slot);
+			continue;
+		}
+		if (item.typeId !== bankCoin || (!deposit && !item.isStackableWith(plainCoin))) continue;
+		const count = Math.min(amount, deposit ? item.amount : 64 - item.amount);
+		if (count <= 0) continue;
+		const remaining = item.amount + (deposit ? -count : count);
+		const next = remaining ? item.clone() : undefined;
+		if (next) next.amount = remaining;
+		changes.push({ slot, before: item, next });
+		amount -= count;
+	}
+	for (const slot of empty) {
+		if (amount === 0) break;
+		const count = Math.min(64, amount);
+		changes.push({ slot, before: undefined, next: new ItemStack(bankCoin, count) });
+		amount -= count;
+	}
+	return amount === 0 ? changes : undefined;
+}
+
+function bankNotice(player, key, ...args) {
+	player.sendMessage(accountText(key, ...args.map(String)));
+}
+
+function bankExchange(player, amount, deposit) {
+	if (!hasAccountSession(player)) return;
+	const container = getBankInventory(player);
+	const objective = world.scoreboard.getObjective('money');
+	if (!container || !objective) {
+		bankNotice(player, 'chat.bank.error.exchange');
+		return;
+	}
+	const balance = objective.getScore(player) ?? 0;
+	if (deposit && balance > bankLimit - amount) {
+		bankNotice(player, 'chat.bank.error.balance_limit');
+		return;
+	}
+	if (!deposit && balance < amount) {
+		bankNotice(player, 'chat.error.no_money');
+		return;
+	}
+	const changes = planBankExchange(container, amount, deposit);
+	if (!changes) {
+		bankNotice(player, deposit ? 'chat.bank.error.no_coins' : 'chat.bank.error.no_space');
+		return;
+	}
+
+	const applied = [];
+	try {
+		// No await between validating the inventory, applying item changes and updating the score.
+		for (const change of changes) {
+			container.setItem(change.slot, change.next);
+			applied.push(change);
+		}
+		objective.setScore(player, balance + (deposit ? amount : -amount));
+	} catch (error) {
+		for (const { slot, before } of applied.reverse()) container.setItem(slot, before);
+		console.error(logPrefix + ' Bank exchange failed: ' + error);
+		bankNotice(player, 'chat.bank.error.exchange');
+		return;
+	}
+	bankNotice(player, deposit ? 'chat.bank.deposit.done' : 'chat.bank.withdraw.done', amount);
+}
+
+function bankRecipients(player) {
+	return world.getAllPlayers().filter(target => target.id !== player.id && !isAccountBot(target) && hasAccountSession(target));
+}
+
+function bankTransfer(player, recipient, amount) {
+	if (!hasAccountSession(player)) return;
+	const target = bankRecipients(player).find(online => online.id === recipient.id);
+	if (!target) {
+		bankNotice(player, 'chat.cmd.error.offline', recipient.name);
+		return;
+	}
+	const objective = world.scoreboard.getObjective('money');
+	if (!objective) {
+		bankNotice(player, 'chat.bank.error.exchange');
+		return;
+	}
+	const senderBalance = objective.getScore(player) ?? 0;
+	const recipientBalance = objective.getScore(target) ?? 0;
+	if (senderBalance < amount) {
+		bankNotice(player, 'chat.error.no_money');
+		return;
+	}
+	if (recipientBalance > bankLimit - amount) {
+		bankNotice(player, 'chat.bank.error.recipient_limit');
+		return;
+	}
+	objective.setScore(player, senderBalance - amount);
+	try {
+		objective.setScore(target, recipientBalance + amount);
+	} catch (error) {
+		objective.setScore(player, senderBalance);
+		console.error(logPrefix + ' Bank transfer failed: ' + error);
+		bankNotice(player, 'chat.bank.error.exchange');
+		return;
+	}
+	player.addTag('stat:paid');
+	bankNotice(player, 'chat.bank.sent', target.name, amount);
+	bankNotice(target, 'chat.bank.received', player.name, amount);
+	if (!player.hasTag('player:menu_success_off')) player.playSound('note.bell');
+}
+
+function bankBody(player) {
+	return { rawtext: [
+		accountText('menu.bank.welcome'), { text: '\n\n' }, accountText('menu.bank.description'),
+		{ text: '\n\n' }, accountText('menu.bank.balance'), { text: ' §e' + readScore(player, 'money') + ' §r' + bankGoldGlyph },
+		{ text: '\n' }, accountText('menu.bank.inventory'), { text: ' §e' + bankCoins(getBankInventory(player)) + ' §r' + bankGoldGlyph },
+	] };
+}
+
+async function bankExchangeForm(player, deposit) {
+	const key = deposit ? 'deposit' : 'withdraw';
+	const title = accountText('menu.bank.' + key + '.title');
+	const result = await new ModalFormData().title(title)
+		.textField(accountText('menu.bank.' + key + '.amount'), accountText('menu.bank.amount_placeholder'))
+		.show(player);
+	if (result.canceled || !hasAccountSession(player)) return;
+
+	const [raw] = result.formValues ?? [];
+	const amount = parseBankAmount(raw);
+	if (!amount) {
+		bankNotice(player, 'chat.cmd.error.number', String(raw ?? '').trim() || '—', 1, bankLimit);
+		return;
+	}
+
+	const confirm = await new MessageFormData().title(title).body({ rawtext: [
+		accountText('menu.bank.' + key + '.confirm'), { text: ' §e' + amount + ' §r' + bankGoldGlyph + '§7?' },
+	] }).button1({ rawtext: [{ text: '\ue139 ' }, accountText('menu.common.yes')] })
+		.button2({ rawtext: [{ text: '\ue130 ' }, accountText('menu.common.no')] }).show(player);
+	// Bedrock maps MessageFormData.button1 to selection 1.
+	if (!confirm.canceled && confirm.selection === 1) bankExchange(player, amount, deposit);
+}
+
+async function bankTransferForm(player) {
+	const recipients = bankRecipients(player).map(({ id, name }) => ({ id, name }));
+	if (recipients.length === 0) {
+		bankNotice(player, 'chat.bank.error.no_players');
+		return;
+	}
+	const result = await new ModalFormData().title(accountText('menu.bank.transfer.title'))
+		.dropdown({ rawtext: [accountText('menu.bank.balance'), { text: ' §e' + readScore(player,'money') + ' §r' + bankGoldGlyph + '\n' },
+			accountText('menu.bank.player')] }, recipients.map(({ name }) => name))
+		.textField(accountText('menu.bank.amount'), accountText('menu.bank.amount_placeholder'))
+		.show(player);
+	if (result.canceled || !hasAccountSession(player)) return;
+	const [choice, raw] = result.formValues ?? [];
+	const recipient = recipients[choice];
+	if (!recipient) return;
+
+	const amount = parseBankAmount(raw);
+	if (!amount) {
+		bankNotice(player, 'chat.cmd.error.number', String(raw ?? '').trim() || '—', 1, bankLimit);
+		return;
+	}
+	bankTransfer(player, recipient, amount);
+}
+
+async function openBank(player) {
+	while (hasAccountSession(player)) {
+		const result = await new ActionFormData().title(accountText('menu.bank.title')).body(bankBody(player))
+			.button(accountText('menu.bank.deposit'), 'textures/items/gold_ingot')
+			.button(accountText('menu.bank.withdraw'), 'textures/items/gold_ingot')
+			.button(accountText('menu.bank.transfer'), 'textures/server_icons/steve')
+			.button(accountText('menu.common.back')).show(player);
+		if (result.canceled || !hasAccountSession(player)) return false;
+		if (result.selection === 0 || result.selection === 1) {
+			await bankExchangeForm(player, result.selection === 0);
+		} else if (result.selection === 2) {
+			await bankTransferForm(player);
+		} else {
+			return result.selection === 3;
+		}
+	}
+	return false;
+}
+
 async function showMenu(player) {
 	let showTeleports = false;
 	while (true) {
@@ -967,7 +1179,8 @@ async function showMenu(player) {
 				.button(message('back'));
 		} else {
 			form.title(message('menu.title'))
-				.button(message('menu.teleports'));
+				.button(message('menu.teleports'))
+				.button(accountText('menu.main.button.bank'), 'textures/items/emerald');
 		}
 
 		const result = await form.show(player);
@@ -981,6 +1194,11 @@ async function showMenu(player) {
 			player.sendMessage(moved ? { translate: 'chat.cmd.warp.done', with: { rawtext: [{ translate: 'warp.mine' }] } }
 				: message('mine.unavailable'));
 			return;
+		}
+
+		if (!showTeleports && result.selection === 1) {
+			if (!await openBank(player)) return;
+			continue;
 		}
 
 		if (result.selection !== (showTeleports ? 1 : 0)) return;
