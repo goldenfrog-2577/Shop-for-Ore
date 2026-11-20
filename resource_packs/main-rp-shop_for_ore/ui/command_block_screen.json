@@ -268,6 +268,41 @@
 				}
 			},
 			{
+				"switch_warning_panel": {
+					"type": "panel",
+					"size": [
+						"100%",
+						"100%c"
+					],
+					"bindings": [
+						{
+							"binding_name": "#char_limit_warning_visible",
+							"binding_name_override": "#visible"
+						}
+					],
+					"controls": [
+						{
+							"switch_warning_label": {
+								"type": "label",
+								"color": "$c_color_format",
+								"size": [
+									"100%",
+									"default"
+								],
+								"offset": [
+									2,
+									0
+								],
+								"layer": 1,
+								"text": "advMode.command.charLimitExceeded",
+								"visible": true,
+								"locked_alpha": 0.5
+							}
+						}
+					]
+				}
+			},
+			{
 				"self_label@command_block.command_block_helper_stack": {
 					"$text_override": "advMode.self"
 				}
@@ -334,6 +369,20 @@
 					"size": [
 						"100%",
 						20
+					]
+				}
+			},
+			{
+				"nearest_label@command_block.command_block_helper_stack": {
+					"$text_override": "advMode.nearest"
+				}
+			},
+			{
+				"nearest_label_offset": {
+					"type": "panel",
+					"size": [
+						"100%",
+						2
 					]
 				}
 			},

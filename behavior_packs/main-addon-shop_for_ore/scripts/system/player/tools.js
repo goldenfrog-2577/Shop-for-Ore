@@ -143,7 +143,7 @@ function getMiningToolRule(player) {
 	return pickaxeRules.find(rule => miningLevel(player) <= rule.last);
 }
 
-function isMineTool(item) {
+export function isMineTool(item) {
 	if (!item) return false;
 	if (item.getLore().includes(mineToolLore)) return true;
 	if (item.lockMode !== ItemLockMode.slot) return false;

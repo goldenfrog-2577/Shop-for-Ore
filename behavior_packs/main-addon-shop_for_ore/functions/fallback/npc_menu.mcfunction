@@ -1,8 +1,8 @@
 # --- Запасное меню: NPC сцен — по одному на сцену (тег npc:<сцена>), раз в секунду из fallback/check ---
 # Собирается tools/fallback_menu.py. Нет NPC — барьер под ним и призыв; пока чанк не загружен, призыв не проходит —
 # следующая попытка через секунду. Прежний общий NPC (npc:fallback, до отдельных NPC) убирается.
-# Перед открытием сцены NPC переносится к игроку (fallback/open, fallback/bring): кнопки адресуют ближайшего
-# к NPC игрока, @initiator после /dialogue open пуст. Нет рядом игрока с меню в руке — NPC возвращается домой.
+# Перед открытием сцены NPC переносится к игроку (fallback/open, fallback/bring): нажимающий игрок определяется внутри диалога,
+# кнопка выполняет действие для @initiator. Без игрока рядом NPC возвращается домой.
 kill @e[type=npc,tag=npc:fallback]
 execute unless entity @e[type=npc,tag=npc:fb_main] run setblock 0 -61 0 barrier
 execute unless entity @e[type=npc,tag=npc:fb_main] run summon minecraft:npc fb_main 0 -60 0

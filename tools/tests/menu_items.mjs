@@ -19,7 +19,7 @@ const inventory = {
 class ItemStack {
 	constructor(typeId) { this.typeId = typeId; }
 }
-const player = { id: 'miner', isValid: true, getComponent: () => ({ container: inventory }) };
+const player = { id: 'miner', isValid: true, hasTag: () => false, getComponent: () => ({ container: inventory }) };
 const listeners = {};
 const callbacks = ['playerSpawn', 'playerLeave', 'playerInventoryItemChange'];
 const afterEvents = Object.fromEntries(callbacks.map(event => [event, {

@@ -89,7 +89,7 @@ export function opponentHp(player, onlineByName) {
 	try {
 		const health = target.getComponent('health');
 		if (!(health.currentValue > 0)) return undefined;
-		const max = healtheffectiveMax > 0 ? healtheffectiveMax : 20;
+		const max = health.effectiveMax > 0 ? health.effectiveMax : 20;
 		const color = health.currentValue > max * 0.6 ? '§a' : health.currentValue > max * 0.3 ? '§6' : '§c';
 		return `${color}${Math.ceil(health.currentValue)}`;
 	} catch {

@@ -85,7 +85,7 @@ async function startup(base, { fail, ready = false, limit = 40, heartbeat = true
  return {load,commands,log,timers,modules:evaluation.length,relativeImports:sourceFiles.reduce((n,f)=>n+[...fs.readFileSync(f,'utf8').matchAll(/(?:from\s+|import\s+)['"]\.[^'"]+['"]/g)].length,0)};
 }
 const actual=await startup(scripts);
-assert.equal(actual.modules,65);assert.equal(actual.relativeImports,226);
+assert.equal(actual.modules,65);assert.equal(actual.relativeImports,228);
 const index=JSON.parse(fs.readFileSync(path.join(bp,'contents.json'),'utf8')).content.map(e=>e.path);
 const files=walk(scripts).filter(p=>p.endsWith('.js')).map(p=>'scripts/'+rel(scripts,p));
 assert.deepEqual(index.filter(p=>p.startsWith('scripts/')&&p.endsWith('.js')).sort(),files.sort(),'index exactly covers scripts');

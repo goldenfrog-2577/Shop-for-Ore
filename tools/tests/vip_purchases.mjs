@@ -40,3 +40,39 @@ assert.equal(menuIds.indexOf(ids[0]),menuIds.indexOf('vip')+1);assert.equal(menu
 for(const l of ['ru_RU','en_US','uk_UA','es_ES']){const text=fs.readFileSync(new URL('resource_packs/main-rp-shop_for_ore/texts/'+l+'.lang',repo),'utf8');for(const id of ids)for(const part of ['name','desc'])assert.ok(text.includes('ach.'+id+'.'+part+'='));}
 const wipe=load('system/core/wipe.js');assert.ok(wipe.includes("'stat:'"),'purchase proof uses existing full-wipe prefix');
 console.log('PASS: 40 entries, approved types/rewards, source-player purchase proof, all three picks, rejected/pending/failed/repeated purchases, no inventory backfill, VIP menu order and 4 locales.');
+
+// These release structures store the old skull ID and variant in little-endian NBT.
+// Bedrock upgrades each variant to its own item ID when the trader loads it.
+const headIds = ['skeleton_skull', 'wither_skeleton_skull', 'zombie_head', 'player_head', 'creeper_head', 'dragon_head'];
+const inspect = vm.runInNewContext(load('system/security/anticheat.js') + '\ninspectItem', {
+	system: { runInterval() {} },
+	ItemStack: class { getComponent() { return undefined; } }
+});
+function afterField(buffer, type, name, start = 0) {
+	const field = Buffer.concat([Buffer.from([type, name.length, 0]), Buffer.from(name)]);
+	const index = buffer.indexOf(field, start);
+	assert.notEqual(index, -1, 'missing NBT field ' + name);
+	return index + field.length;
+}
+function stringField(buffer, offset) {
+	const length = buffer.readUInt16LE(offset);
+	return buffer.toString('utf8', offset + 2, offset + 2 + length);
+}
+for (const file of ['skeleton_skull', 'wither_skull', 'zombie_head', 'player_head', 'creeper_head', 'dragon_head']) {
+	const data = fs.readFileSync(new URL('structures/trader/' + file + '.mcstructure', bp));
+	const itemStart = afterField(data, 10, 'Item');
+	assert.equal(stringField(data, afterField(data, 8, 'Name', itemStart)), 'minecraft:skull');
+	const typeId = 'minecraft:' + headIds[data.readInt16LE(afterField(data, 2, 'Damage', itemStart))];
+	const displayStart = afterField(data, 10, 'display', itemStart);
+	const nameTag = stringField(data, afterField(data, 8, 'Name', displayStart));
+	const enchStart = afterField(data, 9, 'ench', itemStart);
+	assert.equal(data.readInt16LE(afterField(data, 2, 'id', enchStart)), 0, 'Protection');
+	const protection = { type: { id: 'minecraft:protection', maxLevel: 4 }, level: data.readInt16LE(afterField(data, 2, 'lvl', enchStart)) };
+	assert.equal(protection.level, 10);
+	const item = { typeId, nameTag, amount: 1, getComponent: id => id === 'minecraft:enchantable' ? { getEnchantments: () => [protection] } : undefined };
+	assert.equal(inspect(item), undefined, file);
+	assert.equal(inspect({ ...item, nameTag: '' })?.check, 'enchant', 'exact shop name required');
+	assert.equal(inspect({ ...item, typeId: 'minecraft:diamond_helmet' })?.check, 'enchant', 'wrong item with matching name');
+	protection.level++;
+	assert.equal(inspect(item)?.check, 'enchant', 'shop cap still applies');
+}

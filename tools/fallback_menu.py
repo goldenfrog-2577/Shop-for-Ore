@@ -6,12 +6,8 @@
 # functions/fallback/navigation не раньше чем через 5 тиков (timers/ticks_5: sys:fb_nav → sys:fb_nav_ready → navigation).
 # Проверено в игре: команда /dialogue open из кнопки не открывает сцену (окно закрывается вслед за нажатием),
 # а из чата и из функции — открывает. У каждой сцены свой NPC (тег npc:<сцена>, functions/fallback/npc_menu).
-# Проверено в игре: команды кнопок выполняет NPC, а @initiator пуст — сцену открыла команда /dialogue open, а не
-# нажатие на NPC. И кнопки срабатывают, только когда NPC рядом с игроком и не в блоках (NPC в земле под игроком —
-# окно открывается, а кнопки молчат). Поэтому перед открытием NPC сцены переносится прямо к игроку (~ ~ ~), а кнопки
-# адресуют ближайшего к NPC игрока — @p[r=4]. Пока игрок держит меню (sys:fb_open), NPC остаётся при нём;
-# убрал меню или ушёл — NPC возвращается домой (fallback/npc_menu). Окно NPC, перенесённого издалека в тот же тик,
-# кнопкам не отвечает — поэтому NPC переносится за 5 тиков до открытия (fallback/bring, потом fallback/navigation).
+# NPC переносится к игроку за 5 тиков до открытия, чтобы кнопка была доступна в прогруженном чанке.
+# На Bedrock 26.60 адресат кнопки — @initiator. Положение соседа не определяет получателя покупки.
 import json, os
 
 BP = os.path.join(os.path.dirname(__file__), '..', 'behavior_packs', 'main-addon-shop_for_ore')
@@ -22,8 +18,8 @@ BRING = os.path.join(BP, 'functions', 'fallback', 'bring.mcfunction')
 GO, NAV_TAG, READY = 'sys:fb_go_', 'sys:fb_nav', 'sys:fb_nav_ready'
 # NPC стоят в ряд под спавном: x 0…15, y −60, z 0 — один чанк, его держит ticking area fallback (fallback/check)
 NPC_Y, NPC_Z = -60, 0
-# Игрок, нажавший кнопку: ближайший к NPC сцены, который стоит там же, где игрок (см. выше)
-PL = '@p[r=4]'
+# Bedrock 26.60: команды кнопки адресуются игроку, открывшему именно этот диалог.
+PL = '@initiator'
 COIN, LVL = '', ''  # глифы цен: коин и уровень
 MAX_LEVEL, RULES_COUNT = 40, 11
 
@@ -144,7 +140,7 @@ scenes = [
         go(B('kits'), 'fb_kits'),
         go(B('boosts'), 'fb_boosts'),
         back('fb_main')]),
-    scene('fb_enchants', B('enchants'), ['%menu.shop.enchants.pickaxe.body', *prices(('efficiency', '25.0K'), ('fortune', '10.0K'))], [
+    scene('fb_enchants', B('enchants'), ['%menu.shop.enchants.pickaxe.body', *prices(('efficiency', '18.0K'), ('fortune', '8.0K'))], [
         fn(B('efficiency'), 'shop/enchants/efficiency', 'fb_shop'),
         fn(B('fortune'), 'shop/enchants/fortune', 'fb_shop'),
         back('fb_shop')]),
@@ -154,7 +150,7 @@ scenes = [
         fn(B('kit_netherite'), 'shop/pvp_kits/netherite', 'fb_shop'),
         back('fb_shop')]),
     scene('fb_boosts', B('boosts'), ['%menu.shop.boosts.body', '\n\n', '%menu.shop.boosts.x2', '\n', '%menu.shop.boosts.x4', '\n', '%menu.shop.boosts.magnet',
-                                                   *prices(('x2', '10.0K'), ('x4', '50.0K'), ('magnet', '20.0K'))], [
+                                                   *prices(('x2', '10.0K'), ('x4', '30.0K'), ('magnet', '12.0K'))], [
         fn(B('x2'), 'boost/x2_boost', 'fb_shop'),
         fn(B('x4'), 'boost/x4_boost', 'fb_shop'),
         fn(B('magnet'), 'shop/ore_magnet/ore_magnet', 'fb_shop'),
@@ -184,29 +180,29 @@ scenes = [
         button(B('vip_island'), f'/execute as {PL} at @s run function fallback/warp_vip'),
         back('fb_main')]),
     # Прокачка
-    scene('fb_upgrades', B('upgrades'), ['%menu.upgrades.body', *prices(('vip', '125.0K'), ('rebirth', f'25 - {MAX_LEVEL}', LVL))], [
+    scene('fb_upgrades', B('upgrades'), ['%menu.upgrades.body', *prices(('vip', '300.0K'), ('rebirth', f'25 - {MAX_LEVEL}', LVL))], [
         fn(B('vip'), 'upgrade/upgrade_vip', 'fb_main'),
         fn(B('rebirth'), 'upgrade/upgrade_rebirth', 'fb_main'),
         back('fb_main')]),
 ]
 data = {'format_version': '1.17', 'minecraft:npc_dialogue': {'scenes': scenes}}
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
-with open(OUT, 'w', encoding='utf-8') as f:
+with open(OUT, 'w', encoding='utf-8', newline='\n') as f:
     f.write(json.dumps(data, indent='\t', ensure_ascii=True) + '\n')
 # NPC: по одному на сцену
 npcs = ['# --- Запасное меню: NPC сцен — по одному на сцену (тег npc:<сцена>), раз в секунду из fallback/check ---',
         '# Собирается tools/fallback_menu.py. Нет NPC — барьер под ним и призыв; пока чанк не загружен, призыв не проходит —',
         '# следующая попытка через секунду. Прежний общий NPC (npc:fallback, до отдельных NPC) убирается.',
-        '# Перед открытием сцены NPC переносится к игроку (fallback/open, fallback/bring): кнопки адресуют ближайшего',
-        '# к NPC игрока, @initiator после /dialogue open пуст. Нет рядом игрока с меню в руке — NPC возвращается домой.',
+        '# Перед открытием сцены NPC переносится к игроку (fallback/open, fallback/bring): нажимающий игрок определяется внутри диалога,',
+        '# кнопка выполняет действие для @initiator. Без игрока рядом NPC возвращается домой.',
         'kill @e[type=npc,tag=npc:fallback]']
 for x, sc in enumerate(scenes):
     t = sc['scene_tag']
     npcs.append(f'execute unless entity @e[type=npc,tag=npc:{t}] run setblock {x} {NPC_Y - 1} {NPC_Z} barrier')
-    npcs.append(f'execute unless entity @e[type=npc,tag=npc:{t}] run summon npc {x} {NPC_Y} {NPC_Z} minecraft:entity_spawned {t}')
+    npcs.append(f'execute unless entity @e[type=npc,tag=npc:{t}] run summon minecraft:npc {t} {x} {NPC_Y} {NPC_Z}')
     npcs.append(f'tag @e[type=npc,name={t},tag=!npc:{t}] add npc:{t}')
     # Рядом нет игрока с меню в руке — домой (NPC переносится к игроку при открытии сцены)
-    npcs.append(f'execute as @e[type=npc,tag=npc:{t}] at @s unless entity @a[r=6,hasitem={{item=server:menu,location=slot.weapon.mainhand}}] run tp @s {x} {NPC_Y} {NPC_Z}')
+    npcs.append(f'execute as @e[type=npc,tag=npc:{t}] at @s unless entity @a[r=6,hasitem={{item=minecraft:compass,location=slot.weapon.mainhand}}] run tp @s {x} {NPC_Y} {NPC_Z}')
 assert len(scenes) <= 16, 'NPC не помещаются в один чанк'
 # Переходы: открыть сцену тем, у кого кнопка поставила тег, — уже после закрытия окна
 nav = ['# --- Запасное меню: открыть сцену, выбранную кнопкой (теги sys:fb_go_<сцена>) ---',
@@ -228,10 +224,10 @@ bring_fn = ['# --- Запасное меню: NPC сцены, выбранной
 for sc in scenes:
     t = sc['scene_tag']
     bring_fn.append(bring(f'@a[tag={NAV_TAG},tag={GO}{t[3:]}]', t))
-with open(BRING, 'w', encoding='utf-8') as f:
+with open(BRING, 'w', encoding='utf-8', newline='\n') as f:
     f.write('\n'.join(bring_fn) + '\n')
-with open(NAV, 'w', encoding='utf-8') as f:
+with open(NAV, 'w', encoding='utf-8', newline='\n') as f:
     f.write('\n'.join(nav) + '\n')
-with open(NPCS, 'w', encoding='utf-8') as f:
+with open(NPCS, 'w', encoding='utf-8', newline='\n') as f:
     f.write('\n'.join(npcs) + '\n')
 print('сцен:', len(scenes))

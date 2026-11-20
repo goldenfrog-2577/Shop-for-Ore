@@ -21,7 +21,7 @@ import { bankAmount, exchangeCoins, inventoryCoins, rebirth } from '../system/ec
 const OPEN = '\n%menu.common.tap_to_open';
 const COIN = '', LVL = '';
 // Номер сборки в «Версия карты»
-const BUILD = '0.3.0_20261114r';
+const BUILD = '0.4.1';
 
 /** Строки описания из ключей prefix.1 … prefix.N через перенос. */
 const lines = (prefix, n, from = 1) => Array.from({ length: n - from + 1 }, (_, i) => `%${prefix}.${from + i}`).join('\n');
@@ -84,7 +84,20 @@ function syncMenuItems(player, notify = false) {
 	if (!player.isValid || isBot(player)) return;
 	const inventory = player.getComponent('minecraft:inventory')?.container;
 	if (!inventory) return;
-	const serverReady = equipMenu(inventory, 'server:menu', 8);
+	const borrowedCompass = player.hasTag('sys:fb_compass');
+	if (borrowedCompass && world.scoreboard.getObjective('system')?.getScore('fallback') === 0) {
+		for (let slot = 0; slot < 9; slot++) {
+			const marker = 'sys:fb_slot_' + slot;
+			if (!player.hasTag(marker)) continue;
+			const item = inventory.getItem(slot);
+			if (item?.typeId === 'minecraft:compass' && item.keepOnDeath && item.lockMode === ItemLockMode.slot) {
+				inventory.setItem(slot);
+			}
+			player.removeTag(marker);
+		}
+		player.removeTag('sys:fb_compass');
+	}
+	const serverReady = (borrowedCompass && player.hasTag('sys:fb_slot_8')) || equipMenu(inventory, 'server:menu', 8);
 	let adminReady = true;
 	if (hasRole(player, 'admin')) {
 		checkedWithoutAdmin.delete(player.id);
@@ -95,7 +108,7 @@ function syncMenuItems(player, notify = false) {
 		}
 		checkedWithoutAdmin.add(player.id);
 	}
-	if (notify && (!serverReady || !adminReady)) tell(player, 'sfo.port.inventory_full');
+	if (notify && (!serverReady || !adminReady)) tell(player, 'chat.server.inventory_full');
 }
 
 world.afterEvents.playerSpawn.subscribe(({ player }) => syncMenuItems(player, true));
@@ -139,7 +152,7 @@ const HOWTOPLAY = ['\ue101 ' + lines('menu.howtoplay.line', 5), '\ue152 ' + line
 	...Array.from({ length: 8 }, (_, i) => `%menu.howtoplay.line.${14 + i}`)].join('\n\n');
 // Строк «что нового» в .lang: menu.version.line.3…VERSION_LINES
 const VERSION_LINES = 47;
-const VERSION = `%menu.version.line.1\n\n§r %menu.version.label §a${BUILD}§r\n%menu.version.line.2\n\n${lines('menu.version.line', VERSION_LINES, 3)}`;
+const VERSION = `%menu.version.line.1\n\n§r %menu.version.label §a${BUILD}§r\n%menu.version.current\n\n%menu.version.line.2\n\n${lines('menu.version.line', VERSION_LINES, 3)}`;
 
 /** Страница текста с одной кнопкой «Назад». */
 function textPage(player, title, body, back) {

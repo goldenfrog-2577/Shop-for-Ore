@@ -2,7 +2,7 @@
 // Зона тира — поляна за каменными стенами (x 399…493, z 272…360, пол — трава на y −50), спавн 435 −45 338.
 // Вошёл в зону — кирка уровня из слота 1 убирается (тег zone:tir; functions/system/pickaxe_lvl её не выдаёт,
 // system/player/tools.js не трогает слот). Вышел (телепорт на спавн, !warp, портал, перезаход в другом месте) —
-// что лежало в слоте 1, переносим в свободный слот (или бросаем под ноги), а pickaxe_lvl выдаёт кирку заново.
+// штатная выдача кирки бережно освобождает слот или ждёт свободного места.
 // Попадание стрелой в мишень (minecraft:target) из зоны: награда по меткости — центр 50, край 10 монет —
 // и множитель за дальность (×1 на 8 блоках, ×2 с 40 и дальше). Защита от фарма: ближе MIN_DISTANCE блоков
 // награды нет, одна и та же мишень одному игроку платит не чаще раза в COOLDOWN_MS.
@@ -10,6 +10,7 @@
 
 import { world, system } from '@minecraft/server';
 import { run, tell } from '../../utils.js';
+import { isMineTool } from '../player/tools.js';
 import { showHudLine } from '../ui/toast.js';
 
 export const TIR_TAG = 'zone:tir';
@@ -21,7 +22,6 @@ export const CENTER_REWARD = 50, EDGE_REWARD = 10;
 const FAR_DISTANCE = 40;        // с этой дальности множитель ×2
 export const BULLSEYE_ACCURACY = 90, BULLSEYE_DISTANCE = 30;   // достижение «В яблочко»
 const CHECK_EVERY = 10;         // тиков между проверками входа и выхода
-const HOTBAR_FIRST = 0, INVENTORY_SIZE = 36;
 
 /** Точка внутри зоны тира. */
 export function inZone({ x, y, z }) {
@@ -84,37 +84,24 @@ world.afterEvents.projectileHitBlock.subscribe((e) => {
 	run(shooter, r.accuracy >= 90 ? 'playsound random.levelup @s ~ ~ ~ 0.6 1.6' : 'playsound note.bell @s ~ ~ ~ 0.8 1.2');
 });
 
-/** Убрать предмет из слота 1 на свободное место инвентаря (или под ноги), чтобы кирка его не затёрла. */
-function freeFirstSlot(player) {
-	try {
-		const inv = player.getComponent('inventory').container;
-		const item = inv.getItem(HOTBAR_FIRST);
-		if (!item) return;
-		inv.setItem(HOTBAR_FIRST, undefined);
-		for (let i = HOTBAR_FIRST + 1; i < Math.min(INVENTORY_SIZE, inv.size); i++) {
-			if (!inv.getItem(i)) { inv.setItem(i, item); return; }
-		}
-		player.dimension.spawnItem(item, player.location);
-	} catch { /* игрок вышел */ }
-}
-
-/** Вход в тир: кирку уровня — в сторону. */
+/** Снимаем только выданную шахтой кирку. Личный предмет остаётся на месте. */
 export function enterTir(player) {
+	const inventory = player.getComponent('minecraft:inventory')?.container;
+	if (!inventory) return;
 	player.addTag(TIR_TAG);
-	run(player, 'replaceitem entity @s slot.hotbar 0 air');
+	if (isMineTool(inventory.getItem(0))) inventory.setItem(0);
 	tell(player, 'chat.tir.enter');
 }
 
-/** Выход из тира: слот 1 освободить, кирку вернёт pickaxe_lvl (табло pick = 0). */
 export function leaveTir(player) {
 	player.removeTag(TIR_TAG);
-	freeFirstSlot(player);
+	// Выдача кирки сама перенесёт предмет или дождётся свободного места.
 	run(player, 'scoreboard players set @s pick 0');
 }
 
 let tick = 0;
 system.runInterval(() => {
-	if (++tick % CHECK_EVERY !== 0) return;
+	tick += CHECK_EVERY;
 	for (const player of world.getPlayers()) {
 		const inside = inZone(player.location);
 		const tagged = player.hasTag(TIR_TAG);
@@ -126,4 +113,4 @@ system.runInterval(() => {
 		const now = Date.now();
 		for (const [k, t] of lastPaid) if (now - t > COOLDOWN_MS) lastPaid.delete(k);
 	}
-});
+}, CHECK_EVERY);

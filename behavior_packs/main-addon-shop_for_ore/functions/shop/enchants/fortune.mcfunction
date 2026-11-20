@@ -2,7 +2,7 @@
 # Вызывается из меню (Магазин → Зачарования) от имени игрока (@s). Уровень накладывается в timers/ticks_20.
 # Палка (уровень 1) — не кирка: зачаровывать нечего, нужна хотя бы деревянная (уровень 2)
 execute as @s[scores={lvl=..1}] run tellraw @s {"rawtext":[{"translate":"chat.shop.enchant.error.stick"}]}
-execute as @s[scores={lvl=..1}] run function ui/menu_success
+execute as @s[scores={lvl=..1}] run function ui/menu_error
 execute as @s[scores={lvl=2..,fortune=3..}] run tellraw @s {"rawtext":[{"translate":"chat.shop.error.enchant_max"}]}
 execute as @s[scores={lvl=2..,fortune=3..}] run function ui/menu_error
 execute as @s[scores={lvl=2..,fortune=..2,money=..7999}] run tellraw @s {"rawtext":[{"translate":"chat.error.no_money"}]}

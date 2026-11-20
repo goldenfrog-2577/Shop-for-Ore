@@ -20,17 +20,16 @@ export function setBotName(name) {
 	world.setDynamicProperty(BOT_NAME_PROPERTY, name);
 	return true;
 }
+let lastBotScan = -Infinity;
 export function getBot() {
-	// Сохраняем GameTest-объект с методами управления, пока бот есть в списке игроков.
 	try {
-		const trackedName = state.bot?.name;
-		if (trackedName !== undefined) {
-			for (const player of world.getPlayers()) if (player.name === trackedName) return state.bot;
-		}
-	} catch { /* После выхода или смерти сохранённый объект может стать невалидным. */ }
-
+		if (state.bot?.isValid && state.bot.hasTag('sys:bot') && state.bot.hasTag('role:bot')) return state.bot;
+	} catch { /* Дескриптор удалён при выходе. */ }
 	state.bot = undefined;
-	for (const player of world.getPlayers()) {
+	const now = system.currentTick;
+	if (now - lastBotScan < 20) return undefined;
+	lastBotScan = now;
+	for (const player of world.getPlayers({ tags: ['sys:bot', 'role:bot'] })) {
 		if (!player.hasTag('sys:bot') || !player.hasTag('role:bot')) continue;
 		state.bot = player;
 		return player;

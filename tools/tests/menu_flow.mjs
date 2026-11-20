@@ -21,6 +21,16 @@ let back=0;
 context.api.showMenu(player,'title','body',[],()=>back++);await flush();
 assert.equal(shown[0].form.buttons.length,1,'nested list gets an explicit Back');shown.shift().resolve(close);await flush();assert.equal(back,0,'list X only closes');
 context.api.confirm(player,'title','body',()=>back++,()=>back++);await flush();shown.shift().resolve(close);await flush();assert.equal(back,0,'confirmation X does not call No');
+for (const [selection, expected] of [[0, 'yes'], [1, 'no']]) {
+	const called = [];
+	const result = context.api.confirm(player, 'title', 'body', () => called.push('yes'), () => called.push('no'));
+	await flush();
+	const { form, resolve } = shown.shift();
+	assert.match(form.buttons[selection], new RegExp('menu.common.' + expected));
+	resolve({ selection, canceled: false });
+	await result;
+	assert.deepEqual(called, [expected]);
+}
 context.api.showModal(player,new Form(),()=>{},()=>back++);await flush();shown.shift().resolve(close);await flush();assert.equal(back,1,'modal X returns');
 context.api.showMenu(player,'title','body',[{text:'action',run:()=>{pending.push(Promise.resolve().then(()=>{told++;}));}}]);await flush();shown.shift().resolve({selection:0});await flush();assert.deepEqual(sounds,[false]);assert.equal(shown.length,1,'successful action reopens once');shown.shift().resolve(close);await flush();
 context.api.showMenu(player,'title','body',[{text:'error',run:()=>{told++;errors++;context.api.showMenu(player,'blocked','',[]);}}]);await flush();shown.shift().resolve({selection:0});await flush();assert.deepEqual(sounds,[false,true]);assert.equal(shown.length,0,'error suppresses follow-up');

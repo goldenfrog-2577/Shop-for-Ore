@@ -120,6 +120,6 @@ for (const l of ['ru_RU', 'en_US', 'uk_UA', 'es_ES']) {
 const errors = read(new URL('scripts/system/ui/error_keys.js', bp));
 for (const k of ['chat.music.error.no_discs', 'chat.music.error.off', 'chat.music.error.arena']) assert.ok(errors.includes(`'${k}'`), k);
 assert.ok(!menu.includes('stopsound @s music.game'));
-assert.match(read(new URL('dialogue/fallback_menu.json', bp)), /stopsound @p\[r=4\]"/);
+assert.match(read(new URL('dialogue/fallback_menu.json', bp)), /stopsound @initiator"/);
 
 console.log('PASS: music zones (boss > nether > world), playlists, gap/pause/stop/volume, discs and toast, RP events 2D record, built-in music muted, 4-locale keys.');
