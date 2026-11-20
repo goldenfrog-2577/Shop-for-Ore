@@ -252,15 +252,20 @@ export function closedByPlayer(response) {
  * Показать форму, когда игрок сможет её увидеть. Из чата (!password) форма сразу не откроется:
  * пока открыт чат, show() отменяется с userBusy — повторяем раз в 10 тиков, до 30 секунд.
  */
-export function showWhenFree(player, form, tries = 60) {
-	return form.show(player).then(r => {
-		if (r.canceled && r.cancelationReason === 'UserBusy' && tries > 0) {
-			return new Promise(res => {
-				system.runTimeout(() => res(showWhenFree(player, form, tries - 1)), 10);
-			});
+export async function showWhenFree(player, form, tries = 60) {
+	while (player.isValid) {
+		let response;
+		try {
+			response = await form.show(player);
+		} catch (error) {
+			if (error.reason === 'PlayerQuit' || error.reason === 'ServerShutdown') return null;
+			throw error;
 		}
-		return r;
-	});
+		if (!response.canceled || response.cancelationReason !== 'UserBusy' || tries <= 0) return response;
+		tries--;
+		await new Promise(resolve => system.runTimeout(resolve, 10));
+	}
+	return null;
 }
 
 // ======== Деньги: перевод игроку (!pay, Банк) ========

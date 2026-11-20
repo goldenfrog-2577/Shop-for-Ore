@@ -19,7 +19,7 @@ async function startup(base, { fail, ready = false, limit = 40, heartbeat = true
   return { handlers: [], subscribe(fn) { assert.equal(typeof fn, 'function'); this.handlers.push(fn); subscriptions.push([current, key]); return fn; } };
  }
  const beforeEvents = Object.fromEntries(['chatSend', 'itemUse', 'entityHurt', 'playerBreakBlock', 'playerInteractWithBlock', 'playerInteractWithEntity'].map(key => [key, signal('before.' + key)]));
- const afterEvents = Object.fromEntries(['buttonPush', 'entityHitEntity', 'entityHurt', 'itemStartUse', 'itemUse', 'playerBreakBlock', 'playerLeave', 'playerSpawn', 'projectileHitBlock', 'worldLoad'].map(key => [key, signal('after.' + key)]));
+ const afterEvents = Object.fromEntries(['buttonPush', 'entityHitEntity', 'entityHurt', 'itemStartUse', 'itemUse', 'playerBreakBlock', 'playerInventoryItemChange', 'playerLeave', 'playerSpawn', 'projectileHitBlock', 'worldLoad'].map(key => [key, signal('after.' + key)]));
  const dimension = { id: 'minecraft:overworld', runCommand(c) {
   commands.push(c);
   return { successCount: !heartbeat && c === 'scoreboard players set scripts system 0' ? 0 : 1 };
@@ -95,7 +95,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(bp, 'manifest.json'), 'utf
 assert.equal(manifest.modules.find(m => m.type === 'script')?.entry, 'scripts/import.js');
 assert.ok(!fs.existsSync(path.join(scripts, 'port')), 'separate prototype directory removed');
 assert.deepEqual(actual.load.games, [['server', 'spawnbot']]);
-assert.deepEqual(actual.load.components, ['sfo:open_menu']);
+assert.deepEqual(actual.load.components, ['sfo:open_menu', 'sfo:open_admin_menu']);
 assert.deepEqual(actual.load.nativeCommands, ['sfo:resetpass']);
 assert.equal(actual.load.subscriptions.filter(([, event]) => event === 'before.chatSend').length, 2);
 assert.ok(actual.load.subscriptions.some(([, event]) => event === 'after.worldLoad'));

@@ -26,8 +26,8 @@ const recipient = { name: 'Friend' };
 let players = [player, fakeBot];
 const context = {
 	RULES_COUNT: 1,
-	world: { getPlayers: () => players, afterEvents: { playerSpawn: { subscribe() {} } } },
-	system: { beforeEvents: { startup: { subscribe() {} } } },
+	world: { getPlayers: () => players, afterEvents: { playerSpawn: { subscribe() {} }, playerLeave: { subscribe() {} }, playerInventoryItemChange: { subscribe() {} } } },
+	system: { runInterval() {} },
 	Items: { get: id => id }, ItemStack,
 	getScore: p => p === player ? balance : recipientBalance, isPending: p => !!p.pending, isBot: p => !!p.bot,
 	findPlayer: name => players.find(p => p.name === name),

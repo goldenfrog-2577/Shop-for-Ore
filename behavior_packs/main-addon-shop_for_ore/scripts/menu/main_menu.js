@@ -2,9 +2,9 @@
 // Главное меню и разделы: О карте, Магазин, Настройки, Банк, Правила, Промокоды, Телепортации,
 // Прокачка, Достижения, Мини-игры. Формы строит menu/common/forms.js: крестик закрывает окно, возврат — кнопкой «Назад».
 
-import { world, system, ItemStack } from '@minecraft/server';
+import { world, system, ItemStack, ItemLockMode } from '@minecraft/server';
 import { isJailed, tellJailed } from '../system/security/jail.js';
-import { isPending, tellText, tell, run, findPlayer, getScore, isBot, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed, shopBalance } from '../utils.js';
+import { isPending, hasRole, tellText, tell, run, findPlayer, getScore, isBot, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed, shopBalance } from '../utils.js';
 import { showMenu, showModal, modal, backButton, confirm, toggleMenu } from './common/forms.js';
 import { enchantsMenu } from './enchant_shop.js';
 import { cosmeticsMenu } from './cosmetics_shop.js';
@@ -27,7 +27,7 @@ const BUILD = '0.3.0_20261114r';
 const lines = (prefix, n, from = 1) => Array.from({ length: n - from + 1 }, (_, i) => `%${prefix}.${from + i}`).join('\n');
 
 // --- Открытие предметом ---
-function openServerMenu(player) {
+export function openServerMenu(player) {
 	// До входа в аккаунт меню недоступно
 	if (isPending(player)) {
 		tell(player, 'chat.account.error.login_required');
@@ -46,49 +46,63 @@ function openServerMenu(player) {
 	menu(player);
 }
 
-// На блоке движок может вызвать оба обработчика: открываем одну форму за тик.
-const pendingMenu = new Set();
-system.beforeEvents.startup.subscribe(({ itemComponentRegistry }) => {
-	const requestMenu = ({ source }) => {
-		const id = source.id;
-		if (pendingMenu.has(id)) return;
-		pendingMenu.add(id);
-		system.run(() => {
-			try {
-				if (source.isValid) openServerMenu(source);
-			} finally {
-				pendingMenu.delete(id);
-			}
-		});
-	};
-	itemComponentRegistry.registerCustomComponent('sfo:open_menu', { onUse: requestMenu, onUseOn: requestMenu });
-});
-
-function giveMenu(player) {
-	const inventory = player.getComponent('minecraft:inventory')?.container;
-	if (!inventory) return;
-
-	for (let slot = 0; slot < inventory.size; slot++) {
-		if (inventory.getItem(slot)?.typeId === 'server:menu') return;
+// Предмет из старого сохранения может лежать в другом слоте или быть без замка.
+function equipMenu(inventory, typeId, slot) {
+	let item = inventory.getItem(slot);
+	if (item?.typeId !== typeId) {
+		let previous, free;
+		for (let i = 0; i < inventory.size; i++) {
+			const other = inventory.getItem(i);
+			if (other?.typeId === typeId) { previous = i; break; }
+			if (!other && free === undefined) free = i;
+		}
+		if (previous !== undefined) {
+			inventory.swapItems(previous, slot, inventory);
+			item = inventory.getItem(slot);
+		} else {
+			if (item && free === undefined) return false;
+			if (item) inventory.moveItem(slot, free, inventory);
+			item = new ItemStack(typeId);
+		}
 	}
-
-	if (inventory.emptySlotsCount === 0) {
-		tell(player, 'sfo.port.inventory_full');
-		return;
+	if (!item.keepOnDeath || item.lockMode !== ItemLockMode.slot) {
+		item.keepOnDeath = true;
+		item.lockMode = ItemLockMode.slot;
+		inventory.setItem(slot, item);
 	}
-
-	const item = new ItemStack('server:menu');
-	item.keepOnDeath = true;
-	if (!inventory.getItem(8)) {
-		inventory.setItem(8, item);
-	} else {
-		inventory.addItem(item);
-	}
+	return true;
 }
 
-world.afterEvents.playerSpawn.subscribe(({ player }) => {
-	if (player.isValid && !isBot(player)) giveMenu(player);
+// Запоминаем проверенных игроков без доступа, чтобы не перебирать рюкзак каждую секунду.
+const checkedWithoutAdmin = new Set();
+world.afterEvents.playerLeave.subscribe(({ playerId }) => checkedWithoutAdmin.delete(playerId));
+world.afterEvents.playerInventoryItemChange.subscribe(({ player, itemStack }) => {
+	if (itemStack?.typeId === 'server:admin_menu') checkedWithoutAdmin.delete(player.id);
 });
+
+function syncMenuItems(player, notify = false) {
+	if (!player.isValid || isBot(player)) return;
+	const inventory = player.getComponent('minecraft:inventory')?.container;
+	if (!inventory) return;
+	const serverReady = equipMenu(inventory, 'server:menu', 8);
+	let adminReady = true;
+	if (hasRole(player, 'admin')) {
+		checkedWithoutAdmin.delete(player.id);
+		adminReady = equipMenu(inventory, 'server:admin_menu', 7);
+	} else if (notify || !checkedWithoutAdmin.has(player.id)) {
+		for (let i = 0; i < inventory.size; i++) {
+			if (inventory.getItem(i)?.typeId === 'server:admin_menu') inventory.setItem(i);
+		}
+		checkedWithoutAdmin.add(player.id);
+	}
+	if (notify && (!serverReady || !adminReady)) tell(player, 'sfo.port.inventory_full');
+}
+
+world.afterEvents.playerSpawn.subscribe(({ player }) => syncMenuItems(player, true));
+// Подхватывает смену роли, /clear и освобождение слота, пока игрок в мире.
+system.runInterval(() => {
+	for (const player of world.getAllPlayers()) syncMenuItems(player);
+}, 20);
 
 // --- Главное меню ---
 export function menu(player) {

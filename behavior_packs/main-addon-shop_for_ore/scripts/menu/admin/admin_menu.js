@@ -10,7 +10,7 @@ import { groupProfileTags, offlineProfile, offlineProfiles, profilePosition, pro
 import { clearResetHistory } from '../../system/core/reset_history.js';
 import { adminEnchantMenu } from './admin_enchant.js';
 import { boostSeconds } from '../../system/economy/boosts.js';
-import { world, system } from '@minecraft/server';
+import { world } from '@minecraft/server';
 import { isJailed, tellJailed, jailMinutesLeft } from '../../system/security/jail.js';
 import { isPending, isBot, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS, isVip, VIP_TAG, MAX_LEVEL } from '../../utils.js';
 import { showMenu, showModal, modal, backButton, confirm, wipeConfirm, WARN_TITLE } from '../common/forms.js';
@@ -36,26 +36,12 @@ const EVENTS = ['haste', 'rain', 'gift', 'mythic'];
 const EVENT_PERIOD = { haste: 3, rain: 5, gift: 4, mythic: 10 };
 
 // --- Открытие админ-меню по использованию специального предмета ---
-world.beforeEvents.itemUse.subscribe((data) => {
-	if (data.itemStack.typeId !== 'server:admin_menu') return;
-	const player = data.source;
-	// Администратор и владелец (предмет можно получить через /give — тогда роль не даст открыть); сначала — вход
+export function openAdminMenu(player) {
 	if (!hasRole(player, 'admin') || isPending(player)) return;
-	// Замороженный (!freeze) админ-меню не открывает: иначе ушёл бы телепортом или разморозил себя через других
-	if (player.hasTag('state:frozen')) {
-		data.cancel = true;
-		system.run(() => tell(player, 'chat.cmd.freeze.active'));
-		return;
-	}
-	// В тюрьме (!jail) — тоже: меню телепортаций вывело бы из камеры
-	if (isJailed(player)) {
-		data.cancel = true;
-		system.run(() => tellJailed(player));
-		return;
-	}
-	data.cancel = true;
-	system.run(() => admin_menu(player));
-});
+	if (player.hasTag('state:frozen')) return tell(player, 'chat.cmd.freeze.active');
+	if (isJailed(player)) return tellJailed(player);
+	admin_menu(player);
+}
 
 /** Кнопка «Назад» меню администратора — со своим ключом и значком. */
 const back = (run) => backButton(run, '%admin.common.back', BACK_ICON);

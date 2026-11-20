@@ -12,7 +12,10 @@
 					"default": "stick"
 				}
 			},
-			"minecraft:glint": true
+			"minecraft:glint": true,
+			"minecraft:display_name": {
+				"value": "item.server:admin_stick"
+			}
 		}
 	}
 }

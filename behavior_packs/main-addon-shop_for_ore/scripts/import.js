@@ -12,8 +12,8 @@ import { world, system } from '@minecraft/server';
 import { hasRole, tell } from './utils.js';
 
 // Импорт модулей меню
-import './menu/main_menu.js';         // Основное меню магазина
-import './menu/admin/admin_menu.js';   // Админ-меню
+import { openServerMenu } from './menu/main_menu.js';         // Основное меню магазина
+import { openAdminMenu } from './menu/admin/admin_menu.js';   // Админ-меню
 
 // Импорт модулей чата
 import './chat/chat.js';         // Чат-функционал
@@ -52,6 +52,23 @@ import './system/player/ranks.js';       // Префикс уровня в ча�
 import './system/ui/hud.js';         // Панель слева (actionbar)
 import { heartbeatConfirmed } from './system/core/fallback.js';    // Пульс скриптов: без него включается запасное меню на NPC
 import './registration/system.js'; // Вход и регистрация в аккаунт: проверка, запись, смена пароля, сброс пароля
+
+// Один клик по блоку может вызвать onUse и onUseOn у одного предмета.
+system.beforeEvents.startup.subscribe(({ itemComponentRegistry }) => {
+	const pending = new Set();
+	for (const [component, open] of [['sfo:open_menu', openServerMenu], ['sfo:open_admin_menu', openAdminMenu]]) {
+		const request = ({ source }) => {
+			if (source?.typeId !== 'minecraft:player' || pending.has(source.id)) return;
+			const id = source.id;
+			pending.add(id);
+			system.run(() => {
+				pending.delete(id);
+				if (source.isValid) open(source);
+			});
+		};
+		itemComponentRegistry.registerCustomComponent(component, { onUse: request, onUseOn: request });
+	}
+});
 
 // После загрузки уведомить администраторов в сети.
 system.run(() => {

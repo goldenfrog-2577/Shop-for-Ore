@@ -1921,7 +1921,7 @@ sfo.port.teleports.mine=§8Mine (by level)
 sfo.port.back=§8Back
 sfo.port.mine.arrived=§7You are at the entrance to the first mine.
 sfo.port.mine.unavailable=§cCould not teleport. Try again near spawn.
-sfo.port.inventory_full=§eFree an inventory slot and rejoin to receive the server menu.
+sfo.port.inventory_full=§eFree a slot in your inventory. The menu item will appear automatically.
 
 sfo.port.account.registered=§9Account §8» §7Account created. Welcome!
 sfo.port.account.reset_request=§9Account §8» §7Player §f%1$s§7 requested a password reset. Verify the request on Telegram, then use §e/sfo:resetpass§7.

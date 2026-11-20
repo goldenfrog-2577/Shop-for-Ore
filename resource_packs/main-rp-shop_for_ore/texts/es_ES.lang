@@ -1921,7 +1921,7 @@ sfo.port.teleports.mine=§8Mina (por nivel)
 sfo.port.back=§8Atrás
 sfo.port.mine.arrived=§7Estás en la entrada de la primera mina.
 sfo.port.mine.unavailable=§cNo se pudo teletransportar. Inténtalo de nuevo cerca del punto de aparición.
-sfo.port.inventory_full=§eLibera un espacio del inventario y vuelve a entrar para recibir el menú del servidor.
+sfo.port.inventory_full=§eLibera un espacio en tu inventario. El objeto del menú aparecerá automáticamente.
 
 sfo.port.account.registered=§9Cuenta §8» §7Cuenta creada. ¡Te damos la bienvenida!
 sfo.port.account.reset_request=§9Cuenta §8» §7El jugador §f%1$s§7 ha solicitado restablecer su contraseña. Verifica la solicitud en Telegram y usa §e/sfo:resetpass§7.

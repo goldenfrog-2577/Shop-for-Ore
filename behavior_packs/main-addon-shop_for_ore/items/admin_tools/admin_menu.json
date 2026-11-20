@@ -11,7 +11,12 @@
 				"textures": {
 					"default": "admin_menu"
 				}
-			}
+			},
+			"minecraft:display_name": {
+				"value": "item.server:admin_menu"
+			},
+			"minecraft:interact_button": true,
+			"sfo:open_admin_menu": {}
 		}
 	}
 }

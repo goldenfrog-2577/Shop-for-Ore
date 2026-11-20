@@ -1921,7 +1921,7 @@ sfo.port.teleports.mine=§8Шахта (по уровню)
 sfo.port.back=§8Назад
 sfo.port.mine.arrived=§7Ты у входа в первую шахту.
 sfo.port.mine.unavailable=§cНе удалось телепортироваться. Попробуй ещё раз рядом со спавном.
-sfo.port.inventory_full=§eОсвободи слот и перезайди, чтобы получить меню сервера.
+sfo.port.inventory_full=§eОсвободи место в инвентаре. Предмет меню появится автоматически.
 
 sfo.port.account.registered=§9Аккаунт §8» §7Аккаунт создан. Добро пожаловать!
 sfo.port.account.reset_request=§9Аккаунт §8» §7Игрок §f%1$s§7 просит сбросить пароль. Сверь заявку в Telegram, затем используй §e/sfo:resetpass§7.

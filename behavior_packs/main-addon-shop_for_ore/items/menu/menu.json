@@ -13,7 +13,7 @@
 				}
 			},
 			"minecraft:display_name": {
-				"value": "sfo.port.item.menu"
+				"value": "item.server:menu"
 			},
 			"minecraft:interact_button": true,
 			"sfo:open_menu": {}
