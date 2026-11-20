@@ -26,7 +26,7 @@ admin.api.moneyPlayers(owner);assert.equal(capture.title,'%admin.players.money.t
 admin.api.playerActions(owner,alice);assert(capture.body.includes('2§7/§f3§r'));assert(!capture.body.includes('§e/3'));
 admin.api.serverMenu(owner);assert(capture.body.includes('%admin.server.magnets §fAlice§7, §fBob'));
 alice.tags.delete('boost:magnet');bob.tags.delete('boost:magnet');bob.scores.magnet=100;admin.api.serverMenu(owner);assert(capture.body.includes('%admin.server.magnets §f%admin.server.none'));
-admin.api.botMenu(owner);for(const title of ['%admin.bot.button.mode','%admin.bot.button.sit']){const row=capture.items.find(i=>i.text.startsWith(title));assert(row.text.includes('\n§8[§7 '));assert(!row.text.includes('§r'));}
+admin.api.botMenu(owner);for(const title of ['%admin.bot.button.mode','%admin.bot.button.sit']){const row=capture.items.find(i=>i.text.startsWith(title));assert(row.text.includes('\n§r[ '));assert(row.text.endsWith(' §r]'));}
 
 const events=Object.fromEntries(['tick','entityHurt','playerLeave','playerSpawn','worldLoad'].map(k=>[k,event()])),blocks=new Map(),calls=[];
 const dim={id:'overworld',getBlock:p=>({typeId:blocks.get([p.x,p.y,p.z].join(','))??(p.y===0?'minecraft:stone':'minecraft:air')})};

@@ -311,7 +311,7 @@ function musicVolume(player, back) {
 function musicCollection(player, back) {
 	const owned = unlockedDiscs(player);
 	const items = DISCS.map(d => owned.includes(d.id)
-		? { text: `§8${d.title}\n§7${d.author}`, icon: `textures/items/record_${d.id}`, run: () => {
+		? { text: `§8${d.title}\n§r${d.author}`, icon: `textures/items/record_${d.id}`, run: () => {
 			if (player.hasTag(MUSIC_OFF)) return tell(player, 'chat.music.error.off');
 			player.addTag(DISC_MODE);
 			if (!playNow(player, d.id)) return tell(player, 'chat.music.error.arena');
@@ -327,7 +327,7 @@ function musicChoose(player, back) {
 	if (player.hasTag(MUSIC_OFF)) return tell(player, 'chat.music.error.off');
 	const { key, list } = playlistOf(player), now = nowPlaying(player)?.id;
 	const items = list.map(id => ({
-		text: `${id === now ? '§2' : '§8'}${TRACK[id].title}\n§7${TRACK[id].author}`,
+		text: `${id === now ? '§2' : '§8'}${TRACK[id].title}\n§r${TRACK[id].author}`,
 		icon: TRACK[id].item ? `textures/items/record_${id}` : 'textures/server_icons/note_block',
 		run: () => { if (!playNow(player, id)) return tell(player, 'chat.music.error.off'); back(); }
 	}));
@@ -402,7 +402,7 @@ function bankTransfer(player, back) {
 	}, back);
 }
 
-const gameStateLine = (g) => `§8 %menu.games.phase.${g.phase} §7(${g.players.size}/${g.def.maxPlayers})`;
+const gameStateLine = (g) => `§8 %menu.games.phase.${g.phase} §r(${g.players.size}/${g.def.maxPlayers})`;
 
 export function minigamesMenu(player, back) {
 	const mine = gameOf(player);

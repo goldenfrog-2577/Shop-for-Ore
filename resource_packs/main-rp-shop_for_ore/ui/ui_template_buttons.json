@@ -1,7 +1,0 @@
-{
-	"namespace": "common_buttons",
-	"new_ui_binding_button_label": {
-		"$sfo_form_button_shadow|default": false,
-		"shadow": "$sfo_form_button_shadow"
-	}
-}
