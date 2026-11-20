@@ -2,7 +2,11 @@
 	"format_version": "1.21.90",
 	"minecraft:item": {
 		"description": {
-			"identifier": "server:portable_ender_crystal"
+			"identifier": "server:portable_ender_crystal",
+			"menu_category": {
+				"category": "equipment",
+				"is_hidden_in_commands": false
+			}
 		},
 		"components": {
 			"minecraft:icon": {

@@ -4,7 +4,7 @@
 // admin.js (администратор; там же !gm6). Команды владельца — ниже в этом файле; общие помощники — commands/common.js.
 // Новая команда: строка в commandsList и метод в объекте своей роли (имя — без «!»).
 
-import { world, system, CommandPermissionLevel, CustomCommandParamType, CustomCommandStatus } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { commandsList, isPending, tell, hasRole, findPlayer, getRole, ROLES, run, menuFeedback, settleCommands, toldErrorCount, toldSuccessCount } from '../../utils.js';
 import { PLAYER_COMMANDS } from './ranks/player.js';
 import { MODERATION_COMMANDS } from './ranks/moderator.js';
@@ -140,29 +140,6 @@ const OWNER_COMMANDS = {
 };
 
 const HANDLERS = { ...PLAYER_COMMANDS, ...MODERATION_COMMANDS, ...ADMIN_COMMANDS, ...OWNER_COMMANDS };
-
-// Совместимость с командой, которая уже использовалась в сборке 26.60.
-system.beforeEvents.startup.subscribe(({ customCommandRegistry }) => {
-	customCommandRegistry.registerCommand({
-		name: 'sfo:resetpass',
-		description: 'Reset an online player password (map owner only)',
-		permissionLevel: CommandPermissionLevel.Admin,
-		mandatoryParameters: [{ name: 'player', type: CustomCommandParamType.PlayerSelector }]
-	}, (origin, targets) => {
-		const player = origin.sourceEntity;
-		if (player?.typeId !== 'minecraft:player' || !player.hasTag('auth:done') || !hasRole(player, 'owner') || isPending(player)) {
-			return { status: CustomCommandStatus.Failure, message: 'Access denied.' };
-		}
-		if (targets.length !== 1 || targets[0].id === player.id || targets[0].hasTag('role:bot') || targets[0].hasTag('sys:bot')) {
-			return { status: CustomCommandStatus.Failure, message: 'Select one other real player.' };
-		}
-		const [target] = targets;
-		system.run(() => {
-			if (player.isValid && target.isValid && hasRole(player, 'owner') && !isPending(player)) resetPassword(player, target);
-		});
-		return { status: CustomCommandStatus.Success };
-	});
-});
 
 // --- Главный обработчик команд чата ---
 world.beforeEvents.chatSend?.subscribe((data) => {

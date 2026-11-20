@@ -37,8 +37,8 @@ async function startup(base, { fail, ready = false, limit = 40, heartbeat = true
  };
  const server = { world, system, BlockTypes: { get: id => ({ id }) }, EnchantmentTypes: { get: id => ({ id, maxLevel: 5 }) },
   BlockVolume: class {}, ItemStack: class {}, ItemLockMode: { slot: 'slot' },
-  InputPermissionCategory: { Movement: 1 }, CommandPermissionLevel: { Admin: 2 },
-  CustomCommandParamType: { PlayerSelector: "PlayerSelector" }, CustomCommandStatus: { Success: 0, Failure: 1 }, GameMode: { Creative: 'Creative', Adventure: 'Adventure', Spectator: 'Spectator' }
+  InputPermissionCategory: { Movement: 1 },
+  GameMode: { Creative: 'Creative', Adventure: 'Adventure', Spectator: 'Spectator' }
  };
  const form=class{};const games=[];const chain={maxTicks(){return this;},structureName(){return this;}};
  const natives={'@minecraft/server':server,'@minecraft/server-ui':{ActionFormData:form,ModalFormData:form,MessageFormData:form},'@minecraft/server-gametest':{register:(namespace,name,fn)=>{games.push([namespace,name]);return chain;}}};
@@ -96,7 +96,7 @@ assert.equal(manifest.modules.find(m => m.type === 'script')?.entry, 'scripts/im
 assert.ok(!fs.existsSync(path.join(scripts, 'port')), 'separate prototype directory removed');
 assert.deepEqual(actual.load.games, [['server', 'spawnbot']]);
 assert.deepEqual(actual.load.components, ['sfo:open_menu', 'sfo:open_admin_menu']);
-assert.deepEqual(actual.load.nativeCommands, ['sfo:resetpass']);
+assert.deepEqual(actual.load.nativeCommands, [], 'custom commands are accessed through chat');
 assert.equal(actual.load.subscriptions.filter(([, event]) => event === 'before.chatSend').length, 2);
 assert.ok(actual.load.subscriptions.some(([, event]) => event === 'after.worldLoad'));
 const unavailable = await startup(scripts,{limit:120,heartbeat:false});
