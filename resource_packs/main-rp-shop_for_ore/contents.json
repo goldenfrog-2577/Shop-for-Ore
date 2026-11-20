@@ -40,6 +40,12 @@
 			"path": "ui/chat_screen.json"
 		},
 		{
+			"path": "ui/server_form.json"
+		},
+		{
+			"path": "ui/ui_template_buttons.json"
+		},
+		{
 			"path": "textures/server_icons/command_block.png"
 		},
 		{

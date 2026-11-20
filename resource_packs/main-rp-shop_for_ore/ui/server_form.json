@@ -1,0 +1,6 @@
+{
+	"namespace": "server_form",
+	"dynamic_button": {
+		"$sfo_form_button_shadow": true
+	}
+}

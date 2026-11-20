@@ -302,7 +302,7 @@ potion.weakness.linger.name=Туманное зелье слабости
 
 ## --- ОБЩЕЕ: РОЛИ, ЦВЕТА, СРОКИ, ОШИБКИ ---
 ##   menu.common.*, role.*, rank.collector, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
-menu.common.tap_to_open=§8[§7Нажми, чтобы открыть§8]
+menu.common.tap_to_open=§r[Нажми, чтобы открыть]
 menu.common.back=§8§r §8Назад
 menu.common.time.second=с
 menu.common.time.minute=мин

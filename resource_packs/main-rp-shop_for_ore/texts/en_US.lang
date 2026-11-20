@@ -302,7 +302,7 @@ potion.weakness.linger.name=Lingering Potion of Weakness
 
 ## --- COMMON: ROLES, COLORS, TERMS, ERRORS ---
 ##   menu.common.*, role.*, rank.collector, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
-menu.common.tap_to_open=§8[§7Press to open§8]
+menu.common.tap_to_open=§r[Press to open]
 menu.common.back=§8§r §8Back
 menu.common.time.second=s
 menu.common.time.minute=min

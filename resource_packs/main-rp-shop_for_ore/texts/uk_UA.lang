@@ -302,7 +302,7 @@ potion.weakness.linger.name=Тривале зілля слабкості
 
 ## --- СПІЛЬНЕ: РОЛІ, КОЛЬОРИ, СТРОКИ, ПОМИЛКИ ---
 ##   menu.common.*, role.*, rank.collector, color.*, chat.term.*, chat.error.*, chat.cmd.error.*, chat.server.*
-menu.common.tap_to_open=§8[§7Натисни, щоб відкрити§8]
+menu.common.tap_to_open=§r[Натисни, щоб відкрити]
 menu.common.back=§8§r §8Назад
 menu.common.time.second=с
 menu.common.time.minute=хв
