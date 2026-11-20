@@ -13,8 +13,10 @@ execute if score fallback system matches 0 run tag @a remove sys:fb_pre
 execute if score fallback system matches 1 as @a[tag=!role:bot,tag=!sys:bot,tag=!auth:login,tag=!auth:register,hasitem={item=compass,quantity=0}] run function fallback/compass
 execute if score fallback system matches 0 run tag @a[tag=sys:fb_full] remove sys:fb_full
 # Дома NPC не требуют ежесекундного обхода, пока работают скрипты.
-execute if score fallback system matches 1 unless score fb_area system matches 1 run tickingarea add 0 -60 0 0 -60 0 fallback
-execute if score fallback system matches 1 run scoreboard players set fb_area system 1
+# После импорта мира сохранённый счёт fb_area может пережить саму tickingarea.
+# Отсутствие главного NPC означает, что требуется загрузить его домашний чанк.
+execute if score fallback system matches 1 unless entity @e[type=npc,tag=npc:fb_main] run tickingarea add 0 -60 0 0 -60 0 fallback true
+execute if score fallback system matches 1 unless entity @e[type=npc,tag=npc:fb_main] run tickingarea preload fallback true
 execute if score fallback system matches 1 run function fallback/npc_menu
 execute if score fallback system matches 0 if score fb_active system matches 1 run function fallback/npc_menu
 scoreboard players operation fb_active system = fallback system
