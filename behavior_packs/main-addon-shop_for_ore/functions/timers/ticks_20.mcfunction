@@ -49,16 +49,16 @@ execute if score stand_timers_migrated system matches 1 if score rain_event syst
 execute if score gift system matches 1.. run scoreboard players remove gift system 1
 
 ## --- Кирка уровня, зачарования, спешка за ребитхи ---
-function system/pickaxe_lvl
+execute if score scripts system matches 5.. run function system/pickaxe_lvl
 # Купленные зачарования — на предмет в руке (Магазин → Зачарования, shop/enchants/*)
-execute as @a[scores={efficiency=1..1}] run enchant @s efficiency 1
-execute as @a[scores={efficiency=2..2}] run enchant @s efficiency 2
-execute as @a[scores={efficiency=3..3}] run enchant @s efficiency 3
-execute as @a[scores={efficiency=4..4}] run enchant @s efficiency 4
-execute as @a[scores={efficiency=5..}] run enchant @s efficiency 5
-execute as @a[scores={fortune=1..1}] run enchant @s fortune 1
-execute as @a[scores={fortune=2..2}] run enchant @s fortune 2
-execute as @a[scores={fortune=3..}] run enchant @s fortune 3
+execute if score scripts system matches 5.. as @a[scores={efficiency=1..1}] run enchant @s efficiency 1
+execute if score scripts system matches 5.. as @a[scores={efficiency=2..2}] run enchant @s efficiency 2
+execute if score scripts system matches 5.. as @a[scores={efficiency=3..3}] run enchant @s efficiency 3
+execute if score scripts system matches 5.. as @a[scores={efficiency=4..4}] run enchant @s efficiency 4
+execute if score scripts system matches 5.. as @a[scores={efficiency=5..}] run enchant @s efficiency 5
+execute if score scripts system matches 5.. as @a[scores={fortune=1..1}] run enchant @s fortune 1
+execute if score scripts system matches 5.. as @a[scores={fortune=2..2}] run enchant @s fortune 2
+execute if score scripts system matches 5.. as @a[scores={fortune=3..}] run enchant @s fortune 3
 # Спешка: уровень = число ребитхов (до V)
 effect @a[scores={rebirth=1..1}] haste 2 0 true
 effect @a[scores={rebirth=2..2}] haste 2 1 true

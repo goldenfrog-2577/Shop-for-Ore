@@ -12,7 +12,7 @@
 // Не проверяются: владелец и администраторы, бот, творческий режим и режим наблюдателя.
 // !ac <ник> — очки игрока по проверкам; !ac — режим и игроки с очками (хелпер и выше).
 
-import { world, system, Items, ItemStack, GameMode, EnchantmentList, Enchantment } from '@minecraft/server';
+import { world, system, ItemStack, GameMode } from '@minecraft/server';
 import { hasRole, run } from '../../utils.js';
 
 // --- Проверки: порог сигнала (VL) ---
@@ -64,7 +64,7 @@ function checkedPlayers() {
 	if (checkedTick === tick) return checked;
 	const players = new Map();
 	try {
-		for (const player of world.getPlayers({ excludeGameModes: [GameMode.creative, GameMode.spectator] })) players.set(player.name, player);
+		for (const player of world.getPlayers({ excludeGameModes: [GameMode.Creative, GameMode.Spectator] })) players.set(player.name, player);
 	} catch {
 		players.clear();
 		for (const player of world.getPlayers()) players.set(player.name, player);
@@ -217,7 +217,7 @@ function maxStack(item) {
 	return 64;
 }
 
-// Короткий id зачарования (как в MinecraftEnchantmentTypes) из type.id: 'minecraft:efficiency' / 'efficiency'
+// Короткий id зачарования из type.id: 'minecraft:efficiency' / 'efficiency'
 const enchantId = (e) => String(e.type.id).replace('minecraft:', '');
 
 /**
@@ -229,21 +229,21 @@ export function inspectItem(item) {
 	if (isBanned(item.typeId)) return { check: 'item', detail: item.typeId };
 	if (item.amount > maxStack(item)) return { check: 'enchant', detail: `${item.typeId} ×${item.amount}` };
 	let list;
-	try { list = item.getComponent('enchantments')?.enchantments; } catch { list = undefined; }
+	try { list = item.getComponent('minecraft:enchantable')?.getEnchantments(); } catch { list = undefined; }
 	if (!list) return undefined;
 	const vip = VIP_ITEMS[`${item.typeId}|${item.nameTag ?? ''}`];
 	// Совместимость: собираем зачарования по одному в пустой список того же слота с уровнем 1 —
 	// canAddEnchantment откажет на конфликте (острота + небесная кара) и на чужом предмете (острота на кирке).
 	// Книга принимает что угодно; зачарования VIP-лавки (защита на голове) законны сами по себе
 	let fresh;
-	try { fresh = item.typeId === 'minecraft:enchanted_book' ? undefined : new EnchantmentList(list.slot); } catch { fresh = undefined; }
+	try { fresh = item.typeId === 'minecraft:enchanted_book' ? undefined : new ItemStack(item.typeId).getComponent('minecraft:enchantable'); } catch { fresh = undefined; }
 	for (const e of list) {
 		const id = enchantId(e);
 		const cap = vip?.[id] ?? e.type.maxLevel;
 		if (e.level > cap) return { check: 'enchant', detail: `${item.typeId} ${id} ${e.level}` };
 		if (!fresh || vip?.[id]) continue;
 		try {
-			const one = new Enchantment(e.type, 1);
+			const one = { type: e.type, level: 1 };
 			if (!fresh.canAddEnchantment(one)) return { check: 'enchant', detail: `${item.typeId} ${id}` };
 			fresh.addEnchantment(one);
 		} catch { /* API не дал проверить — не наказываем */ }
@@ -251,12 +251,9 @@ export function inspectItem(item) {
 	return undefined;
 }
 
-// --- Пустой предмет для очистки слота ---
-const air = new ItemStack(Items.get('minecraft:stick'), 0);
-
 // --- Проверка инвентаря раз в CHECK_EVERY_TICKS тиков; очки тают раз в секунду ---
 const CHECK_EVERY_TICKS = 10;
-system.runSchedule(() => {
+system.runInterval(() => {
 	tick++;
 	if (tick % 20 === 0) {
 		for (const [name, rec] of vl) {
@@ -278,7 +275,7 @@ system.runSchedule(() => {
 			if (!item) continue;
 			const bad = inspectItem(item);
 			if (!bad) continue;
-			container.setItem(i, air);
+			container.setItem(i, undefined);
 			flag(player, bad.check, bad.detail);
 			run(player, `tellraw @s ${JSON.stringify({ rawtext: [{ translate: `chat.anticheat.removed.${bad.check}`, with: [item.typeId] }] })}`);
 		}

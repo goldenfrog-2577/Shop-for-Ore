@@ -10,7 +10,7 @@ import { groupProfileTags, offlineProfile, offlineProfiles, profilePosition, pro
 import { clearResetHistory } from '../../system/core/reset_history.js';
 import { adminEnchantMenu } from './admin_enchant.js';
 import { boostSeconds } from '../../system/economy/boosts.js';
-import { world } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { isJailed, tellJailed, jailMinutesLeft } from '../../system/security/jail.js';
 import { isPending, isBot, tell, hasRole, getRole, getScore, getWarns, muteMinutesLeft, run, findPlayer, CHAT_COLORS, isVip, VIP_TAG, MAX_LEVEL } from '../../utils.js';
 import { showMenu, showModal, modal, backButton, confirm, wipeConfirm, WARN_TITLE } from '../common/forms.js';
@@ -36,24 +36,25 @@ const EVENTS = ['haste', 'rain', 'gift', 'mythic'];
 const EVENT_PERIOD = { haste: 3, rain: 5, gift: 4, mythic: 10 };
 
 // --- Открытие админ-меню по использованию специального предмета ---
-world.events.beforeItemUse.subscribe((data) => {
-	if (data.item.typeId !== 'server:admin_menu') return;
+world.beforeEvents.itemUse.subscribe((data) => {
+	if (data.itemStack.typeId !== 'server:admin_menu') return;
 	const player = data.source;
 	// Администратор и владелец (предмет можно получить через /give — тогда роль не даст открыть); сначала — вход
 	if (!hasRole(player, 'admin') || isPending(player)) return;
 	// Замороженный (!freeze) админ-меню не открывает: иначе ушёл бы телепортом или разморозил себя через других
 	if (player.hasTag('state:frozen')) {
 		data.cancel = true;
-		tell(player, 'chat.cmd.freeze.active');
+		system.run(() => tell(player, 'chat.cmd.freeze.active'));
 		return;
 	}
 	// В тюрьме (!jail) — тоже: меню телепортаций вывело бы из камеры
 	if (isJailed(player)) {
 		data.cancel = true;
-		tellJailed(player);
+		system.run(() => tellJailed(player));
 		return;
 	}
-	admin_menu(player);
+	data.cancel = true;
+	system.run(() => admin_menu(player));
 });
 
 /** Кнопка «Назад» меню администратора — со своим ключом и значком. */
@@ -199,8 +200,8 @@ export function parseItemFields(id, count, data, maxCount = 255) {
 function itemById(player, command, onBack) {
 	const form = modal('%admin.item.title')
 		.textField('%admin.item.id', 'minecraft:diamond_sword')
-		.textField('%admin.item.count', '1', '1')
-		.textField('%admin.item.data', '0', '0');
+		.textField('%admin.item.count', '1', { defaultValue: '1' })
+		.textField('%admin.item.data', '0', { defaultValue: '0' });
 	showModal(player, form, ([id, count, data]) => {
 		const parsed = parseItemFields(id, count, data);
 		if (parsed.error) return tell(player, parsed.error, ...(parsed.args ?? []));
@@ -271,7 +272,7 @@ function playersMenu(player) {
 	const names = orderedPlayers(player).map(p => p.name);
 	if (!names.length) return tell(player, 'chat.admin.error.no_players');
 	const form = modal('%admin.players.title')
-		.dropdown('%admin.players.choose', names, 0);
+		.dropdown('%admin.players.choose', names, { defaultValueIndex: 0 });
 	showModal(player, form, (values) => {
 		const name = names[values[0]];
 		const target = findPlayer(name);
@@ -307,7 +308,7 @@ function playerProfileMenu(player, name, returnToList = () => playerRegistryMenu
 	const live = findPlayer(name);
 	const identity = live ? undefined : offlineProfiles(new Set()).get(name);
 	const data = live ? {
-		scores: profileScores(live.scoreboard),
+		scores: profileScores(live.scoreboardIdentity),
 		role: getRole(live), vip: isVip(live), warns: getWarns(live), seconds: playedSeconds(live)
 	} : identity ? offlineProfile(identity) : { scores: {} };
 	const { scores, vip } = data;
@@ -346,7 +347,7 @@ function playerRegistryDetails(player, name, openProfile) {
 	if (!registryAllowed(player)) return;
 	const target = findPlayer(name);
 	const identity = target ? undefined : offlineProfiles(new Set()).get(name);
-	const scores = profileScores(target?.scoreboard ?? identity);
+	const scores = profileScores(target?.scoreboardIdentity ?? identity);
 	const scoreLine = (label, id, glyph, color = '§e') =>
 		glyph + ' %admin.players.' + label + ' ' + (scores[id] === undefined ? '§8—' : color + scores[id]) + '§r';
 	const scoreBlock = [
@@ -483,8 +484,8 @@ function playerGamemode(player, target) {
 function playerColor(player, target) {
 	const colors = Object.keys(CHAT_COLORS);
 	const form = modal('%admin.players.color.title')
-		.dropdown('%admin.players.color.kind', ['%admin.players.color.kind.name', '%admin.players.color.kind.text'], 0)
-		.dropdown('%admin.players.color.color', ['%admin.players.color.reset', ...colors.map(c => `§${CHAT_COLORS[c]}■§r %color.${c}`)], 0);
+		.dropdown('%admin.players.color.kind', ['%admin.players.color.kind.name', '%admin.players.color.kind.text'], { defaultValueIndex: 0 })
+		.dropdown('%admin.players.color.color', ['%admin.players.color.reset', ...colors.map(c => `§${CHAT_COLORS[c]}■§r %color.${c}`)], { defaultValueIndex: 0 });
 	showModal(player, form, (values) => {
 		const kind = values[0] === 1 ? 'text' : 'name';
 		const i = values[1];
@@ -495,8 +496,8 @@ function playerColor(player, target) {
 function playerMoney(player, target, back = () => playerActions(player, target)) {
 	const actions = ['add', 'take', 'set'];
 	const form = modal('%admin.players.money.title')
-		.dropdown(`%admin.players.body.money ${getScore(target, 'money')} §r${COIN_GLYPH}\n%admin.players.body.vip_coins ${getScore(target, 'vip_coins')} §r${VIP_COIN_GLYPH}\n\n%admin.players.money.currency`, ['%admin.players.money.normal', '%admin.players.money.vip'], 0)
-		.dropdown('%admin.players.money.action', actions.map(a => `%admin.players.money.${a}`), 0)
+		.dropdown(`%admin.players.body.money ${getScore(target, 'money')} §r${COIN_GLYPH}\n%admin.players.body.vip_coins ${getScore(target, 'vip_coins')} §r${VIP_COIN_GLYPH}\n\n%admin.players.money.currency`, ['%admin.players.money.normal', '%admin.players.money.vip'], { defaultValueIndex: 0 })
+		.dropdown('%admin.players.money.action', actions.map(a => `%admin.players.money.${a}`), { defaultValueIndex: 0 })
 		.textField('%admin.players.money.amount', '%menu.bank.amount_placeholder');
 	showModal(player, form, (values) => {
 		// Игрок мог выйти, пока окно было открыто
@@ -514,7 +515,7 @@ export const termLabel = (m) => m === 'permanent' ? '%chat.term.permanent'
 	: m % 1440 === 0 ? `${m / 1440} %admin.common.days` : m % 60 === 0 && m >= 60 ? `${m / 60} %admin.common.hours` : `${m} %admin.common.min`;
 function playerTerm(player, target, command, title, terms) {
 	const form = modal(title)
-		.dropdown('%admin.players.term', terms.map(termLabel), 0)
+		.dropdown('%admin.players.term', terms.map(termLabel), { defaultValueIndex: 0 })
 		.textField('%admin.players.reason_optional', '%admin.players.reason_placeholder');
 	showModal(player, form, (values) => {
 		const reason = String(values[1] ?? '').trim();
@@ -535,7 +536,7 @@ function playerReason(player, target, command, title, label) {
 function playerRole(player, target) {
 	const roles = ['player', 'helper', 'moder', 'admin'];
 	const form = modal('%admin.players.role.title')
-		.dropdown('%admin.players.role.choose', roles.map(r => `${ROLE_GLYPHS[r]} %role.${r}`), Math.max(0, roles.indexOf(getRole(target))));
+		.dropdown('%admin.players.role.choose', roles.map(r => `${ROLE_GLYPHS[r]} %role.${r}`), { defaultValueIndex: Math.max(0, roles.indexOf(getRole(target))) });
 	showModal(player, form, (values) => {
 		runChatCommand(player, 'role', [target.name, roles[values[0]]]);
 	}, () => playerActions(player, target));
@@ -575,8 +576,8 @@ const minutesLabel = (m) => `\ue12c ${m} %admin.common.minutes`;
 function magnetForm(player) {
 	const names = [...world.getPlayers()].map(p => p.name);
 	const form = modal('%admin.boosts.magnet.title')
-		.dropdown('%admin.players.choose', names, Math.max(0, names.indexOf(player.name)))
-		.dropdown('%admin.boosts.boost.minutes', BOOST_MINUTES.map(minutesLabel), 0);
+		.dropdown('%admin.players.choose', names, { defaultValueIndex: Math.max(0, names.indexOf(player.name)) })
+		.dropdown('%admin.boosts.boost.minutes', BOOST_MINUTES.map(minutesLabel), { defaultValueIndex: 0 });
 	showModal(player, form, (values) => {
 		runChatCommand(player, 'boost', ['magnet', names[values[0]], String(BOOST_MINUTES[values[1]])]);
 	}, () => boostsMenu(player));
@@ -586,8 +587,8 @@ function magnetForm(player) {
 function boostForm(player) {
 	const types = ['x2', 'x4'];
 	const form = modal('%admin.boosts.boost.title')
-		.dropdown('%admin.boosts.boost.type', [`§2${XP_GLYPH} x2`, `§3${XP_GLYPH} x4`], 0)
-		.dropdown('%admin.boosts.boost.minutes', BOOST_MINUTES.map(minutesLabel), 0);
+		.dropdown('%admin.boosts.boost.type', [`§2${XP_GLYPH} x2`, `§3${XP_GLYPH} x4`], { defaultValueIndex: 0 })
+		.dropdown('%admin.boosts.boost.minutes', BOOST_MINUTES.map(minutesLabel), { defaultValueIndex: 0 });
 	showModal(player, form, (values) => {
 		runChatCommand(player, 'boost', [types[values[0]], String(BOOST_MINUTES[values[1]])]);
 	}, () => boostsMenu(player));
@@ -598,7 +599,7 @@ const eventLabel = (ev) => `%chat.cmd.event.name.${ev} §8— %admin.boosts.auto
 // Ивенты по таймеру: переключатели табло settings (то же, что /scoreboard players set <ивент> settings 1|0)
 function autoEventsForm(player, onBack) {
 	const form = modal('%admin.boosts.auto.title');
-	for (const ev of EVENTS) form.toggle(eventLabel(ev), getSetting(ev) === 1);
+	for (const ev of EVENTS) form.toggle(eventLabel(ev), { defaultValue: getSetting(ev) === 1 });
 	showModal(player, form, (values) => {
 		EVENTS.forEach((ev, i) => run(player, `scoreboard players set ${ev} settings ${values[i] ? 1 : 0}`));
 		tell(player, 'chat.admin.auto_events.saved');
@@ -713,7 +714,7 @@ function botModeMenu(player) {
 
 function botSpar(player) {
 	const form = modal('%admin.bot.spar.title')
-		.dropdown('%admin.bot.spar.level', SPAR_LEVELS.map(l => `%admin.bot.spar.level.${l}`), Math.max(0, SPAR_LEVELS.indexOf(botState().level)));
+		.dropdown('%admin.bot.spar.level', SPAR_LEVELS.map(l => `%admin.bot.spar.level.${l}`), { defaultValueIndex: Math.max(0, SPAR_LEVELS.indexOf(botState().level)) });
 	showModal(player, form, ([level]) => {
 		const error = setBotMode('spar', { level: SPAR_LEVELS[level] });
 		if (error) return tell(player, error);
@@ -738,7 +739,7 @@ function botGuide(player) {
 	if (!bot) return tell(player, 'chat.admin.bot.error.absent');
 	const names = orderedPlayers(player).filter(target => canGuidePlayer(target, bot)).map(target => target.name);
 	if (!names.length) return tell(player, 'chat.admin.bot.error.guide_target');
-	const form = modal('%admin.bot.guide.title').dropdown('%admin.players.choose', names, 0);
+	const form = modal('%admin.bot.guide.title').dropdown('%admin.players.choose', names, { defaultValueIndex: 0 });
 	showModal(player, form, ([index]) => {
 		if (!hasRole(player, 'admin')) return tell(player, 'chat.cmd.error.no_permission');
 		const name = names[index];
@@ -753,7 +754,7 @@ function botGuide(player) {
 // Имя задаётся при появлении бота, поэтому бот, который уже в мире, призывается заново под новым именем
 function botRename(player) {
 	const form = modal('%admin.bot.rename.title')
-		.textField('%admin.bot.rename.body', getBotName(), getBotName());
+		.textField('%admin.bot.rename.body', getBotName(), { defaultValue: getBotName() });
 	showModal(player, form, async (values) => {
 		const name = String(values[0] ?? '').trim();
 		if (!setBotName(name)) return tell(player, 'chat.admin.bot.error.name');
@@ -774,10 +775,10 @@ const secondsLabel = (s) => s >= 1000000 ? '\ue12c %admin.bot.effects.infinite'
 
 function botEffects(player) {
 	const form = modal('%admin.bot.effects.title')
-		.dropdown('%admin.bot.effects.effect', BOT_EFFECTS.map(id => `%effect.${id}.name`), 0)
-		.slider('%admin.bot.effects.level', 0, 255, 1, 0)
-		.dropdown('%admin.boosts.boost.minutes', EFFECT_SECONDS.map(secondsLabel), 1)
-		.toggle('%admin.bot.effects.hide', false);
+		.dropdown('%admin.bot.effects.effect', BOT_EFFECTS.map(id => `%effect.${id}.name`), { defaultValueIndex: 0 })
+		.slider('%admin.bot.effects.level', 0, 255, { valueStep: 1, defaultValue: 0 })
+		.dropdown('%admin.boosts.boost.minutes', EFFECT_SECONDS.map(secondsLabel), { defaultValueIndex: 1 })
+		.toggle('%admin.bot.effects.hide', { defaultValue: false });
 	showModal(player, form, ([effect, level, time, hide]) => {
 		const bot = getBot();
 		if (!bot) return tell(player, 'chat.admin.bot.error.absent');
@@ -804,18 +805,18 @@ const slotName = (slot) => {
 };
 function botSlots(player) {
 	const form = modal('%admin.bot.slots.title')
-		.dropdown('%admin.bot.slots.slot', BOT_SLOTS.map(s => s.label), 0)
+		.dropdown('%admin.bot.slots.slot', BOT_SLOTS.map(s => s.label), { defaultValueIndex: 0 })
 		.textField('%admin.bot.slots.id', 'minecraft:diamond_sword')
-		.textField('%admin.item.count', '1', '1')
-		.textField('%admin.item.data', '0', '0')
-		.toggle('%admin.bot.slots.select', true);
+		.textField('%admin.item.count', '1', { defaultValue: '1' })
+		.textField('%admin.item.data', '0', { defaultValue: '0' })
+		.toggle('%admin.bot.slots.select', { defaultValue: true });
 	showModal(player, form, ([slotIndex, id, count, data, select]) => {
 		const bot = getBot();
 		if (!bot) return tell(player, 'chat.admin.bot.error.absent');
 		const slot = BOT_SLOTS[slotIndex];
 		const target = `replaceitem entity "${bot.name}" ${slot.slot}`;
 		if (select && slot.hotbar !== undefined) {
-			try { bot.selectedSlot = slot.hotbar; } catch { /* у бота нет выбора слота */ }
+			try { bot.selectedSlotIndex = slot.hotbar; } catch { /* у бота нет выбора слота */ }
 		}
 		if (!String(id ?? '').trim()) {
 			run(player, `${target} air`);
@@ -853,7 +854,7 @@ function moneyPlayers(player) {
 	if (!hasRole(player, 'admin')) return tell(player, 'chat.cmd.error.no_permission');
 	const names = orderedPlayers(player).map(p => p.name);
 	if (!names.length) return tell(player, 'chat.admin.error.no_players');
-	const form = modal('%admin.players.money.title').dropdown('%admin.players.choose', names, 0);
+	const form = modal('%admin.players.money.title').dropdown('%admin.players.choose', names, { defaultValueIndex: 0 });
 	showModal(player, form, ([i]) => {
 		const target = findPlayer(names[i]);
 		if (!target) return tell(player, 'chat.cmd.error.offline', names[i]);

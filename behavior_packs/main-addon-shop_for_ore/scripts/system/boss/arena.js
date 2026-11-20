@@ -63,16 +63,16 @@ export function particleCommands(random = Math.random) {
 	return out;
 }
 
-system.runSchedule(() => {
+system.runInterval(() => {
 	let anyone = false;
 	for (const player of world.getPlayers()) {
 		if (!inArena(player.location, player.dimension?.id) || player.hasTag('role:bot')) continue;
 		anyone = true;
 		// напрямую, а не через run(): run() глушит playsound игрока, пока у него открыто меню с выключенным звуком ответа
-		for (const command of ambientCommands(player.location)) player.runCommandAsync(command).catch(() => {});
+		for (const command of ambientCommands(player.location)) Promise.resolve().then(() => player.runCommand(command)).catch(() => {});
 	}
 	if (anyone) {
 		const dimension = world.getDimension('overworld');
-		for (const command of particleCommands()) dimension.runCommandAsync(command).catch(() => {});
+		for (const command of particleCommands()) Promise.resolve().then(() => dimension.runCommand(command)).catch(() => {});
 	}
 }, CHECK_TICKS);

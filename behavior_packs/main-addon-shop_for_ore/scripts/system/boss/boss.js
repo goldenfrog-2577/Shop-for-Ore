@@ -24,7 +24,7 @@
 // не загружена (все ушли): тогда tickingarea boss_arena грузит её (она же держит арену загруженной весь бой), и уборка ждёт, пока чанки загрузятся (RECOVER_CORNERS);
 // до этого бой не начать, решётка закрыта.
 
-import { system, world, Location, BlockLocation, MinecraftEffectTypes } from '@minecraft/server';
+import { system, world } from '@minecraft/server';
 import { getScore, run, tell, isPending } from '../../utils.js';
 import { inArena } from './arena.js';
 import { SPAWN } from '../player/void.js';
@@ -136,7 +136,7 @@ export function discFor(tags, random = Math.random) {
 // ======== Состояние ========
 
 const overworld = () => world.getDimension('overworld');
-const cmd = (c) => overworld().runCommandAsync(c).catch(() => {});
+const cmd = (c) => Promise.resolve().then(() => overworld().runCommand(c)).catch(() => {});
 const now = () => Math.floor(Date.now() / 1000);
 function systemScore(name) {
 	try { return world.scoreboard.getObjective('system').getScores().find(s => s.participant.displayName === name)?.score ?? 0; } catch { return 0; }
@@ -161,12 +161,12 @@ const arenaArea = (on) => cmd(on ? `tickingarea add 480 -62 -104 575 -20 -12 ${A
 // Углы и центр арены: если все эти блоки читаются, чанки (и сущности в них) загружены
 const RECOVER_CORNERS = [[480, -104], [575, -104], [480, -12], [575, -12], [528, -58]];
 const arenaLoaded = () => {
-	try { return RECOVER_CORNERS.every(([x, z]) => !!overworld().getBlock(new BlockLocation(x, -60, z))); } catch { return false; }
+	try { return RECOVER_CORNERS.every(([x, z]) => !!overworld().getBlock({ x, y: -60, z })); } catch { return false; }
 };
 
 function setBars(open) {
 	const [[x0, y0, z0], [x1, y1, z1]] = BARS;
-	cmd(`fill ${x0} ${y0} ${z0} ${x1} ${y1} ${z1} ${open ? 'air' : 'iron_bars'} 0`);
+	cmd(`fill ${x0} ${y0} ${z0} ${x1} ${y1} ${z1} ${open ? 'air' : 'iron_bars'} []`);
 }
 
 function clearArena() {
@@ -229,7 +229,7 @@ function endFight(result) {
 	for (const b of bosses()) {
 		// уход: звук закапывания и телепорт под мир (без анимации смерти и без добычи)
 		cmd(`playsound mob.warden.dig @a ${SUMMON.join(' ')} 4 1`);
-		try { b.teleport({ x: SUMMON[0], y: -200, z: SUMMON[2] }, overworld(), 0, 0); } catch {}
+		try { b.teleport({ x: SUMMON[0], y: -200, z: SUMMON[2] }, { dimension: overworld() }); } catch {}
 	}
 	clearArena();
 	arenaArea(false);
@@ -273,7 +273,7 @@ function wave(phase) {
 	const wither = alive.filter(e => e.typeId === 'minecraft:wither_skeleton').length;
 	for (const type of waveSpawns(phase, alive.length, wither)) {
 		const [x, y, z] = MINION_SPOTS[Math.floor(Math.random() * MINION_SPOTS.length)];
-		try { overworld().spawnEntity(type, new Location(x + 0.5, y, z + 0.5)).addTag(MINION); } catch {}
+		try { overworld().spawnEntity(type, { x: x + 0.5, y, z: z + 0.5 }).addTag(MINION); } catch {}
 	}
 	for (const name of fight.fighters) {
 		const p = findOnline(name);
@@ -297,7 +297,7 @@ function fightStep() {
 	// тотем: после него у босса Поглощение — других источников у Хранителя нет
 	if (boss && !fight.totem) {
 		let absorbed = false;
-		try { absorbed = !!boss.getEffect(MinecraftEffectTypes.absorption); } catch {}
+		try { absorbed = !!boss.getEffect('absorption'); } catch {}
 		if (absorbed) markTotem(boss);
 	}
 	// Сначала — кто всё ещё в бою: ушедший с арены (или вышедший) выбывает до награды, даже если босса добили в эту же секунду
@@ -309,7 +309,7 @@ function fightStep() {
 	// босса не видно: конец боя, только если арена загружена (иначе он просто в незагруженном чанке)
 	if (!boss) return arenaLoaded() ? endFight(fight.totem ? 'victory' : 'abort') : undefined;
 	let current = fight.max;
-	try { current = boss.getComponent('minecraft:health').current; } catch {}
+	try { current = boss.getComponent('minecraft:health').currentValue; } catch {}
 	// фаза не откатывается назад (порог 60 % мог быть пройден и между проверками)
 	const phase = Math.max(fight.phase, phaseOf({ current, max: fight.max, totem: fight.totem }));
 	if (phase === 2 && fight.phase === 1) {
@@ -335,7 +335,7 @@ function processClears() {
 	for (const p of world.getPlayers()) {
 		if (!p.hasTag(CLEAR)) continue;
 		let hp = 0;
-		try { hp = p.getComponent('minecraft:health').current; } catch {}
+		try { hp = p.getComponent('minecraft:health').currentValue; } catch {}
 		if (hp <= 0) continue;
 		run(p, 'clear @s');
 		p.removeTag(CLEAR);
@@ -369,7 +369,7 @@ function recoverStep() {
 		return;
 	}
 	if (++recovering < 3) return;
-	for (const b of bosses()) { try { b.teleport({ x: SUMMON[0], y: -200, z: SUMMON[2] }, overworld(), 0, 0); } catch {} }
+	for (const b of bosses()) { try { b.teleport({ x: SUMMON[0], y: -200, z: SUMMON[2] }, { dimension: overworld() }); } catch {} }
 	clearArena();
 	cmd('scoreboard players set boss_state system 0');
 	arenaArea(false);
@@ -380,7 +380,7 @@ function recoverStep() {
 
 const hinted = new Set();   // кому уже подсказали, как разбудить Хранителя (до выхода с арены)
 
-system.runSchedule(() => {
+system.runInterval(() => {
 	if (!loaded) return load();
 	processClears();
 	if (recovering) return recoverStep();
@@ -419,23 +419,25 @@ function tryStart(p) {
 	return { ...check, inside };
 }
 
-const hasHorn = (p) => {
+function hasHorn(player, inHand = false) {
 	try {
-		const inv = p.getComponent('minecraft:inventory').container;
-		for (let i = 0; i < inv.size; i++) { const it = inv.getItem(i); if (it?.typeId === HORN && it.data === HORN_SOUND) return true; }
-	} catch {}
-	return false;
-};
+		const location = inHand ? ',location=slot.weapon.mainhand' : '';
+		const selector = '@s[hasitem={item=' + HORN + ',data=' + HORN_SOUND + location + '}]';
+		return player.runCommand('testfor ' + selector).successCount > 0;
+	} catch { return false; }
+}
+
 
 let summoning = false;   // рог забирается командой — до её ответа второй призыв не начинать
 let summon;   // { name, at } — «Тосковать» прозвучала, Хранитель появится в at (мс)
 
 // Рог «Тосковать» на плите у портала будит Хранителя (раньше — просто встать на плиту)
-world.events.itemStartCharge.subscribe((e) => {
+world.afterEvents.itemStartUse.subscribe((e) => {
 	const p = e.source;
 	if (p?.typeId !== 'minecraft:player' || p.hasTag('role:bot') || isPending(p) || !loaded) return;
 	if (!inArena(p.location, p.dimension?.id)) return;
-	const action = hornAction(e.itemStack?.typeId, e.itemStack?.data, onStart(p.location));
+	const data = e.itemStack?.typeId === HORN && hasHorn(p, true) ? HORN_SOUND : undefined;
+	const action = hornAction(e.itemStack?.typeId, data, onStart(p.location));
 	if (!action) return;
 	if (action !== 'start') return tell(p, `chat.boss.horn_${action}`);
 	if (summon || summoning) return tell(p, 'chat.boss.busy');
@@ -446,7 +448,7 @@ world.events.itemStartCharge.subscribe((e) => {
 });
 
 // Мелодия доиграла, прошло полсекунды: проверить ещё раз, забрать рог, разбудить
-system.runSchedule(() => {
+system.runInterval(() => {
 	if (!summon || Date.now() < summon.at) return;
 	const { name } = summon;
 	summon = undefined;
@@ -466,18 +468,18 @@ system.runSchedule(() => {
 }, 2);
 
 // Смерть участника: отметить; выпавшее уничтожится в fightStep, остальное — после возрождения
-world.events.entityHurt.subscribe((e) => {
-	if (fight && e.damagingEntity?.typeId === BOSS) vampire(e);
+world.afterEvents.entityHurt.subscribe((e) => {
+	if (fight && e.damageSource.damagingEntity?.typeId === BOSS) vampire(e);
 	// Удар по боссу: тотем отмечаем сразу (Поглощение или смертельный удар — умереть он может только после тотема)
 	if (fight && !fight.totem && e.hurtEntity?.typeId === BOSS) {
 		let absorbed = false, hp = 1;
-		try { absorbed = !!e.hurtEntity.getEffect(MinecraftEffectTypes.absorption); } catch {}
-		try { hp = e.hurtEntity.getComponent('minecraft:health').current; } catch {}
+		try { absorbed = !!e.hurtEntity.getEffect('absorption'); } catch {}
+		try { hp = e.hurtEntity.getComponent('minecraft:health').currentValue; } catch {}
 		if (absorbed || hp <= 0) markTotem(e.hurtEntity);
 	}
 	if (!fight || e.hurtEntity?.typeId !== 'minecraft:player' || !fight.fighters.has(e.hurtEntity.name)) return;
 	let hp = 1;
-	try { hp = e.hurtEntity.getComponent('minecraft:health').current; } catch {}
+	try { hp = e.hurtEntity.getComponent('minecraft:health').currentValue; } catch {}
 	if (hp <= 0 && isBotName(e.hurtEntity.name)) {
 		// бот: после гибели появится на спавне (botLink.assist) и в бой не вернётся; вещи из «Управления слотами» ему выдаст bot.js
 		knockOut(e.hurtEntity.name);
@@ -491,23 +493,23 @@ world.events.entityHurt.subscribe((e) => {
 
 /** Вампиризм: звуковой удар по игроку или мобу — Хранитель забирает отнятое здоровье (душу погибшего — целиком). */
 function vampire(e) {
-	const boss = e.damagingEntity, victim = e.hurtEntity;
+	const boss = e.damageSource.damagingEntity, victim = e.hurtEntity;
 	const d = Math.hypot(boss.location.x - victim.location.x, boss.location.y - victim.location.y, boss.location.z - victim.location.z);
 	if (!isSonic(e.cause, d)) return;
 	let current, hp = 1, victimMax = 0;
-	try { current = boss.getComponent('minecraft:health').current; } catch { return; }
-	try { const h = victim.getComponent('minecraft:health'); hp = h.current; victimMax = h.value; } catch {}
+	try { current = boss.getComponent('minecraft:health').currentValue; } catch { return; }
+	try { const h = victim.getComponent('minecraft:health'); hp = h.currentValue; victimMax = heffectiveMax; } catch {}
 	// фаза — по здоровью прямо сейчас: игроки могли пробить 60 % после последней проверки fightStep (раз в секунду)
 	const phase = Math.max(fight.phase, phaseOf({ current, max: fight.max, totem: fight.totem }));
 	const next = vampireHeal({ phase, current, max: fight.max, damage: e.damage, died: hp <= 0, victimMax });
 	if (next === null) return;
-	try { boss.getComponent('minecraft:health').setCurrent(next); } catch { return; }
+	try { boss.getComponent('minecraft:health').setCurrentValue(next); } catch { return; }
 	const { x, y, z } = boss.location;
 	cmd(`particle minecraft:sculk_soul_particle ${x.toFixed(1)} ${(y + 2).toFixed(1)} ${z.toFixed(1)}`);
 	if (hp <= 0) for (const name of fight.fighters) { const p = findOnline(name); if (p) tell(p, 'chat.boss.vampire'); }
 }
 
-world.events.playerLeave.subscribe((e) => {
+world.afterEvents.playerLeave.subscribe((e) => {
 	hinted.delete(e.playerName);
 	if (summon?.name === e.playerName) summon = undefined;
 	if (fight?.fighters.has(e.playerName)) { fight.fighters.delete(e.playerName); fight.dead.delete(e.playerName); }

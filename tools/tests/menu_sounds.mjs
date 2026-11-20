@@ -18,7 +18,7 @@ const ctx = { ActionFormData: Form, ModalFormData: Form, MessageFormData: Form, 
 	beginMenuAction() {}, endMenuAction() {}, closedByPlayer: r => r.canceled, toldCount: () => 0, toldErrorCount: () => 0, settleCommands: async () => {}, menuFeedback() {},
 	showWhenFree: (_, f) => new Promise(res => shown.push(res)) };
 vm.runInNewContext(forms + '\nglobalThis.api={showMenu,confirm,CLICK_SOUND};', ctx);
-const tags = new Set(); const P = { name: 'P', hasTag: t => tags.has(t), runCommandAsync: c => { ran.push(c); return Promise.resolve(); } };
+const tags = new Set(); const P = { name: 'P', hasTag: t => tags.has(t), runCommand: c => { ran.push(c); return Promise.resolve(); } };
 const flush = async () => { for (let i = 0; i < 12; i++) await Promise.resolve(); };
 ctx.api.showMenu(P, 't', 'b', [{ text: 'a', run() {} }]); await flush(); shown.shift()({ selection: 0 }); await flush();
 assert.deepEqual(ran, [ctx.api.CLICK_SOUND]);

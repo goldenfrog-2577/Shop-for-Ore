@@ -60,7 +60,7 @@ export function checkCollector(p) {
 	return true;
 }
 
-world.events.blockBreak.subscribe((e) => {
+world.afterEvents.playerBreakBlock.subscribe((e) => {
 	const p = e.player;
 	// Снег в сплифе и прочие мини-игры — не добыча; бот не собирает
 	if (!p || isPending(p) || p.hasTag('role:bot') || p.getTags().some(t => t.startsWith('game:'))) return;
@@ -68,6 +68,6 @@ world.events.blockBreak.subscribe((e) => {
 	if (id) giveDisc(p, id);
 });
 
-system.runSchedule(() => {
+system.runInterval(() => {
 	for (const p of world.getPlayers()) if (!p.hasTag('role:bot')) checkCollector(p);
 }, 100);

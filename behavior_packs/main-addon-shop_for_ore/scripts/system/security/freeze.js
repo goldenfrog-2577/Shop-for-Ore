@@ -4,7 +4,7 @@
 // Эффекты (замедление 255, прыгучесть 128) не подходят: в воздухе игрок падает, а «переполненная»
 // прыгучесть ведёт себя по-разному на разных устройствах.
 
-import { world } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { run, clearIssuer } from '../../utils.js';
 
 const POS_TAG = 'state:frozen_at:';
@@ -39,7 +39,7 @@ export function unfreezePlayer(player) {
 	run(player, 'effect @s jump_boost 0');
 }
 
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	for (const player of world.getPlayers()) {
 		if (!player.hasTag('state:frozen')) continue;
 		const at = frozenAt(player);

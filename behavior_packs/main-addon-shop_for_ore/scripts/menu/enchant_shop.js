@@ -7,18 +7,18 @@
 // Кирка уровня: «Эффективность» и «Удача» хранятся в табло и накладываются в timers/ticks_20; покупка —
 // функции shop/enchants/*, цены и максимумы — там же (здесь только для показа).
 
-import { MinecraftEnchantmentTypes, Enchantment } from '@minecraft/server';
+import { EnchantmentTypes } from '@minecraft/server';
 import { getScore, shopBalance, metricNumbers, run, tell } from '../utils.js';
 import { showMenu, backButton } from './common/forms.js';
 
-// id — ключ в MinecraftEnchantmentTypes, name — ванильный ключ перевода (переводится на языке игрока)
+// id — идентификатор зачарования, name — ванильный ключ перевода (переводится на языке игрока)
 export const ITEM_ENCHANTS = [
 	{ id: 'sharpness', name: 'enchantment.damage.all', max: 5, price: 5000 },
-	{ id: 'fireAspect', name: 'enchantment.fire', max: 2, price: 8000 },
+	{ id: 'fire_aspect', name: 'enchantment.fire', max: 2, price: 8000 },
 	{ id: 'knockback', name: 'enchantment.knockback', max: 2, price: 4000 },
 	{ id: 'protection', name: 'enchantment.protect.all', max: 4, price: 5000 },
 	{ id: 'thorns', name: 'enchantment.thorns', max: 3, price: 6000 },
-	{ id: 'featherFalling', name: 'enchantment.protect.fall', max: 4, price: 3000 },
+	{ id: 'feather_falling', name: 'enchantment.protect.fall', max: 4, price: 3000 },
 	{ id: 'power', name: 'enchantment.arrowDamage', max: 5, price: 4000 },
 	{ id: 'punch', name: 'enchantment.arrowKnockback', max: 2, price: 4000 },
 	{ id: 'infinity', name: 'enchantment.arrowInfinite', max: 1, price: 30000 },
@@ -30,7 +30,7 @@ export const ITEM_ENCHANTS = [
 	{ id: 'channeling', name: 'enchantment.tridentChanneling', max: 1, price: 50000 },
 	{ id: 'multishot', name: 'enchantment.crossbowMultishot', max: 1, price: 20000 },
 	{ id: 'piercing', name: 'enchantment.crossbowPiercing', max: 4, price: 5000 },
-	{ id: 'quickCharge', name: 'enchantment.crossbowQuickCharge', max: 3, price: 6000 },
+	{ id: 'quick_charge', name: 'enchantment.crossbowQuickCharge', max: 3, price: 6000 },
 	// Общие: щит берёт только эти два
 	{ id: 'unbreaking', name: 'enchantment.durability', max: 3, price: 4000 },
 	{ id: 'mending', name: 'enchantment.mending', max: 1, price: 40000 }
@@ -75,15 +75,16 @@ const MOB_HEADS = new Set(['skull', 'skeleton_skull', 'wither_skull', 'wither_sk
 export function optionsFor(item) {
 	// Кирка уровня зачаровывается отдельно; лопаты не продаём (в сплифе лопата игры — её зачаровать нельзя)
 	if (!item || item.typeId.endsWith('_pickaxe') || item.typeId.endsWith('_shovel') || MOB_HEADS.has(shortId(item.typeId))) return [];
-	const comp = item.getComponent('enchantments');
+	const comp = item.getComponent('minecraft:enchantable');
 	if (!comp) return [];
-	const list = comp.enchantments;
+	const list = comp;
 	const out = [];
 	for (const e of ITEM_ENCHANTS) {
-		const type = MinecraftEnchantmentTypes[e.id];
-		const level = list.hasEnchantment(type);
+		const type = EnchantmentTypes.get('minecraft:' + e.id);
+		if (!type) continue;
+		const level = list.getEnchantment(type)?.level ?? 0;
 		if (level > 0) out.push({ e, level, next: level >= e.max ? undefined : level + 1 });
-		else if (list.canAddEnchantment(new Enchantment(type, 1))) out.push({ e, level: 0, next: 1 });
+		else if (list.canAddEnchantment({ type, level: 1 })) out.push({ e, level: 0, next: 1 });
 	}
 	return out;
 }
@@ -107,12 +108,14 @@ export function buyEnchant(player, slot, typeId, enchantId) {
 		tell(player, 'chat.error.no_money');
 		return false;
 	}
-	const comp = held.item.getComponent('enchantments');
-	const list = comp.enchantments;
-	const type = MinecraftEnchantmentTypes[opt.e.id];
-	if (opt.level > 0) list.removeEnchantment(type);
-	if (!list.addEnchantment(new Enchantment(type, opt.next))) return false;
-	comp.enchantments = list;
+	const comp = held.item.getComponent('minecraft:enchantable');
+	const list = comp;
+	const type = EnchantmentTypes.get('minecraft:' + opt.e.id);
+	if (!type) return false;
+	try {
+		if (opt.level > 0) list.removeEnchantment(type);
+		list.addEnchantment({ type, level: opt.next });
+	} catch { return false; }
 	held.container.setItem(slot, held.item);
 	run(player, `scoreboard players remove @s money ${price}`);
 	tell(player, 'chat.shop.item_enchant.done', { translate: opt.e.name }, { translate: `enchantment.level.${opt.next}` }, String(price));
@@ -146,9 +149,9 @@ export function enchantsMenu(player, back) {
 
 /** Текущие зачарования предмета из каталога: «Острота II, Прочность I» (не больше limit, дальше «…»). */
 function currentEnchantsText(item, limit = 99) {
-	const list = item.getComponent('enchantments')?.enchantments;
+	const list = item.getComponent('minecraft:enchantable');
 	if (!list) return '%menu.shop.item_enchants.none';
-	const have = ITEM_ENCHANTS.map(e => [e, list.hasEnchantment(MinecraftEnchantmentTypes[e.id])]).filter(([, l]) => l > 0);
+	const have = ITEM_ENCHANTS.map(e => [e, list.getEnchantment('minecraft:' + e.id)?.level ?? 0]).filter(([, l]) => l > 0);
 	if (!have.length) return '%menu.shop.item_enchants.none';
 	// Без §-кода прямо перед %ключом: так ключ точно переводится (цвет — из строки вокруг)
 	const parts = have.slice(0, limit).map(([e, l]) => levelText(e.name, l));

@@ -1,4 +1,4 @@
-import { Items, ItemStack } from '@minecraft/server';
+import { ItemStack } from '@minecraft/server';
 import { changeMoney, getScore, isPending, lockMoneyOperation, run, tell } from '../../utils.js';
 
 const COIN_ID = 'minecraft:gold_ingot';
@@ -31,8 +31,7 @@ export function bankAmount(raw) {
 }
 
 function newStack(amount) {
-	// В Bedrock 1.19.50 setItem требует ItemStack даже при очистке слота.
-	return new ItemStack(Items.get(amount ? COIN_ID : 'minecraft:stick'), amount);
+	return amount ? new ItemStack(COIN_ID, amount) : undefined;
 }
 
 function stackPlan(container, amount, deposit) {

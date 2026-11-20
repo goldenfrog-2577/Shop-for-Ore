@@ -2,7 +2,7 @@
 // Главное меню и разделы: О карте, Магазин, Настройки, Банк, Правила, Промокоды, Телепортации,
 // Прокачка, Достижения, Мини-игры. Формы строит menu/common/forms.js: крестик закрывает окно, возврат — кнопкой «Назад».
 
-import { world } from '@minecraft/server';
+import { world, system, ItemStack } from '@minecraft/server';
 import { isJailed, tellJailed } from '../system/security/jail.js';
 import { isPending, tellText, tell, run, findPlayer, getScore, isBot, transferMoney, WARPS, MAX_LEVEL, RULES_COUNT, warpAllowed, shopBalance } from '../utils.js';
 import { showMenu, showModal, modal, backButton, confirm, toggleMenu } from './common/forms.js';
@@ -27,28 +27,67 @@ const BUILD = '0.3.0_20261114r';
 const lines = (prefix, n, from = 1) => Array.from({ length: n - from + 1 }, (_, i) => `%${prefix}.${from + i}`).join('\n');
 
 // --- Открытие предметом ---
-world.events.beforeItemUse.subscribe((data) => {
-	if (data.item.typeId !== 'server:menu') return;
-	const player = data.source;
+function openServerMenu(player) {
 	// До входа в аккаунт меню недоступно
 	if (isPending(player)) {
-		data.cancel = true;
 		tell(player, 'chat.account.error.login_required');
 		return;
 	}
 	// Замороженный игрок не может уйти варпом из меню
 	if (player.hasTag('state:frozen')) {
-		data.cancel = true;
 		tell(player, 'chat.cmd.freeze.active');
 		return;
 	}
 	// В тюрьме (!jail) — тоже: меню телепортаций вывело бы из камеры
 	if (isJailed(player)) {
-		data.cancel = true;
 		tellJailed(player);
 		return;
 	}
 	menu(player);
+}
+
+// На блоке движок может вызвать оба обработчика: открываем одну форму за тик.
+const pendingMenu = new Set();
+system.beforeEvents.startup.subscribe(({ itemComponentRegistry }) => {
+	const requestMenu = ({ source }) => {
+		const id = source.id;
+		if (pendingMenu.has(id)) return;
+		pendingMenu.add(id);
+		system.run(() => {
+			try {
+				if (source.isValid) openServerMenu(source);
+			} finally {
+				pendingMenu.delete(id);
+			}
+		});
+	};
+	itemComponentRegistry.registerCustomComponent('sfo:open_menu', { onUse: requestMenu, onUseOn: requestMenu });
+});
+
+function giveMenu(player) {
+	const inventory = player.getComponent('minecraft:inventory')?.container;
+	if (!inventory) return;
+
+	for (let slot = 0; slot < inventory.size; slot++) {
+		if (inventory.getItem(slot)?.typeId === 'server:menu') return;
+	}
+
+	if (inventory.emptySlotsCount === 0) {
+		tell(player, 'sfo.port.inventory_full');
+		return;
+	}
+
+	const item = new ItemStack('server:menu');
+	item.keepOnDeath = true;
+	if (!inventory.getItem(8)) {
+		inventory.setItem(8, item);
+	} else {
+		inventory.addItem(item);
+	}
+}
+
+world.afterEvents.playerSpawn.subscribe(({ player }) => {
+	if (player.isValid && !isBot(player)) giveMenu(player);
 });
 
 // --- Главное меню ---
@@ -137,7 +176,7 @@ function creatorLinks(player, creator, back) {
 	const form = modal('%menu.creators.links.title §8» ' + creator.name);
 	for (const [index, [key, url]] of creator.links.entries()) {
 		const label = '%menu.creators.link.' + key;
-		form.textField(index === 0 ? '%menu.creators.copy_hint\n\n' + label : label, url, url);
+		form.textField(index === 0 ? '%menu.creators.copy_hint\n\n' + label : label, url, { defaultValue: url });
 	}
 	return showModal(player, form, back, back);
 }
@@ -236,7 +275,7 @@ function musicSetting(player, back) {
 }
 
 function musicVolume(player, back) {
-	const form = modal('%menu.music.volume.title').slider('%menu.music.volume.label', 0, 100, 10, getVolume(player));
+	const form = modal('%menu.music.volume.title').slider('%menu.music.volume.label', 0, 100, { valueStep: 10, defaultValue: getVolume(player) });
 	showModal(player, form, ([v]) => { setVolume(player, v); tell(player, 'chat.music.volume', String(getVolume(player))); back(); }, back);
 }
 
@@ -327,7 +366,7 @@ function bankTransfer(player, back) {
 	const names = [...world.getPlayers()].filter(eligible).map(target => target.name);
 	if (!names.length) return tell(player, 'chat.bank.error.no_players');
 	const form = modal('%menu.bank.transfer.title')
-		.dropdown('\n%menu.bank.balance §e' + getScore(player, 'money') + ' §r' + COIN + '\n%menu.bank.player', names, 0)
+		.dropdown('\n%menu.bank.balance §e' + getScore(player, 'money') + ' §r' + COIN + '\n%menu.bank.player', names, { defaultValueIndex: 0 })
 		.textField('%menu.bank.amount', '%menu.bank.amount_placeholder');
 	return showModal(player, form, ([index, amount]) => {
 		const name = names[index];

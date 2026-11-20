@@ -6,8 +6,7 @@
 // Список хранится в свойствах мира shop:bans0…3 (JSON по частям: одно свойство — до 1000 символов).
 // Срок: until — время окончания в мс (0 — навсегда); истёкший бан не действует и убирается из списка при проверке.
 
-import { world } from '@minecraft/server';
-import { DynamicPropertiesDefinition } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { run } from '../../utils.js';
 
 const PARTS = 4;
@@ -16,11 +15,6 @@ const KEY = (i) => `shop:bans${i}`;
 const REASON_MAX = 40;
 const NAMES_MAX = 5;   // сколько ников помнить в одном бане (последние)
 
-world.events.worldInitialize.subscribe((e) => {
-	const def = new DynamicPropertiesDefinition();
-	for (let i = 0; i < PARTS; i++) def.defineString(KEY(i), PART_LEN);
-	e.propertyRegistry.registerWorldDynamicProperties(def);
-});
 
 /** Список банов: [{ id, names: [ники], by, reason, t, until }] (until 0 / нет — навсегда) */
 export function getBans() {
@@ -98,9 +92,9 @@ export function kickBanned(player, ban) {
 
 // Проверка при входе: игрок появляется в списке не сразу, поэтому — со следующих тиков, плюс раз в 5 секунд всех
 const justJoined = new Set();
-world.events.playerJoin.subscribe((e) => justJoined.add(e.player.name));
+world.afterEvents.playerSpawn.subscribe(({ player, initialSpawn }) => { if (initialSpawn && player.isValid) justJoined.add(player.name); });
 let tick = 0;
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	tick++;
 	if (!justJoined.size && tick % 100 !== 0) return;
 	for (const p of world.getPlayers()) {

@@ -1,48 +1,30 @@
-// Бюджет динамических свойств мира (Minecraft 1.19.5x): сумма объявленных длин строк
-// не должна приближаться к 10 000 — иначе игра пишет «Dynamic property size limit exceeded»
-// и не регистрирует часть свойств (так было с журналом WorldEdit на 8 страниц).
-import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+// Проверяем старые страницы банов на 26.60 и отказ при переполнении без частичной записи.
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
 
-const ROOT = new URL('../../behavior_packs/main-addon-shop_for_ore/scripts/', import.meta.url).pathname;
-const LIMIT = 10000, RESERVE = 1000, NUMBER = 8, BOOLEAN = 1;
-
-const files = [];
-(function walk(dir) {
-	for (const name of readdirSync(dir)) {
-		const path = join(dir, name);
-		if (statSync(path).isDirectory()) walk(path);
-		else if (name.endsWith('.js')) files.push(path);
-	}
-})(ROOT);
-
-const constant = (src, name) => {
-	const m = src.match(new RegExp(`\\b${name}\\s*=\\s*(\\d+)`));
-	if (!m) throw new Error(`константа ${name} не найдена`);
-	return Number(m[1]);
+const url = new URL('../../behavior_packs/main-addon-shop_for_ore/scripts/system/security/ban.js', import.meta.url);
+const source = fs.readFileSync(url, 'utf8').replace(/^import .*;$/gm, '').replace(/^export /gm, '');
+const properties = new Map();
+const legacy = [{ id: 'p1', names: ['tester'], by: 'Owner', reason: 'old', t: 1, until: 0 }];
+properties.set('shop:bans0', JSON.stringify(legacy));
+const context = {
+	world: { afterEvents: { playerSpawn: { subscribe() {} } },
+		getDynamicProperty: k => properties.get(k),
+		setDynamicProperty: (k, v) => { assert(v.length <= 1000); properties.set(k, v); } },
+	system: { runInterval() {} },
 };
-const value = (src, expr) => /^\d+$/.test(expr.trim()) ? Number(expr) : constant(src, expr.trim());
-
-let total = 0;
-const rows = [];
-for (const file of files) {
-	const src = readFileSync(file, 'utf8');
-	if (!src.includes('registerWorldDynamicProperties')) continue;
-	let size = 0;
-	// for (let i = 0; i < N; i++) def.defineString(key(i), LEN)
-	for (const m of src.matchAll(/for\s*\(\s*let\s+\w+\s*=\s*0\s*;\s*\w+\s*<\s*(\w+)\s*;[^)]*\)\s*def\.defineString\([^,]+,\s*(\w+)\s*\)/g))
-		size += value(src, m[1]) * value(src, m[2]);
-	const loopless = src.replace(/for\s*\([^)]*\)\s*def\.defineString\([^)]*\)/g, '');
-	for (const m of loopless.matchAll(/defineString\([^,]+,\s*(\w+)\s*\)/g)) size += value(src, m[1]);
-	size += (loopless.match(/defineNumber\(/g) || []).length * NUMBER;
-	size += (loopless.match(/defineBoolean\(/g) || []).length * BOOLEAN;
-	total += size;
-	rows.push(`${file.slice(ROOT.length)}: ${size}`);
+vm.runInNewContext(source + '\nglobalThis.api = { getBans, addBan, removeBan };', context);
+const { getBans, addBan, removeBan } = context.api;
+assert.deepEqual(JSON.parse(JSON.stringify(getBans())), legacy);
+for (let i = 0; i <= 100; i++) {
+	const before = [...properties];
+	if (addBan({ name: 'Player' + i }, 'Owner', 'ш'.repeat(40), Infinity, i + 2)) continue;
+	assert.deepEqual([...properties], before);
+	assert.ok(properties.get('shop:bans1').length > 0);
+	assert.equal(getBans().length, i + 1);
+	assert.equal(removeBan('tester').id, 'p1');
+	console.log('PASS: persisted ban pages, multi-page round trip and no writes when full.');
+	break;
 }
-
-if (total > LIMIT - RESERVE) {
-	console.error(rows.join('\n'));
-	console.error(`FAIL: объявлено ${total} из ${LIMIT}, запас меньше ${RESERVE}`);
-	process.exit(1);
-}
-console.log(`PASS: world dynamic properties ${total}/${LIMIT} (${rows.length} files, reserve ≥ ${RESERVE})`);
+assert.ok(!getBans().some(entry => entry.id === 'p1'));

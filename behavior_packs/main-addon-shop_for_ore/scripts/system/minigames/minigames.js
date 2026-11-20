@@ -8,7 +8,7 @@
 // Идея — по мотивам карты FearCube (с разрешения автора), код свой.
 
 import { isJailed, jailMinutesLeft } from '../security/jail.js';
-import { world, system, MinecraftEffectTypes } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { run, rawTranslateRich, isPending, isBot, findPlayer, tell } from '../../utils.js';
 import { teleportToArena, combatSecondsLeft } from '../combat/pvp.js';
 import { showTitle } from '../ui/toast.js';
@@ -76,7 +76,7 @@ const gameName = (g) => ({ translate: `minigame.${g.def.id}.name` });
 
 /** Записаться в игру. Бота (role:bot) — только с allowBot (меню администратора → Бот, system/bot/bot.js). @returns {boolean} */
 const hasFeatherEffect = (p) => {
-	try { return !!(p.getEffect(MinecraftEffectTypes.levitation) || p.getEffect(MinecraftEffectTypes.slowFalling)); } catch { return false; }
+	try { return !!(p.getEffect('levitation') || p.getEffect('slow_falling')); } catch { return false; }
 };
 
 export function joinGame(player, id, { allowBot = false } = {}) {
@@ -251,7 +251,7 @@ function checkEnd(g) {
 }
 
 // --- Раз в секунду: отсчёт, выбывшие, время ---
-system.runSchedule(() => {
+system.runInterval(() => {
 	for (const g of games.values()) {
 		// Вышедшие с сервера
 		for (const name of [...g.players]) if (!findPlayer(name)) removePlayer(g, name, undefined, 'quit');
@@ -283,20 +283,20 @@ system.runSchedule(() => {
 }, 20);
 
 // Смерть во время игры — выбыл
-world.events.entityHurt.subscribe((e) => {
+world.afterEvents.entityHurt.subscribe((e) => {
 	const p = e.hurtEntity;
 	if (p?.typeId !== 'minecraft:player') return;
 	const g = gameOf(p);
 	if (!g || g.phase !== 'running' || !g.alive.has(p.name)) return;
 	let hp;
-	try { hp = p.getComponent('health').current; } catch { return; }
+	try { hp = p.getComponent('health').currentValue; } catch { return; }
 	if (hp <= 0) removePlayer(g, p.name, p, 'out');
 });
 
 // Победы по играм появились, когда игра была одна (PvP): прежние stat_wins переносятся в stat_win_pvp_ffa
 // один раз на игрока (тег sys:wins_split; ставится, только если команда прошла — табло уже создано)
 const SPLIT_TAG = 'sys:wins_split';
-system.runSchedule(() => {
+system.runInterval(() => {
 	for (const p of world.getPlayers()) {
 		if (p.hasTag(SPLIT_TAG) || isPending(p)) continue;
 		run(p, 'scoreboard players operation @s stat_win_pvp_ffa = @s stat_wins').then(r => { if (r) try { p.addTag(SPLIT_TAG); } catch { /* вышел */ } });
@@ -309,7 +309,7 @@ system.run(() => { for (const p of world.getPlayers()) clearStale(p); });
 // При входе — сразу в обработчике: в 1.19.50 e.player доступен только в момент события, а в system.run
 // падал («Native object bound to prototype does not exist»), и try молча глушил ошибку — тег не снимался.
 // Теги при входе так же снимает registration/system.js
-world.events.playerJoin.subscribe((e) => clearStale(e.player));
+world.afterEvents.playerSpawn.subscribe(({ player, initialSpawn }) => { if (initialSpawn && player.isValid) clearStale(player); });
 
 // ===== Мини-игры =====
 

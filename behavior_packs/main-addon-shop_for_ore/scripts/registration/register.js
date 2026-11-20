@@ -15,7 +15,7 @@ export function RegisterUI(player) {
 	const register = modal('%account.register.title')
 		// В форме у ключей нет параметров: ник — в начале («Ник, приветствую…»), так порядок слов верен во всех языках
 		.textField(`\n§f${player.name}§r§7, %account.login.intro`, '%account.login.placeholder')
-		.toggle('%account.register.agree', false);
+		.toggle('%account.register.agree', { defaultValue: false });
 	return register.show(player).then(r => {
 		// Форма закрыта — через ~2 с она покажется снова
 		if (!r.formValues) return;
@@ -38,10 +38,9 @@ export function RegisterUI(player) {
 		player.addTag('auth:done');
 		player.removeTag('auth:register');
 		unlockPlayer(player);
-		// В чате ник и пароль — параметры ключей (%1$s): где они стоят, решает перевод
-		// Приветствие — что есть на сервере (одна строка — один ключ), затем пароль: он показывается только здесь, один раз
-		tellText(player, '\n%account.register.greeting\n%account.register.welcome\n%account.register.feature.1\n%account.register.feature.2\n%account.register.feature.3\n%account.register.feature.4\n%account.register.menu\n\n%account.register.info\n%account.register.password\n\n%account.register.remember\n ',
-			{ 'account.register.greeting': [player.name], 'account.register.password': [password] });
+		// Приветствие: пароль остаётся только в форме и сохранённом хеше.
+		tellText(player, '\n%account.register.greeting\n%account.register.welcome\n%account.register.feature.1\n%account.register.feature.2\n%account.register.feature.3\n%account.register.feature.4\n%account.register.menu\n\n%account.register.remember\n ',
+			{ 'account.register.greeting': [player.name] });
 		if (!player.hasTag('player:menu_success_off')) run(player, 'playsound random.levelup @s');
 	});
 }

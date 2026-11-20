@@ -16,7 +16,7 @@
 // с прежним режимом и предметами из «Управления слотами».
 // Победы и смерти бота в статистику и достижения не идут (achievements.js, minigames.js).
 
-import { world, Location, Vector, BlockLocation, DynamicPropertiesDefinition, MinecraftEffectTypes } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { run, findPlayer, getScore, isPending, isBot } from '../../utils.js';
 import { getBot, spawnBot, removeBot, onBotSpawned, onBotRemoved } from './spawnbot.js';
 import { isAir, isSolid } from '../security/anticheat_checks.js';
@@ -50,11 +50,6 @@ const DEFAULT_STATE = { mode: 'idle', target: undefined, stay: undefined, offset
 let state = { ...DEFAULT_STATE, items: {} };
 let loaded = false;
 
-world.events.worldInitialize.subscribe((e) => {
-	const def = new DynamicPropertiesDefinition();
-	def.defineString(STATE_PROP, 2000);
-	e.propertyRegistry.registerWorldDynamicProperties(def);
-});
 
 function loadState() {
 	loaded = true;
@@ -72,7 +67,7 @@ function saveState() {
 export const botState = () => ({ ...state });
 
 const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
-const loc = (p) => new Location(p.x, p.y, p.z);
+const loc = (p) => ({ x: p.x, y: p.y, z: p.z });
 const safe = (fn) => { try { return fn(); } catch { return undefined; } };
 
 // Перестраиваем путь раз в секунду. Телепорт — только между измерениями или после 10 с без движения.
@@ -83,10 +78,10 @@ const JUMP_BLOCKS = new Set(['planks','log','log2','wood','stonebrick','brick_bl
 	'chest','trapped_chest','ender_chest','crafting_table','furnace','lit_furnace'].map(id => 'minecraft:' + id));
 const jumpBlock = id => isSolid(id) || JUMP_BLOCKS.has(id) || /^minecraft:double_.*slab/.test(id ?? '');
 const clearBlock = id => !!id && (isAir(id) || /^minecraft:(tallgrass|double_plant|yellow_flower|red_flower|deadbush|sapling|torch|redstone_torch|unlit_redstone_torch)$/.test(id));
-const blockId = (bot,x,y,z) => safe(() => bot.dimension.getBlock(new BlockLocation(Math.floor(x),Math.floor(y),Math.floor(z)))?.typeId);
+const blockId = (bot,x,y,z) => safe(() => bot.dimension.getBlock({ x: Math.floor(x), y: Math.floor(y), z: Math.floor(z) })?.typeId);
 
 export function jumpableObstacle(bot, goal) {
-	const p = bot.location, v = safe(() => bot.velocity);
+	const p = bot.location, v = safe(() => bot.getVelocity());
 	const moving = v && Number.isFinite(v.x) && Number.isFinite(v.z) && Math.hypot(v.x,v.z) > 0.05;
 	const dx = moving ? v.x : goal.x - p.x, dz = moving ? v.z : goal.z - p.z, length = Math.hypot(dx,dz);
 	if (length < 0.1) return false;
@@ -103,7 +98,7 @@ export function jumpableObstacle(bot, goal) {
 }
 let lastJump = -100;
 function tryJump(bot, goal, runJump = false) {
-	if (bot.isSneaking || tick - lastJump < 8 || Math.abs(safe(() => bot.velocity.y) ?? 0) >= 0.03) return;
+	if (bot.isSneaking || tick - lastJump < 8 || Math.abs(safe(() => bot.getVelocity().y) ?? 0) >= 0.03) return;
 	if (!runJump && !jumpableObstacle(bot,goal)) return;
 	lastJump = tick;
 	safe(() => bot.jump());
@@ -126,7 +121,7 @@ function walkTo(bot, goal, { target, speed = 1, near = 1.2, recover = true } = {
 		if (target) run(bot, `tp @s "${target.name}"`); else run(bot, `tp @s ${goal.x} ${goal.y} ${goal.z}`);
 		motion = undefined; return;
 	}
-	if (tick - motion.pathAt >= 20 && Math.abs(safe(() => bot.velocity.y) ?? 0) < 0.03) {
+	if (tick - motion.pathAt >= 20 && Math.abs(safe(() => bot.getVelocity().y) ?? 0) < 0.03) {
 		speed = Math.min(1, Math.max(0, speed));
 		motion.pathAt = tick;
 		if (target) safe(() => bot.navigateToEntity(target, speed)); else safe(() => bot.navigateToLocation(loc(goal), speed));
@@ -227,11 +222,11 @@ onBotRemoved((bot) => {
 let respawnAt = -1;
 let tick = 0;
 let healNext = false;   // груша: восстановить здоровье на следующем тике
-world.events.entityHurt.subscribe((e) => {
+world.afterEvents.entityHurt.subscribe((e) => {
 	const bot = getBot();
 	if (!bot || e.hurtEntity?.id !== bot.id) return;
-	if (state.mode === 'dummy') return dummyHit(bot, e.damagingEntity, e.damage);
-	const hp = safe(() => bot.getComponent('health').current);
+	if (state.mode === 'dummy') return dummyHit(bot, e.damageSource.damagingEntity, e.damage);
+	const hp = safe(() => bot.getComponent('health').currentValue);
 	if (hp !== undefined && hp <= 0) respawnAt = tick + RESPAWN_TICKS;
 });
 
@@ -250,7 +245,7 @@ function dummyHit(bot, attacker, damage) {
 	const span = Math.max(1, (now - list[0].t) / 1000);
 	showHudLine(attacker, [{ translate: 'hud.bot.dummy', with: [damage.toFixed(1), (total / span).toFixed(1), String(list.length)] }], { priority: 10, source: 'dummy' });
 }
-world.events.playerLeave.subscribe((e) => hits.delete(e.playerName));
+world.afterEvents.playerLeave.subscribe((e) => hits.delete(e.playerName));
 
 // ===== Спарринг и мини-игры =====
 
@@ -278,11 +273,11 @@ function hasSelectedBow(bot, slot) {
 
 function bowLineClear(bot, target) {
 	return safe(() => {
-		const from = bot.headLocation, to = target.headLocation;
+		const from = bot.getHeadLocation(), to = target.getHeadLocation();
 		const dx = to.x - from.x, dy = to.y - from.y, dz = to.z - from.z;
 		const length = Math.hypot(dx, dy, dz);
 		if (length < 1) return false;
-		const direction = new Vector(dx / length, dy / length, dz / length);
+		const direction = { x: dx / length, y: dy / length, z: dz / length };
 		return !bot.dimension.getBlockFromRay(from, direction, { maxDistance: length - 0.1 });
 	}) === true;
 }
@@ -294,19 +289,19 @@ function cancelBow(bot) {
 	nextBowAt = tick + BOW_RETRY_TICKS;
 	// Смена слота прерывает натяжение. Отпускать натянутый лук в прежнем слоте здесь нельзя.
 	safe(() => {
-		const slot = bot.selectedSlot;
+		const slot = bot.selectedSlotIndex;
 		if (slot !== draw.slot) {
 			bot.stopUsingItem();
 			return;
 		}
-		bot.selectedSlot = (slot + 1) % 9;
-		try { bot.stopUsingItem(); } finally { bot.selectedSlot = slot; }
+		bot.selectedSlotIndex = (slot + 1) % 9;
+		try { bot.stopUsingItem(); } finally { bot.selectedSlotIndex = slot; }
 	});
 }
 
 function shootBow(bot, target, distance) {
 	const inRange = distance >= BOW_MIN_RANGE && distance <= BOW_MAX_RANGE;
-	const slot = bot.selectedSlot;
+	const slot = bot.selectedSlotIndex;
 	if (bowDraw) {
 		if (!inRange || bowDraw.target !== target.id || bowDraw.slot !== slot) {
 			cancelBow(bot);
@@ -356,7 +351,7 @@ function fight(bot, among) {
 function attack(bot, t) {
 	const cfg = SPAR[state.level] ?? SPAR[2];
 	if (state.level === 4 && tick % 20 === 0) {
-		const effect = safe(() => bot.getEffect(MinecraftEffectTypes.speed));
+		const effect = safe(() => bot.getEffect('speed'));
 		if (!effect || effect.amplifier < 1 || effect.duration < 20) run(bot, 'effect @s speed 2 1 true');
 	}
 	safe(() => bot.lookAtEntity(t));
@@ -376,7 +371,7 @@ function attack(bot, t) {
 function spleef(bot, among) {
 	const t = nearestOpponent(bot, among);
 	if (!t) return;
-	const under = new BlockLocation(Math.floor(t.location.x), Math.floor(t.location.y) - 1, Math.floor(t.location.z));
+	const under = { x: Math.floor(t.location.x), y: Math.floor(t.location.y) - 1, z: Math.floor(t.location.z) };
 	const d = dist(t.location, bot.location);
 	if (d > 4) walkTo(bot, t.location, { target: t, near: 4, recover: false });
 	if (d <= 4.5 && tick % 6 === 0) {
@@ -423,7 +418,7 @@ function findBotSummoner() {
 	}
 }
 
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	tick++;
 	if (!loaded && tick >= 2) loadState();
 	if (!loaded) return;
@@ -492,7 +487,7 @@ world.events.tick.subscribe(() => {
 			const o = state.offset ?? { x: 2, y: 0, z: 0 };
 			const goal = { x: t.location.x + o.x, y: t.location.y, z: t.location.z + o.z };
 			walkTo(bot, goal, { speed: 1.1, near: 0.4 });
-			safe(() => bot.setRotation(t.rotation.x, t.rotation.y));
+			safe(() => bot.setRotation(t.getRotation()));
 			safe(() => { bot.isSneaking = t.isSneaking; });
 			break;
 		}

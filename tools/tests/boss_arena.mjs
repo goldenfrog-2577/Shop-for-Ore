@@ -8,10 +8,10 @@ const src = fs.readFileSync(new URL('scripts/system/boss/arena.js', bp), 'utf8')
 let tickCb; const ran = []; const particles = []; const players = [];
 const ctx = {
 	Math,
-	system: { runSchedule: (cb, n) => { assert.equal(n, 20); tickCb = cb; } },
+	system: { runInterval: (cb, n) => { assert.equal(n, 20); tickCb = cb; } },
 	world: {
 		getPlayers: () => players,
-		getDimension: () => ({ runCommandAsync: c => { particles.push(c); return Promise.resolve(); } }),
+		getDimension: () => ({ runCommand: c => { particles.push(c); return Promise.resolve(); } }),
 	},
 	run: () => { throw Error('run() не используется'); }
 };
@@ -59,15 +59,15 @@ for (const c of A.particleCommands(rnd)) {
 }
 assert.equal(A.BRAZIERS.length, 16);
 // Цикл: игрок на арене получает эмбиент, бот и игрок снаружи — ничего; частицы только при игроках на арене
-const tags = (n, name) => ({ hasTag: t => n.includes(t), runCommandAsync: c => { ran.push([name, c]); return Promise.resolve(); } });
+const tags = (n, name) => ({ hasTag: t => n.includes(t), runCommand: c => { ran.push([name, c]); return Promise.resolve(); } });
 players.push({ name: 'P', location: { x: 528, y: -55, z: -40 }, dimension: { id: 'minecraft:overworld' }, ...tags([], 'P') });
 players.push({ name: 'Bot', location: { x: 528, y: -55, z: -40 }, dimension: { id: 'minecraft:overworld' }, ...tags(['role:bot'], 'Bot') });
 players.push({ name: 'Far', location: { x: 0, y: 5, z: 0 }, dimension: { id: 'minecraft:overworld' }, ...tags([], 'Far') });
-for (let i = 0; i < 20 && !ran.length; i++) tickCb();
+for (let i = 0; i < 20 && !ran.length; i++) { tickCb(); await Promise.resolve(); }
 assert.ok(ran.length && ran.every(([n, c]) => n === 'P' && c.startsWith('playsound ')));
 assert.ok(particles.length > 0);
 players.splice(0, 1); ran.length = 0; particles.length = 0;
-for (let i = 0; i < 20; i++) tickCb();
+for (let i = 0; i < 20; i++) { tickCb(); await Promise.resolve(); }
 assert.equal(ran.length, 0); assert.equal(particles.length, 0);
 assert.ok(!src.includes('music'.concat('Step')) && !src.includes('playsound music.') && !src.includes('playsound record.'));
 

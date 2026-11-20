@@ -7,7 +7,7 @@
 // sys:offline_reset:<номер> уже в порядке, у остальных теги снимаются при входе — раньше проверки
 // пароля (registration/system.js вызывает applyOfflineReset первым делом).
 
-import { world, DynamicPropertiesDefinition } from '@minecraft/server';
+import { world } from '@minecraft/server';
 import { syncResetEpoch, markResetEpoch } from './reset_history.js';
 import { run, tell, isBot } from '../../utils.js';
 import { logAction } from '../security/staff_log.js';
@@ -17,11 +17,6 @@ export const RESET_TAG = 'sys:offline_reset:';
 const WIPE_ID = 'shop:wipe_id';
 const WIPE_TAG = 'sys:wipe:';
 
-world.events.worldInitialize.subscribe((e) => {
-	const def = new DynamicPropertiesDefinition();
-	def.defineNumber(RESET_ID);
-	e.propertyRegistry.registerWorldDynamicProperties(def);
-});
 
 // null — свойство не прочиталось: тогда ничего не сбрасываем и не помечаем
 const prop = (id) => { try { return world.getDynamicProperty(id) ?? 0; } catch { return null; } };
@@ -60,7 +55,10 @@ export function resetOffline(by) {
 		// Что вернуть после reset *: счета игроков в сети, сущностей и служебные записи (не игроки)
 		const keep = [];
 		for (const p of online) {
-			try { keep.push([p, objective.getScore(p.scoreboard)]); } catch { /* у игрока нет счёта в этом табло */ }
+			try {
+				const score = objective.getScore(p);
+				if (Number.isFinite(score)) keep.push([p, score]);
+			} catch { /* у игрока нет счёта в этом табло */ }
 		}
 		const fake = [];
 		try {

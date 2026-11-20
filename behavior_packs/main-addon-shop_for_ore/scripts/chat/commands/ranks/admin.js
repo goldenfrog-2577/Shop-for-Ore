@@ -27,7 +27,7 @@ const PROTECTED_OBJECTIVES = ['timer', 'system', 'settings', 'display', 'online'
 
 /** Строки !debug. Секреты аккаунта исключаются в groupProfileTags. */
 export function debugLines(target) {
-	const data = profileScores(target.scoreboard);
+	const data = profileScores(target.scoreboardIdentity);
 	const scores = DEBUG_SCORES.map(id => '§e' + id + '§7: §f' + (data[id] ?? 0)).join('§8, ');
 	const { count, groups } = groupProfileTags(target);
 	const lines = [
@@ -317,7 +317,7 @@ export const ADMIN_COMMANDS = {
 			return;
 		}
 		// Счёт игрока в табло или undefined (счёта нет)
-		const scoreOf = (objective) => { try { return objective.getScore(target.scoreboard); } catch { return undefined; } };
+		const scoreOf = (objective) => { try { return objective.getScore(target); } catch { return undefined; } };
 		if (sbAction === 'list') {
 			const scores = world.scoreboard.getObjectives().map(o => [o.id, scoreOf(o)]).filter(([, value]) => value !== undefined);
 			const padding = columnPadding(scores.map(([id]) => id));

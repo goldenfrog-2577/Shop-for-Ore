@@ -77,12 +77,12 @@ export function saveRegistryProfile(player) {
 		if (!world.scoreboard.getObjective(REGISTRY)) world.scoreboard.addObjective(REGISTRY, REGISTRY);
 		const warns = Math.max(0, Math.min(3, Math.floor(getWarns(player))));
 		const packed = ROLES.indexOf(getRole(player)) + 1 + (isVip(player) ? 10 : 0) + warns * 100;
-		if (score(player.scoreboard, REGISTRY) !== packed) run(player, 'scoreboard players set @s ' + REGISTRY + ' ' + packed);
+		if (score(player.scoreboardIdentity, REGISTRY) !== packed) run(player, 'scoreboard players set @s ' + REGISTRY + ' ' + packed);
 	} catch (error) {
 		console.warn('[Shop for Ore] Player registry: ' + (error?.message ?? error));
 	}
 }
 
-system.runSchedule(() => {
+system.runInterval(() => {
 	for (const player of world.getPlayers()) saveRegistryProfile(player);
 }, 100);

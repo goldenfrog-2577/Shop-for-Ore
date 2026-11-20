@@ -1,6 +1,6 @@
 // Восстановление только отсутствующих счетов: после reset запись исчезает, а не становится нулём.
 // Деньги, VIP и прочий уже существующий прогресс при повторной проверке не меняются.
-import { world, system, DynamicPropertiesDefinition } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { run, getScore } from '../../utils.js';
 
 const CORE = { xp: 0, money: 0, vip_coins: 0, lvl: 1, rebirth: 0, efficiency: 0, fortune: 0, pick: 0, magnet: 0 };
@@ -26,7 +26,7 @@ async function repair(player, onlineCount) {
 		let objective = world.scoreboard.getObjective(id);
 		if (!objective) objective = world.scoreboard.addObjective(id, id);
 		let score;
-		try { score = objective.getScore(player.scoreboard); } catch { /* отсутствующая запись */ }
+		try { score = objective.getScore(player); } catch { /* отсутствующая запись */ }
 		if (Number.isFinite(score) && (id !== 'lvl' || score >= 1)
 			&& (id !== 'online' || score === initial)
 			&& (id !== 'xp_need' || level !== 1 || score > 0)) continue;
@@ -40,7 +40,7 @@ async function repair(player, onlineCount) {
 }
 
 let tick = 0;
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	if (++tick % 20 !== 0) return;
 	const players = [...world.getPlayers()];
 	for (const player of players) ensurePlayerScores(player, players.length);
@@ -52,15 +52,17 @@ world.events.tick.subscribe(() => {
 // Это отдельные правила от commandblocksenabled — старые командные блоки не включаем.
 const LIMITS_FIXED = 'shop:command_limits_v1';
 let limitsTask;
-world.events.worldInitialize.subscribe(e => {
-	const def = new DynamicPropertiesDefinition();
-	def.defineBoolean(LIMITS_FIXED);
-	e.propertyRegistry.registerWorldDynamicProperties(def);
-});
 
 export function ensureFunctionLimits() {
 	if (limitsTask) return limitsTask;
-	limitsTask = restoreFunctionLimits();
+	limitsTask = restoreFunctionLimits().then(ok => {
+		if (!ok) limitsTask = undefined;
+		return ok;
+	}, error => {
+		limitsTask = undefined;
+		console.warn('[Shop for Ore] Function limits repair failed: ' + (error?.message ?? error));
+		return false;
+	});
 	return limitsTask;
 }
 async function restoreFunctionLimits() {
@@ -69,15 +71,14 @@ async function restoreFunctionLimits() {
 	// после включения функций ещё раз обнулит его новые деньги как «новичку».
 	const players = [...world.getPlayers()];
 	for (const player of players) {
-		if (await ensurePlayerScores(player, players.length) !== true) { limitsTask = undefined; return false; }
+		if (await ensurePlayerScores(player, players.length) !== true) return false;
 	}
 	const dim = world.getDimension('overworld');
 	try {
-		await dim.runCommandAsync('gamerule functioncommandlimit 10000');
-		await dim.runCommandAsync('gamerule maxcommandchainlength 65536');
+		dim.runCommand('gamerule functioncommandlimit 10000');
+		dim.runCommand('gamerule maxcommandchainlength 65536');
 	} catch (error) {
 		console.warn('[Shop for Ore] Function limits repair failed: ' + (error?.message ?? error));
-		limitsTask = undefined;
 		return false;
 	}
 	try { world.setDynamicProperty(LIMITS_FIXED, true); }
@@ -85,4 +86,10 @@ async function restoreFunctionLimits() {
 	console.warn('[Shop for Ore] Restored functioncommandlimit=10000 and maxcommandchainlength=65536; commandblocksenabled unchanged');
 	return true;
 }
-system.run(() => { ensureFunctionLimits(); });
+world.afterEvents.worldLoad.subscribe(() => {
+	// На чистом мире нативный system/timers ещё не может прочитать setup system.
+	for (const id of ['system', ...Object.keys(CORE), 'online', 'xp_need']) {
+		if (!world.scoreboard.getObjective(id)) world.scoreboard.addObjective(id, id);
+	}
+	ensureFunctionLimits();
+});

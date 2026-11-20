@@ -23,4 +23,7 @@ command('set','stone');await r.step();r.leave();await r.drain();assert.equal(sha
 const beforeLarge=snapshot();select([0,0,0],[128,0,512]);command('set','stone');await r.drain();assert.equal(get(128,0,512).id,'minecraft:stone');assert.equal(status(),'chat.cmd.worldedit.done');command('undo');await r.drain();assert.equal(snapshot(),beforeLarge);
 select([-29999984,-64,-29999984],[29999984,319,29999984]);command('set','stone');await r.step();command('cancel');await r.drain();assert.equal(shared.areas.size,0);assert.equal(snapshot(),beforeLarge);
 select([0,0,0],[1,1,1]);n=shared.log.length;command('set','stone;kill');assert.equal(status(),'chat.cmd.worldedit.error.block');assert.equal(shared.log.length,n);commandBudget(r);
+select([0,0,0],[0,0,0]);command('set','stone','1');await r.drain();
+assert.equal(get(0,0,0).id,'minecraft:granite');assert.match(shared.log.findLast(e=>e.cmd.startsWith('fill ')).cmd,/minecraft:granite \[\] replace$/);
+command('set','stone','15');assert.equal(status(),'chat.cmd.worldedit.error.block');
 console.log('PASS: 66,177-block set/undo, lazy unlimited selection, container data, clipboard offsets, replace, cancel/error/leave recovery, persistent journal and one command per tick.');

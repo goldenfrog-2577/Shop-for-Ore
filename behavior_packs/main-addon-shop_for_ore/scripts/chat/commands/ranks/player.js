@@ -103,7 +103,7 @@ function sendPrivate(player, recipientName, text) {
 }
 
 // Игрок вышел — его записи больше не нужны
-world.events.playerLeave.subscribe((data) => {
+world.afterEvents.playerLeave.subscribe((data) => {
 	lastPrivate.delete(data.playerName);
 	lastReport.delete(data.playerName);
 });
@@ -272,7 +272,7 @@ export const PLAYER_COMMANDS = {
 			tell(player, 'chat.cmd.error.offline', args[0]);
 			return;
 		}
-		const scores = profileScores(target.scoreboard);
+		const scores = profileScores(target.scoreboardIdentity);
 		const lvl = scores.lvl ?? 0;
 		const lines = [
 			{ translate: 'chat.cmd.stats.lvl', with: { rawtext: [isVip(target) ? { translate: 'chat.cmd.stats.vip', with: [String(lvl)] } : { text: String(lvl) }] } },

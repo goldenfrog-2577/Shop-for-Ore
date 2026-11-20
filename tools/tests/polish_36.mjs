@@ -68,8 +68,8 @@ assert.ok(sys.includes('tag @a[x=-115,y=0,z=-51,r=1,tag=!role:bot,tag=!sys:warp_
 const portal = read(new URL('scripts/system/boss/portal.js', bp)).replace(/^import .*;\r?\n/gm, '').replace(/\bexport (?=const)/g, '');
 let cb; const calls = []; const players = [];
 vm.runInNewContext(portal, {
-	system: { runSchedule: (f, n) => { assert.equal(n, 2); cb = f; } },
-	world: { getPlayers: () => players.values(), events: { playerLeave: { subscribe() {} } } },
+	system: { runInterval: (f, n) => { assert.equal(n, 2); cb = f; } },
+	world: { getPlayers: () => players.values(), afterEvents: { playerLeave: { subscribe() {} } } },
 	runChatCommand: (p, c, a) => calls.push([p.name, c, ...a])
 });
 const tags = new Set(['sys:warp_boss']); const P = { name: 'low', hasTag: t => tags.has(t), removeTag: t => tags.delete(t) };

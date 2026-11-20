@@ -8,13 +8,13 @@ const read = (u) => fs.readFileSync(u, 'utf8');
 const T = await import(new URL('scripts/system/ui/music_tracks.js', bp));
 const src = read(new URL('scripts/system/ui/music.js', bp)).replace(/^import .*;\r?\n/gm, '').replace(/\bexport (?=(?:async )?function|const)/g, '');
 const arena = await import('data:text/javascript,' + encodeURIComponent(read(new URL('scripts/system/boss/arena.js', bp))
-	.replace(/^import .*;\r?\n/gm, '').replace(/system\.runSchedule\([\s\S]*?\n\}, CHECK_TICKS\);/, '')));
+	.replace(/^import .*;\r?\n/gm, '').replace(/system\.runInterval\([\s\S]*?\n\}, CHECK_TICKS\);/, '')));
 const schedules = []; let leave; const toasts = []; const players = [];
 const ctx = {
 	Math, Number, Object, inArena: arena.inArena, ...T,
 	showToast: (p, raw) => toasts.push([p.name, raw]),
-	system: { runSchedule: (cb, n) => schedules.push([n, cb]) },
-	world: { getPlayers: () => players.values(), events: { playerLeave: { subscribe: cb => { leave = cb; } } } }
+	system: { runInterval: (cb, n) => schedules.push([n, cb]) },
+	world: { getPlayers: () => players.values(), afterEvents: { playerLeave: { subscribe: cb => { leave = cb; } } } }
 };
 vm.runInNewContext(src + '\nglobalThis.M={zoneOf,playlistFor,pickTrack,musicStep,startTrack,NETHER,GAP,ZONE_PAUSE,getVolume,setVolume,unlockedDiscs,nowPlaying,playNow,setMusicOff,MUSIC_OFF,DISC_MODE,DISC_SCAN_TICKS};', ctx);
 const M = ctx.M;
@@ -66,12 +66,12 @@ assert.deepEqual([...M.musicStep(on.state, { ...N, now: t0 + 20, volume: 0 }).co
 // Цикл и ручные действия на «игроке»
 const mk = (name, loc, tags = []) => { const s = new Set(tags), cmds = [];
 	return { name, location: loc, dimension: { id: 'minecraft:overworld' }, cmds, getTags: () => [...s], hasTag: t => s.has(t), addTag: t => s.add(t), removeTag: t => s.delete(t),
-		runCommandAsync: c => { cmds.push(c); return Promise.resolve(); },
+		runCommand: c => { cmds.push(c); return Promise.resolve(); },
 		getComponent: () => ({ container: { size: 3, getItem: i => i === 1 ? { typeId: 'minecraft:record_ward' } : undefined } }) }; };
 const P = mk('P', { x: 0, y: 5, z: 0 }), B = mk('Bot', { x: 0, y: 5, z: 0 }, ['role:bot']);
 players.push(P, B);
 const [sec] = schedules.filter(([n]) => n === 20).map(([, cb]) => cb), [scan] = schedules.filter(([n]) => n === M.DISC_SCAN_TICKS).map(([, cb]) => cb);
-for (let i = 0; i < M.ZONE_PAUSE + 1; i++) sec();
+for (let i = 0; i < M.ZONE_PAUSE + 1; i++) { sec(); await Promise.resolve(); }
 assert.ok(P.cmds.includes('stopsound @s') && P.cmds.some(c => c.startsWith('playsound shop.music.'))); assert.equal(B.cmds.length, 0);
 assert.ok(M.nowPlaying(P) && T.PLAYLISTS.world.includes(M.nowPlaying(P).id)); assert.equal(toasts.length, 0);   // сам выбранный — без плашки
 // Следующий трек — плашка «Сейчас играет: <название> от <автор>»
@@ -90,13 +90,13 @@ P.addTag(M.DISC_MODE); assert.ok(M.playNow(P, 'ward')); assert.equal(M.nowPlayin
 P.addTag('music:disc:cat'); P.location = { x: 528, y: -55, z: -40 };
 assert.ok(!M.playNow(P, 'cat') && M.playNow(P, 'ward'));   // на арене — только её музыка (ward в ней есть)
 // Выключили в меню — трек останавливается сразу
-P.location = { x: 0, y: 5, z: 0 }; M.playNow(P, '5'); P.cmds.length = 0; M.setMusicOff(P, true);
+P.location = { x: 0, y: 5, z: 0 }; M.playNow(P, '5'); await Promise.resolve(); P.cmds.length = 0; M.setMusicOff(P, true); await Promise.resolve();
 assert.deepEqual([...P.cmds], ['stopsound @s shop.music.5']); assert.equal(M.nowPlaying(P), undefined); assert.ok(!M.playNow(P, '5'));
 assert.ok(!src.includes('nextTrack') && !read(new URL('scripts/menu/main_menu.js', bp)).includes('button.next'));   // «Следующий трек» убран — только выбор из списка
 leave({ playerName: 'P' }); assert.equal(M.nowPlaying(P), undefined);
 
 // Ресурс-пак: на каждый трек — shop.music.<id>, категория record, не объёмный, поток; встроенная музыка заглушена
-const defs = JSON.parse(read(new URL('sounds/sound_definitions.json', rp)));
+const defs = JSON.parse(read(new URL('sounds/sound_definitions.json', rp))).sound_definitions;
 for (const t of T.TRACKS) {
 	const d = defs[T.soundOf(t.id)]; assert.ok(d, t.id); assert.equal(d.category, 'record');
 	assert.deepEqual([...d.sounds].map(s => [s.name, s.is3D, s.stream]), [[t.file, false, true]], t.id);

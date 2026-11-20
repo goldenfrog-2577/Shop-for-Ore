@@ -4,7 +4,7 @@
 // (или переключатель в меню администратора). Сразу — командой !event mythic.
 // Столбец сундука держит прогруженным ticking area «mythic», иначе без игроков на арене сундук не заполнить.
 
-import { world, BlockLocation } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { run } from '../../utils.js';
 
 const CHEST_X = 300, CHEST_Z = 300;
@@ -69,7 +69,7 @@ export function rollLoot(count) {
 function findChestY() {
 	try {
 		for (let y = SEARCH_Y[0]; y >= SEARCH_Y[1]; y--) {
-			if (overworld().getBlock(new BlockLocation(CHEST_X, y, CHEST_Z)).typeId === 'minecraft:chest') return y;
+			if (overworld().getBlock({ x: CHEST_X, y, z: CHEST_Z }).typeId === 'minecraft:chest') return y;
 		}
 	} catch { /* столбец не прогружен */ }
 	return undefined;
@@ -104,7 +104,7 @@ function mythicEnabled() {
 }
 
 let tick = 0;
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	tick++;
 	// Один раз после загрузки: держим столбец сундука прогруженным (если зона уже есть — команда просто не сработает)
 	if (tick === 40) run(overworld(), `tickingarea add ${CHEST_X} ${SEARCH_Y[1]} ${CHEST_Z} ${CHEST_X} ${SEARCH_Y[0]} ${CHEST_Z} mythic`);

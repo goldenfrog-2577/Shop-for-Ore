@@ -3,7 +3,7 @@ const bp=new URL('../../behavior_packs/main-addon-shop_for_ore/',import.meta.url
 const load=p=>fs.readFileSync(new URL(p,bp),'utf8').replace(/^import .*;\r?\n/gm,'').replace(/\bexport (?=(?:async )?function|const)/g,'');
 const event=()=>({handlers:[],subscribe(fn){this.handlers.push(fn);}});
 let seconds=0,scheduled;const timeCommands=[],timePlayer={scoreboard:{},hasTag:()=>false};let historical=120;
-const time={world:{scoreboard:{getObjective:()=>({getScore:()=>seconds})},getPlayers:()=>[timePlayer].values(),getDimension:()=>({})},system:{runSchedule:f=>scheduled=f},getScore:()=>historical,isPending:()=>false,run:(p,c)=>timeCommands.push(c)};
+const time={world:{scoreboard:{getObjective:()=>({getScore:()=>seconds})},getPlayers:()=>[timePlayer].values(),getDimension:()=>({})},system:{runInterval:f=>scheduled=f},getScore:()=>historical,isPending:()=>false,run:(p,c)=>timeCommands.push(c)};
 vm.runInNewContext(load('scripts/system/player/playtime.js')+'\nglobalThis.api={playedSeconds,durationParts,playtimeText,playtimeRawtext};',time);
 const text=()=>time.api.playtimeText(timePlayer);
 assert.equal(text(),'0 %menu.common.time.hour 0 %menu.common.time.minute 0 %menu.common.time.second');
@@ -17,7 +17,7 @@ seconds=NaN;historical=NaN;assert.equal(time.api.playedSeconds(timePlayer),0);as
 
 const mk=(name,role='player',tags=[])=>({name,role,scores:{money:5,vip_coins:7},tags:new Set(tags),hasTag(t){return this.tags.has(t);}});
 const owner=mk('Owner','owner'),alice=mk('Alice','player',['boost:magnet']),bob=mk('Bob','player',['boost:magnet']),bot=mk('Bot','player',['role:bot']);const people=[owner,bob,bot,alice];let capture;
-const admin={world:{events:{beforeItemUse:event()},getPlayers:()=>people.values(),scoreboard:{getObjective(){throw Error('no settings');}}},getRole:p=>p.role,hasRole:p=>p.role==='owner',isBot:p=>p===bot,isVip:()=>false,isJailed:()=>false,
+const admin={world:{beforeEvents:{itemUse:event()},getPlayers:()=>people.values(),scoreboard:{getObjective(){throw Error('no settings');}}},getRole:p=>p.role,hasRole:p=>p.role==='owner',isBot:p=>p===bot,isVip:()=>false,isJailed:()=>false,
  getScore:(p,k)=>p.scores[k]??0,getWarns:()=>2,muteMinutesLeft:()=>0,playtimeText:time.api.playtimeText,findPlayer:n=>people.find(p=>p.name===n),
  showMenu:(p,title,body,items)=>capture={title,body,items},showModal:(p,form)=>capture={title:form.title},modal:title=>({title,dropdown(){return this;}}),backButton:run=>({text:'back',run}),
  boostSeconds:()=>0,getBot:()=>bot,getBotName:()=>bot.name,botState:()=>({mode:'follow',sit:false,totem:true,returnOnLoad:true}),SPAR_LEVELS:[1,2,3,4]};
@@ -28,12 +28,12 @@ admin.api.serverMenu(owner);assert(capture.body.includes('%admin.server.magnets 
 alice.tags.delete('boost:magnet');bob.tags.delete('boost:magnet');bob.scores.magnet=100;admin.api.serverMenu(owner);assert(capture.body.includes('%admin.server.magnets §f%admin.server.none'));
 admin.api.botMenu(owner);for(const title of ['%admin.bot.button.mode','%admin.bot.button.sit']){const row=capture.items.find(i=>i.text.startsWith(title));assert(row.text.includes('\n§8[§7 '));assert(!row.text.includes('§r'));}
 
-const events=Object.fromEntries(['tick','entityHurt','playerLeave','playerJoin','worldInitialize'].map(k=>[k,event()])),blocks=new Map(),calls=[];
+const events=Object.fromEntries(['tick','entityHurt','playerLeave','playerSpawn','worldLoad'].map(k=>[k,event()])),blocks=new Map(),calls=[];
 const dim={id:'overworld',getBlock:p=>({typeId:blocks.get([p.x,p.y,p.z].join(','))??(p.y===0?'minecraft:stone':'minecraft:air')})};
-const sim={name:'Bot',id:'bot',dimension:dim,typeId:'minecraft:player',location:{x:.5,y:1,z:.5},velocity:{x:0,y:0,z:0},tags:new Set(['role:bot','sys:bot']),hasTag:t=>sim.tags.has(t),addTag:t=>sim.tags.add(t),getComponent:()=>({resetToMaxValue(){}})};
-const human={name:'Human',id:'human',dimension:dim,typeId:'minecraft:player',location:{x:4.5,y:1,z:.5},velocity:{x:0,y:.5,z:0},rotation:{x:0,y:0},hasTag:t=>t==='player:pvp'||t==='sys:guided'};
+const sim={name:'Bot',id:'bot',dimension:dim,typeId:'minecraft:player',location:{x:.5,y:1,z:.5},getVelocity(){return this.velocity;},velocity:{x:0,y:0,z:0},tags:new Set(['role:bot','sys:bot']),hasTag:t=>sim.tags.has(t),addTag:t=>sim.tags.add(t),getComponent:()=>({resetToMaxValue(){}})};
+const human={name:'Human',id:'human',dimension:dim,typeId:'minecraft:player',location:{x:4.5,y:1,z:.5},getVelocity(){return this.velocity;},velocity:{x:0,y:.5,z:0},getRotation(){return this.rotation;},rotation:{x:0,y:0},hasTag:t=>t==='player:pvp'||t==='sys:guided'};
 for(const f of ['navigateToEntity','navigateToLocation','stopMoving','stopBreakingBlock','lookAtEntity','setRotation','jump','attackEntity'])sim[f]=(...a)=>calls.push([f,...a]);
-const ai={connectBot(){},world:{events,getPlayers:()=>[sim,human].values(),getDynamicProperty(){},setDynamicProperty(){}},Location:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},BlockLocation:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},DynamicPropertiesDefinition:class{},
+const ai={connectBot(){},system:{runInterval:fn=>events.tick.subscribe(fn)},world:{afterEvents:events,getPlayers:()=>[sim,human].values(),getDynamicProperty(){},setDynamicProperty(){}},Location:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},BlockLocation:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},DynamicPropertiesDefinition:class{},
  getBot:()=>sim,isBot:p=>p===sim,isPending:()=>false,getScore:()=>10,findPlayer:n=>n===human.name?human:undefined,run(){},onBotSpawned(){},onBotRemoved(){},freezePlayer(){},unfreezePlayer(){},showHudLine(){},getGame(){},gameOf(){},leaveGame(){},joinGame:()=>true,teleportToArena(){},isAir:id=>!id||id==='minecraft:air',isSolid:id=>id==='minecraft:stone'};
 vm.runInNewContext(load('scripts/system/bot/bot.js')+'\nglobalThis.api={setBotMode,toggleBot,jumpableObstacle};',ai);
 const tick=n=>{for(let i=0;i<n;i++)for(const fn of events.tick.handlers)fn();},jumps=()=>calls.filter(c=>c[0]==='jump').length;

@@ -14,8 +14,8 @@ const ctx = {
 	tell: (p, k, ...a) => ran.push([p.name, 'tell ' + k + ' ' + a.join(',')]),
 	rawTranslateRich: (k, ...a) => JSON.stringify({ k, a }), getScore: (p) => p.lvl, isPending: () => false,
 	showToast: (p, r) => toasts.push(r),
-	system: { runSchedule: (cb) => { scanCb = cb; } },
-	world: { getPlayers: () => [], events: { blockBreak: { subscribe: cb => { breakCb = cb; } } } }
+	system: { runInterval: (cb) => { scanCb = cb; } },
+	world: { getPlayers: () => [], afterEvents: { playerBreakBlock: { subscribe: cb => { breakCb = cb; } } } }
 };
 vm.runInNewContext(src + '\nglobalThis.D={BOSS_DISCS,DROP_POOL,dropChance,rollDisc,giveDisc,rollWinDisc,checkCollector,WIN_CHANCE,COLLECTOR};', ctx);
 const D = ctx.D;

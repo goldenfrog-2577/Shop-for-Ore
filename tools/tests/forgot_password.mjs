@@ -10,7 +10,7 @@ const mk = (name, tags = []) => { const s = new Set(tags); return { name, hasTag
 const ctx = {
 	world: { getPlayers: () => players.values() },
 	tell: (p, k, ...a) => told.push([p.name, k, ...a]),
-	modal: (title) => { const f = { title, fields: [], textField(l, ph, def) { this.fields.push([l, ph, def]); return this; }, show: () => Promise.resolve({}) }; forms.push(f); return f; }
+	modal: (title) => { const f = { title, fields: [], textField(l, ph, def) { this.fields.push([l, ph, def.defaultValue]); return this; }, show: () => Promise.resolve({}) }; forms.push(f); return f; }
 };
 vm.runInNewContext(src + '\nglobalThis.F={requestReset,notifyRequests,ForgotUI,RESET_REQUEST,OWNER_TELEGRAM};', ctx);
 const F = ctx.F;
@@ -32,7 +32,7 @@ told.length = 0; players.push(P); F.notifyRequests(owner); assert.ok(told.some((
 
 // Форма входа: переключатель «Я забыл пароль» ведёт в окно без проверки пароля; удачный вход снимает заявку; владельцу — заявки
 const login = read(new URL('scripts/registration/login.js', bp));
-assert.match(login, /\.toggle\('%account\.login\.forgot', false\)/);
+assert.match(login, /\.toggle\('%account\.login\.forgot', \{ defaultValue: false \}\)/);
 assert.match(login, /if \(r\.formValues\[1\] === true\) return ForgotUI\(player\);\s*const password/);
 assert.ok(login.includes('player.removeTag(RESET_REQUEST);') && login.includes("if (player.hasTag('role:owner')) notifyRequests(player);"));
 assert.ok(!/count >= MAX_WRONG[\s\S]{0,200}clearPassword|resetPassword/.test(login), 'автосброса после неудачных попыток нет');
@@ -42,7 +42,7 @@ assert.match(read(new URL('scripts/menu/admin/admin_menu.js', bp)), /target\.has
 // Приветствие и ключи на 4 языках
 const reg = read(new URL('scripts/registration/register.js', bp));
 const keys = [...reg.matchAll(/%(account\.register\.[a-z_.0-9]+)/g)].map(m => m[1]);
-assert.ok(keys.includes('account.register.feature.4') && keys.includes('account.register.menu') && keys.includes('account.register.password'));
+assert.ok(keys.includes('account.register.feature.4') && keys.includes('account.register.menu') && keys.includes('account.register.remember'));
 for (const l of ['ru_RU', 'en_US', 'uk_UA', 'es_ES']) {
 	const lang = Object.fromEntries(read(new URL(`texts/${l}.lang`, rp)).replace(/^﻿/, '').split(/\r?\n/).filter(x => x.includes('=')).map(x => [x.slice(0, x.indexOf('=')), x.slice(x.indexOf('=') + 1)]));
 	for (const k of [...keys, 'account.login.forgot', 'account.forgot.title', 'account.forgot.body', 'account.forgot.online', 'account.forgot.offline', 'chat.account.reset_request', 'admin.players.body.reset_request'])

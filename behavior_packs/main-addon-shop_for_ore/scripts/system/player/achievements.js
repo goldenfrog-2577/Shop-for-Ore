@@ -158,7 +158,7 @@ export const countOf = (player) => ACHIEVEMENTS.filter(a => has(player, a.id)).l
 
 // --- Проверка условий: раз в секунду, одно новое достижение за раз ---
 const CHECK_TICKS = 20;
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	if (++tick % CHECK_TICKS !== 0) return;
 	for (const player of world.getPlayers()) {
 		if (isPending(player) || player.hasTag('role:bot')) continue;
@@ -171,13 +171,13 @@ world.events.tick.subscribe(() => {
 // --- Счётчики ---
 // Сломанные блоки копятся в памяти и раз в секунду уходят в табло одной командой на игрока
 const mined = new Map();
-world.events.blockBreak.subscribe((e) => {
+world.afterEvents.playerBreakBlock.subscribe((e) => {
 	const p = e.player;
 	// Снег в сплифе — не добыча (stat_mined считает шахты)
 	if (!p || isPending(p) || p.hasTag('game:spleef')) return;
 	mined.set(p.name, (mined.get(p.name) ?? 0) + 1);
 });
-system.runSchedule(() => {
+system.runInterval(() => {
 	if (!mined.size) return;
 	for (const player of world.getPlayers()) {
 		const n = mined.get(player.name);
@@ -187,7 +187,7 @@ system.runSchedule(() => {
 }, 20);
 
 // Время в игре — минуты, только вошедшим в аккаунт
-system.runSchedule(() => {
+system.runInterval(() => {
 	for (const player of world.getPlayers()) {
 		if (!isPending(player) && !player.hasTag('role:bot')) run(player, 'scoreboard players add @s stat_playtime 1');
 	}
@@ -196,14 +196,14 @@ system.runSchedule(() => {
 // Смерть (удар добил: здоровье ≤ 0). Одна смерть — один раз.
 // Убил другой игрок — ему +1 к stat_kills. Смерть для K/D (stat_deaths) — от игрока или любая на PvP-арене
 const lastDeath = new Map();
-world.events.entityHurt.subscribe((e) => {
-	const victim = e.hurtEntity, killer = e.damagingEntity;
+world.afterEvents.entityHurt.subscribe((e) => {
+	const victim = e.hurtEntity, killer = e.damageSource.damagingEntity;
 	// Бот (спарринг, мини-игры) в статистику не идёт: ни как жертва, ни как убийца
 	if (victim?.typeId !== 'minecraft:player' || victim.hasTag('role:bot') || killer?.hasTag?.('role:bot')) return;
 	const byPlayer = killer?.typeId === 'minecraft:player' && killer !== victim;
 	if (!byPlayer && !victim.hasTag('player:pvp')) return;
 	let hp;
-	try { hp = victim.getComponent('health').current; } catch { return; }
+	try { hp = victim.getComponent('health').currentValue; } catch { return; }
 	if (hp > 0) return;
 	if ((lastDeath.get(victim.name) ?? -100) > tick - 40) return;
 	lastDeath.set(victim.name, tick);

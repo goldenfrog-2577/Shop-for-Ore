@@ -11,7 +11,7 @@ export const DENY_TICKS = 60;
 const lastTry = new Map();   // ник → тик последней попытки
 let tick = 0;
 
-system.runSchedule(() => {
+system.runInterval(() => {
 	tick += 2;
 	for (const p of world.getPlayers()) {
 		if (!p.hasTag(PORTAL_TAG)) continue;
@@ -22,4 +22,4 @@ system.runSchedule(() => {
 		runChatCommand(p, 'warp', ['boss']);
 	}
 }, 2);
-world.events.playerLeave.subscribe((e) => lastTry.delete(e.playerName));
+world.afterEvents.playerLeave.subscribe((e) => lastTry.delete(e.playerName));

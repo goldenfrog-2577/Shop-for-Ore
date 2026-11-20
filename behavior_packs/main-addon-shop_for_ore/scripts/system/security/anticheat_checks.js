@@ -14,7 +14,7 @@
 //   с элитрами на груди (тег ac:elytra ставится командой раз в 2 с) и с трезубцем «Тягун» в руке.
 // Ограничение: в 1.19.50 скрипт не видит, едет ли игрок в лодке или вагонетке.
 
-import { world, BlockLocation, MinecraftEffectTypes, MinecraftEnchantmentTypes } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { run } from '../../utils.js';
 import { flag, isExempt, rollbackEnabled } from './anticheat.js';
 
@@ -51,7 +51,7 @@ export const isAir = (id) => !id || AIR.has(id);
 export const isSolid = (id) => !!id && SOLID.test(id) && !NOT_FULL.test(id);
 
 function blockAt(dim, x, y, z) {
-	try { return dim.getBlock(new BlockLocation(Math.floor(x), Math.floor(y), Math.floor(z)))?.typeId; } catch { return undefined; }
+	try { return dim.getBlock({ x: Math.floor(x), y: Math.floor(y), z: Math.floor(z) })?.typeId; } catch { return undefined; }
 }
 
 /** Опора и окружение: { ground, special, ice, unknown } по блокам под углами хитбокса и на уровне ног и головы. */
@@ -77,8 +77,8 @@ function amplifier(player, type) {
 
 function holdsRiptide(player) {
 	try {
-		const item = player.getComponent('inventory').container.getItem(player.selectedSlot);
-		return item?.typeId === 'minecraft:trident' && item.getComponent('enchantments').enchantments.hasEnchantment(MinecraftEnchantmentTypes.riptide) > 0;
+		const item = player.getComponent('inventory').container.getItem(player.selectedSlotIndex);
+		return item?.typeId === 'minecraft:trident' && item.getComponent('minecraft:enchantable')?.hasEnchantment('riptide') === true;
 	} catch {
 		return false;
 	}
@@ -101,7 +101,7 @@ function rollback(player, st) {
 	if (!rollbackEnabled()) return;
 	const { x, y, z } = st.valid;
 	try {
-		player.teleport(st.valid, player.dimension, player.rotation.x, player.rotation.y);
+		player.teleport(st.valid, { dimension: player.dimension, rotation: player.getRotation() });
 	} catch {
 		run(player, `tp @s ${x.toFixed(2)} ${y.toFixed(2)} ${z.toFixed(2)}`);
 	}
@@ -150,7 +150,7 @@ export function checkMovement(player) {
 	// --- speed: путь по горизонтали за секунду ---
 	if (st.hist.length === 20) {
 		const speed = st.hist.reduce((a, b) => a + b, 0);
-		let limit = SPEED_LIMIT * (1 + 0.2 * amplifier(player, MinecraftEffectTypes.speed));
+		let limit = SPEED_LIMIT * (1 + 0.2 * amplifier(player, 'speed'));
 		if (tick < st.iceUntil) limit *= ICE_FACTOR;
 		if (speed > limit) { movementFlag(player, st, 'speed', speed.toFixed(1)); return; }
 	}
@@ -162,9 +162,9 @@ export function checkMovement(player) {
 		return;
 	}
 	st.air++;
-	if (amplifier(player, MinecraftEffectTypes.levitation) || amplifier(player, MinecraftEffectTypes.slowFalling)) { st.hover = 0; return; }
+	if (amplifier(player, 'levitation') || amplifier(player, 'slow_falling')) { st.hover = 0; return; }
 	if (dy > (st.air > 10 ? -0.08 : -0.03)) st.hover++;
-	const limit = FLY_TICKS + 8 * amplifier(player, MinecraftEffectTypes.jumpBoost);
+	const limit = FLY_TICKS + 8 * amplifier(player, 'jump_boost');
 	if (st.hover > limit) movementFlag(player, st, 'fly', (st.air / 20).toFixed(1));
 }
 
@@ -196,7 +196,7 @@ export function aimAngle(eye, view, target) {
 export function checkHit(attacker, victim, damage) {
 	if (isExempt(attacker)) return false;
 	let eye;
-	try { eye = attacker.headLocation; } catch { return false; }
+	try { eye = attacker.getHeadLocation(); } catch { return false; }
 	if (!eye) return false;
 	const reach = reachDistance(eye, victim);
 	let bad = false;
@@ -211,14 +211,14 @@ export function checkHit(attacker, victim, damage) {
 	if (bad && rollbackEnabled() && damage > 0) {
 		try {
 			const health = victim.getComponent('health');
-			if (health.current > 0) health.setCurrent(Math.min(health.value, health.current + damage));
+			if (health.currentValue > 0) health.setCurrentValue(Math.min(healtheffectiveMax, health.currentValue + damage));
 		} catch { /* нет компонента */ }
 	}
 	return bad;
 }
 
-world.events.entityHurt.subscribe((e) => {
-	const victim = e.hurtEntity, attacker = e.damagingEntity;
+world.afterEvents.entityHurt.subscribe((e) => {
+	const victim = e.hurtEntity, attacker = e.damageSource.damagingEntity;
 	if (victim?.typeId !== 'minecraft:player') return;
 	// Отбрасывание, взрыв, падение после жемчуга — не считать движение читерским
 	graceMovement(victim.name);
@@ -244,9 +244,9 @@ export function checkBreak(player) {
 	return false;
 }
 
-world.events.blockBreak.subscribe((e) => { if (e.player) checkBreak(e.player); });
+world.afterEvents.playerBreakBlock.subscribe((e) => { if (e.player) checkBreak(e.player); });
 
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	tick++;
 	// Элитры на груди скрипту в 1.19.50 не видны — тегом по hasitem раз в 2 секунды
 	if (tick % 40 === 0) {
@@ -260,4 +260,4 @@ world.events.tick.subscribe(() => {
 	}
 });
 
-world.events.playerLeave.subscribe((e) => { state.delete(e.playerName); hitLog.delete(e.playerName); });
+world.afterEvents.playerLeave.subscribe((e) => { state.delete(e.playerName); hitLog.delete(e.playerName); });

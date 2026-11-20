@@ -21,9 +21,10 @@ assert.ok(!/fill 10 0 -2[68] 12 -4 -2[68] /.test(automine), 'tenth pit stays emp
 
 const sale = read('functions/system/autosale.mcfunction');
 for (const [lvl, , item, price] of NETHER) {
+	const money = [32, 34, 36, 38, 40, 42, 6, 48, 50][NETHER.findIndex(row => row[0] === lvl)];
 	const sel = `scores={lvl=${lvl}..40},hasitem={item=${item}}`;
-	assert.ok(sale.includes(`execute as @a[${sel}] at @s if block ~~-1~ gold_block run scoreboard players add @s money ${price}\n`), 'money ' + item);
-	assert.ok(sale.includes(`execute as @a[tag=boost:x4,tag=!boost:x2,${sel}] at @s if block ~~-1~ gold_block run scoreboard players add @s xp ${price * 4}\n`), 'xp x4 ' + item);
+	assert.ok(sale.includes(`execute as @a[${sel}] at @s if block ~~-1~ gold_block run scoreboard players add @s money ${money}\n`), 'money ' + item);
+	assert.ok(sale.includes(`execute as @a[tag=boost:x4,tag=!boost:x2,${sel}] at @s if block ~~-1~ gold_block run scoreboard players add @s xp ${(item === 'netherite_ingot' ? 9 : price) * 4}\n`), 'xp x4 ' + item);
 	assert.ok(sale.includes(`execute as @a[${sel}] at @s if block ~~-1~ gold_block run clear @s ${item} 0 1\n`), 'clear ' + item);
 	assert.equal((sale.match(new RegExp(`hasitem=\\{item=${item}\\}`, 'g')) || []).length, 7, 'one section ' + item);
 }

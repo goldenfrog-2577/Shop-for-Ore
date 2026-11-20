@@ -6,15 +6,16 @@ const bp = new URL('../../behavior_packs/main-addon-shop_for_ore/', import.meta.
 const src = fs.readFileSync(new URL('scripts/system/security/portals.js', bp), 'utf8')
 	.replace(/^import .*;\r?\n/gm, '').replace(/\bexport (?=(?:async )?function|const)/g, '');
 let useOn, tick; const told = [], commands = [], teleports = [];
-const dim = (id) => ({ id, runCommandAsync: c => { commands.push([id, c]); return Promise.resolve({}); }, getBlock: () => ({ typeId: blocks.get(id) }) });
+const dim = (id) => ({ id, runCommand: c => { commands.push([id, c]); return Promise.resolve({}); }, getBlock: () => ({ typeId: blocks.get(id) }) });
 const blocks = new Map();
 const dims = { overworld: dim('minecraft:overworld'), nether: dim('minecraft:nether'), end: dim('minecraft:the_end') };
 let players = [];
 const ctx = {
 	world: {
-		events: { beforeItemUseOn: { subscribe: cb => { useOn = cb; } }, playerLeave: { subscribe() {} }, tick: { subscribe: cb => { tick = cb; } } },
+		beforeEvents: { playerInteractWithBlock: { subscribe: cb => { useOn = cb; } } }, afterEvents: { playerLeave: { subscribe() {} } },
 		getPlayers: () => players[Symbol.iterator](), getDimension: () => dims.overworld
 	},
+	system: { run: fn => fn(), runInterval: fn => { tick = fn; } },
 	tell: (p, k) => told.push([p.name, k]), SPAWN: [0, 5, 0], console
 };
 vm.runInNewContext(src + '\nglobalThis.P={ignitesPortal,breakCommands,RADIUS};', ctx);
@@ -31,15 +32,15 @@ assert.equal(ignitesPortal('minecraft:stick', 'minecraft:obsidian'), false);
 
 // 2. Событие: отмена для всех ролей, сообщение с паузой, не-игроки не трогаются
 const player = (name, d, tags = [], loc = { x: 10.7, y: -55.2, z: -3.4 }) => ({ name, typeId: 'minecraft:player', dimension: d, location: loc, hasTag: t => tags.includes(t),
-	teleport: (l, to) => teleports.push([name, l, to.id]) });
+	teleport: (l, to) => teleports.push([name, l, to.dimension.id]) });
 blocks.set('minecraft:overworld', 'minecraft:obsidian');
 for (const tags of [[], ['role:owner'], ['role:admin'], ['role:moder']]) {
-	const e = { source: player('P' + tags.join(), dims.overworld, tags), item: { typeId: 'minecraft:flint_and_steel' }, blockLocation: {}, cancel: false };
+	const e = { player: player('P' + tags.join(), dims.overworld, tags), itemStack: { typeId: 'minecraft:flint_and_steel' }, block: dims.overworld.getBlock(), cancel: false };
 	useOn(e); assert.equal(e.cancel, true, tags.join());
 }
 assert.equal(told.length, 4);
 const owner = player('Owner', dims.overworld, ['role:owner']);
-const ev = () => ({ source: owner, item: { typeId: 'minecraft:flint_and_steel' }, blockLocation: {}, cancel: false });
+const ev = () => ({ player: owner, itemStack: { typeId: 'minecraft:flint_and_steel' }, block: dims.overworld.getBlock(), cancel: false });
 told.length = 0;
 useOn(ev()); useOn(ev()); assert.equal(told.length, 1);   // зажатая кнопка — одно сообщение
 for (let i = 0; i < 40; i++) tick();
@@ -47,13 +48,13 @@ const later = ev(); useOn(later); assert.equal(later.cancel, true); assert.equal
 assert.deepEqual(told[0], ['Owner', 'chat.server.portal_blocked']);
 blocks.set('minecraft:overworld', 'minecraft:stone');
 const free = ev(); useOn(free); assert.equal(free.cancel, false);
-const mob = { source: { typeId: 'minecraft:skeleton' }, item: { typeId: 'minecraft:flint_and_steel' }, blockLocation: {}, cancel: false };
+const mob = { player: owner, itemStack: undefined, block: {}, cancel: false };
 useOn(mob); assert.equal(mob.cancel, false);
 
 // 3. /fill вокруг игрока: куб в пределах лимита, обрезка по высоте, все виды порталов
 assert.ok((2 * RADIUS + 1) ** 3 <= 32768);
 const cmds = breakCommands({ x: 10.7, y: -55.2, z: -3.4 }, 'minecraft:overworld');
-assert.deepEqual(cmds, ['portal', 'end_portal', 'end_gateway'].map(b => `fill -5 -64 -19 25 -41 11 air 0 replace ${b} -1`));
+assert.deepEqual(cmds, ['portal', 'end_portal', 'end_gateway'].map(b => `fill -5 -64 -19 25 -41 11 air [] replace ${b}`));
 assert.match(breakCommands({ x: 0, y: 120, z: 0 }, 'minecraft:nether')[0], /^fill -15 105 -15 15 127 15 /);
 assert.deepEqual(breakCommands({ x: 0, y: -200, z: 0 }, 'minecraft:overworld'), []);   // далеко под миром — нечего чистить
 
@@ -62,6 +63,7 @@ commands.length = 0; told.length = 0; teleports.length = 0;
 players = [player('A', dims.overworld), player('B', dims.nether, ['role:owner'], { x: 0, y: 64, z: 0 }), player('C', dims.end, [], { x: 0, y: 64, z: 0 })];
 let n = 0; while (n < 20) { tick(); n++; }
 // счётчик тиков уже не с нуля — за 20 тиков ровно 4 раза по 3 игрока × 3 команды
+await Promise.resolve();
 assert.equal(commands.length, 4 * 3 * 3);
 assert.ok(commands.some(([d]) => d === 'minecraft:nether') && commands.some(([d]) => d === 'minecraft:the_end'));
 assert.deepEqual(teleports.map(t => [t[0], t[2]]), [['B', 'minecraft:overworld'], ['C', 'minecraft:overworld']]);

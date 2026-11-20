@@ -23,7 +23,7 @@ assert.equal(B.hornAction('minecraft:stick', 6, true), null);
 // Старт — по itemStartCharge (на перезарядке его нет): мелодия доигрывает ≈ 7 с, через полсекунды проверки ещё раз,
 // рог забирается, и только потом startFight; рога уже нет — отказ; плита без рога больше не будит
 assert.equal(B.HORN_MS, 7500);
-assert.match(src, /world\.events\.itemStartCharge\.subscribe[\s\S]*?summon = \{ name: p\.name, at: Date\.now\(\) \+ HORN_MS \}/);
+assert.match(src, /world\.afterEvents\.itemStartUse\.subscribe[\s\S]*?summon = \{ name: p\.name, at: Date\.now\(\) \+ HORN_MS \}/);
 assert.match(src, /Date\.now\(\) < summon\.at\) return;[\s\S]*?if \(!hasHorn\(p\)\) return tell\(p, 'chat\.boss\.horn_lost'\);[\s\S]*?const check = tryStart\(p\);[\s\S]*?clear @s \$\{HORN\} \$\{HORN_SOUND\} 1`\)\.then\(\(result\) => \{[\s\S]*?startFight\(/);
 // Вампиризм: звуковой удар (без причины или издалека), лечит на отнятое, за смерть — на запас цели; в ярости ×1,5; потолок — порог фазы
 assert.ok(B.isSonic(undefined, 12) && B.isSonic(undefined, 2) && B.isSonic('entityAttack', 9) && !B.isSonic('entityAttack', 1.9));
@@ -36,7 +36,7 @@ assert.equal(B.vampireHeal({ phase: 2, current: 600, max: 1000, damage: 15, died
 assert.equal(B.vampireHeal({ phase: 3, current: 100, max: 1000, damage: 15, died: false, victimMax: 20 }), 122.5);  // ярость ×1,5
 assert.equal(B.vampireHeal({ phase: 3, current: 100, max: 1000, damage: 15, died: true, victimMax: 20 }), 130);
 assert.equal(B.vampireHeal({ phase: 3, current: 100, max: 1000, damage: 0, died: false, victimMax: 20 }), null);
-assert.match(src, /if \(fight && e\.damagingEntity\?\.typeId === BOSS\) vampire\(e\);/);
+assert.match(src, /if \(fight && e\.damageSource\.damagingEntity\?\.typeId === BOSS\) vampire\(e\);/);
 assert.ok(!/inside\.find\(p => onStart/.test(src));
 // Рог — только из мистика
 assert.match(fs.readFileSync(new URL('scripts/system/combat/mythic.js', bp), 'utf8'), /\{ w: 2, item: 'goat_horn', count: \[1, 1\], data: 6 \}/);
@@ -104,8 +104,9 @@ for (let i = 1; i <= 4; i++) assert.equal(ent.component_groups[`server:hp_${i}`]
 for (const ev of ['server:spawn_emerging', 'server:rage', 'server:hp_4']) assert.ok(ent.events[ev], ev);
 assert.ok(src.includes('server:spawn_emerging') && src.includes("triggerEvent('server:rage')"));
 const sounds = JSON.parse(fs.readFileSync(new URL('sounds.json', rp), 'utf8'));
-for (const ev of ['hurt', 'death', 'step', 'roar', 'emerge']) assert.ok(sounds.entity_sounds.entities['server:warden_boss'].events[ev], ev);
-assert.ok(fs.existsSync(new URL('entity/warden_boss.entity.json', rp)));
+for (const ev of ['hurt', 'death', 'step', 'roar']) assert.ok(sounds.entity_sounds.entities['server:warden_boss'].events[ev], ev);
+const clientBoss = JSON.parse(fs.readFileSync(new URL('entity/warden_boss.entity.json', rp), 'utf8'));
+assert.equal(clientBoss['minecraft:client_entity'].description.sound_effects.emerge, 'mob.warden.emerge');
 
 // Варп boss: игрокам с 26 уровня, персоналу — всегда; во время боя чужих не пускает
 const db = fs.readFileSync(new URL('scripts/utils.js', bp), 'utf8');
@@ -163,7 +164,7 @@ assert.equal(B.vampireHeal({ phase: Math.max(1, B.phaseOf({ current: 299, max: 5
 assert.match(src, /function tryStart\(p\) \{\n\tif \(bossBusy\(\)\) return \{ ok: false, reason: 'busy'/, 'horn waits for recovery cleanup');
 assert.match(fs.readFileSync(new URL('scripts/system/core/wipe.js', bp), 'utf8'), /'boss:disc:', WIPE_TAG\]/);
 { const mg = fs.readFileSync(new URL('scripts/system/minigames/minigames.js', bp), 'utf8');
-	assert.match(mg, /getEffect\(MinecraftEffectTypes\.levitation\) \|\| p\.getEffect\(MinecraftEffectTypes\.slowFalling\)/);
+	assert.match(mg, /getEffect\('levitation'\) \|\| p\.getEffect\('slow_falling'\)/);
 	assert.match(mg, /if \(hasFeatherEffect\(player\)\) return fail\('chat\.game\.error\.feather'\);\n\tg\.players\.add/);
 	assert.ok(!mg.includes('effect @s clear'), 'only the feather effects — never clear bought ones'); }
 // Бой — только после того, как рог действительно забрали

@@ -101,7 +101,7 @@ export const unlockedDiscs = (p) => DISCS.filter(d => p.hasTag(DISC_TAG + d.id) 
 
 const music = new Map();    // ник → состояние musicStep
 let seconds = 0;
-const send = (p, commands) => { for (const c of commands) p.runCommandAsync(c).catch(() => {}); };
+const send = (p, commands) => { for (const c of commands) Promise.resolve().then(() => p.runCommand(c)).catch(() => {}); };
 const isBot = (p) => p.hasTag('role:bot');
 /** Текущий плейлист игрока { key, list } — что можно выбрать в меню «Выбрать трек». */
 export const playlistOf = (p) => playlistFor(zoneOf(p.location, p.dimension?.id), p.hasTag(DISC_MODE), unlockedDiscs(p));
@@ -134,7 +134,7 @@ export function setMusicOff(p, off) {
 	if (off && s?.track) { send(p, [stop(s.track)]); music.set(p.name, { ...s, track: null, key: null }); }
 }
 
-system.runSchedule(() => {
+system.runInterval(() => {
 	seconds++;
 	for (const p of world.getPlayers()) {
 		if (isBot(p)) continue;
@@ -147,7 +147,7 @@ system.runSchedule(() => {
 }, 20);
 
 // Пластинки в инвентаре запоминаются навсегда: потом их можно убрать в сундук
-system.runSchedule(() => {
+system.runInterval(() => {
 	for (const p of world.getPlayers()) {
 		if (isBot(p)) continue;
 		let inv;
@@ -161,4 +161,4 @@ system.runSchedule(() => {
 	}
 }, DISC_SCAN_TICKS);
 
-world.events.playerLeave.subscribe((e) => music.delete(e.playerName));
+world.afterEvents.playerLeave.subscribe((e) => music.delete(e.playerName));

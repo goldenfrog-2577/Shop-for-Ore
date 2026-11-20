@@ -5,7 +5,7 @@
 // купленный в магазине буст или магнит не трогается. Пока идёт один общий буст, второй не начнётся
 // ни покупкой, ни командой, поэтому запись не может «накрыть» купленный буст.
 
-import { world, DynamicPropertiesDefinition } from '@minecraft/server';
+import { world } from '@minecraft/server';
 import { run } from '../../utils.js';
 
 const ADMIN_BOOST = 'shop:admin_boost';
@@ -19,11 +19,6 @@ function systemScore(name) {
 export const boostTimersReady = () => systemScore('stand_timers_migrated') === 1;
 export const boostSeconds = (type) => BOOST_TIMERS[type] ? systemScore(BOOST_TIMERS[type]) : 0;
 
-world.events.worldInitialize.subscribe((e) => {
-	const def = new DynamicPropertiesDefinition();
-	def.defineString(ADMIN_BOOST, 32);
-	e.propertyRegistry.registerWorldDynamicProperties(def);
-});
 
 /** Общий буст выдан администратором: тип и время окончания. */
 export function markAdminBoost(type, minutes, now = Date.now()) {

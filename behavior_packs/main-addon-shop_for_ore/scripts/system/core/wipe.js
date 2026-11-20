@@ -6,7 +6,7 @@
 // достижения и их счётчики, косметика (купленное и выбранное, цвета в чате), запись в мини-игры.
 // Остаются: роль, пароль, баны, наказания, настройки игрока (панель, частицы, звуки, музыка).
 
-import { world, DynamicPropertiesDefinition } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { syncResetEpoch } from './reset_history.js';
 import { ensurePlayerScores } from './player_scores.js';
 import { run, tell } from '../../utils.js';
@@ -21,11 +21,6 @@ export const WIPE_OBJECTIVES = ['money', 'vip_coins', 'lvl', 'xp', 'rebirth', 'o
 // Теги: точное имя или префикс (с «:» на конце)
 const WIPE_TAGS = ['player', 'player:rebirth', 'player:vip', 'sys:vip_migrated', 'boost:', 'ach:', 'stat:', 'cosmetic:', 'fx:', 'chat:name_color:', 'chat:text_color:', 'game:', 'promo:', 'boss:disc:', WIPE_TAG];
 
-world.events.worldInitialize.subscribe((e) => {
-	const def = new DynamicPropertiesDefinition();
-	def.defineNumber(WIPE_ID);
-	e.propertyRegistry.registerWorldDynamicProperties(def);
-});
 
 // null — свойство не прочиталось: вайп при входе не применяем (ложный ноль сбрасывал бы прогресс)
 const wipeId = () => { try { return world.getDynamicProperty(WIPE_ID) ?? 0; } catch { return null; } };
@@ -74,9 +69,9 @@ export async function wipeAll(by) {
 // (позже — «Native object bound to prototype does not exist»), поэтому запоминаем ник, а сбрасываем,
 // когда игрок появится в мире (так же, как бан в system/security/ban.js)
 const joined = new Set();
-world.events.playerJoin.subscribe((e) => joined.add(e.player.name));
-world.events.playerLeave.subscribe((e) => joined.delete(e.playerName));
-world.events.tick.subscribe(() => {
+world.afterEvents.playerSpawn.subscribe(({ player, initialSpawn }) => { if (initialSpawn && player.isValid) joined.add(player.name); });
+world.afterEvents.playerLeave.subscribe((e) => joined.delete(e.playerName));
+system.runInterval(() => {
 	if (!joined.size) return;
 	const id = wipeId();
 	for (const player of world.getPlayers()) {

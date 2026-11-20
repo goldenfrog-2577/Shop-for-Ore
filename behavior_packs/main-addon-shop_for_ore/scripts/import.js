@@ -149,10 +149,10 @@ console.warn('[Shop for Ore] Загрузка завершена · файлов
 
 // При первом запуске табло может появиться после начала работы нативных функций.
 let readinessChecks = 0;
-const readinessTimer = system.runSchedule(() => {
+const readinessTimer = system.runInterval(() => {
 	const missing = ['system', 'money', 'lvl', 'xp', 'xp_need'].filter(id => !world.scoreboard.getObjective(id));
 	if (++readinessChecks < 5 && (missing.length || !heartbeatConfirmed)) return;
-	system.clearRunSchedule(readinessTimer);
+	system.clearRun(readinessTimer);
 	console.warn('[Shop for Ore] Проверка табло · ' + (missing.length ? 'отсутствуют: ' + missing.join(', ') : 'доступны'));
 	console.warn('[Shop for Ore] Проверка legacy · ' + (heartbeatConfirmed ? 'сигнал обновляется' : 'сигнал не подтверждён'));
 }, 20);

@@ -33,6 +33,6 @@ export function notifyRequests(owner) {
 export function ForgotUI(player) {
 	const online = requestReset(player);
 	const form = modal('%account.forgot.title')
-		.textField(`%account.forgot.body\n\n%account.forgot.${online ? 'online' : 'offline'}`, OWNER_TELEGRAM, OWNER_TELEGRAM);
+		.textField(`%account.forgot.body\n\n%account.forgot.${online ? 'online' : 'offline'}`, OWNER_TELEGRAM, { defaultValue: OWNER_TELEGRAM });
 	return form.show(player).then(() => {});
 }

@@ -8,7 +8,7 @@
 // награды нет, одна и та же мишень одному игроку платит не чаще раза в COOLDOWN_MS.
 // Сообщение — строкой над хотбаром (system/ui/toast.js), звук — колокольчик (в яблочко — уровень).
 
-import { world } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { run, tell } from '../../utils.js';
 import { showHudLine } from '../ui/toast.js';
 
@@ -67,13 +67,13 @@ export function scoreHit(player, block, location, face, now = Date.now()) {
 	return { money: reward(off, distance), accuracy: Math.round((1 - off) * 100), distance };
 }
 
-world.events.projectileHit.subscribe((e) => {
+world.afterEvents.projectileHitBlock.subscribe((e) => {
 	const shooter = e.source;
-	const hit = e.blockHit;
+	const hit = e.getBlockHit();
 	if (shooter?.typeId !== 'minecraft:player' || !hit || !shooter.hasTag(TIR_TAG)) return;
 	if (hit.block?.typeId !== 'minecraft:target') return;
 	const b = hit.block.location;
-	const r = scoreHit(shooter, b, e.location ?? { x: b.x + hit.faceLocationX, y: b.y + hit.faceLocationY, z: b.z + 0.5 }, hit.face);
+	const r = scoreHit(shooter, b, e.location, hit.face);
 	if (r.error === 'close') { showHudLine(shooter, [{ translate: 'hud.tir.close', with: [String(MIN_DISTANCE)] }]); return; }
 	if (r.error) return;
 	run(shooter, `scoreboard players add @s money ${r.money}`);
@@ -113,7 +113,7 @@ export function leaveTir(player) {
 }
 
 let tick = 0;
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	if (++tick % CHECK_EVERY !== 0) return;
 	for (const player of world.getPlayers()) {
 		const inside = inZone(player.location);

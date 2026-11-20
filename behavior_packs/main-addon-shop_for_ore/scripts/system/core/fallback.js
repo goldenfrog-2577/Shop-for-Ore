@@ -11,7 +11,7 @@ export let heartbeatConfirmed = false;
 
 let heartbeatFailureLogged = false;
 
-system.runSchedule(() => {
+system.runInterval(() => {
 	const pulse = run(world.getDimension('overworld'), HEARTBEAT, error => {
 		if (heartbeatFailureLogged) return;
 		heartbeatFailureLogged = true;

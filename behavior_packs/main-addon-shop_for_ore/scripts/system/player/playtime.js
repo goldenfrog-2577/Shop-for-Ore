@@ -5,7 +5,7 @@ import { getScore, isPending, run } from '../../utils.js';
 export const PLAYTIME_OBJECTIVE = 'play_seconds';
 export function playedSeconds(player) {
 	try {
-		const seconds = world.scoreboard.getObjective(PLAYTIME_OBJECTIVE).getScore(player.scoreboard);
+		const seconds = world.scoreboard.getObjective(PLAYTIME_OBJECTIVE).getScore(player);
 		if (Number.isFinite(seconds)) return Math.max(0, Math.floor(seconds));
 	} catch { /* цели или счёта ещё нет */ }
 	const seconds = getScore(player, 'stat_playtime') * 60;
@@ -23,13 +23,13 @@ export const playtimeRawtext = player => displayParts(playedSeconds(player)).fla
 	{ text: (i ? ' ' : '') + n + ' ' }, { translate: 'menu.common.time.' + u }
 ]);
 
-system.runSchedule(() => {
+system.runInterval(() => {
 	const objective = world.scoreboard.getObjective(PLAYTIME_OBJECTIVE);
 	if (!objective) return;
 	for (const player of world.getPlayers()) {
 		if (isPending(player) || player.hasTag('role:bot')) continue;
 		let score;
-		try { score = objective.getScore(player.scoreboard); } catch { /* счёт ещё не создан */ }
+		try { score = objective.getScore(player); } catch { /* счёт ещё не создан */ }
 		if (!Number.isFinite(score)) run(player, `scoreboard players set @s ${PLAYTIME_OBJECTIVE} ${Math.min(2147483646, playedSeconds(player))}`);
 	}
 	run(world.getDimension('overworld'), 'scoreboard players add @a[tag=auth:done,tag=!auth:login,tag=!auth:register,tag=!role:bot,scores={play_seconds=..2147483646}] play_seconds 1');

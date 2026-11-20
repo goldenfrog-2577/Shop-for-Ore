@@ -28,7 +28,7 @@ export function LoginUI(player) {
 	const login = modal('%account.login.title')
 		.textField('%account.login.hint', '%account.login.placeholder')
 		// «Я забыл пароль» — заявка владельцу и ник в Telegram (registration/forgot.js), пароль не проверяется
-		.toggle('%account.login.forgot', false);
+		.toggle('%account.login.forgot', { defaultValue: false });
 	return login.show(player).then(r => {
 		// Форма закрыта — через ~2 с она покажется снова
 		if (!r.formValues) return;

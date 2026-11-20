@@ -5,7 +5,7 @@
 // раз в секунду проверяет срок — истёк: на спавн и сообщение. В тюрьме недоступны меню, !warp и мини-игры
 // (как при заморозке). Кто посадил — тег state:jail_by:<роль>: выпустить раньше может только роль не ниже.
 
-import { world } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { run, tell, clearIssuer } from '../../utils.js';
 
 export const JAIL_TAG = 'state:jail:';
@@ -57,7 +57,7 @@ export function tellJailed(player) {
 }
 
 let tick = 0;
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	tick++;
 	if (tick % 5 !== 0) return;
 	for (const player of world.getPlayers()) {

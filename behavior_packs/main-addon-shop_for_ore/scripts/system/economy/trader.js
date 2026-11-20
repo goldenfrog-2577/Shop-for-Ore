@@ -73,7 +73,7 @@ export function buy(player, product) {
 	return 'ok';
 }
 
-world.events.buttonPush.subscribe((e) => {
+world.afterEvents.buttonPush.subscribe((e) => {
 	const player = e.source;
 	if (player?.typeId !== 'minecraft:player') return;
 	const product = productAt(e.block.location);

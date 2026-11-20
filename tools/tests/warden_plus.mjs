@@ -54,10 +54,11 @@ const warden = { typeId: 'server:warden_boss', dimension: dim, location: { x: 2,
 const calls = [], commands = [], spawns = [];
 for (const m of ['navigateToEntity', 'navigateToLocation', 'lookAtEntity', 'stopMoving', 'stopBreakingBlock', 'attackEntity', 'jump', 'setRotation']) bot[m] = (...a) => calls.push([m, ...a]);
 let hp = 20;
-bot.getComponent = () => ({ current: hp, resetToMaxValue() {} });
+bot.getComponent = () => ({ currentValue: hp, resetToMaxValue() {} });
 let link, present = bot;
 const botCtx = { connectBot: l => { link = l; }, Math, JSON, Number, Object, Set, Map, Date,
-	world: { events, getPlayers: () => [bot, human].values(), getDynamicProperty() {}, setDynamicProperty() {} },
+	system: { runInterval(fn) { events.tick.subscribe(fn); } },
+	world: { afterEvents: events, getPlayers: () => [bot, human].values(), getDynamicProperty() {}, setDynamicProperty() {} },
 	Location: class { constructor(x, y, z) { Object.assign(this, { x, y, z }); } }, BlockLocation: class {}, DynamicPropertiesDefinition: class {},
 	MinecraftEffectTypes: {}, isAir: () => true, isSolid: () => false, getBot: () => present, isBot: p => p.hasTag('role:bot'), isPending: () => false,
 	getScore: () => 10, findPlayer: n => n === 'Human' ? human : undefined, run: (p, c) => commands.push(c),
@@ -76,7 +77,7 @@ const hits = calls.filter(c => c[0] === 'attackEntity');
 assert.ok(hits.length >= 2); assert.ok(hits.every(c => c[1] === warden));
 assert.ok(!commands.some(c => c.includes('totem_of_undying')), 'no auto-totem while fighting the boss');
 // погиб — появится на спавне и будет ждать
-hp = 0; for (const fn of events.entityHurt.handlers) fn({ hurtEntity: bot, damage: 30 });
+hp = 0; for (const fn of events.entityHurt.handlers) fn({ hurtEntity: bot, damage: 30, damageSource: {} });
 tick(60);
 assert.deepEqual(spawns.at(-1), { x: 9, y: 5, z: 9 });
 present = bot; hp = 20; calls.length = 0; tick(40);

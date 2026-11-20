@@ -4,7 +4,7 @@
 // (после повышения, ребитха, покупки VIP) снимаются. Свои префиксы игрока (!prefix) не трогаются.
 // Раз в секунду.
 
-import { world } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { getScore, isVip, MAX_LEVEL } from '../../utils.js';
 
 export const VIP_RANK = 'rank:§aVIP';
@@ -32,7 +32,7 @@ export function updateRank(player) {
 }
 
 let tick = 0;
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	if (++tick % CHECK_TICKS !== 0) return;
 	for (const player of world.getPlayers()) updateRank(player);
 });

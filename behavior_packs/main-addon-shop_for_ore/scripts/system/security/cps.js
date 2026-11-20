@@ -8,7 +8,7 @@
 // строкой над хотбаром (system/ui/toast.js → hud_screen.json), а после удара — ещё и здоровье противника
 // (последний, кого ты ударил или кто ударил тебя, 10 секунд; обновляется дважды в секунду).
 
-import { world } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { hasRole, tell } from '../../utils.js';
 import { showHudLine } from '../ui/toast.js';
 
@@ -46,11 +46,11 @@ export function cpsLimit() {
 	}
 }
 
-world.events.entityHit.subscribe((e) => {
-	if (e.entity?.typeId !== 'minecraft:player' || !e.hitEntity) return;
-	const list = hits.get(e.entity.name) ?? [];
+world.afterEvents.entityHitEntity.subscribe((e) => {
+	if (e.damagingEntity?.typeId !== 'minecraft:player' || !e.hitEntity) return;
+	const list = hits.get(e.damagingEntity.name) ?? [];
 	list.push(tick);
-	hits.set(e.entity.name, list);
+	hits.set(e.damagingEntity.name, list);
 });
 
 /** CPS игрока сейчас (удары за последние 20 тиков) и максимум за HISTORY секунд. */
@@ -65,8 +65,8 @@ const OPPONENT_SECONDS = 10;
 const opponent = new Map();       // ник → { name, tick }
 const shown = new Map();          // ник → [CPS с цветом, скорость] за последнюю секунду
 
-world.events.entityHurt.subscribe((e) => {
-	const a = e.damagingEntity, v = e.hurtEntity;
+world.afterEvents.entityHurt.subscribe((e) => {
+	const a = e.damageSource.damagingEntity, v = e.hurtEntity;
 	if (a?.typeId !== 'minecraft:player' || v?.typeId !== 'minecraft:player' || a === v) return;
 	if (!a.hasTag('player:pvp') || !v.hasTag('player:pvp')) return;
 	opponent.set(a.name, { name: v.name, tick });
@@ -88,10 +88,10 @@ export function opponentHp(player, onlineByName) {
 	if (!target || !target.hasTag('player:pvp')) return undefined;
 	try {
 		const health = target.getComponent('health');
-		if (!(health.current > 0)) return undefined;
-		const max = health.value > 0 ? health.value : 20;
-		const color = health.current > max * 0.6 ? '§a' : health.current > max * 0.3 ? '§6' : '§c';
-		return `${color}${Math.ceil(health.current)}`;
+		if (!(health.currentValue > 0)) return undefined;
+		const max = healtheffectiveMax > 0 ? healtheffectiveMax : 20;
+		const color = health.currentValue > max * 0.6 ? '§a' : health.currentValue > max * 0.3 ? '§6' : '§c';
+		return `${color}${Math.ceil(health.currentValue)}`;
 	} catch {
 		return undefined;
 	}
@@ -105,7 +105,7 @@ function renderHud(player, hp) {
 		: { translate: 'hud.cps.hp', with: [cps, speed, hp] }]);
 }
 
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	tick++;
 	if (tick % 10 !== 0) return;
 	const players = [...world.getPlayers()];
@@ -146,6 +146,6 @@ world.events.tick.subscribe(() => {
 	}
 });
 
-world.events.playerLeave.subscribe((e) => {
+world.afterEvents.playerLeave.subscribe((e) => {
 	for (const m of [hits, history, streak, lastAlert, lastPos, opponent, shown]) m.delete(e.playerName);
 });

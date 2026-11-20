@@ -7,7 +7,7 @@
 // Шутка к награде «Прыжка веры» (перо): ПКМ пером — левитация на FEATHER_SECONDS секунд, потом плавное падение,
 // одно перо пропадает. В мини-играх (теги game:…) перо не работает — левитация ломала бы их правила.
 
-import { world, GameMode } from '@minecraft/server';
+import { world, GameMode, system } from '@minecraft/server';
 import { run, tell } from '../../utils.js';
 
 export const VOID_Y = -64;
@@ -25,14 +25,14 @@ export function fellIntoVoid(player) {
 
 function survivalPlayers() {
 	try {
-		return world.getPlayers({ excludeGameModes: [GameMode.creative, GameMode.spectator] });
+		return world.getPlayers({ excludeGameModes: [GameMode.Creative, GameMode.Spectator] });
 	} catch {
 		return world.getPlayers();
 	}
 }
 
 let tick = 0;
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	if (++tick % CHECK_TICKS !== 0) return;
 	for (const player of survivalPlayers()) {
 		if (!fellIntoVoid(player)) continue;
@@ -42,9 +42,9 @@ world.events.tick.subscribe(() => {
 	}
 });
 
-world.events.itemUse.subscribe((e) => {
+world.afterEvents.itemUse.subscribe((e) => {
 	const player = e.source;
-	if (e.item?.typeId !== 'minecraft:feather' || player?.typeId !== 'minecraft:player') return;
+	if (e.itemStack?.typeId !== 'minecraft:feather' || player?.typeId !== 'minecraft:player') return;
 	if (player.getTags().some(t => t.startsWith('game:'))) return tell(player, 'chat.server.feather_game');
 	run(player, 'clear @s feather 0 1');
 	run(player, `effect @s levitation ${FEATHER_SECONDS} 0`);

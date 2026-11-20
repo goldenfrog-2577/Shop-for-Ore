@@ -19,7 +19,7 @@ export const HUD_MARK = '§s§f§c';
 
 // Ник → время (мс), до которого канал title занят плашкой или заголовком
 const busyUntil = new Map(), hudLeases = new Map();
-world.events.playerLeave.subscribe(e => { busyUntil.delete(e.playerName); hudLeases.delete(e.playerName); });
+world.afterEvents.playerLeave.subscribe(e => { busyUntil.delete(e.playerName); hudLeases.delete(e.playerName); });
 const markBusy = (player, ticks) => busyUntil.set(player.name, Date.now() + ticks * 50);
 /** Канал title сейчас занят (плашка или заголовок по центру). */
 export const isBusy = (player) => (busyUntil.get(player.name) ?? 0) > Date.now();

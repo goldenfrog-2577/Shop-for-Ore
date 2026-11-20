@@ -10,7 +10,7 @@
 // Башню держит прогруженной ticking area «spleef».
 // Идея — по мотивам карты FearCube (с разрешения автора), код свой.
 
-import { world } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { run } from '../../utils.js';
 import { registerGame, getGame } from './minigames.js';
 
@@ -81,7 +81,7 @@ registerGame({
 		run(p, `tp @s ${x} ${y} ${z} facing ${CENTER[0] + 0.5} ${y} ${CENTER[1] + 0.5}`);
 		run(p, SHOVEL);
 		run(p, 'effect @s resistance 3600 255 true');
-		try { p.selectedSlot = 0; } catch { /* в 1.19.50 может быть только для чтения */ }
+		try { p.selectedSlotIndex = 0; } catch { /* в 1.19.50 может быть только для чтения */ }
 	},
 	isOut: (p) => p.location.y < OUT_Y,
 	cleanup,
@@ -91,7 +91,7 @@ registerGame({
 
 // Пока идёт игра — выпавший при копании снег (снежки) убираем раз в секунду: не мусорит и не летит магнитом
 let tick = 0;
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	tick++;
 	if (queue.length) for (const c of queue.splice(0, FILL_PER_TICK)) run(overworld(), c);
 	// Один раз после загрузки: держим башню прогруженной и заливаем полы снегом (бетон → снег)
@@ -102,7 +102,7 @@ world.events.tick.subscribe(() => {
 });
 
 // Сломал снег в игре — снежки у этого блока убираем сразу (событие приходит, когда они уже выпали)
-world.events.blockBreak.subscribe((e) => {
+world.afterEvents.playerBreakBlock.subscribe((e) => {
 	const g = getGame('spleef');
 	if (!e.player || g?.phase !== 'running' || !g.alive.has(e.player.name)) return;
 	const { x, y, z } = e.block.location;

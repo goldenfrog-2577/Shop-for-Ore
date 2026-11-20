@@ -57,7 +57,7 @@ function allowed(player) {
 export const CLICK_SOUND = 'playsound random.pop @s ~ ~ ~ 0.5 1.6';
 export const CLICK_OFF = 'player:menu_click_off';
 function click(player) {
-	try { if (!player.hasTag(CLICK_OFF)) player.runCommandAsync(CLICK_SOUND).catch(() => {}); } catch { /* игрок вышел */ }
+	try { if (!player.hasTag(CLICK_OFF)) player.runCommand(CLICK_SOUND); } catch { /* игрок вышел */ }
 }
 
 // null — форма не показана (обработчики ничего не делают, «Назад» тоже не срабатывает)

@@ -4,11 +4,11 @@ const src=fs.readFileSync(file,'utf8').replace(/^import .*;\r?\n/gm,'').replace(
 const flush=async()=>{for(let i=0;i<12;i++)await Promise.resolve();};
 function fixture(){
 	let registered,ready=false,mode='success',calls=0,players=[];const schedules=new Map(),commands=[],warnings=[];
-	const dimension={id:'overworld',getBlock:()=>ready?{}:undefined,runCommandAsync:async cmd=>{if(mode==='command-fail')throw Error('native command budget is zero');return context.run(dimension,cmd);}};
-	const bot={name:'Bot',tags:new Set(),hasTag:t=>bot.tags.has(t),addTag:t=>bot.tags.add(t),removeTag:t=>bot.tags.delete(t),kill:()=>{players=[];}};
+	const dimension={id:'overworld',getBlock:()=>ready?{}:undefined,runCommand:cmd=>{if(mode==='command-fail')throw Error('native command budget is zero');return context.run(dimension,cmd);}};
+	const bot={name:'Bot',tags:new Set(),hasTag:t=>bot.tags.has(t),addTag:t=>bot.tags.add(t),removeTag:t=>bot.tags.delete(t),disconnect:()=>{players=[];},kill:()=>{players=[];}};
 	const test={spawnSimulatedPlayer(){if(mode==='throw')throw Error('engine spawn failure');players.push(bot);return bot;},removeSimulatedPlayer(){players=[];}};
 	const context={ensureFunctionLimits:async()=>true,console:{warn:s=>warnings.push(s)},world:{events:{worldInitialize:{subscribe(){}}},getDynamicProperty(){},getDimension:id=>{assert.equal(id,'overworld');return dimension;},getPlayers:()=>players.values()},
-		system:{runSchedule:fn=>{schedules.set(++calls,fn);return calls;},clearRunSchedule:id=>schedules.delete(id)},BlockLocation:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},DynamicPropertiesDefinition:class{},
+		system:{runInterval:fn=>{schedules.set(++calls,fn);return calls;},clearRun:id=>schedules.delete(id)},BlockLocation:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},DynamicPropertiesDefinition:class{},
 		GT:{register(a,b,fn){registered=fn;return {maxTicks(){return this;},structureName(){return this;}};}},
 		run:async(entity,cmd)=>{commands.push([entity,cmd]);if(cmd==='function system/spawn_bot'){
 			assert.equal(entity,dimension,'GameTest always in overworld');

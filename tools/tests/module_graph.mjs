@@ -12,20 +12,34 @@ const rel=(base,p)=>path.relative(base,p).split(path.sep).join('/');
 const fixture=JSON.parse(fs.readFileSync(new URL('fixtures/system-layout.json',import.meta.url),'utf8'));
 const mapping=fixture.relocations,identity=p=>mapping[p]??p;
 async function startup(base, { fail, ready = false, limit = 40, heartbeat = true } = {}) {
- const evaluation=[],subscriptions=[],timers=[],oneShots=[],commands=[],events={},properties=new Map(),log=[];let current;
+ const evaluation=[],subscriptions=[],timers=[],oneShots=[],commands=[],properties=new Map(),log=[];let current;
  const context=vm.createContext({console:{log(){},warn(message){log.push(message);}},__enter:id=>{current=identity(id);evaluation.push(current);}});
  const sourceFiles=walk(base).filter(f=>f.endsWith('.js'));
- const names=new Set(sourceFiles.flatMap(f=>[...fs.readFileSync(f,'utf8').matchAll(/world\.events\.(\w+)/g)].map(m=>m[1])));
- for(const key of names)events[key]={handlers:[],subscribe(fn){assert.equal(typeof fn,'function');this.handlers.push(fn);subscriptions.push([current,key]);return fn;},unsubscribe(fn){const i=this.handlers.indexOf(fn);if(i>=0)this.handlers.splice(i,1);}};
- const dimension={id:'minecraft:overworld',runCommandAsync:async c=>{commands.push(c);return {successCount:!heartbeat && c === 'scoreboard players set scripts system 0' ? 0 : 1,statusMessage:c.includes('maxcommandchainlength')?'65536':'10000'};},getEntities:()=>[],getPlayers:()=>[].values(),getBlock:()=>undefined};
- const world={events,getPlayers:()=>[].values(),getDimension:()=>dimension,scoreboard:{getObjective:id=>ready && ['system','money','lvl','xp','xp_need'].includes(id) ? {id} : undefined,getObjectives:()=>[],addObjective:id=>({id})},getDynamicProperty:k=>properties.get(k),setDynamicProperty:(k,v)=>properties.set(k,v)};
- const system={run(fn){oneShots.push(fn);return oneShots.length;},runSchedule(fn,interval=1){timers.push({fn,interval,owner:current,active:true});return timers.length;},clearRunSchedule(id){if(timers[id-1])timers[id-1].active=false;}};
- class Point{constructor(x,y,z){Object.assign(this,{x,y,z});}}
- class DynamicPropertiesDefinition{defineString(){}defineNumber(){}defineBoolean(){}}
- class ItemStack{constructor(type,amount){this.type=type;this.typeId=type?.id;this.amount=amount;}}
- class Enchantment{constructor(type,level){Object.assign(this,{type,level});}}
- const dictionary=new Proxy({}, {get:(o,k)=>({id:String(k),maxLevel:5})});
- const server={world,system,Location:Point,BlockLocation:Point,Vector:Point,DynamicPropertiesDefinition,Items:{get:id=>({id})},ItemStack,Enchantment,EnchantmentList:class{},MinecraftEnchantmentTypes:dictionary,MinecraftEffectTypes:dictionary,MinecraftBlockTypes:dictionary,GameMode:{creative:'creative',survival:'survival',adventure:'adventure',spectator:'spectator'}};
+ function signal(key) {
+  return { handlers: [], subscribe(fn) { assert.equal(typeof fn, 'function'); this.handlers.push(fn); subscriptions.push([current, key]); return fn; } };
+ }
+ const beforeEvents = Object.fromEntries(['chatSend', 'itemUse', 'entityHurt', 'playerBreakBlock', 'playerInteractWithBlock', 'playerInteractWithEntity'].map(key => [key, signal('before.' + key)]));
+ const afterEvents = Object.fromEntries(['buttonPush', 'entityHitEntity', 'entityHurt', 'itemStartUse', 'itemUse', 'playerBreakBlock', 'playerLeave', 'playerSpawn', 'projectileHitBlock', 'worldLoad'].map(key => [key, signal('after.' + key)]));
+ const dimension = { id: 'minecraft:overworld', runCommand(c) {
+  commands.push(c);
+  return { successCount: !heartbeat && c === 'scoreboard players set scripts system 0' ? 0 : 1 };
+ }, getEntities: () => [], getPlayers: () => [], getBlock: () => undefined };
+ const world = { beforeEvents, afterEvents, getAllPlayers: () => [], getPlayers: () => [], getDimension: () => dimension,
+  scoreboard: { getObjective: id => ready && ['system','money','lvl','xp','xp_need'].includes(id) ? { id } : undefined,
+   getObjectives: () => [], addObjective: id => ({ id }) },
+  getDynamicProperty: key => properties.get(key), setDynamicProperty: (key, value) => properties.set(key, value)
+ };
+ const system = {
+  beforeEvents: { startup: signal('system.startup') },
+  run(fn) { oneShots.push(fn); return oneShots.length; },
+  runInterval(fn, interval = 1) { timers.push({fn, interval, owner: current, active: true}); return timers.length; },
+  clearRun(id) { if (timers[id - 1]) timers[id - 1].active = false; }
+ };
+ const server = { world, system, BlockTypes: { get: id => ({ id }) }, EnchantmentTypes: { get: id => ({ id, maxLevel: 5 }) },
+  BlockVolume: class {}, ItemStack: class {}, ItemLockMode: { slot: 'slot' },
+  InputPermissionCategory: { Movement: 1 }, CommandPermissionLevel: { Admin: 2 },
+  CustomCommandParamType: { PlayerSelector: "PlayerSelector" }, CustomCommandStatus: { Success: 0, Failure: 1 }, GameMode: { Creative: 'Creative', Adventure: 'Adventure', Spectator: 'Spectator' }
+ };
  const form=class{};const games=[];const chain={maxTicks(){return this;},structureName(){return this;}};
  const natives={'@minecraft/server':server,'@minecraft/server-ui':{ActionFormData:form,ModalFormData:form,MessageFormData:form},'@minecraft/server-gametest':{register:(namespace,name,fn)=>{games.push([namespace,name]);return chain;}}};
  const cache=new Map();
@@ -51,11 +65,22 @@ async function startup(base, { fail, ready = false, limit = 40, heartbeat = true
  await entry.link((spec,ref)=>spec.startsWith('.')?module(path.resolve(path.dirname(ref.identifier),spec)):native(spec));
  await entry.evaluate();
  assert.equal(evaluation.length,sourceFiles.length,'all modules loaded from entry');assert.equal(new Set(evaluation).size,sourceFiles.length,'each module evaluated once');
- const load={evaluation:[...evaluation],subscriptions:[...subscriptions],timers:timers.map(t=>[t.owner,t.interval]),oneShots:oneShots.length,games};
- const registry={registerWorldDynamicProperties(){},registerEntityTypeDynamicProperties(){}};
- for(const fn of events.worldInitialize?.handlers??[])fn({propertyRegistry:registry});
- for(const fn of oneShots.splice(0))await fn();
- for(let tick=1;tick<=limit;tick++){for(const fn of events.tick?.handlers??[])fn({});for(const t of [...timers])if(t.active&&tick%t.interval===0)t.fn();for(let i=0;i<12;i++)await Promise.resolve();}
+ const readinessTimer = timers.at(-1);
+ const components = [], nativeCommands = [];
+ const itemComponentRegistry = { registerCustomComponent(id, handlers) {
+  assert.equal(typeof handlers.onUse, 'function');
+  assert.equal(typeof handlers.onUseOn, 'function');
+  components.push(id);
+ } };
+ const customCommandRegistry = { registerCommand(command) { nativeCommands.push(command.name); } };
+ for (const fn of system.beforeEvents.startup.handlers) fn({ itemComponentRegistry, customCommandRegistry });
+ for (const fn of afterEvents.worldLoad.handlers) fn({});
+ for (const fn of oneShots.splice(0)) await fn();
+ for (let tick = 1; tick <= limit; tick++) {
+  for (const timer of [...timers]) if (timer.active && tick % timer.interval === 0) timer.fn();
+  for (let i = 0; i < 12; i++) await Promise.resolve();
+ }
+ const load = { evaluation, subscriptions, games, components, nativeCommands, readinessTimer };
  assert.ok([...cache.values()].every(m=>m.status==='evaluated'),'linked modules remain evaluated');
  return {load,commands,log,timers,modules:evaluation.length,relativeImports:sourceFiles.reduce((n,f)=>n+[...fs.readFileSync(f,'utf8').matchAll(/(?:from\s+|import\s+)['"]\.[^'"]+['"]/g)].length,0)};
 }
@@ -66,21 +91,16 @@ const files=walk(scripts).filter(p=>p.endsWith('.js')).map(p=>'scripts/'+rel(scr
 assert.deepEqual(index.filter(p=>p.startsWith('scripts/')&&p.endsWith('.js')).sort(),files.sort(),'index exactly covers scripts');
 for(const [old,next]of Object.entries(mapping)){assert.ok(!fs.existsSync(path.join(scripts,old)),'old module remains '+old);assert.ok(fs.existsSync(path.join(scripts,next)),'missing relocation '+next);}
 assert.deepEqual(fs.readdirSync(path.join(scripts,'system')).filter(n=>n.endsWith('.js')),['worldedit.js']);
-const withoutNewModules = ({ evaluation, timers, ...rest }) => ({ ...rest,
- evaluation: evaluation.filter(id => !['system/player/registry.js', 'system/economy/bank.js'].includes(id)),
- timers: timers.filter(([id]) => id !== 'system/player/registry.js')
-});
-if (process.argv[2]) {
- const baseline=await startup(path.resolve(process.argv[2]));
- assert.deepEqual(withoutNewModules(actual.load),baseline.load,'baseline startup order');
- assert.deepEqual(actual.commands,baseline.commands,'baseline first 40 empty-world ticks');
-}
-const { timers: originalTimers, ...originalLoad } = actual.load;
-assert.deepEqual(withoutNewModules({...originalLoad, timers: originalTimers.slice(0,-1)}), fixture.startup, 'existing module evaluation/subscription/schedule order unchanged');
-assert.deepEqual(originalTimers.at(-1), ['import.js',20], 'one new startup diagnostics timer');
-assert.deepEqual(originalTimers.filter(([id]) => id === 'system/player/registry.js'), [['system/player/registry.js',100]]);
+const manifest = JSON.parse(fs.readFileSync(path.join(bp, 'manifest.json'), 'utf8'));
+assert.equal(manifest.modules.find(m => m.type === 'script')?.entry, 'scripts/import.js');
+assert.ok(!fs.existsSync(path.join(scripts, 'port')), 'separate prototype directory removed');
+assert.deepEqual(actual.load.games, [['server', 'spawnbot']]);
+assert.deepEqual(actual.load.components, ['sfo:open_menu']);
+assert.deepEqual(actual.load.nativeCommands, ['sfo:resetpass']);
+assert.equal(actual.load.subscriptions.filter(([, event]) => event === 'before.chatSend').length, 2);
+assert.ok(actual.load.subscriptions.some(([, event]) => event === 'after.worldLoad'));
 const unavailable = await startup(scripts,{limit:120,heartbeat:false});
-assert.equal(unavailable.timers.at(-1).active,false,'diagnostics stop after timeout');
+assert.equal(unavailable.load.readinessTimer.active,false,'diagnostics stop after timeout');
 const moduleList = syncModuleList(scripts, {check:true});
 const report = actual.log.filter(line => line.endsWith(' — загружен'))
  .map(line => line.slice('[Shop for Ore]     '.length,-' — загружен'.length));
@@ -95,7 +115,7 @@ const reloaded = await startup(scripts,{ready:true});
 assert.equal(reloaded.log.filter(line => line.includes('Загрузка завершена')).length,1);
 assert.ok(reloaded.log.includes('[Shop for Ore] Проверка табло · доступны'));
 assert.ok(reloaded.log.includes('[Shop for Ore] Проверка legacy · сигнал обновляется'));
-assert.equal(reloaded.timers.at(-1).active,false,'diagnostics stop after success');
+assert.equal(reloaded.load.readinessTimer.active,false,'diagnostics stop after success');
 await startup(scripts,{fail:'missing'});
 await startup(scripts,{fail:'evaluate'});
 console.log('PASS: ESM graph, pack index, startup order, generated Content Log report, readiness and failed imports.');

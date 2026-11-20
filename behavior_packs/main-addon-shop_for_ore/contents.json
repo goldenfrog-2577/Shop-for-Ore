@@ -184,18 +184,6 @@
 			"path" : "scripts/import.js"
 		},
 		{
-			"path" : "scripts/port/main.js"
-		},
-		{
-			"path" : "scripts/port/level-costs.js"
-		},
-		{
-			"path" : "scripts/port/progress.js"
-		},
-		{
-			"path" : "scripts/port/hud.js"
-		},
-		{
 			"path" : "scripts/menu/admin/admin_menu.js"
 		},
 		{

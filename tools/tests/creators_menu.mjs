@@ -35,8 +35,8 @@ for (const [i, name] of names.entries()) {
 	if (urls[i].length) {
 		form.buttons[0].run();
 		assert.deepEqual(Array.from(form.fields, ([, placeholder, value]) => {
-			assert.equal(placeholder, value);
-			return value;
+			assert.equal(placeholder, value.defaultValue);
+			return value.defaultValue;
 		}), urls[i]);
 		form.close();
 		assert.equal(form.title, '§l§8' + name);

@@ -6,7 +6,7 @@
 // Числа подставляет игра (компоненты score), поэтому панель всегда показывает текущий счёт.
 // Раз в HUD_TICKS тиков проверяем данные; отправляем при изменении или для продления показа.
 
-import { world } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { getScore, isVip, metricNumbers, run, MAX_LEVEL } from '../../utils.js';
 
 export const ICONS_TAG = 'player:board_icons';
@@ -65,9 +65,9 @@ export function hudRawtext(player) {
 }
 
 const sent = new Map();
-world.events.playerLeave.subscribe((e) => sent.delete(e.playerName));
+world.afterEvents.playerLeave.subscribe((e) => sent.delete(e.playerName));
 let tick = 0;
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	if (++tick % HUD_TICKS !== 0) return;
 	for (const player of world.getPlayers()) {
 		const view = viewOf(player);

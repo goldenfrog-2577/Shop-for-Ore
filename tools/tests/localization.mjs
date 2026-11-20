@@ -38,7 +38,7 @@ for(let l=0;l<4;l++){
 	const tags=new Set();let mute=0,bot=null,captured;
 	const target={name:'Target',role:'player',hasTag:t=>tags.has(t)};
 	const scores={lvl:11,money:12345,vip_coins:67890};
-	const ctx={world:{events:{beforeItemUse:{subscribe(){}}},getPlayers:()=>[owner,target].values(),scoreboard:{getObjective:()=>({getParticipants:()=>[]})}},
+	const ctx={world:{beforeEvents:{itemUse:{subscribe(){}}},getPlayers:()=>[owner,target].values(),scoreboard:{getObjective:()=>({getParticipants:()=>[]})}},
 		getRole:p=>p.role,hasRole:(p,r)=>p.role==='owner',findPlayer:()=>target,isVip:p=>p===target&&tags.has('player:vip'),getScore:(p,k)=>scores[k]||0,getWarns:()=>2,
 		muteMinutesLeft:()=>mute,playtimeText:()=> '987 %menu.common.time.second',isJailed:()=>false,backButton:fn=>({text:'%admin.common.back',run:fn}),
 		showMenu:(p,title,body,items)=>{captured={title:tr(title),body:tr(typeof body==='function'?body():body),items:items.map(x=>({...x,text:tr(x.text)}))};},

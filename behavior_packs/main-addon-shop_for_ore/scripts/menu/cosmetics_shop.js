@@ -6,7 +6,7 @@
 // не продаются тем, у кого этой роли нет (colorAllowed). Смотреть Косметику может каждый, покупать — только VIP (тег player:vip);
 // купленное раньше (например, до ребитха) выбирается и без VIP, кроме частиц при продаже — они действуют только у VIP.
 
-import { world, BlockLocation } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { CHAT_COLORS, getChatColor, setChatColor, colorAllowed, getScore, metricNumbers, run, tell, isVip } from '../utils.js';
 import { showMenu, backButton } from './common/forms.js';
 
@@ -170,7 +170,7 @@ const lastPos = new Map();        // ник → { x, y, z }
 // --- Частицы при продаже: счёт вырос, пока игрок стоит на золотом блоке ---
 const lastWorth = new Map();      // ник → money + vip_coins + xp
 let tick = 0;
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	if (++tick % TRAIL_TICKS !== 0) return;
 	for (const player of world.getPlayers()) {
 		const { x, y, z } = player.location;
@@ -193,7 +193,7 @@ world.events.tick.subscribe(() => {
 		particleAt(player.dimension, prev.x, prev.y + 0.6, prev.z, fx.particle);
 	}
 });
-world.events.playerLeave.subscribe((e) => { lastPos.delete(e.playerName); lastWorth.delete(e.playerName); });
+world.afterEvents.playerLeave.subscribe((e) => { lastPos.delete(e.playerName); lastWorth.delete(e.playerName); });
 
 // Облако при продаже: SELL_POINTS случайных точек вокруг игрока — кольцо радиусом 0.6…1.3 блока от ног до макушки
 // (раньше была одна частица на уровне пояса). Новое облако — при каждом росте счёта, т. е. пока идёт продажа
@@ -211,7 +211,7 @@ function sellCloud(dim, loc, id) {
 function onGold(player) {
 	try {
 		const { x, y, z } = player.location;
-		return player.dimension.getBlock(new BlockLocation(Math.floor(x), Math.floor(y) - 1, Math.floor(z))).typeId === 'minecraft:gold_block';
+		return player.dimension.getBlock({ x: Math.floor(x), y: Math.floor(y) - 1, z: Math.floor(z) }).typeId === 'minecraft:gold_block';
 	} catch {
 		return false;
 	}
@@ -228,11 +228,11 @@ function burst(dim, loc, id) {
 		particleAt(dim, loc.x + dx, loc.y + 1.5, loc.z + dz, id);
 	}
 }
-world.events.entityHurt.subscribe((e) => {
+world.afterEvents.entityHurt.subscribe((e) => {
 	const p = e.hurtEntity;
 	if (!p || p.typeId !== 'minecraft:player') return;
 	let hp;
-	try { hp = p.getComponent('health').current; } catch { return; }
+	try { hp = p.getComponent('health').currentValue; } catch { return; }
 	if (hp > 0) return;
 	const fx = getFx(p, 'death');
 	if (fx) burst(p.dimension, p.location, fx.particle);

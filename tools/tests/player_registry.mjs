@@ -8,7 +8,7 @@ const source = file => fs.readFileSync(new URL('scripts/' + file, bp), 'utf8')
 const owner = { name: 'Owner', role: 'owner', tags: ['auth:done'] };
 const online = { name: 'Alice', role: 'player', tags: ['auth:done', 'auth:hash:secret', 'auth:salt:secret', 'password:secret', 'ach:welcome', 'sys:guided', 'sys:wipe:1', 'player', 'player:board', 'unprefixed_tag'] };
 for (const player of [owner, online]) {
-	player.scoreboard = { displayName: player.name, type: 'Player' };
+	player.scoreboardIdentity = { displayName: player.name, type: 'Player' };
 	player.location = { x: -4.1, y: 1, z: 0 };
 	player.dimension = { id: 'minecraft:overworld' };
 	player.hasTag = tag => player.tags.includes(tag);
@@ -16,13 +16,13 @@ for (const player of [owner, online]) {
 }
 const former = { displayName: 'Former', type: 'player' };
 const botIdentity = { displayName: 'TestBot', type: 'player' };
-const bot = { name: 'TestBot', scoreboard: botIdentity, hasTag: tag => tag === 'sys:bot' };
+const bot = { name: 'TestBot', scoreboardIdentity: botIdentity, hasTag: tag => tag === 'sys:bot' };
 const unnamed = { displayName: 'commands.scoreboard.players.offlinePlayerName', type: 'player' };
 const unnamedTranslated = { displayName: '%commands.scoreboard.players.offlinePlayerName', type: 'player' };
 const fake = { displayName: 'Timer', type: 'FakePlayer' };
 const tables = new Map();
 for (const [id, current, previous] of [['money', 100, 0], ['lvl', 1, 40], ['xp', 0, 350], ['xp_need', 100, 0], ['vip_coins', 20, 508], ['rebirth', 0, 1], ['play_seconds', 65, 151617]]) {
-	tables.set(id, new Map([[online.scoreboard, current], [former, previous], [fake, 1]]));
+	tables.set(id, new Map([[online.scoreboardIdentity, current], [former, previous], [fake, 1]]));
 }
 tables.get('money').set(botIdentity, 0);
 tables.get('money').set(unnamed, 0);
@@ -37,10 +37,10 @@ const objective = id => tables.has(id) ? {
 } : undefined;
 let players = [owner, online, bot], menu, snapshot;
 const context = {
-	world: { getPlayers: () => players.values(), events: { beforeItemUse: { subscribe() {} } }, scoreboard: {
+	world: { getPlayers: () => players.values(), beforeEvents: { itemUse: { subscribe() {} } }, scoreboard: {
 		getObjective: objective, addObjective: id => tables.set(id, new Map())
 	} },
-	system: { runSchedule: fn => { snapshot = fn; } },
+	system: { runInterval: fn => { snapshot = fn; } },
 	ROLES: ['player', 'helper', 'moder', 'admin', 'owner'],
 	MAX_LEVEL: 40,
 	getRole: player => player.role,
@@ -54,7 +54,7 @@ const context = {
 	findPlayer: name => players.find(player => player.name === name),
 	run: (player, command) => {
 		const [, id, value] = /set @s (\w+) (\d+)$/.exec(command);
-		tables.get(id).set(player.scoreboard, Number(value));
+		tables.get(id).set(player.scoreboardIdentity, Number(value));
 		return Promise.resolve({});
 	},
 	showMenu: (player, title, body, items) => { menu = { title, body, items }; },

@@ -38,7 +38,7 @@ export const RULES_COUNT = 11;
  */
 export function getScore(entity, objective) {
 	try {
-		const value = world.scoreboard.getObjective(objective).getScore(entity.scoreboard);
+		const value = world.scoreboard.getObjective(objective).getScore(entity);
 		return Number.isFinite(value) ? value : 0;
 	} catch (error) {
 		return 0;
@@ -102,12 +102,14 @@ export const menuSoundCount = p => soundTotals.get(p.name) ?? 0;
 export const failedCommandCount = p => failedTotals.get(p.name) ?? 0;
 export const beginMenuAction = p => menuActions.set(p.name, toldErrorCount(p));
 export const endMenuAction = p => menuActions.delete(p.name);
-world.events.playerLeave.subscribe(e => { for (const map of [pendingCommands, menuActions, commandTotals, soundTotals, failedTotals, told, toldErrors, toldSuccess]) map.delete(e.playerName); });
+world.afterEvents.playerLeave.subscribe(e => { for (const map of [pendingCommands, menuActions, commandTotals, soundTotals, failedTotals, told, toldErrors, toldSuccess]) map.delete(e.playerName); });
 /** Дождаться команд действия, включая команды из их обработчиков .then. */
 export const hasPendingCommands = entity => (pendingCommands.get(entity.name)?.size ?? 0) > 0;
 export async function settleCommands(entity) {
+	if (entity.isValid === false) return;
+	const name = entity.name;
 	for (let i = 0; i < 16; i++) {
-		const pending = pendingCommands.get(entity.name);
+		const pending = pendingCommands.get(name);
 		if (!pending?.size) return;
 		await Promise.all([...pending]);
 	}
@@ -119,27 +121,30 @@ export function menuFeedback(player, error = false) {
 }
 
 export function run(entity, command, diagnostic) {
-	if (entity.name && menuActions.has(entity.name) && command.startsWith('playsound ')) {
-		const error = toldErrorCount(entity) > menuActions.get(entity.name);
+	if (entity.isValid === false) return Promise.resolve(undefined);
+	// Команда может завершиться уже после playerLeave, когда геттер name недоступен.
+	const name = entity.name;
+	if (name && menuActions.has(name) && command.startsWith('playsound ')) {
+		const error = toldErrorCount(entity) > menuActions.get(name);
 		if (entity.hasTag(error ? 'player:menu_error_off' : 'player:menu_success_off')) return Promise.resolve({});
-		soundTotals.set(entity.name, menuSoundCount(entity) + 1);
+		soundTotals.set(name, menuSoundCount(entity) + 1);
 	}
-	if (entity.name && !/^(function |playsound |tellraw )/.test(command)) commandTotals.set(entity.name, menuCommandCount(entity) + 1);
+	if (name && !/^(function |playsound |tellraw )/.test(command)) commandTotals.set(name, menuCommandCount(entity) + 1);
 	if (command.startsWith('tellraw @s ')) {
-		told.set(entity.name, toldCount(entity) + 1);
-		if (isErrorMessage(command)) toldErrors.set(entity.name, toldErrorCount(entity) + 1);
-		else if (isSuccessMessage(command)) toldSuccess.set(entity.name, toldSuccessCount(entity) + 1);
+		told.set(name, toldCount(entity) + 1);
+		if (isErrorMessage(command)) toldErrors.set(name, toldErrorCount(entity) + 1);
+		else if (isSuccessMessage(command)) toldSuccess.set(name, toldSuccessCount(entity) + 1);
 	}
-	const task = entity.runCommandAsync(command).then((r) => r ?? {}, error => {
-		if (entity.name) failedTotals.set(entity.name, failedCommandCount(entity) + 1);
+	const task = Promise.resolve().then(() => entity.runCommand(command) ?? {}).catch(error => {
+		if (name && entity.isValid !== false) failedTotals.set(name, (failedTotals.get(name) ?? 0) + 1);
 		diagnostic?.(error);
 		return undefined;
 	});
-	if (entity.name) {
-		let pending = pendingCommands.get(entity.name);
-		if (!pending) pendingCommands.set(entity.name, pending = new Set());
+	if (name) {
+		let pending = pendingCommands.get(name);
+		if (!pending) pendingCommands.set(name, pending = new Set());
 		pending.add(task);
-		task.then(() => { pending.delete(task); if (!pending.size && pendingCommands.get(entity.name) === pending) pendingCommands.delete(entity.name); });
+		task.then(() => { pending.delete(task); if (!pending.size && pendingCommands.get(name) === pending) pendingCommands.delete(name); });
 	}
 	return task;
 }
@@ -240,7 +245,7 @@ export function isPending(player) {
  * @returns {boolean}
  */
 export function closedByPlayer(response) {
-	return !!response.canceled && response.cancelationReason !== 'userBusy';
+	return !!response.canceled && response.cancelationReason !== 'UserBusy';
 }
 
 /**
@@ -249,12 +254,9 @@ export function closedByPlayer(response) {
  */
 export function showWhenFree(player, form, tries = 60) {
 	return form.show(player).then(r => {
-		if (r.canceled && r.cancelationReason === 'userBusy' && tries > 0) {
+		if (r.canceled && r.cancelationReason === 'UserBusy' && tries > 0) {
 			return new Promise(res => {
-				const id = system.runSchedule(() => {
-					system.clearRunSchedule(id);
-					res(showWhenFree(player, form, tries - 1));
-				}, 10);
+				system.runTimeout(() => res(showWhenFree(player, form, tries - 1)), 10);
 			});
 		}
 		return r;

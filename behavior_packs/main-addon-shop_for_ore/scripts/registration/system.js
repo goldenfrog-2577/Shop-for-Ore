@@ -1,9 +1,9 @@
 // --- Система регистрации и логина игроков ---
 // Добавляет нужные теги при входе и блокирует действия до прохождения логина/регистрации
 
-import { tellText, run, isBot } from '../utils.js';
+import { tellText, run, isBot, isPending } from '../utils.js';
 import { saveRegistryProfile } from '../system/player/registry.js';
-import { world } from '@minecraft/server';
+import { world, system, InputPermissionCategory } from '@minecraft/server';
 import { LoginUI, loginLockSeconds } from './login.js';
 import { RegisterUI } from './register.js';
 import { hasPassword } from './password.js';
@@ -15,6 +15,7 @@ const FORM_DELAY_TICKS = 40;
 // Эффекты блокировки: длинные (60 с) и обновляются раз в 10 с — слепота в Bedrock начинает рассеиваться
 // в конце действия, и с короткими эффектами экран на мгновение «проглядывал».
 // После входа эффекты снимает unlockPlayer()
+const AUTH_MOVEMENT = 'sfo:auth_movement';
 const EFFECT_SECONDS = 60;
 const EFFECT_REFRESH_TICKS = 200;
 
@@ -28,9 +29,16 @@ const formOpen = new Set();
  * это его наказание, а не блокировка входа.
  */
 export function unlockPlayer(player) {
+	releaseMovement(player);
 	saveRegistryProfile(player);
 	run(player, 'effect @s blindness 0');
 	if (!player.hasTag('state:frozen')) run(player, 'effect @s slowness 0');
+}
+
+function releaseMovement(player) {
+	if (!player.hasTag(AUTH_MOVEMENT) || player.hasTag('state:frozen')) return;
+	player.inputPermissions.setPermissionCategory(InputPermissionCategory.Movement, true);
+	player.removeTag(AUTH_MOVEMENT);
 }
 
 /** Может ли игрок войти по паролю (иначе ему нужна регистрация) */
@@ -41,8 +49,8 @@ function canLogin(player) {
 // При входе игрока: определяем, что ему показывать — логин или регистрацию.
 // Ставим ровно один из тегов auth:login/auth:register: в мире встречались игроки
 // с обоими сразу — старый код показывал им две формы одновременно
-world.events.playerJoin.subscribe((data) => {
-	const player = data.player;
+world.afterEvents.playerSpawn.subscribe(({ player, initialSpawn }) => {
+	if (!initialSpawn || !player.isValid) return;
 	if (isBot(player)) return;
 	// Не был в сети во время !resetoffline — все теги снимаются (до проверки пароля: регистрация заново)
 	applyOfflineReset(player);
@@ -66,8 +74,22 @@ world.events.playerJoin.subscribe((data) => {
 	}
 });
 
+const needsLogin = player => player?.typeId === 'minecraft:player' && isPending(player);
+function blockBeforeLogin(event) {
+	if (needsLogin(event.player)) event.cancel = true;
+}
+world.beforeEvents.playerBreakBlock.subscribe(blockBeforeLogin);
+world.beforeEvents.playerInteractWithBlock.subscribe(blockBeforeLogin);
+world.beforeEvents.playerInteractWithEntity.subscribe(blockBeforeLogin);
+world.beforeEvents.itemUse.subscribe(event => {
+	if (needsLogin(event.source)) event.cancel = true;
+});
+world.beforeEvents.entityHurt.subscribe(event => {
+	if (needsLogin(event.hurtEntity) || needsLogin(event.damageSource.damagingEntity)) event.cancel = true;
+});
+
 // При выходе игрока забываем его состояние (иначе «открытая форма» могла бы зависнуть до перезапуска)
-world.events.playerLeave.subscribe((data) => {
+world.afterEvents.playerLeave.subscribe((data) => {
 	waitTicks.delete(data.playerName);
 	formOpen.delete(data.playerName);
 });
@@ -79,12 +101,15 @@ world.events.playerLeave.subscribe((data) => {
  */
 function openForm(player, showForm) {
 	formOpen.add(player.name);
-	showForm(player).finally(() => formOpen.delete(player.name));
+	const name = player.name;
+	Promise.resolve().then(() => showForm(player)).catch(error => {
+		if (player.isValid) console.warn('[Shop for Ore] Account form failed: ' + error);
+	}).finally(() => formOpen.delete(name));
 }
 
 // Каждый тик работаем только с игроками, которые ещё не вошли.
 let tickCounter = 0;
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	tickCounter++;
 	for (const player of world.getPlayers()) {
 		if (isBot(player)) {
@@ -98,6 +123,7 @@ world.events.tick.subscribe(() => {
 		const needRegister = player.hasTag('auth:register');
 		if (!needLogin && !needRegister) {
 			waitTicks.delete(player.name);
+			releaseMovement(player);
 			continue;
 		}
 
@@ -106,6 +132,10 @@ world.events.tick.subscribe(() => {
 
 		// Эффекты блокировки управления: сразу и затем раз в EFFECT_REFRESH_TICKS тиков (10 с)
 		if (firstSeen || tickCounter % EFFECT_REFRESH_TICKS === 0) {
+			if (player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Movement)) {
+				player.addTag(AUTH_MOVEMENT);
+				player.inputPermissions.setPermissionCategory(InputPermissionCategory.Movement, false);
+			}
 			run(player, `effect @s slowness ${EFFECT_SECONDS} 255 true`);
 			run(player, `effect @s blindness ${EFFECT_SECONDS} 255 true`);
 		}

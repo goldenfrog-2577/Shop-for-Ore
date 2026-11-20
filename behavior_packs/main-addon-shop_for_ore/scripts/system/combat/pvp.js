@@ -7,19 +7,20 @@
 //    только на арене и участниками боя с Хранителем (тег boss:fighter — FIGHTER в system/boss/boss.js):
 //    на спавне и в шахтах им можно было бы взорвать игроков, которые не в бою.
 
-import { world, BlockLocation } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { run, tell } from '../../utils.js';
 
 export const PORTABLE_CRYSTAL = 'server:portable_ender_crystal';
 // Арена боя с Хранителем — те же границы, что inFight в system/boss/boss.js (за решёткой; тоннель — уже не арена).
 // Одного тега boss:fighter мало: ушедший с арены (!warp spawn) теряет тег только на следующей секундной проверке боя
 export const inBossFight = (loc, dimensionId) => dimensionId === 'minecraft:overworld' && loc.x >= 480 && loc.x < 576 && loc.y >= -61 && loc.y < -20 && loc.z >= -104 && loc.z < -12;
-world.events.beforeItemUse.subscribe((e) => {
-	if (e.item?.typeId !== PORTABLE_CRYSTAL || e.source?.typeId !== 'minecraft:player') return;
+world.beforeEvents.itemUse.subscribe((e) => {
+	if (e.itemStack?.typeId !== PORTABLE_CRYSTAL || e.source?.typeId !== 'minecraft:player') return;
 	if (e.source.hasTag('player:pvp')) return;
 	if (e.source.hasTag('boss:fighter') && inBossFight(e.source.location, e.source.dimension?.id)) return;
 	e.cancel = true;
-	tell(e.source, 'chat.pvp.crystal_arena_only');
+	const player = e.source;
+	system.run(() => tell(player, 'chat.pvp.crystal_arena_only'));
 });
 
 // Где выбирать точку появления: арена круглая — каменная стена по кругу радиусом ~55 вокруг (295, 300),
@@ -78,7 +79,7 @@ function findStandY(dimension, x, z) {
 	// Соседние кандидаты используют те же блоки пола и свободного пространства.
 	const column = new Map();
 	const type = y => {
-		if (!column.has(y)) column.set(y, dimension.getBlock(new BlockLocation(x, y, z)).typeId);
+		if (!column.has(y)) column.set(y, dimension.getBlock({ x, y, z }).typeId);
 		return column.get(y);
 	};
 	let best;
@@ -91,7 +92,7 @@ function findStandY(dimension, x, z) {
 	return best;
 }
 
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	tick++;
 	// Портал из мини-игр: тег ставит system.mcfunction
 	if (tick % 2 === 0) {
@@ -128,8 +129,8 @@ world.events.tick.subscribe(() => {
 });
 
 // Режим боя: урон от игрока игроку на арене (стрела тоже — damagingEntity у неё стрелок)
-world.events.entityHurt.subscribe((e) => {
-	const hurt = e.hurtEntity, attacker = e.damagingEntity;
+world.afterEvents.entityHurt.subscribe((e) => {
+	const hurt = e.hurtEntity, attacker = e.damageSource.damagingEntity;
 	if (!hurt || !attacker || hurt.typeId !== 'minecraft:player' || attacker.typeId !== 'minecraft:player') return;
 	if (hurt.id === attacker.id || !hurt.hasTag('player:pvp')) return;
 	const now = Date.now();
@@ -137,4 +138,4 @@ world.events.entityHurt.subscribe((e) => {
 	lastCombat.set(attacker.name, now);
 });
 
-world.events.playerLeave.subscribe((e) => lastCombat.delete(e.playerName));
+world.afterEvents.playerLeave.subscribe((e) => lastCombat.delete(e.playerName));

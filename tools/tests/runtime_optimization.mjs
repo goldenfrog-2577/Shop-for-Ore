@@ -16,7 +16,8 @@ function hudRuntime(path, count = 8) {
 	}));
 	const runtime = { players, commands, fail: false, time: 0 };
 	const context = {
-		world: { events: { tick: { subscribe: f => callbacks.push(f) }, playerLeave: { subscribe: f => leave.push(f) } }, getPlayers: () => players.values() },
+		system: { runInterval: f => callbacks.push(f) },
+		world: { afterEvents: { playerLeave: { subscribe: f => leave.push(f) } }, getPlayers: () => players.values() },
 		getScore: (p, key) => p.scores[key] ?? 0, isVip: p => p.hasTag('player:vip'), MAX_LEVEL: 40,
 		metricNumbers: n => String(n), run: (p, command) => { commands.push({ player: p.name, command, tick: runtime.time }); return Promise.resolve(runtime.fail ? undefined : {}); }
 	};
@@ -33,20 +34,43 @@ function hudRuntime(path, count = 8) {
 	return runtime;
 }
 
-function toolsRuntime(path) {
-	let clock = 0, calls = 0, scans = 0;
-	const schedules = [], commands = [];
-	const player = {
-		selectedSlot: 1, hasTag: () => false,
-		getComponent: () => ({ container: { getItem: () => ({ getComponent: () => ({ damage: 10, maxDurability: 100 }) }) } })
+function miningRuntime(path) {
+	const schedules = new Map(), jobs = [], commands = [];
+	const dirt = { typeId: 'minecraft:dirt', amount: 1 };
+	const slots = new Map([[5, dirt]]);
+	const scores = new Map([['lvl', 1], ['xp_need', 100], ['money', 0], ['xp', 0], ['pick', 1]]);
+	const dim = {
+		id: 'minecraft:overworld', heightRange: { min: -64, max: 320 },
+		getBlock({ y }) {
+			assert.ok(y >= -64 && y < 320, 'sale read outside dimension');
+			return { typeId: 'minecraft:gold_block' };
+		},
 	};
-	vm.runInNewContext(source(path), {
-		world: { getPlayers: () => { scans++; return [player].values(); } },
-		system: { runSchedule: (callback, interval = 1) => schedules.push({ callback, interval }) },
-		run: (_, command) => commands.push({ command, tick: clock })
-	});
-	for (clock = 1; clock <= 1000; clock++) for (const s of schedules) if (clock % s.interval === 0) { calls++; s.callback(); }
-	return { calls, scans, commands };
+	const player = {
+		location: { x: 0, y: 1, z: 0 }, dimension: dim, selectedSlotIndex: 0,
+		hasTag: tag => tag === 'auth:done', getGameMode: () => 'Adventure',
+		getComponent: () => ({ container: { size: 36, getItem: i => slots.get(i), setItem: (i, v) => slots.set(i, v) } }),
+		runCommand: cmd => commands.push(cmd),
+	};
+	const context = {
+		world: { afterEvents: { worldLoad: { subscribe: fn => fn() } }, beforeEvents: { playerBreakBlock: { subscribe() {} } },
+			getAllPlayers: () => [player], getDimension: () => dim,
+			scoreboard: { getObjective: id => ({ getScore: () => scores.get(id), setScore: (_, n) => scores.set(id, n) }) } },
+		system: { runInterval: (fn, interval) => schedules.set(interval, fn), runJob: job => jobs.push(job) },
+		MAX_LEVEL: 40, getScore: (_, k) => scores.get(k) ?? 0, isPending: () => false, isBot: () => false,
+		console: { error: msg => assert.fail(msg) },
+	};
+	vm.runInNewContext(source(path), context);
+	assert.deepEqual([...schedules.keys()].sort((a, b) => a - b), [5, 20, 500]);
+	for (const y of [-105, -64, 321]) { player.location.y = y; schedules.get(5)(); }
+	assert.equal(slots.get(5), dirt);
+	player.location.y = 1;
+	schedules.get(5)();
+	assert.equal(slots.get(5), undefined);
+	assert.equal(scores.get('money'), 1);
+	assert.equal(scores.get('xp'), 1);
+	schedules.get(500)(); schedules.get(500)();
+	assert.equal(jobs.length, 1, 'one active regeneration job');
 }
 
 const idle = hudRuntime(scripts + 'system/ui/hud.js');
@@ -97,21 +121,5 @@ modes.fail = false;
 await modes.advance(5);
 assert.equal(modes.commands.length, failure + 1, 'failed send retries after five ticks');
 
-const tools = toolsRuntime(scripts + 'system/player/tools.js');
-assert.equal(tools.calls, 50);
-assert.equal(tools.scans, 50);
-assert.deepEqual(tools.commands.map(c => c.tick), Array.from({ length: 50 }, (_, i) => (i + 1) * 20));
-
-const result = { ticks: 1000, players: 8, idleHudCommands: idle.commands.length, activeHudCommands: active.commands.length, toolsCallbacks: tools.calls, toolsChecks: tools.scans };
-if (process.argv[2]) {
-	const baseline = process.argv[2].replace(/\\/g, '/').replace(/\/$/, '');
-	const oldHud = hudRuntime(baseline + '/scripts/system/hud.js');
-	await oldHud.advance(1000);
-	const oldTools = toolsRuntime(baseline + '/scripts/system/tools.js');
-	assert.deepEqual(tools.commands.map(c => c.tick), oldTools.commands.map(c => c.tick));
-	result.baselineIdleHudCommands = oldHud.commands.length;
-	result.baselineToolsCallbacks = oldTools.calls;
-	assert.equal(idle.commands.length * 4, oldHud.commands.length);
-	assert.equal(tools.calls * 20, oldTools.calls);
-}
-console.log('PASS', JSON.stringify(result));
+miningRuntime(scripts + 'system/player/tools.js');
+console.log('PASS: idle and active HUD refresh, mine intervals, sale at the gold block and void boundaries.');

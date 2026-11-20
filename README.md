@@ -2,7 +2,7 @@
 
 Техническая карта-симулятор для Minecraft Bedrock Edition.
 
-**Ветка `main-26.60`:** перенос Shop for Ore на Minecraft Bedrock 26.60. Версия паков в разработке — `0.4.0`. В игре уже проверены вход со старым паролем, панель, меню и цикл добычи. Точка входа — `scripts/port/main.js`, зависимости — `@minecraft/server` 2.11.0 и `@minecraft/server-ui` 2.3.0.
+**Ветка `main-26.60`** переносит Shop for Ore на Minecraft Bedrock 26.60. Версия паков в разработке — `0.4.0`. Точка входа — `scripts/import.js`. Чат с `!`-командами и бот GameTest используют эксперимент Beta APIs.
 
 Остальные разделы описывают возможности релиза 1.19.50 и служат справочником при переносе. Статус версии 26.60 — в [CHANGELOG.md](CHANGELOG.md).
 
@@ -18,11 +18,11 @@
 ## ⚙️ Технологии
 * **Основная логика**: функции `.mcfunction` (цепочки команд)
 * **Скрипты**: Minecraft Script API (JavaScript) — меню, команды чата, регистрация, античит. 65 модулей: экраны банка и мини-игр собраны в `scripts/menu/main_menu.js`, обмен монет — в `scripts/system/economy/bank.js`, подключение регистрации и уведомление о загрузке — в `scripts/import.js`.
-* **Движок**: Bedrock, `min_engine_version` 1.19.50
-* **Script API**: `@minecraft/server` 1.1.0-beta, `@minecraft/server-ui` 1.0.0-beta, `@minecraft/server-gametest` 1.0.0-beta
+* **Движок** — Bedrock 26.60, `min_engine_version` 1.26.60.
+* **Script API** — `@minecraft/server` 2.12.0-beta, `@minecraft/server-ui` 2.3.0 и `@minecraft/server-gametest` 1.0.0-beta.
 * **Перевод**: файлы `.lang` (русский, английский, украинский, испанский)
 
-> ⚠️ Аддон использует **бета-версии** Script API времён 1.19.50. Новые версии Bedrock старые бета-модули не загружают, поэтому там скрипты (меню, чат) без переноса на современный Script API работать не будут.
+> Релиз 0.3.0 для Bedrock 1.19.50 хранится в ветке `main`.
 
 ## 🌟 Ключевые системы
 

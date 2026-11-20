@@ -2,13 +2,13 @@ import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:asser
 const bp=new URL('../../behavior_packs/main-addon-shop_for_ore/',import.meta.url);
 const load=p=>fs.readFileSync(new URL(p,bp),'utf8').replace(/^import .*;\r?\n/gm,'').replace(/\bexport (?=(?:async )?function|const)/g,'');
 const event=()=>({handlers:[],subscribe(fn){this.handlers.push(fn);}});
-const events=Object.fromEntries(['tick','entityHurt','playerLeave','playerJoin','worldInitialize','beforeChat'].map(k=>[k,event()]));
+const events=Object.fromEntries(['tick','entityHurt','playerLeave','playerSpawn','worldLoad','beforeChat'].map(k=>[k,event()]));
 const dim={id:'overworld'},mk=(name,tags=[])=>{const p={name,id:name,typeId:'minecraft:player',dimension:dim,location:{x:0,y:1,z:0},tags:new Set(tags),hasTag:t=>p.tags.has(t),addTag:t=>p.tags.add(t),removeTag:t=>p.tags.delete(t),getTags:()=>[...p.tags]};return p;};
 const bot=mk('Bot',['sys:bot','role:bot']),human=mk('Human',['player:pvp','auth:done','sys:guided']);human.location.x=50;
 const calls=[],commands=[],props={},clock={now:()=>1000};
 for(const method of ['navigateToEntity','navigateToLocation','lookAtEntity','stopMoving','stopBreakingBlock','attackEntity','jump','setRotation'])bot[method]=(...args)=>calls.push([method,...args]);
-bot.getComponent=()=>({current:20,resetToMaxValue(){}});
-const ctx={connectBot(){},world:{events,getPlayers:()=>[bot,human].values(),getDynamicProperty:k=>props[k],setDynamicProperty:(k,v)=>props[k]=v},Location:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},Vector:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},BlockLocation:class{},DynamicPropertiesDefinition:class{},Date:clock,
+bot.getComponent=()=>({currentValue:20,resetToMaxValue(){}});
+const ctx={connectBot(){},system:{runInterval:fn=>events.tick.subscribe(fn)},world:{afterEvents:events,getPlayers:()=>[bot,human].values(),getDynamicProperty:k=>props[k],setDynamicProperty:(k,v)=>props[k]=v},Location:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},Vector:class{constructor(x,y,z){Object.assign(this,{x,y,z});}},BlockLocation:class{},DynamicPropertiesDefinition:class{},Date:clock,
 	isAir:id=>!id||id==='minecraft:air',isSolid:id=>id==='minecraft:stone',getBot:()=>bot,isBot:p=>p.hasTag('sys:bot')||p.hasTag('role:bot'),isPending:()=>false,getScore:()=>10,findPlayer:n=>n===human.name?human:undefined,
 	run:(p,c)=>commands.push(c),onBotSpawned(){},onBotRemoved(){},freezePlayer(){},unfreezePlayer(){},showHudLine(){},getGame(){},gameOf(){},leaveGame(){},joinGame(){return true;},teleportToArena:p=>p.addTag('player:pvp')};
 vm.runInNewContext(load('scripts/system/bot/bot.js')+'\nglobalThis.botApi={setBotMode,startBotGuide,canGuidePlayer};',ctx);
@@ -19,13 +19,15 @@ tick(220);assert.ok(commands.some(c=>c.startsWith('tp ')),'stuck recovery eventu
 human.location.x=bot.location.x+2;ctx.botApi.setBotMode('spar',{level:4});calls.length=0;tick(40);assert.ok(calls.filter(c=>c[0]==='attackEntity').length>=15);assert.ok(calls.some(c=>c[0]==='jump'));assert.ok(calls.some(c=>c[0]==='navigateToLocation'),'hardest bot circles its target');
 
 // A real bow uses the selected slot, holds the draw for 20 ticks and checks the line again at release.
-bot.selectedSlot = 2;
+bot.selectedSlotIndex = 2;
 bot.headLocation = { ...bot.location, y: bot.location.y + 1.62 };
 human.location.x = bot.location.x + 10;
+bot.getHeadLocation = () => bot.headLocation;
+human.getHeadLocation = () => human.headLocation;
 human.headLocation = { ...human.location, y: human.location.y + 1.62 };
 bot.getComponent = type => type === 'inventory'
 	? { container: { getItem: slot => slot === 2 ? { typeId: 'minecraft:bow' } : undefined } }
-	: { current: 20, resetToMaxValue() {} };
+	: { currentValue: 20, resetToMaxValue() {} };
 let wall = false, ammo = true;
 dim.getBlockFromRay = (from, direction, options) => {
 	assert.equal(from, bot.headLocation);
@@ -34,7 +36,7 @@ dim.getBlockFromRay = (from, direction, options) => {
 	return wall ? { typeId: 'minecraft:stone' } : undefined;
 };
 bot.useItemInSlot = slot => { calls.push(['draw', slot]); return ammo; };
-bot.stopUsingItem = () => calls.push(['release', bot.selectedSlot]);
+bot.stopUsingItem = () => calls.push(['release', bot.selectedSlotIndex]);
 ctx.botApi.setBotMode('spar', { level: 2 });
 calls.length = 0;
 tick(1);
@@ -48,7 +50,7 @@ wall = true;
 calls.length = 0;
 tick(20);
 assert.deepEqual(calls.filter(c => c[0] === 'release'), [['release', 3]], 'release only after changing the bow slot');
-assert.equal(bot.selectedSlot, 2, 'the configured slot is restored');
+assert.equal(bot.selectedSlotIndex, 2, 'the configured slot is restored');
 wall = false;
 ammo = false;
 calls.length = 0;
@@ -76,12 +78,12 @@ assert.equal(delivered.length, 4, 'the guide stops if the player changes dimensi
 human.dimension = dim;
 
 // Dummy HUD blocks lower-priority arena updates for its lease, then releases them.
-let now=1000;const hud={world:{events:{playerLeave:event()}},Date:{now:()=>now},run:(p,c)=>commands.push(c)};
+let now=1000;const hud={world:{afterEvents:{playerLeave:event()}},Date:{now:()=>now},run:(p,c)=>commands.push(c)};
 vm.runInNewContext(load('scripts/system/ui/toast.js')+'\nglobalThis.line=showHudLine;',hud);
 assert.equal(hud.line(human,[],{priority:10,source:'dummy'}),true);assert.equal(hud.line(human,[]),false);now+=2001;assert.equal(hud.line(human,[]),true);
 // Join a running game as an additional participant; humans still cannot join late.
 const miniEvents=new Proxy({}, {get:(o,k)=>o[k]??(o[k]=event())});let starts=0;
-const mini={world:{events:miniEvents,getPlayers:()=>[bot,human].values()},system:{runSchedule(){},run(){}},run(){},tell(){},rawTranslateRich:()=> '{}',isPending:()=>false,isBot:ctx.isBot,findPlayer:n=>n===bot.name?bot:human,
+const mini={world:{afterEvents:miniEvents,getPlayers:()=>[bot,human].values()},system:{runInterval(){},run(){}},run(){},tell(){},rawTranslateRich:()=> '{}',isPending:()=>false,isBot:ctx.isBot,findPlayer:n=>n===bot.name?bot:human,
 	isJailed:()=>false,jailMinutesLeft:()=>0,combatSecondsLeft:()=>0,teleportToArena:()=>starts++,showTitle(){}};
 vm.runInNewContext(load('scripts/system/minigames/minigames.js')+'\nglobalThis.games={getGame,joinGame};',mini);
 const g=mini.games.getGame('pvp_ffa');g.phase='running';g.seconds=40;g.players.add(human.name);g.alive.add(human.name);
@@ -90,7 +92,7 @@ const third=mk('Third');assert.equal(mini.games.joinGame(third,'pvp_ffa'),false)
 assert.ok(calls.filter(c=>c[0].startsWith('navigate')).every(c=>c[2]<=1),'navigation respects API speed bounds');
 // Bot prefix survives a separately assigned role and arbitrary custom ranks.
 bot.addTag('role:owner');bot.addTag('rank:Fake');const chatCommands=[];
-const chat={world:{events,getDimension:()=>({})},system:{runSchedule(){}},getScore:()=>7,isBot:ctx.isBot,isPending:()=>false,getRole:()=> 'player',ROLE_COLORS:{owner:'§4',player:'§f'},BOT_COLOR:'§f',getChatColor:()=>undefined,impersonatedRole:()=>undefined,emotes:{},run:(p,c)=>chatCommands.push(c),isVip:()=>false,censor:s=>s,LEVEL_RANK_RE:/^rank:(§r\d+\ue153?|§aVIP)$/};
+const chat={world:{beforeEvents:{chatSend:events.beforeChat},afterEvents:events,getDimension:()=>({})},system:{runInterval(){}},getScore:()=>7,isBot:ctx.isBot,isPending:()=>false,getRole:()=> 'player',ROLE_COLORS:{owner:'§4',player:'§f'},BOT_COLOR:'§f',getChatColor:()=>undefined,impersonatedRole:()=>undefined,emotes:{},run:(p,c)=>chatCommands.push(c),isVip:()=>false,censor:s=>s,LEVEL_RANK_RE:/^rank:(§r\d+\ue153?|§aVIP)$/};
 vm.runInNewContext(load('scripts/chat/chat.js')+'\nglobalThis.chat=sendChatMessage;',chat);chat.chat(bot,'hello');
 const message=chatCommands.at(-1);assert.ok(message.includes('role.tag.bot'));assert.ok(message.includes('§4Bot'));assert.ok(message.includes('7'));assert.ok(!message.includes('Fake'));assert.ok(!message.includes('role.tag.owner'));
 // Порядок префиксов (владелец): роль → Меломан → свои префиксы → уровень или VIP последним, как бы ни шли теги
@@ -98,7 +100,7 @@ const message=chatCommands.at(-1);assert.ok(message.includes('role.tag.bot'));as
 chat.chat(human,'hi');const m=JSON.parse(chatCommands.at(-1).slice('tellraw @a '.length)).rawtext;const text=JSON.stringify(m);
 const at=s=>text.indexOf(s);assert.ok(at('role.tag.player')<at('rank.collector')&&at('rank.collector')<at('§bПро')&&at('§bПро')<at('§cАс')&&at('§cАс')<at('§r12'),text);
 tags[0]='rank:§aVIP';chat.chat(human,'hi');const t2=chatCommands.at(-1);assert.ok(t2.indexOf('§cАс')<t2.indexOf('§aVIP'));}
-let present=true,menu;const ui={world:{events:{beforeItemUse:event()}},getBot:()=>present?bot:undefined,getBotName:()=>bot.name,botState:()=>({mode:'follow',sit:false,totem:true,returnOnLoad:true}),showMenu:(p,t,b,items)=>menu={body:typeof b==='function'?b():b,items},backButton:run=>({text:'%admin.common.back',run})};
+let present=true,menu;const ui={world:{beforeEvents:{itemUse:event()}},getBot:()=>present?bot:undefined,getBotName:()=>bot.name,botState:()=>({mode:'follow',sit:false,totem:true,returnOnLoad:true}),showMenu:(p,t,b,items)=>menu={body:typeof b==='function'?b():b,items},backButton:run=>({text:'%admin.common.back',run})};
 vm.runInNewContext(load('scripts/menu/admin/admin_menu.js')+'\nglobalThis.menu=botMenu;',ui);ui.menu(human);
 const slots=menu.items.findIndex(i=>i.text==='%admin.bot.button.slots'),sit=menu.items.findIndex(i=>i.text.startsWith('%admin.bot.button.sit'));
 assert.equal(sit,slots+1);assert.ok(menu.items[sit].text.replace(/§./g,'').includes('[ '));assert.ok(menu.body.includes('%admin.bot.status %admin.bot.present'));

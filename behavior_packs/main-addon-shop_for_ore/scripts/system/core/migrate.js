@@ -71,7 +71,7 @@ export function migrateVip(player) {
 	return true;
 }
 
-system.runSchedule(() => {
+system.runInterval(() => {
 	for (const player of world.getPlayers()) {
 		migratePlayer(player);
 		migrateVip(player);

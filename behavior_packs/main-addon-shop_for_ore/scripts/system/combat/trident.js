@@ -4,7 +4,7 @@
 // раз в TRACK_TICKS тиков запоминаем, держал ли игрок трезубец с «Громовержцем»: после броска рука
 // уже пуста, а попадание приходит через долю секунды — запомненное действует MEMORY_TICKS тиков.
 
-import { world, MinecraftEnchantmentTypes } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { run } from '../../utils.js';
 
 const TRACK_TICKS = 5;
@@ -15,9 +15,9 @@ const channeling = new Map();      // ник → тик, когда в руке 
 /** В руке трезубец с «Громовержцем». */
 export function holdsChanneling(player) {
 	try {
-		const item = player.getComponent('inventory').container.getItem(player.selectedSlot);
+		const item = player.getComponent('inventory').container.getItem(player.selectedSlotIndex);
 		if (item?.typeId !== 'minecraft:trident') return false;
-		return item.getComponent('enchantments').enchantments.hasEnchantment(MinecraftEnchantmentTypes.channeling) > 0;
+		return item.getComponent('minecraft:enchantable')?.hasEnchantment('channeling') === true;
 	} catch {
 		return false;
 	}
@@ -26,22 +26,22 @@ export function holdsChanneling(player) {
 /** В руке лук или арбалет (тогда урон от снаряда — стрела, а не трезубец). */
 function holdsBow(player) {
 	try {
-		const id = player.getComponent('inventory').container.getItem(player.selectedSlot)?.typeId;
+		const id = player.getComponent('inventory').container.getItem(player.selectedSlotIndex)?.typeId;
 		return id === 'minecraft:bow' || id === 'minecraft:crossbow';
 	} catch {
 		return false;
 	}
 }
 
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	if (++tick % TRACK_TICKS !== 0) return;
 	for (const player of world.getPlayers()) {
 		if (holdsChanneling(player)) channeling.set(player.name, tick);
 	}
 });
 
-world.events.entityHurt.subscribe((e) => {
-	const target = e.hurtEntity, thrower = e.damagingEntity;
+world.afterEvents.entityHurt.subscribe((e) => {
+	const target = e.hurtEntity, thrower = e.damageSource.damagingEntity;
 	if (target?.typeId !== 'minecraft:player' || thrower?.typeId !== 'minecraft:player') return;
 	if ((channeling.get(thrower.name) ?? -Infinity) < tick - MEMORY_TICKS) return;
 	// Чем попали: снаряд из события (e.projectile в 1.19.50, damageSource.damagingProjectile в новых версиях).
@@ -54,4 +54,4 @@ world.events.entityHurt.subscribe((e) => {
 	run(target.dimension, `summon lightning_bolt ${x.toFixed(2)} ${y.toFixed(2)} ${z.toFixed(2)}`);
 });
 
-world.events.playerLeave.subscribe((e) => channeling.delete(e.playerName));
+world.afterEvents.playerLeave.subscribe((e) => channeling.delete(e.playerName));

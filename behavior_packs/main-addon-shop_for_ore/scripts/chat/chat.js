@@ -15,7 +15,7 @@ const FLOOD_TIME = 10000;       // Период для антифлуда (мс)
 const playerMessages = new Map(); // Хранилище сообщений игроков
 
 // Игрок вышел — его история сообщений больше не нужна
-world.events.playerLeave.subscribe((data) => playerMessages.delete(data.playerName));
+world.afterEvents.playerLeave.subscribe((data) => playerMessages.delete(data.playerName));
 
 /**
  * Проверка на спам и флуд.
@@ -79,7 +79,7 @@ export function replaceEmotes(message) {
 }
 
 // --- Основной обработчик чата ---
-world.events.beforeChat.subscribe((data) => {
+world.beforeEvents.chatSend?.subscribe((data) => {
 	const playerName = data.sender.name;
 	const message = data.message.trim();
 	const player = data.sender;
@@ -120,10 +120,8 @@ world.events.beforeChat.subscribe((data) => {
 	}
 
 	// Формирование и отправка форматированного сообщения
-	data.sendToTargets = true;
-	data.targets = [];
-
-	sendChatMessage(data.sender, message);
+	data.cancel = true;
+	system.run(() => sendChatMessage(player, message));
 });
 
 /**
@@ -167,7 +165,7 @@ export function sendChatMessage(sender, message) {
 // Раз в секунду и только если текст изменился
 const NAMETAG_REFRESH_TICKS = 20;
 let nameTagTick = 0;
-world.events.tick.subscribe(() => {
+system.runInterval(() => {
 	if (++nameTagTick % NAMETAG_REFRESH_TICKS !== 0) return;
 	for (const player of world.getPlayers()) {
 		// Бот: над головой только ник в цвете бота (уровня и денег у него нет)
@@ -187,7 +185,7 @@ world.events.tick.subscribe(() => {
 
 // Мут истекает сам: раз в секунду проверяем замученных — muteMinutesLeft снимет тег и напишет игроку,
 // что писать снова можно
-system.runSchedule(() => {
+system.runInterval(() => {
 	for (const player of world.getPlayers()) {
 		if (player.getTags().some(t => t.startsWith('state:mute:'))) muteMinutesLeft(player);
 	}

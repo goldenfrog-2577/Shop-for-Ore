@@ -3,9 +3,9 @@ import vm from 'node:vm';
 import assert from 'node:assert/strict';
 const repo=new URL('../../',import.meta.url),bp=new URL('behavior_packs/main-addon-shop_for_ore/',repo);
 const load=p=>fs.readFileSync(new URL('scripts/'+p,bp),'utf8').replace(/^import .*;\r?\n/gm,'').replace(/\bexport (?=(?:async )?function|const)/g,'');
-const events=Object.fromEntries(['tick','blockBreak','entityHurt','buttonPush'].map(k=>[k,{handlers:[],subscribe(fn){this.handlers.push(fn);}}]));
+const events=Object.fromEntries(['tick','playerBreakBlock','entityHurt','buttonPush'].map(k=>[k,{handlers:[],subscribe(fn){this.handlers.push(fn);}}]));
 const people=[],commands=[],messages=[],toasts=[];let capture;
-const context={world:{events,getPlayers:()=>people.values()},system:{runSchedule(){}},TRAILS:[],PROMOCODES:[],usedPromo:()=>false,TOAST_TICKS:60,
+const context={world:{afterEvents:events,getPlayers:()=>people},system:{runInterval(fn, interval = 1){if(interval===1)events.tick.handlers.push(fn);}},TRAILS:[],PROMOCODES:[],usedPromo:()=>false,TOAST_TICKS:60,
  getScore:(p,k)=>p.scores[k]??0,isPending:p=>p.hasTag('auth:login'),isVip:p=>p.hasTag('player:vip'),rawTranslateRich:()=> '{}',showToast:(p,t)=>toasts.push({p,t}),
  tell:(p,k)=>messages.push({p,k}),metricNumbers:String,backButton:fn=>({text:'BACK',run:fn}),showMenu:(p,title,body,items)=>{capture={title,body,items};},
  run:(p,c)=>{commands.push({p,c});if(c.startsWith('structure load ')||c.startsWith('effect '))return new Promise(resolve=>p.finish=resolve);const m=c.match(/^scoreboard players (add|remove) @s (\w+) (\d+)$/);if(m)p.scores[m[2]]=(p.scores[m[2]]??0)+(m[1]==='add'?1:-1)*Number(m[3]);return Promise.resolve({});}

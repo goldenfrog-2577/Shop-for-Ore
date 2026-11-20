@@ -12,7 +12,7 @@ Object.assign(player.scores,{lvl:1,money:250100,vip_coins:80,play_seconds:24615}
 const objectives=new Map(),commands=[],properties={};let useUndefined=false;
 const addObjective=id=>{const o={id,getScore:p=>{if(!(id in p.scores)&&!useUndefined)throw Error('missing');return p.scores[id];}};objectives.set(id,o);return o;};
 for(const id of ['xp','money','vip_coins','lvl','rebirth','efficiency','fortune','pick','magnet','online','xp_need','stat_mined'])addObjective(id);
-const world={events:events(),getPlayers:()=>[player].values(),scoreboard:{getObjective:id=>objectives.get(id),addObjective:id=>addObjective(id)},getDynamicProperty:k=>properties[k],setDynamicProperty:(k,v)=>{properties[k]=v;}};
+const world={afterEvents:{worldLoad:{subscribe(){}},playerSpawn:{subscribe(){}},playerLeave:{subscribe(){}}},getPlayers:()=>[player].values(),scoreboard:{getObjective:id=>objectives.get(id),addObjective:id=>addObjective(id)},getDynamicProperty:k=>properties[k],setDynamicProperty:(k,v)=>{properties[k]=v;}};
 const run=async(p,cmd)=>{
 	commands.push(cmd);await Promise.resolve();
 	let m=cmd.match(/^scoreboard players set @s (\w+) (-?\d+)$/);if(m)p.scores[m[1]]=Number(m[2]);
@@ -23,17 +23,17 @@ const run=async(p,cmd)=>{
 	}
 	return {};
 };
-const ctx={world,run,console,Number,system:{run(){}},DynamicPropertiesDefinition:class{},getScore:(p,k)=>Number.isFinite(p.scores[k])?p.scores[k]:0};
+const ctx={world,run,console,Number,system:{run(){},runInterval(){}},DynamicPropertiesDefinition:class{},getScore:(p,k)=>Number.isFinite(p.scores[k])?p.scores[k]:0};
 vm.runInNewContext(source('scripts/system/core/player_scores.js')+'\nglobalThis.ensure=ensurePlayerScores;',ctx);
 const task=ctx.ensure(player);assert.equal(ctx.ensure(player),task,'one pending repair per player');await task;
 for(const k of ['xp','rebirth','efficiency','fortune','pick','magnet'])assert.equal(player.scores[k],0,k+' explicitly initialized');
 assert.equal(player.scores.xp_need,100);assert.equal(player.scores.online,1);assert.equal(player.scores.money,250100);assert.equal(player.scores.vip_coins,80);assert.equal(player.scores.play_seconds,24615);assert.ok(player.hasTag('player'));
 const stable=commands.length;await ctx.ensure(player);assert.equal(commands.length,stable,'stable scores produce no writes');
 useUndefined=true;delete player.scores.xp;await ctx.ensure(player);assert.equal(player.scores.xp,0,'API returning undefined also repaired');
-player.scores.lvl=33;delete player.scores.xp_need;await ctx.ensure(player);assert.equal(player.scores.xp_need,126000,'price from real level table');
+player.scores.lvl=33;delete player.scores.xp_need;await ctx.ensure(player);assert.equal(player.scores.xp_need,113750,'price from real level table');
 objectives.delete('fortune');delete player.scores.fortune;await ctx.ensure(player);assert.equal(player.scores.fortune,0,'missing objective recreated');
 // HUD now has every referenced score, without replacing current money or VIP balance.
-const hud={world,getScore:ctx.getScore,isVip:()=>false,MAX_LEVEL:40,metricNumbers:String,run:async()=>({})};
+const hud={world:{...world,afterEvents:{playerLeave:{subscribe(){}}}},system:{runInterval(){}},getScore:ctx.getScore,isVip:()=>false,MAX_LEVEL:40,metricNumbers:String,run:async()=>({})};
 vm.runInNewContext(source('scripts/system/ui/hud.js')+'\nglobalThis.hud=hudRawtext;',hud);
 for(const part of hud.hud(player))if(part.score)assert.ok(Number.isFinite(player.scores[part.score.objective]),'HUD score exists: '+part.score.objective);
 player.scores.lvl=25;player.tags.delete('player');await ctx.ensure(player);assert.ok(!player.hasTag('player'),'rebirth signal must remain until the function resets progress');player.tags.add('player');
