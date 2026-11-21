@@ -272,79 +272,165 @@ function tagSetting(player, kind, tag, back) {
 	}, back);
 }
 
-// Музыка (system/ui/music.js): вкл/выкл, громкость 0–100, источник — музыка сервера по зонам или свои пластинки,
-// следующий трек и выбор пластинки (плашка «Сейчас играет»). В описании — что играет и как всё настроено
-const musicTime = seconds => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
+// Настройки музыки. Позиция и instanceId относятся к треку, для которого открыли эту форму.
+function musicTime(seconds) {
+	const minutes = Math.floor(seconds / 60);
+	const remainder = String(Math.floor(seconds % 60)).padStart(2, '0');
+	return `${minutes}:${remainder}`;
+}
+
 function musicSetting(player, back) {
-	const again = () => musicSetting(player, back);
-	const off = player.hasTag(MUSIC_OFF), discMode = player.hasTag(DISC_MODE), discs = unlockedDiscs(player);
+	const reopen = () => musicSetting(player, back);
+	const off = player.hasTag(MUSIC_OFF);
+	const discMode = player.hasTag(DISC_MODE);
+	const discs = unlockedDiscs(player);
 	const current = playback(player);
+
 	const body = () => {
-		const t = current?.track;
-		return ['%menu.settings.music.body', '',
+		const now = current ? `§f ${trackTitle(current.track)} §8— §f ${trackArtist(current.track)}` : '§8—';
+		const lines = [
+			'%menu.settings.music.body',
+			'',
 			`%menu.settings.state ${off ? '%menu.settings.state.off' : '%menu.settings.state.on'}`,
-			`%menu.music.now ${t ? `§f ${trackTitle(t)} §8— §f ${trackArtist(t)}` : '§8—'}`,
-			...(Number.isFinite(current?.position) ? [`%menu.music.position §f${musicTime(current.position)} §7/ §f${musicTime(current.duration)}`] : []),
+			`%menu.music.now ${now}`
+		];
+		if (Number.isFinite(current?.position)) {
+			lines.push(`%menu.music.position §f${musicTime(current.position)} §7/ §f${musicTime(current.duration)}`);
+		}
+		lines.push(
 			`%menu.music.source ${discMode ? '%menu.music.source.discs' : '%menu.music.source.server'}`,
 			`%menu.music.volume §f${getVolume(player)}§7 / 100`,
-			`%menu.music.discs §f${discs.length}§7 / ${DISCS.length}`].join('\n');
+			`%menu.music.discs §f${discs.length}§7 / ${DISCS.length}`
+		);
+		return lines.join('\n');
 	};
+
 	showMenu(player, '%menu.settings.music.title', body, [
-		{ text: off ? '\ue139 %menu.settings.button.enable' : '\ue130 %menu.settings.button.disable', run: () => { setMusicOff(player, !off); changed(player, off); again(); } },
-		...(current ? [{ text: current.paused ? '%menu.music.button.resume' : '%menu.music.button.pause', icon: 'textures/server_icons/note_block', run: () => {
-			setPaused(player, current.instanceId, !current.paused); again();
-		} }] : []),
-		...(current?.duration >= 1 ? [{ text: '%menu.music.button.seek', icon: 'textures/server_icons/note_block', run: () => {
-			const max = Math.floor(current.duration);
-			const form = modal('%menu.music.seek.title').slider('%menu.music.seek.label', 0, max, { valueStep: 1, defaultValue: Math.min(max, Math.floor(current.position)) });
-			showModal(player, form, ([value]) => { seek(player, current.instanceId, value); again(); }, again);
-		} }] : []),
-		{ text: '%menu.music.button.volume', icon: 'textures/server_icons/note_block', run: () => musicVolume(player, again) },
-		{ text: discMode ? '%menu.music.button.to_server' : '%menu.music.button.to_discs', icon: 'textures/items/record_cat', run: () => {
-			if (!discMode && !discs.length) return tell(player, 'chat.music.error.no_discs');
-			if (discMode) player.removeTag(DISC_MODE); else player.addTag(DISC_MODE);
-			tell(player, discMode ? 'chat.music.source.server' : 'chat.music.source.discs');
-			again();
-		} },
-		{ text: '%menu.music.button.choose', icon: 'textures/server_icons/note_block', run: () => musicChoose(player, again) },
-		{ text: '%menu.music.button.collection', icon: 'textures/items/record_13', run: () => musicCollection(player, again) },
+		{
+			text: off ? '\ue139 %menu.settings.button.enable' : '\ue130 %menu.settings.button.disable',
+			run: () => {
+				setMusicOff(player, !off);
+				changed(player, off);
+				reopen();
+			}
+		},
+		// showMenu пропускает пустые пункты. Между треками пауза и перемотка скрыты.
+		current && {
+			text: current.paused ? '%menu.music.button.resume' : '%menu.music.button.pause',
+			icon: 'textures/server_icons/note_block',
+			run: () => {
+				setPaused(player, current.instanceId, !current.paused);
+				reopen();
+			}
+		},
+		current?.duration >= 1 && {
+			text: '%menu.music.button.seek',
+			icon: 'textures/server_icons/note_block',
+			run: () => musicSeek(player, current, reopen)
+		},
+		{
+			text: '%menu.music.button.volume',
+			icon: 'textures/server_icons/note_block',
+			run: () => musicVolume(player, reopen)
+		},
+		{
+			text: discMode ? '%menu.music.button.to_server' : '%menu.music.button.to_discs',
+			icon: 'textures/items/record_cat',
+			run: () => {
+				if (!discMode && !discs.length) return tell(player, 'chat.music.error.no_discs');
+				if (discMode) player.removeTag(DISC_MODE);
+				else player.addTag(DISC_MODE);
+				tell(player, discMode ? 'chat.music.source.server' : 'chat.music.source.discs');
+				reopen();
+			}
+		},
+		{
+			text: '%menu.music.button.choose',
+			icon: 'textures/server_icons/note_block',
+			run: () => musicChoose(player, reopen)
+		},
+		{
+			text: '%menu.music.button.collection',
+			icon: 'textures/items/record_13',
+			run: () => musicCollection(player, reopen)
+		},
 		backButton(back)
 	], back);
 }
 
-function musicVolume(player, back) {
-	const form = modal('%menu.music.volume.title').slider('%menu.music.volume.label', 0, 100, { valueStep: 10, defaultValue: getVolume(player) });
-	showModal(player, form, ([v]) => { setVolume(player, v); tell(player, 'chat.music.volume', String(getVolume(player))); back(); }, back);
+function musicSeek(player, current, back) {
+	const max = Math.floor(current.duration);
+	const form = modal('%menu.music.seek.title').slider('%menu.music.seek.label', 0, max, {
+		valueStep: 1,
+		defaultValue: Math.min(max, Math.floor(current.position))
+	});
+	showModal(player, form, ([seconds]) => {
+		seek(player, current.instanceId, seconds);
+		back();
+	}, back);
 }
 
-// Коллекция: все пластинки. Найденная — нажал, и она играет (источник переключается на «Мои пластинки»);
-// ненайденная — «???» с подсказкой, где искать (system/player/discs.js)
+function musicVolume(player, back) {
+	const form = modal('%menu.music.volume.title').slider('%menu.music.volume.label', 0, 100, {
+		valueStep: 10,
+		defaultValue: getVolume(player)
+	});
+	showModal(player, form, ([volume]) => {
+		setVolume(player, volume);
+		tell(player, 'chat.music.volume', String(getVolume(player)));
+		back();
+	}, back);
+}
+
+// Коллекция показывает и найденные, и закрытые пластинки. Для закрытой выдаём подсказку по месту добычи.
 function musicCollection(player, back) {
 	const owned = unlockedDiscs(player);
-	const items = DISCS.map(d => owned.includes(d.id)
-		? { text: `§8 ${trackTitle(d)}\n§r ${trackArtist(d)}`, icon: d.icon, run: () => {
-			if (player.hasTag(MUSIC_OFF) || getVolume(player) === 0) return tell(player, 'chat.music.error.off');
-			const { key, list } = playlistOf(player);
-			if (key === 'boss' && !list.includes(d.id)) return tell(player, 'chat.music.error.arena');
-			player.addTag(DISC_MODE);
-			if (!playNow(player, d.id)) return tell(player, 'chat.music.error.arena');
-			back();
-		} }
-		: { text: `§8???\n%menu.music.hint.${BOSS_DISCS.includes(d.id) ? 'boss' : 'mine'}`, icon: 'textures/ui/lock', run: () => tell(player, 'chat.music.error.locked') });
-	showMenu(player, '%menu.music.collection.title', `%menu.music.collection.body\n\n%menu.music.discs §f${owned.length}§7 / ${DISCS.length}`, [...items, backButton(back)], back);
+	const items = DISCS.map(disc => {
+		if (!owned.includes(disc.id)) {
+			const source = BOSS_DISCS.includes(disc.id) ? 'boss' : 'mine';
+			return {
+				text: `§8???\n%menu.music.hint.${source}`,
+				icon: 'textures/ui/lock',
+				run: () => tell(player, 'chat.music.error.locked')
+			};
+		}
+		return {
+			text: `§8 ${trackTitle(disc)}\n§r ${trackArtist(disc)}`,
+			icon: disc.icon,
+			run: () => {
+				if (player.hasTag(MUSIC_OFF) || getVolume(player) === 0) return tell(player, 'chat.music.error.off');
+				// Проверяем арену до переключения источника, чтобы отказ сохранил выбор игрока.
+				const { key, list } = playlistOf(player);
+				if (key === 'boss' && !list.includes(disc.id)) return tell(player, 'chat.music.error.arena');
+				player.addTag(DISC_MODE);
+				if (!playNow(player, disc.id)) return tell(player, 'chat.music.error.arena');
+				back();
+			}
+		};
+	});
+	const body = `%menu.music.collection.body\n\n%menu.music.discs §f${owned.length}§7 / ${DISCS.length}`;
+	showMenu(player, '%menu.music.collection.title', body, [...items, backButton(back)], back);
 }
 
-// Выбрать трек из текущего плейлиста: музыка зоны (мир, Незер, арена Хранителя) или свои пластинки. Нажал — играет сразу,
-// с плашкой «Сейчас играет»; играющий сейчас отмечен
+// «Выбрать трек» следует активному плейлисту. Зелёным отмечаем текущую запись.
 function musicChoose(player, back) {
 	if (player.hasTag(MUSIC_OFF) || getVolume(player) === 0) return tell(player, 'chat.music.error.off');
-	const { key, list } = playlistOf(player), now = nowPlaying(player)?.id;
-	const items = list.map(id => ({
-		text: `${id === now ? '§2' : '§8'} ${trackTitle(TRACK[id])}\n§r ${trackArtist(TRACK[id])}`,
-		icon: TRACK[id].icon ?? 'textures/server_icons/note_block',
-		run: () => { if (!playNow(player, id)) return tell(player, 'chat.music.error.off'); back(); }
-	}));
-	showMenu(player, '%menu.music.choose.title', `%menu.music.choose.body\n\n%menu.music.choose.${key}`, [...items, backButton(back)], back);
+	const { key, list } = playlistOf(player);
+	const currentId = nowPlaying(player)?.id;
+	const items = list.map(id => {
+		const track = TRACK[id];
+		const color = id === currentId ? '§2' : '§8';
+		return {
+			text: `${color} ${trackTitle(track)}\n§r ${trackArtist(track)}`,
+			icon: track.icon ?? 'textures/server_icons/note_block',
+			run: () => {
+				if (!playNow(player, id)) return tell(player, 'chat.music.error.off');
+				back();
+			}
+		};
+	});
+	const body = `%menu.music.choose.body\n\n%menu.music.choose.${key}`;
+	showMenu(player, '%menu.music.choose.title', body, [...items, backButton(back)], back);
 }
 
 // Панель слева: три состояния (теги player:board_icons, player:board_no — functions/settings/*)

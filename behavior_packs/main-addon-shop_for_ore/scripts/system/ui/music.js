@@ -1,5 +1,4 @@
-// Персональный плеер карты. Серверные определения задают реальную длительность,
-// а ресурс-пак воспроизводит плоский звук в категории «Проигрыватели».
+// Персональный плеер карты. Каталог и состав зон находятся в music_tracks.js.
 import { system, world } from '@minecraft/server';
 import { inArena } from '../boss/arena.js';
 import { showToast } from './toast.js';
@@ -10,175 +9,284 @@ export const DISC_MODE = 'music:discs';
 export const DISC_TAG = 'music:disc:';
 const VOLUME_TAG = 'music:volume:';
 const SAVED_TRACK = 'sfo:music_current';
-const FADE_SECONDS = 1;
-const TICKS = 20;
-export const ZONE_PAUSE = 3;
-export const GAP = 120;
-export const NETHER = { min: [-15, 0, -52], max: [15, 30, -23] };
-const sessions = new Map();
-const discItems = new Map(DISCS.map(d => [d.item, d.id]));
 
-const inBox = ({ min, max }, l) => l.x >= min[0] && l.x < max[0] + 1 && l.y >= min[1] && l.y < max[1] + 1 && l.z >= min[2] && l.z < max[2] + 1;
+const TICKS_PER_SECOND = 20;
+const FADE_SECONDS = 1;
+export const ZONE_PAUSE = 3; // Секунды после смены плейлиста.
+export const GAP = 120;      // Секунды тишины после естественного окончания трека.
+
+const sessions = new Map(); // player.id → состояние персонального плеера до выхода из мира.
+const discItems = new Map(DISCS.map(disc => [disc.item, disc.id]));
+
+// «Незер» карты — шахта в Верхнем мире. Верхняя граница входит в область целиком, до края блока.
+export const NETHER = { min: [-15, 0, -52], max: [15, 30, -23] };
+
+function inBox({ min, max }, { x, y, z }) {
+	return x >= min[0] && x < max[0] + 1
+		&& y >= min[1] && y < max[1] + 1
+		&& z >= min[2] && z < max[2] + 1;
+}
+
 export function zoneOf(location, dimensionId = 'minecraft:overworld') {
 	if (inArena(location, dimensionId)) return 'boss';
-	return dimensionId === 'minecraft:overworld' && inBox(NETHER, location) ? 'nether' : 'world';
+	if (dimensionId === 'minecraft:overworld' && inBox(NETHER, location)) return 'nether';
+	return 'world';
 }
+
 export function playlistFor(zone, discMode, discs) {
+	// На арене всегда звучит её подборка. В других зонах игрок может выбрать свою коллекцию.
 	if (zone === 'boss') return { key: 'boss', list: PLAYLISTS.boss };
 	if (discMode && discs.length) return { key: 'discs', list: discs };
 	return { key: zone, list: PLAYLISTS[zone] };
 }
+
 export function pickTrack(list, last, rand = Math.random) {
-	const pool = list.length > 1 ? list.filter(id => id !== last) : list;
-	return pool[Math.floor(rand() * pool.length)];
-}
-export const unlockedDiscs = p => DISCS.filter(d => p.hasTag(DISC_TAG + d.id) || p.hasTag(`boss:disc:record_${d.id}`)).map(d => d.id);
-export function playlistOf(p) {
-	const zone = zoneOf(p.location, p.dimension.id);
-	const discs = zone !== 'boss' && p.hasTag(DISC_MODE) ? unlockedDiscs(p) : [];
-	return playlistFor(zone, discs.length > 0, discs);
-}
-export function getVolume(p) {
-	const tag = p.getTags().find(t => t.startsWith(VOLUME_TAG));
-	const n = tag ? Number(tag.slice(VOLUME_TAG.length)) : 100;
-	return Number.isFinite(n) ? Math.min(100, Math.max(0, Math.round(n))) : 100;
+	const candidates = list.length > 1 ? list.filter(id => id !== last) : list;
+	return candidates[Math.floor(rand() * candidates.length)];
 }
 
-function rememberDisc(p, item) {
-	const id = discItems.get(item?.typeId);
-	if (id && !p.hasTag(DISC_TAG + id)) p.addTag(DISC_TAG + id);
+export function unlockedDiscs(player) {
+	// Пластинки старых наград Хранителя могли сохраниться только в тегах boss:disc:record_*.
+	return DISCS
+		.filter(disc => player.hasTag(DISC_TAG + disc.id) || player.hasTag(`boss:disc:record_${disc.id}`))
+		.map(disc => disc.id);
 }
+
+export function playlistOf(player) {
+	const zone = zoneOf(player.location, player.dimension.id);
+	const discMode = zone !== 'boss' && player.hasTag(DISC_MODE);
+	const discs = discMode ? unlockedDiscs(player) : [];
+	return playlistFor(zone, discMode, discs);
+}
+
+export function getVolume(player) {
+	const tag = player.getTags().find(tag => tag.startsWith(VOLUME_TAG));
+	const volume = tag ? Number(tag.slice(VOLUME_TAG.length)) : 100;
+	return Number.isFinite(volume) ? Math.min(100, Math.max(0, Math.round(volume))) : 100;
+}
+
+function rememberDisc(player, item) {
+	const id = discItems.get(item?.typeId);
+	if (id && !player.hasTag(DISC_TAG + id)) player.addTag(DISC_TAG + id);
+}
+
 world.afterEvents.playerInventoryItemChange.subscribe(({ player, itemStack }) => {
 	if (!player.hasTag('role:bot')) rememberDisc(player, itemStack);
-}, { includeItems: [...discItems.keys()], ignoreQuantityChange: true });
+}, {
+	includeItems: [...discItems.keys()],
+	ignoreQuantityChange: true
+});
 
-function session(p) {
-	let s = sessions.get(p.id);
-	if (s) return s;
-	// При /reload ссылка SoundInstance теряется. Останавливаем только последнюю музыку карты.
-	const saved = p.getDynamicProperty(SAVED_TRACK);
-	if (typeof saved === 'string' && TRACK[saved]) {
-		p.stopSound(soundOf(saved));
-		p.setDynamicProperty(SAVED_TRACK, undefined);
+function sessionFor(player) {
+	const existing = sessions.get(player.id);
+	if (existing) return existing;
+
+	// После /reload игра может ещё воспроизводить звук, а ссылка SoundInstance уже потеряна.
+	// Сохранённый ID позволяет остановить именно музыку карты у этого игрока.
+	const savedTrack = player.getDynamicProperty(SAVED_TRACK);
+	if (typeof savedTrack === 'string' && TRACK[savedTrack]) {
+		player.stopSound(soundOf(savedTrack));
+		player.setDynamicProperty(SAVED_TRACK, undefined);
 	}
-	// Единственная сверка старого инвентаря за сессию. Далее достаточно событий слота.
-	const bag = p.getComponent('minecraft:inventory')?.container;
-	if (bag) for (let i = 0; i < bag.size; i++) rememberDisc(p, bag.getItem(i));
-	s = { player: p, key: null, active: null, last: null, nextAt: 0 };
-	sessions.set(p.id, s);
-	return s;
+
+	// Событие слота приходит только при изменении. Уже лежащие в инвентаре пластинки учитываем один раз.
+	const inventory = player.getComponent('minecraft:inventory')?.container;
+	if (inventory) {
+		for (let slot = 0; slot < inventory.size; slot++) {
+			rememberDisc(player, inventory.getItem(slot));
+		}
+	}
+
+	const session = {
+		player,
+		playlistKey: null,
+		active: null,
+		lastTrackId: null,
+		nextStartTick: 0
+	};
+	sessions.set(player.id, session);
+	return session;
 }
 
-function clearTrack(s) {
-	s.active = null;
-	s.player.setDynamicProperty(SAVED_TRACK, undefined);
+function clearTrack(session) {
+	session.active = null;
+	session.player.setDynamicProperty(SAVED_TRACK, undefined);
 }
-function stop(s) {
-	if (!s.active) return;
-	const a = s.active;
-	try { a.sound.stop(); } finally { clearTrack(s); }
-}
-function start(s, id, volume, fadeIn) {
-	stop(s);
-	const sound = s.player.playSound(soundOf(id), { volume: 1 });
+
+function stopTrack(session) {
+	if (!session.active) return;
 	try {
-		sound.setVolume(fadeIn ? 0 : volume / 100);
-		if (fadeIn) sound.fade(FADE_SECONDS, volume / 100);
-		s.player.setDynamicProperty(SAVED_TRACK, id);
-		s.active = { id, sound, paused: false, fading: false };
-		s.last = id;
-	} catch (error) { sound.stop(); throw error; }
+		session.active.sound.stop();
+	} finally {
+		clearTrack(session);
+	}
 }
-function finish(s) {
-	clearTrack(s);
-	s.nextAt = system.currentTick + GAP * TICKS;
+
+function startTrack(session, id, volume, fadeIn) {
+	stopTrack(session);
+	const sound = session.player.playSound(soundOf(id), { volume: 1 });
+	const targetVolume = volume / 100;
+	try {
+		sound.setVolume(fadeIn ? 0 : targetVolume);
+		if (fadeIn) sound.fade(FADE_SECONDS, targetVolume);
+		session.player.setDynamicProperty(SAVED_TRACK, id);
+		session.active = { id, sound, paused: false, fading: false };
+		session.lastTrackId = id;
+	} catch (error) {
+		sound.stop();
+		throw error;
+	}
 }
+
 world.afterEvents.soundCompleted.subscribe(({ soundInstanceId }) => {
-	for (const s of sessions.values()) {
-		const a = s.active;
-		if (a?.sound.id !== soundInstanceId) continue;
-		if (a.fading) clearTrack(s); else finish(s);
+	for (const session of sessions.values()) {
+		const active = session.active;
+		if (active?.sound.id !== soundInstanceId) continue;
+
+		// У старой зоны уже назначена короткая пауза. Две минуты отсчитываем лишь при обычном окончании.
+		clearTrack(session);
+		if (!active.fading) session.nextStartTick = system.currentTick + GAP * TICKS_PER_SECOND;
 		break;
 	}
 });
 
-function update(p) {
-	const s = session(p);
-	const volume = getVolume(p);
-	if (!volume || p.hasTag(MUSIC_OFF)) {
-		stop(s);
-		s.key = null;
-		return;
-	}
-	const { key, list } = playlistOf(p);
-	if (s.key !== key) {
-		s.key = key;
-		s.nextAt = system.currentTick + ZONE_PAUSE * TICKS;
-		const a = s.active;
-		if (a && !a.paused && !a.fading) {
-			const playerId = p.id;
-			a.fading = true;
-			a.sound.fade(FADE_SECONDS, 0);
-			system.runTimeout(() => { if (s.active === a && sessions.get(playerId) === s) stop(s); }, TICKS);
-		} else if (a?.paused) stop(s);
-		return;
-	}
-	if (s.active || system.currentTick < s.nextAt) return;
-	s.nextAt = system.currentTick + GAP * TICKS;
-	start(s, pickTrack(list, s.last), volume, true);
-}
-system.runInterval(() => {
-	for (const p of world.getPlayers()) {
-		if (p.hasTag('role:bot')) continue;
-		try { update(p); } catch (e) { console.warn(`[Shop for Ore] Music (${p.name}): ${e}`); }
-	}
-}, TICKS);
-world.afterEvents.playerLeave.subscribe(e => sessions.delete(e.playerId));
+function changePlaylist(session, key) {
+	session.playlistKey = key;
+	session.nextStartTick = system.currentTick + ZONE_PAUSE * TICKS_PER_SECOND;
 
-export function setVolume(p, value) {
+	const active = session.active;
+	if (!active) return;
+	if (active.paused) {
+		stopTrack(session);
+		return;
+	}
+	if (active.fading) return;
+
+	const playerId = session.player.id;
+	active.fading = true;
+	active.sound.fade(FADE_SECONDS, 0);
+	system.runTimeout(() => {
+		// За время затухания игрок может выйти или вручную запустить другой трек.
+		if (sessions.get(playerId) === session && session.active === active) stopTrack(session);
+	}, FADE_SECONDS * TICKS_PER_SECOND);
+}
+
+function updatePlayer(player) {
+	const session = sessionFor(player);
+	const volume = getVolume(player);
+	if (!volume || player.hasTag(MUSIC_OFF)) {
+		stopTrack(session);
+		session.playlistKey = null;
+		return;
+	}
+
+	const { key, list } = playlistOf(player);
+	if (session.playlistKey !== key) {
+		changePlaylist(session, key);
+		return;
+	}
+	if (session.active || system.currentTick < session.nextStartTick) return;
+
+	// Если движок отклонит запуск, следующая попытка будет после паузы между треками.
+	session.nextStartTick = system.currentTick + GAP * TICKS_PER_SECOND;
+	startTrack(session, pickTrack(list, session.lastTrackId), volume, true);
+}
+
+system.runInterval(() => {
+	for (const player of world.getPlayers()) {
+		if (player.hasTag('role:bot')) continue;
+		try {
+			updatePlayer(player);
+		} catch (error) {
+			console.warn(`[Shop for Ore] Music (${player.name}): ${error}`);
+		}
+	}
+}, TICKS_PER_SECOND);
+
+world.afterEvents.playerLeave.subscribe(({ playerId }) => sessions.delete(playerId));
+
+export function setVolume(player, value) {
 	if (!Number.isFinite(value)) return;
-	const v = Math.max(0, Math.min(100, Math.round(value)));
-	for (const t of p.getTags()) if (t.startsWith(VOLUME_TAG)) p.removeTag(t);
-	p.addTag(VOLUME_TAG + v);
-	const s = sessions.get(p.id);
-	if (!s) return;
-	if (!v) { stop(s); s.key = null; }
-	else if (s.active && !s.active.fading) s.active.sound.setVolume(v / 100);
+	const volume = Math.max(0, Math.min(100, Math.round(value)));
+	for (const tag of player.getTags()) {
+		if (tag.startsWith(VOLUME_TAG)) player.removeTag(tag);
+	}
+	player.addTag(VOLUME_TAG + volume);
+
+	const session = sessions.get(player.id);
+	if (!session) return;
+	if (volume === 0) {
+		stopTrack(session);
+		session.playlistKey = null;
+	} else if (session.active && !session.active.fading) {
+		session.active.sound.setVolume(volume / 100);
+	}
 }
-export function setMusicOff(p, off) {
-	if (off) p.addTag(MUSIC_OFF); else p.removeTag(MUSIC_OFF);
-	const s = sessions.get(p.id);
-	if (off && s) { stop(s); s.key = null; }
+
+export function setMusicOff(player, off) {
+	if (off) player.addTag(MUSIC_OFF);
+	else player.removeTag(MUSIC_OFF);
+
+	const session = sessions.get(player.id);
+	if (off && session) {
+		stopTrack(session);
+		session.playlistKey = null;
+	}
 }
-export function playback(p) {
-	const a = sessions.get(p.id)?.active;
-	if (!a || a.fading) return undefined;
-	const info = a.sound.durationInfo;
-	return { track: TRACK[a.id], instanceId: a.sound.id, paused: a.paused, position: info?.getPlaybackPosition(), duration: info?.duration };
+
+// Меню запоминает instanceId вместе с позицией в момент открытия формы.
+export function playback(player) {
+	const active = sessions.get(player.id)?.active;
+	if (!active || active.fading) return undefined;
+	const info = active.sound.durationInfo;
+	return {
+		track: TRACK[active.id],
+		instanceId: active.sound.id,
+		paused: active.paused,
+		position: info?.getPlaybackPosition(),
+		duration: info?.duration
+	};
 }
-export const nowPlaying = p => playback(p)?.track;
-/** Формы могут оставаться открытыми после смены трека или зоны. */
-function selected(p, instanceId) {
-	const s = sessions.get(p.id), a = s?.active;
-	if (!a || a.fading || a.sound.id !== instanceId || s.key !== playlistOf(p).key) return undefined;
-	return a;
+
+export const nowPlaying = player => playback(player)?.track;
+
+// Нажатие в старой форме относится только к тому экземпляру звука и той зоне, где её открыли.
+function selectedTrack(player, instanceId) {
+	const session = sessions.get(player.id);
+	const active = session?.active;
+	if (!active || active.fading || active.sound.id !== instanceId) return undefined;
+	if (session.playlistKey !== playlistOf(player).key) return undefined;
+	return active;
 }
-export function setPaused(p, instanceId, pause) {
-	const a = selected(p, instanceId);
-	if (!a || a.paused === pause) return;
-	if (pause) a.sound.pause(); else a.sound.resume();
-	a.paused = pause;
+
+export function setPaused(player, instanceId, pause) {
+	const active = selectedTrack(player, instanceId);
+	if (!active || active.paused === pause) return;
+	if (pause) active.sound.pause();
+	else active.sound.resume();
+	active.paused = pause;
 }
-export function seek(p, instanceId, seconds) {
-	const a = selected(p, instanceId), duration = a?.sound.durationInfo?.duration;
-	if (duration > 0 && Number.isFinite(seconds)) a.sound.seekTo(Math.max(0, Math.min(seconds, duration - 0.01)));
+
+export function seek(player, instanceId, seconds) {
+	const active = selectedTrack(player, instanceId);
+	const duration = active?.sound.durationInfo?.duration;
+	if (duration > 0 && Number.isFinite(seconds)) {
+		// Последнее положение ползунка должно оставаться внутри записи.
+		active.sound.seekTo(Math.max(0, Math.min(seconds, duration - 0.01)));
+	}
 }
-export function playNow(p, id) {
-	const s = session(p), { key, list } = playlistOf(p), volume = getVolume(p);
-	if (!volume || p.hasTag(MUSIC_OFF) || !list.includes(id)) return false;
-	s.key = key;
-	start(s, id, volume, false);
+
+// При ручном выборе играем сразу и показываем название. Автоподбор использует startTrack напрямую.
+export function playNow(player, id) {
+	const session = sessionFor(player);
+	const { key, list } = playlistOf(player);
+	const volume = getVolume(player);
+	if (!volume || player.hasTag(MUSIC_OFF) || !list.includes(id)) return false;
+
+	session.playlistKey = key;
+	startTrack(session, id, volume, false);
 	const track = TRACK[id];
-	showToast(p, [{ translate: 'music.now_playing', with: { rawtext: [trackPart(trackTitle(track)), trackPart(trackArtist(track))] } }]);
+	const rawtext = [trackPart(trackTitle(track)), trackPart(trackArtist(track))];
+	showToast(player, [{ translate: 'music.now_playing', with: { rawtext } }]);
 	return true;
 }

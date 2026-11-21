@@ -55,8 +55,7 @@ assert.ok(ran.some(([n, c]) => n === 'C' && c.includes('chat.music.collector')))
 // Мини-игры: победителю с наградой — бросок пластинки; чат — префикс «Меломан»; меню — коллекция с «???»
 assert.match(read(new URL('scripts/system/minigames/minigames.js', bp)), /tell\(p, 'chat\.game\.reward', reward \|\| '—'\);\s*\/\/[^\n]*\n\s*rollWinDisc\(p\);/);
 assert.match(read(new URL('scripts/chat/chat.js', bp)), /sender\.hasTag\('music:collector'\)\) rawtext\.push\(\{ text: '§r§8\] \| \[§r' \}, \{ translate: 'rank\.collector' \}\)/);
-const menu = read(new URL('scripts/menu/main_menu.js', bp));
-assert.match(menu, /§8\?\?\?\\n%menu\.music\.hint\.\$\{BOSS_DISCS\.includes\(d\.id\) \? 'boss' : 'mine'\}/);
+// Подсказки по месту добычи проверяются на кнопках реальной формы в music.mjs.
 for (const l of ['ru_RU', 'en_US', 'uk_UA', 'es_ES']) {
 	const keys = new Set(read(new URL(`texts/${l}.lang`, rp)).split(/\r?\n/).map(x => x.split('=')[0]));
 	for (const k of ['menu.music.button.collection', 'menu.music.collection.title', 'menu.music.collection.body', 'menu.music.hint.mine', 'menu.music.hint.boss',
