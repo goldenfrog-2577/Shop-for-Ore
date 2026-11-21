@@ -19,7 +19,7 @@ async function startup(base, { fail, ready = false, limit = 40, heartbeat = true
   return { handlers: [], subscribe(fn) { assert.equal(typeof fn, 'function'); this.handlers.push(fn); subscriptions.push([current, key]); return fn; } };
  }
  const beforeEvents = Object.fromEntries(['chatSend', 'itemUse', 'entityHurt', 'playerBreakBlock', 'playerInteractWithBlock', 'playerInteractWithEntity'].map(key => [key, signal('before.' + key)]));
- const afterEvents = Object.fromEntries(['buttonPush', 'entityHitEntity', 'entityHurt', 'itemStartUse', 'itemUse', 'playerBreakBlock', 'playerInventoryItemChange', 'playerLeave', 'playerSpawn', 'projectileHitBlock', 'worldLoad'].map(key => [key, signal('after.' + key)]));
+ const afterEvents = Object.fromEntries(['buttonPush', 'entityHitEntity', 'entityHurt', 'itemStartUse', 'itemUse', 'playerBreakBlock', 'playerInventoryItemChange', 'playerLeave', 'playerSpawn', 'projectileHitBlock', 'soundCompleted', 'worldLoad'].map(key => [key, signal('after.' + key)]));
  const dimension = { id: 'minecraft:overworld', runCommand(c) {
   commands.push(c);
   return { successCount: !heartbeat && c === 'scoreboard players set scripts system 0' ? 0 : 1 };
@@ -37,8 +37,8 @@ async function startup(base, { fail, ready = false, limit = 40, heartbeat = true
  };
  const server = { world, system, BlockTypes: { get: id => ({ id }) }, EnchantmentTypes: { get: id => ({ id, maxLevel: 5 }) },
   BlockVolume: class {}, ItemStack: class {}, ItemLockMode: { slot: 'slot' },
-  InputPermissionCategory: { Movement: 1 }, CommandPermissionLevel: { Admin: 2 },
-  CustomCommandParamType: { PlayerSelector: "PlayerSelector" }, CustomCommandStatus: { Success: 0, Failure: 1 }, GameMode: { Creative: 'Creative', Adventure: 'Adventure', Spectator: 'Spectator' }
+  InputPermissionCategory: { Movement: 1 },
+  GameMode: { Creative: 'Creative', Adventure: 'Adventure', Spectator: 'Spectator' }
  };
  const form=class{};const games=[];const chain={maxTicks(){return this;},structureName(){return this;}};
  const natives={'@minecraft/server':server,'@minecraft/server-ui':{ActionFormData:form,ModalFormData:form,MessageFormData:form},'@minecraft/server-gametest':{register:(namespace,name,fn)=>{games.push([namespace,name]);return chain;}}};
@@ -85,7 +85,7 @@ async function startup(base, { fail, ready = false, limit = 40, heartbeat = true
  return {load,commands,log,timers,modules:evaluation.length,relativeImports:sourceFiles.reduce((n,f)=>n+[...fs.readFileSync(f,'utf8').matchAll(/(?:from\s+|import\s+)['"]\.[^'"]+['"]/g)].length,0)};
 }
 const actual=await startup(scripts);
-assert.equal(actual.modules,65);assert.equal(actual.relativeImports,226);
+assert.equal(actual.modules,65);assert.equal(actual.relativeImports,228);
 const index=JSON.parse(fs.readFileSync(path.join(bp,'contents.json'),'utf8')).content.map(e=>e.path);
 const files=walk(scripts).filter(p=>p.endsWith('.js')).map(p=>'scripts/'+rel(scripts,p));
 assert.deepEqual(index.filter(p=>p.startsWith('scripts/')&&p.endsWith('.js')).sort(),files.sort(),'index exactly covers scripts');
@@ -96,7 +96,7 @@ assert.equal(manifest.modules.find(m => m.type === 'script')?.entry, 'scripts/im
 assert.ok(!fs.existsSync(path.join(scripts, 'port')), 'separate prototype directory removed');
 assert.deepEqual(actual.load.games, [['server', 'spawnbot']]);
 assert.deepEqual(actual.load.components, ['sfo:open_menu', 'sfo:open_admin_menu']);
-assert.deepEqual(actual.load.nativeCommands, ['sfo:resetpass']);
+assert.deepEqual(actual.load.nativeCommands, [], 'custom commands are accessed through chat');
 assert.equal(actual.load.subscriptions.filter(([, event]) => event === 'before.chatSend').length, 2);
 assert.ok(actual.load.subscriptions.some(([, event]) => event === 'after.worldLoad'));
 const unavailable = await startup(scripts,{limit:120,heartbeat:false});

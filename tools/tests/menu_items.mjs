@@ -3,6 +3,18 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 
 const bp = new URL('../../behavior_packs/main-addon-shop_for_ore/', import.meta.url);
+// These items must be exposed to the client as well as constructible through ItemStack.
+for (const [file, category] of [
+	['menu/menu', 'items'],
+	['admin_tools/admin_menu', 'items'],
+	['admin_tools/admin_stick', 'equipment'],
+	['weapons/portable_ender_crystal', 'equipment']
+]) {
+	const definition = JSON.parse(fs.readFileSync(new URL('items/' + file + '.json', bp), 'utf8'))['minecraft:item'];
+	const menu = definition.description.menu_category;
+	assert.equal(menu?.category, category, definition.description.identifier);
+	assert.equal(menu.is_hidden_in_commands, false, definition.description.identifier);
+}
 const source = fs.readFileSync(new URL('scripts/menu/main_menu.js', bp), 'utf8');
 const slots = Array(36);
 const inventory = {
@@ -19,7 +31,7 @@ const inventory = {
 class ItemStack {
 	constructor(typeId) { this.typeId = typeId; }
 }
-const player = { id: 'miner', isValid: true, getComponent: () => ({ container: inventory }) };
+const player = { id: 'miner', isValid: true, hasTag: () => false, getComponent: () => ({ container: inventory }) };
 const listeners = {};
 const callbacks = ['playerSpawn', 'playerLeave', 'playerInventoryItemChange'];
 const afterEvents = Object.fromEntries(callbacks.map(event => [event, {

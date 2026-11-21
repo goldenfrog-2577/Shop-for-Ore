@@ -96,6 +96,7 @@ export function joinGame(player, id, { allowBot = false } = {}) {
 	// перо «Прыжка веры» (system/player/void.js): с левитацией или плавным падением в игру не войти — снять только эти два
 	// эффекта командой в 1.19.50 нельзя (effect clear снял бы и купленные), а в игре перо уже не работает
 	if (hasFeatherEffect(player)) return fail('chat.game.error.feather');
+	if (g.phase === 'running' && g.def.prepare && !g.def.prepare(player)) return fail('chat.game.error.inventory_full');
 	g.players.add(player.name);
 	player.addTag(GAME_TAG + g.def.id);
 	if (g.phase === 'running') {
@@ -175,6 +176,35 @@ function startCountdown(g) {
 /** Начать игру (администратор — даже если игроков меньше нужного). */
 export function startGame(g) {
 	if (g.phase === 'running' || !g.players.size) return false;
+	// Проверяем место до выдачи лопат: отменённый старт не трогает рюкзаки.
+	const entrants = [];
+	for (const name of g.players) {
+		const p = findPlayer(name);
+		if (p && (!g.def.canEquip || g.def.canEquip(p))) entrants.push(p);
+		else {
+			g.players.delete(name);
+			p?.removeTag(GAME_TAG + g.def.id);
+			if (p) tell(p, 'chat.game.error.inventory_full');
+		}
+	}
+	const required = g.phase === 'countdown' ? g.def.minPlayers : 1;
+	const stopCountdown = () => {
+		g.phase = 'waiting';
+		tellGame(g, 'chat.game.countdown_stopped', gameName(g));
+		return false;
+	};
+	if (entrants.length < required) return stopCountdown();
+	const ready = entrants.filter(p => {
+		if (!g.def.prepare || g.def.prepare(p)) return true;
+		g.players.delete(p.name);
+		p.removeTag(GAME_TAG + g.def.id);
+		tell(p, 'chat.game.error.inventory_full');
+		return false;
+	});
+	if (ready.length < required) {
+		for (const p of ready) g.def.cleanup?.(p);
+		return stopCountdown();
+	}
 	g.phase = 'running';
 	g.seconds = 0;
 	g.alive = new Set(g.players);
@@ -182,13 +212,10 @@ export function startGame(g) {
 	g.watchers.clear();
 	g.startedWith = g.players.size;
 	// Награда и статистика — только если играли хотя бы двое живых: бот добирает игроков, но победа над ним одним не в счёт
-	g.humans = [...g.players].filter(n => !findPlayer(n)?.hasTag('role:bot')).length;
+	g.humans = ready.filter(p => !p.hasTag('role:bot')).length;
 	g.def.onStart?.(g);
-	let index = 0;
-	for (const name of g.players) {
-		const p = findPlayer(name);
-		if (!p) continue;
-		g.def.start(p, index++, g.players.size);
+	for (const [index, p] of ready.entries()) {
+		g.def.start(p, index, ready.length);
 		showTitle(p, [{ text: '§a' }, { translate: 'title.game.go' }]);
 		run(p, 'playsound note.pling @s ~ ~ ~ 1 2');
 	}
@@ -304,7 +331,15 @@ system.runInterval(() => {
 }, 100);
 
 // После перезагрузки скриптов игры в памяти нет — снять старые теги game:*
-const clearStale = (p) => p.getTags().filter(t => t.startsWith(GAME_TAG)).forEach(t => p.removeTag(t));
+const clearStale = (p) => {
+	for (const tag of p.getTags()) {
+		if (!tag.startsWith(GAME_TAG)) continue;
+		const game = getGame(tag.slice(GAME_TAG.length));
+		if (game?.players.has(p.name)) continue;
+		game?.def.cleanup?.(p);
+		p.removeTag(tag);
+	}
+};
 system.run(() => { for (const p of world.getPlayers()) clearStale(p); });
 // При входе — сразу в обработчике: в 1.19.50 e.player доступен только в момент события, а в system.run
 // падал («Native object bound to prototype does not exist»), и try молча глушил ошибку — тег не снимался.

@@ -41,7 +41,7 @@ export const WAVE_SECONDS = 20;
 export const MAX_MINIONS = 4;
 export const MAX_WITHER = 2;
 export const REWARD = { money: 25000, vip_coins: 10 };
-export const DISCS = ['record_5', 'record_otherside'];   // идентификаторы Bedrock (в Java — music_disc_*)
+export const DISCS = ['record_5', 'record_otherside'];   // сохранённые суффиксы тегов boss:disc:*
 
 export const START = [528, -61, -68];          // резной сланец перед порталом (стоять на нём — y −60)
 // Козий рог: в Bedrock один предмет, мелодия — data 0–7; 6 — «Тосковать» (Yearn). Событие itemStartCharge приходит,
@@ -101,8 +101,8 @@ export const mmss = (seconds) => `${Math.floor(seconds / 60)}:${String(seconds %
 /** Фаза: 3 — тотем сработал; 2 — здоровье не выше 60 %; иначе 1. */
 export const phaseOf = ({ current, max, totem }) => totem ? 3 : current <= max * PHASE2_SHARE ? 2 : 1;
 
-/** Звуковой удар Хранителя: у него нет причины урона (в 1.19.50 нет такой) и бьёт он издалека; вблизи — entityAttack. */
-export const isSonic = (cause, distance) => cause !== 'entityAttack' || distance > 4;
+/** В 26.60 движок различает звуковой удар и удар рукой. */
+export const isSonic = cause => cause === 'sonicBoom';
 
 /**
  * Вампиризм: новое здоровье Хранителя или null (лечить некуда). Отнял damage; цель погибла — лечится на её запас victimMax.
@@ -181,6 +181,26 @@ const isBotName = (name) => !!name && botLink.name() === name;
 // Цели бота в бою: Хранитель и прислужники
 const botTargets = () => [...bosses(), ...minions()];
 
+// Сначала создаём и экипируем Хранителя. При ошибке арены рог остаётся у игрока.
+function wakeBoss(player, count) {
+	let entity;
+	try {
+		const [x, y, z] = SUMMON;
+		entity = overworld().spawnEntity(BOSS, { x, y, z });
+		entity.triggerEvent('server:spawn_emerging');
+		entity.triggerEvent('server:hp_' + count);
+		if (!entity.runCommand('replaceitem entity @s slot.weapon.offhand 0 totem_of_undying').successCount) {
+			throw new Error('Could not equip the boss totem');
+		}
+		if (player.runCommand(`clear @s ${HORN} ${HORN_SOUND} 1`).successCount > 0) return true;
+	} catch (error) {
+		console.warn('[Shop for Ore] Boss preparation failed: ' + error);
+	}
+	if (entity?.isValid) entity.remove();
+	tell(player, 'chat.boss.abort');
+	return false;
+}
+
 function startFight(fighters, kick) {
 	const n = fighters.length;
 	fight = { fighters: new Set(fighters), dead: new Set(), started: now(), max: HP[n - 1], phase: 1, nextWave: 0, totem: false };
@@ -206,12 +226,6 @@ function startFight(fighters, kick) {
 		tell(p, 'chat.boss.start', String(n));
 	}
 	arenaArea(true);
-	cmd(`summon ${BOSS} ${SUMMON.join(' ')} server:spawn_emerging`);
-	// событие здоровья и тотем — тиком позже, когда сущность уже есть
-	system.run(() => {
-		cmd(`event entity @e[type=${BOSS}] server:hp_${n}`);
-		cmd(`replaceitem entity @e[type=${BOSS}] slot.weapon.offhand 0 totem_of_undying`);
-	});
 }
 
 function endFight(result) {
@@ -227,9 +241,9 @@ function endFight(result) {
 		else tell(p, result === 'timeout' ? 'chat.boss.timeout' : result === 'abort' ? 'chat.boss.abort' : 'chat.boss.defeat');
 	}
 	for (const b of bosses()) {
-		// уход: звук закапывания и телепорт под мир (без анимации смерти и без добычи)
+		// При поражении или прерывании убираем живого босса без смерти и добычи.
 		cmd(`playsound mob.warden.dig @a ${SUMMON.join(' ')} 4 1`);
-		try { b.teleport({ x: SUMMON[0], y: -200, z: SUMMON[2] }, { dimension: overworld() }); } catch {}
+		if (b.isValid) b.remove();
 	}
 	clearArena();
 	arenaArea(false);
@@ -250,7 +264,7 @@ function reward(p, seconds) {
 	tell(p, 'chat.boss.victory', String(REWARD.money), String(REWARD.vip_coins));
 	const disc = discFor(p.getTags());
 	// отметку о пластинке ставим только после успешной выдачи: run() при ошибке команды возвращает undefined
-	if (disc) run(p, `give @s ${disc} 1`).then((result) => {
+	if (disc) run(p, `give @s minecraft:music_disc_${disc.slice(7)} 1`).then((result) => {
 		if (!result) return;
 		p.addTag(`boss:disc:${disc}`);
 		tell(p, 'chat.boss.disc');
@@ -369,7 +383,7 @@ function recoverStep() {
 		return;
 	}
 	if (++recovering < 3) return;
-	for (const b of bosses()) { try { b.teleport({ x: SUMMON[0], y: -200, z: SUMMON[2] }, { dimension: overworld() }); } catch {} }
+	for (const b of bosses()) { if (b.isValid) b.remove(); }
 	clearArena();
 	cmd('scoreboard players set boss_state system 0');
 	arenaArea(false);
@@ -428,7 +442,6 @@ function hasHorn(player, inHand = false) {
 }
 
 
-let summoning = false;   // рог забирается командой — до её ответа второй призыв не начинать
 let summon;   // { name, at } — «Тосковать» прозвучала, Хранитель появится в at (мс)
 
 // Рог «Тосковать» на плите у портала будит Хранителя (раньше — просто встать на плиту)
@@ -440,7 +453,7 @@ world.afterEvents.itemStartUse.subscribe((e) => {
 	const action = hornAction(e.itemStack?.typeId, data, onStart(p.location));
 	if (!action) return;
 	if (action !== 'start') return tell(p, `chat.boss.horn_${action}`);
-	if (summon || summoning) return tell(p, 'chat.boss.busy');
+	if (summon) return tell(p, 'chat.boss.busy');
 	const check = tryStart(p);
 	if (!check.ok) return tell(p, `chat.boss.${check.reason}`, ...check.args);
 	summon = { name: p.name, at: Date.now() + HORN_MS };
@@ -457,14 +470,8 @@ system.runInterval(() => {
 	if (!hasHorn(p)) return tell(p, 'chat.boss.horn_lost');
 	const check = tryStart(p);
 	if (!check.ok) return tell(p, `chat.boss.${check.reason}`, ...check.args);
-	// бой — только если рог действительно забрали (run при ошибке команды возвращает undefined)
-	summoning = true;
-	run(p, `clear @s ${HORN} ${HORN_SOUND} 1`).then((result) => {
-		summoning = false;
-		if (!result) return tell(p, 'chat.boss.horn_lost');
-		if (bossBusy()) return;
-		startFight(check.fighters, check.inside.map(q => q.name).filter(n => !check.fighters.includes(n)));
-	});
+	if (!wakeBoss(p, check.fighters.length)) return;
+	startFight(check.fighters, check.inside.map(q => q.name).filter(n => !check.fighters.includes(n)));
 }, 2);
 
 // Смерть участника: отметить; выпавшее уничтожится в fightStep, остальное — после возрождения
@@ -494,11 +501,10 @@ world.afterEvents.entityHurt.subscribe((e) => {
 /** Вампиризм: звуковой удар по игроку или мобу — Хранитель забирает отнятое здоровье (душу погибшего — целиком). */
 function vampire(e) {
 	const boss = e.damageSource.damagingEntity, victim = e.hurtEntity;
-	const d = Math.hypot(boss.location.x - victim.location.x, boss.location.y - victim.location.y, boss.location.z - victim.location.z);
-	if (!isSonic(e.cause, d)) return;
+	if (!isSonic(e.damageSource.cause)) return;
 	let current, hp = 1, victimMax = 0;
 	try { current = boss.getComponent('minecraft:health').currentValue; } catch { return; }
-	try { const h = victim.getComponent('minecraft:health'); hp = h.currentValue; victimMax = heffectiveMax; } catch {}
+	try { const h = victim.getComponent('minecraft:health'); hp = h.currentValue; victimMax = h.effectiveMax; } catch {}
 	// фаза — по здоровью прямо сейчас: игроки могли пробить 60 % после последней проверки fightStep (раз в секунду)
 	const phase = Math.max(fight.phase, phaseOf({ current, max: fight.max, totem: fight.totem }));
 	const next = vampireHeal({ phase, current, max: fight.max, damage: e.damage, died: hp <= 0, victimMax });

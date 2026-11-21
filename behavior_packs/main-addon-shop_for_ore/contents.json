@@ -1,6 +1,9 @@
 {
 	"content" : [
 		{
+			"path" : "sounds/sound_definitions.json"
+		},
+		{
 			"path" : "entities/floating_text.json"
 		},
 		{
@@ -485,6 +488,12 @@
 		},
 		{
 			"path" : "functions/promo/books_scan.mcfunction"
+		},
+		{
+			"path" : "functions/system/session.mcfunction"
+		},
+		{
+			"path" : "functions/fallback/compass.mcfunction"
 		},
 		{
 			"path" : "scripts/system/worldedit.js"

@@ -651,7 +651,7 @@ function serverMenu(player) {
 
 export function botMenu(player) {
 	const bot = getBot(), name = getBotName(), st = botState();
-	const status = (title, value) => `${title}\n§8[§7 ${value} §8]`;
+	const status = (title, value) => `${title}\n§r[ ${value} §r]`;
 	const toggle = (key, label, icon) => ({
 		text: status(`%admin.bot.button.${label}`, key === 'sit'
 			? st.sit ? '%admin.bot.sit.sneaking' : '%admin.bot.sit.standing'
@@ -710,7 +710,7 @@ function botSpar(player) {
 
 function botGame(player) {
 	showMenu(player, '%admin.bot.game.title', '%admin.bot.game.body', [
-		...listGames().map(g => ({ text: `§8 %minigame.${g.def.id}.name\n§8 %menu.games.phase.${g.phase} §7(${g.players.size}/${g.def.maxPlayers})`, run: () => {
+		...listGames().map(g => ({ text: `§8 %minigame.${g.def.id}.name\n§8 %menu.games.phase.${g.phase} §r(${g.players.size}/${g.def.maxPlayers})`, run: () => {
 			const error = setBotMode('game', { game: g.def.id });
 			if (error) return tell(player, error, { translate: `minigame.${g.def.id}.name` });
 			tell(player, 'chat.admin.bot.mode', getBotName(), { translate: 'admin.bot.mode.game' });

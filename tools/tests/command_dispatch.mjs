@@ -12,7 +12,7 @@ world.afterEvents = { playerLeave: world.events.playerLeave };
 const logged=[];
 let now=1000,wipes=0,resets=0;const notices=[],native=[],delegated=[],passwords=[],routed=[],sounds=[];let helpHook;const muted=[];
 const stubs={
- '@minecraft/server':{world,system:{beforeEvents:{startup:{subscribe(){}}},run:fn=>fn()},CommandPermissionLevel:{Admin:2},CustomCommandParamType:{PlayerSelector:'PlayerSelector'},CustomCommandStatus:{Success:0,Failure:1}},
+ '@minecraft/server':{world,system:{run:fn=>fn()}},
  '../../utils.js':{commandsList,isPending:p=>!!p.pending,tell:(p,key,...args)=>notices.push({p,key,args}),hasRole,findPlayer:name=>people.find(p=>p.name===name),getRole,ROLES,run:(p,cmd)=>native.push(cmd),menuFeedback:(p,error)=>sounds.push([p.name,error]),settleCommands:async()=>{},toldErrorCount:p=>p.errs??0,toldSuccessCount:p=>p.oks??0},
  './ranks/player.js':{PLAYER_COMMANDS:{help:(p,a)=>helpHook?helpHook(p):routed.push(['help',p,Array.from(a)])},textWidth:s=>s.length,emoteGrid:()=> 'grid'},
  './ranks/moderator.js':{MODERATION_COMMANDS:{mute:(p,a)=>muted.push([p.name,...Array.from(a)])},isCoord:()=>true},

@@ -40,8 +40,7 @@ export function unfreezePlayer(player) {
 }
 
 system.runInterval(() => {
-	for (const player of world.getPlayers()) {
-		if (!player.hasTag('state:frozen')) continue;
+	for (const player of world.getPlayers({ tags: ['state:frozen'] })) {
 		const at = frozenAt(player);
 		// Заморожен до этого обновления (без места) — застывает там, где он сейчас
 		if (!at) {

@@ -98,6 +98,7 @@ export const ERROR_KEYS = new Set([
 	'chat.error.too_long',
 	'chat.game.error.already',
 	'chat.game.error.full',
+	'chat.game.error.inventory_full',
 	'chat.game.error.not_in_game',
 	'chat.game.error.running',
 	'chat.game.error.teleport',

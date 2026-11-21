@@ -10,8 +10,7 @@ tag @a[tag=auth:register] add sys:fb_block
 tag @a[tag=state:frozen] add sys:fb_block
 tag @a[x=-19,y=0,z=-3,dx=3,dy=4,dz=3] add sys:fb_block
 # Открытие в два шага, через 5 тиков: сначала NPC главной сцены переносится к игроку (sys:fb_pre), потом окно.
-# Кнопки работают, только когда NPC рядом с игроком, и адресуют ближайшего к NPC игрока (@initiator после
-# /dialogue open пуст); окно NPC, перенесённого издалека в тот же тик, кнопкам не отвечает (проверено в игре).
+# NPC должен быть в загруженной области. Кнопки адресуются игроку через @initiator.
 execute as @a[tag=sys:fb_pre,tag=!sys:fb_open,tag=!sys:fb_block,hasitem={item=minecraft:compass,location=slot.weapon.mainhand}] at @s run tp @e[type=npc,tag=npc:fb_main,c=1] ~ ~ ~
 execute as @a[tag=sys:fb_pre,tag=!sys:fb_open,tag=!sys:fb_block,hasitem={item=minecraft:compass,location=slot.weapon.mainhand}] at @s run dialogue open @e[type=npc,tag=npc:fb_main,c=1] @s fb_main
 tag @a[tag=sys:fb_pre,hasitem={item=minecraft:compass,location=slot.weapon.mainhand}] add sys:fb_open
