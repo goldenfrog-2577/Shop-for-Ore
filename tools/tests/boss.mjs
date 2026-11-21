@@ -72,7 +72,7 @@ assert.equal(B.discFor([], () => 0.1), 'record_5'); assert.equal(B.discFor([], (
 assert.equal(B.discFor(['boss:disc:record_5']), 'record_otherside');
 assert.equal(B.discFor(['boss:disc:record_5', 'boss:disc:record_otherside']), undefined);
 // отметка о пластинке — только после успешной выдачи
-assert.match(src, /run\(p, `give @s \$\{disc\} 1`\)\.then\(\(result\) => \{\s*if \(!result\) return;\s*p\.addTag/);
+assert.match(src, /run\(p, `give @s minecraft:music_disc_\$\{disc\.slice\(7\)\} 1`\)\.then\(\(result\) => \{\s*if \(!result\) return;\s*p\.addTag/);
 
 // Арена боя — только за решёткой (z −12): тоннель не считается, плита старта и портал — внутри
 assert.ok(B.inFight({ x: 528.5, y: -59, z: -67.5 }) && B.inFight({ x: 480, y: -61, z: -104 }));

@@ -1,6 +1,9 @@
 {
 	"content" : [
 		{
+			"path" : "sounds/sound_definitions.json"
+		},
+		{
 			"path" : "entities/floating_text.json"
 		},
 		{

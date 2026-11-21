@@ -41,7 +41,7 @@ export const WAVE_SECONDS = 20;
 export const MAX_MINIONS = 4;
 export const MAX_WITHER = 2;
 export const REWARD = { money: 25000, vip_coins: 10 };
-export const DISCS = ['record_5', 'record_otherside'];   // идентификаторы Bedrock (в Java — music_disc_*)
+export const DISCS = ['record_5', 'record_otherside'];   // сохранённые суффиксы тегов boss:disc:*
 
 export const START = [528, -61, -68];          // резной сланец перед порталом (стоять на нём — y −60)
 // Козий рог: в Bedrock один предмет, мелодия — data 0–7; 6 — «Тосковать» (Yearn). Событие itemStartCharge приходит,
@@ -264,7 +264,7 @@ function reward(p, seconds) {
 	tell(p, 'chat.boss.victory', String(REWARD.money), String(REWARD.vip_coins));
 	const disc = discFor(p.getTags());
 	// отметку о пластинке ставим только после успешной выдачи: run() при ошибке команды возвращает undefined
-	if (disc) run(p, `give @s ${disc} 1`).then((result) => {
+	if (disc) run(p, `give @s minecraft:music_disc_${disc.slice(7)} 1`).then((result) => {
 		if (!result) return;
 		p.addTag(`boss:disc:${disc}`);
 		tell(p, 'chat.boss.disc');

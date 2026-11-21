@@ -1,15 +1,15 @@
-// --- Коллекция пластинок: где их найти и награда за все 15 ---
-// Источники: «5» и otherside — только за Хранителя (system/boss/boss.js); остальные 13 (DROP_POOL) —
+// --- Коллекция пластинок: где их найти и награда за всю коллекцию ---
+// Источники: «5» и otherside — только за Хранителя (system/boss/boss.js); остальные 20 (DROP_POOL) —
 // редкий дроп при копании (шанс за сломанный блок по уровню: шахты у спавна, Незер, Пещера) и награда за победу в мини-игре
 // (WIN_CHANCE). Выпадает всегда пластинка, которой у игрока ещё нет; если нет таких — ничего.
-// Найдена — /give record_<id>, после успешной выдачи тег music:disc:<id> (как у пластинок из инвентаря в system/ui/music.js),
-// сообщение и плашка. Все 15 — тег music:collector: префикс «Меломан» в чате (chat/chat.js) и бесплатный след «Ноты»
+// Найдена — /give minecraft:music_disc_<id>, после успешной выдачи тег music:disc:<id> (как у пластинок из инвентаря в system/ui/music.js),
+// сообщение и плашка. Вся коллекция — тег music:collector: префикс «Меломан» в чате (chat/chat.js) и бесплатный след «Ноты»
 // из Косметики (cosmetic:trail:note), сообщение всем. Проверка раз в 5 с — так же засчитываются пластинки из инвентаря.
 
 import { system, world } from '@minecraft/server';
 import { run, tell, getScore, isPending, rawTranslateRich } from '../../utils.js';
 import { DISC_TAG, unlockedDiscs } from '../ui/music.js';
-import { DISCS, TRACK } from '../ui/music_tracks.js';
+import { DISCS, TRACK, trackTitle, trackPart } from '../ui/music_tracks.js';
 import { showToast } from '../ui/toast.js';
 
 export const BOSS_DISCS = ['5', 'otherside'];
@@ -29,11 +29,11 @@ export function rollDisc(owned, chance, rand = Math.random) {
 
 /** Выдать пластинку; отметка и сообщение — только если /give сработал. */
 export function giveDisc(p, id) {
-	return run(p, `give @s record_${id} 1`).then((result) => {
+	return run(p, `give @s ${TRACK[id].item} 1`).then((result) => {
 		if (!result) return;
 		p.addTag(DISC_TAG + id);
-		tell(p, 'chat.music.disc.found', TRACK[id].title, String(unlockedDiscs(p).length), String(DISCS.length));
-		showToast(p, [{ translate: 'music.disc_found', with: { rawtext: [{ text: TRACK[id].title }] } }]);
+		tell(p, 'chat.music.disc.found', trackPart(trackTitle(TRACK[id])), String(unlockedDiscs(p).length), String(DISCS.length));
+		showToast(p, [{ translate: 'music.disc_found', with: { rawtext: [trackPart(trackTitle(TRACK[id]))] } }]);
 		run(p, 'playsound random.levelup @s');
 		checkCollector(p);
 	});
@@ -45,7 +45,7 @@ export function rollWinDisc(p, rand = Math.random) {
 	if (id) giveDisc(p, id);
 }
 
-/** Все 15 — один раз: префикс «Меломан», след «Ноты», сообщение всем. */
+/** Вся коллекция — один раз: префикс «Меломан», след «Ноты», сообщение всем. */
 export function checkCollector(p) {
 	// Вайп снимает все cosmetic:-теги, а пластинки и «Меломан» остаются — бесплатный след «Ноты» вернуть (без повторного объявления)
 	if (p.hasTag(COLLECTOR)) {

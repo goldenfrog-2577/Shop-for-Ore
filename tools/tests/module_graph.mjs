@@ -19,7 +19,7 @@ async function startup(base, { fail, ready = false, limit = 40, heartbeat = true
   return { handlers: [], subscribe(fn) { assert.equal(typeof fn, 'function'); this.handlers.push(fn); subscriptions.push([current, key]); return fn; } };
  }
  const beforeEvents = Object.fromEntries(['chatSend', 'itemUse', 'entityHurt', 'playerBreakBlock', 'playerInteractWithBlock', 'playerInteractWithEntity'].map(key => [key, signal('before.' + key)]));
- const afterEvents = Object.fromEntries(['buttonPush', 'entityHitEntity', 'entityHurt', 'itemStartUse', 'itemUse', 'playerBreakBlock', 'playerInventoryItemChange', 'playerLeave', 'playerSpawn', 'projectileHitBlock', 'worldLoad'].map(key => [key, signal('after.' + key)]));
+ const afterEvents = Object.fromEntries(['buttonPush', 'entityHitEntity', 'entityHurt', 'itemStartUse', 'itemUse', 'playerBreakBlock', 'playerInventoryItemChange', 'playerLeave', 'playerSpawn', 'projectileHitBlock', 'soundCompleted', 'worldLoad'].map(key => [key, signal('after.' + key)]));
  const dimension = { id: 'minecraft:overworld', runCommand(c) {
   commands.push(c);
   return { successCount: !heartbeat && c === 'scoreboard players set scripts system 0' ? 0 : 1 };

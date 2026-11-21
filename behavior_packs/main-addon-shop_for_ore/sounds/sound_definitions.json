@@ -1,0 +1,830 @@
+{
+	"format_version": "1.26.60",
+	"minecraft:server_sound_definitions": [
+		{
+			"sound_event_name": "sfo:music.emerald_tycoon",
+			"duration_info": {
+				"seconds": 74.667982,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Razzleberries",
+				"title": "Emerald Tycoon"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.stand_tall",
+			"duration_info": {
+				"seconds": 308.4,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Stand Tall"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.left_to_bloom",
+			"duration_info": {
+				"seconds": 342.96,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Left to Bloom"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.wending",
+			"duration_info": {
+				"seconds": 314.738313,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Wending"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.infinite_amethyst",
+			"duration_info": {
+				"seconds": 271.786667,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Infinite Amethyst"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.one_more_day",
+			"duration_info": {
+				"seconds": 278.546667,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "One More Day"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.floating_dream",
+			"duration_info": {
+				"seconds": 205.2,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Kumi Tanioka",
+				"title": "Floating Dream"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.comforting_memories",
+			"duration_info": {
+				"seconds": 275.2,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Kumi Tanioka",
+				"title": "Comforting Memories"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.an_ordinary_day",
+			"duration_info": {
+				"seconds": 331.364771,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Kumi Tanioka",
+				"title": "An Ordinary Day"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.aerie",
+			"duration_info": {
+				"seconds": 296.786667,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Aerie"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.firebugs",
+			"duration_info": {
+				"seconds": 312.72,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Firebugs"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.labyrinthine",
+			"duration_info": {
+				"seconds": 324.6,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Labyrinthine"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.ancestry",
+			"duration_info": {
+				"seconds": 343.506667,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Ancestry"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.biome_fest",
+			"duration_info": {
+				"seconds": 382.943628,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "Biome Fest"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.blind_spots",
+			"duration_info": {
+				"seconds": 332.05322,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "Blind Spots"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.haunt_muskie",
+			"duration_info": {
+				"seconds": 361.677052,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "Haunt Muskie"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.aria_math",
+			"duration_info": {
+				"seconds": 309.5,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "Aria Math"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.dreiton",
+			"duration_info": {
+				"seconds": 497.0,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "Dreiton"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.taswell",
+			"duration_info": {
+				"seconds": 515.0,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "Taswell"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.mutation",
+			"duration_info": {
+				"seconds": 194.594626,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "Mutation"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.moog_city_2",
+			"duration_info": {
+				"seconds": 183.648662,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "Moog City 2"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.beginning_2",
+			"duration_info": {
+				"seconds": 182.601361,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "Beginning 2"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.floating_trees",
+			"duration_info": {
+				"seconds": 244.75,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "Floating Trees"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.concrete_halls",
+			"duration_info": {
+				"seconds": 259.459478,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "Concrete Halls"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.dead_voxel",
+			"duration_info": {
+				"seconds": 303.797483,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "Dead Voxel"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.warmth",
+			"duration_info": {
+				"seconds": 239.46771,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "Warmth"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.ballad_of_the_cats",
+			"duration_info": {
+				"seconds": 280.0,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "Ballad of the Cats"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.rubedo",
+			"duration_info": {
+				"seconds": 312.02,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Rubedo"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.chrysopoeia",
+			"duration_info": {
+				"seconds": 303.424,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Chrysopoeia"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.so_below",
+			"duration_info": {
+				"seconds": 318.826667,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "So Below"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.13",
+			"duration_info": {
+				"seconds": 178.085261,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "13"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.cat",
+			"duration_info": {
+				"seconds": 185.342812,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "cat"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.blocks",
+			"duration_info": {
+				"seconds": 345.913311,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "blocks"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.chirp",
+			"duration_info": {
+				"seconds": 185.583243,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "chirp"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.far",
+			"duration_info": {
+				"seconds": 174.461542,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "far"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.mall",
+			"duration_info": {
+				"seconds": 197.218322,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "mall"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.mellohi",
+			"duration_info": {
+				"seconds": 96.198367,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "mellohi"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.stal",
+			"duration_info": {
+				"seconds": 150.857143,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "stal"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.strad",
+			"duration_info": {
+				"seconds": 188.167483,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "strad"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.ward",
+			"duration_info": {
+				"seconds": 251.392562,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "ward"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.11",
+			"duration_info": {
+				"seconds": 71.11102,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "11"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.wait",
+			"duration_info": {
+				"seconds": 237.885125,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "C418",
+				"title": "wait"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.pigstep",
+			"duration_info": {
+				"seconds": 148.235312,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Pigstep"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.otherside",
+			"duration_info": {
+				"seconds": 195.652167,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "otherside"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.5",
+			"duration_info": {
+				"seconds": 178.239208,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Samuel Åberg",
+				"title": "5"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.echo_in_the_wind",
+			"duration_info": {
+				"seconds": 296.183604,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Aaron Cherof",
+				"title": "Echo in the Wind"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.a_familiar_room",
+			"duration_info": {
+				"seconds": 241.198958,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Aaron Cherof",
+				"title": "A Familiar Room"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.bromeliad",
+			"duration_info": {
+				"seconds": 312.278937,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Aaron Cherof",
+				"title": "Bromeliad"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.crescent_dunes",
+			"duration_info": {
+				"seconds": 248.346354,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Aaron Cherof",
+				"title": "Crescent Dunes"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.relic",
+			"duration_info": {
+				"seconds": 218.966583,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Aaron Cherof",
+				"title": "Relic"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.featherfall",
+			"duration_info": {
+				"seconds": 344.08,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Aaron Cherof",
+				"title": "Featherfall"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.watcher",
+			"duration_info": {
+				"seconds": 332.146667,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Aaron Cherof",
+				"title": "Watcher"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.puzzlebox",
+			"duration_info": {
+				"seconds": 299.626667,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Aaron Cherof",
+				"title": "Puzzlebox"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.komorebi",
+			"duration_info": {
+				"seconds": 287.647042,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Kumi Tanioka",
+				"title": "komorebi"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.pokopoko",
+			"duration_info": {
+				"seconds": 304.554312,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Kumi Tanioka",
+				"title": "pokopoko"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.yakusoku",
+			"duration_info": {
+				"seconds": 271.005333,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Kumi Tanioka",
+				"title": "yakusoku"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.deeper",
+			"duration_info": {
+				"seconds": 303.44,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Deeper"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.eld_unknown",
+			"duration_info": {
+				"seconds": 296.546667,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Eld Unknown"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.endless",
+			"duration_info": {
+				"seconds": 402.146667,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Endless"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.creator",
+			"duration_info": {
+				"seconds": 176.388979,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Creator"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.creator_music_box",
+			"duration_info": {
+				"seconds": 73.069229,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Lena Raine",
+				"title": "Creator (Music Box Version)"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.precipice",
+			"duration_info": {
+				"seconds": 299.313292,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Aaron Cherof",
+				"title": "Precipice"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.lilypad",
+			"duration_info": {
+				"seconds": 235.875,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Amos Roddy",
+				"title": "Lilypad"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.below_and_above",
+			"duration_info": {
+				"seconds": 212.375,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Amos Roddy",
+				"title": "Below and Above"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.os_piano",
+			"duration_info": {
+				"seconds": 275.125,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Amos Roddy",
+				"title": "O's Piano"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.broken_clocks",
+			"duration_info": {
+				"seconds": 213.75,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Amos Roddy",
+				"title": "Broken Clocks"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.fireflies",
+			"duration_info": {
+				"seconds": 155.541146,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Amos Roddy",
+				"title": "Fireflies"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.tears",
+			"duration_info": {
+				"seconds": 175.122396,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Amos Roddy",
+				"title": "Tears"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.lava_chicken",
+			"duration_info": {
+				"seconds": 134.522292,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "Hyper Potions",
+				"title": "Lava Chicken"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.memories",
+			"duration_info": {
+				"seconds": 245.294125,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "fingerspit",
+				"title": "Memories"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.ebb",
+			"duration_info": {
+				"seconds": 306.486479,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "fingerspit",
+				"title": "Ebb"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.home",
+			"duration_info": {
+				"seconds": 380.213125,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "fingerspit",
+				"title": "Home"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.shores",
+			"duration_info": {
+				"seconds": 320.0,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "fingerspit",
+				"title": "Shores"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.nightly",
+			"duration_info": {
+				"seconds": 302.142854,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "fingerspit",
+				"title": "Nightly"
+			}
+		},
+		{
+			"sound_event_name": "sfo:music.bounce",
+			"duration_info": {
+				"seconds": 234.626875,
+				"mode": "real_time"
+			},
+			"music_info": {
+				"artist": "fingerspit",
+				"title": "Bounce"
+			}
+		}
+	]
+}
