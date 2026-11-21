@@ -10,8 +10,9 @@
 // Башню держит прогруженной ticking area «spleef».
 // Идея — по мотивам карты FearCube (с разрешения автора), код свой.
 
-import { world, system } from '@minecraft/server';
+import { world, system, ItemStack, ItemLockMode } from '@minecraft/server';
 import { run } from '../../utils.js';
+import { isMineTool } from '../player/tools.js';
 import { registerGame, getGame } from './minigames.js';
 
 export const CENTER = [501, 502];
@@ -28,12 +29,47 @@ export const FLOORS = {
 const START_Y = -12;            // верхний этаж
 const START_RADIUS = 8;         // игроки встают по кругу вокруг центра
 const AREA = { x: 485, y: -47, z: 486, dx: 32, dy: 44, dz: 32 };
-const SHOVEL = 'replaceitem entity @s slot.hotbar 0 diamond_shovel 1 0 {"minecraft:can_destroy":{"blocks":["snow"]},"minecraft:item_lock":{"mode":"lock_in_slot"}}';
+// Лопата старого сохранения имеет тот же замок и разрешение копать снег.
+function gameShovel(item) {
+	return item?.typeId === 'minecraft:diamond_shovel' && item.lockMode === ItemLockMode.slot &&
+		item.getCanDestroy().some(block => block === 'minecraft:snow' || block === 'snow');
+}
+
+function hasShovelSpace(player) {
+	const inv = player.getComponent('minecraft:inventory')?.container;
+	if (!inv) return false;
+	const current = inv.getItem(0);
+	return !current || gameShovel(current) || isMineTool(current) || inv.emptySlotsCount > 0;
+}
+
+function equipShovel(player) {
+	const inv = player.getComponent('minecraft:inventory')?.container;
+	if (!inv) return false;
+	const current = inv.getItem(0);
+	if (gameShovel(current)) return true;
+	const shovel = new ItemStack('minecraft:diamond_shovel');
+	shovel.setCanDestroy(['minecraft:snow']);
+	shovel.lockMode = ItemLockMode.slot;
+	if (current && !isMineTool(current)) {
+		let free = 1;
+		while (free < inv.size && inv.getItem(free)) free++;
+		if (free === inv.size) return false;
+		inv.moveItem(0, free, inv);
+	}
+	inv.setItem(0, shovel);
+	return true;
+}
 
 const overworld = () => world.getDimension('overworld');
 const FILL_PER_TICK = 8;
 const queue = [];               // команды заливки, ждущие своего тика
-const killItems = (a = AREA) => `kill @e[type=item,x=${a.x},y=${a.y},z=${a.z},dx=${a.dx},dy=${a.dy},dz=${a.dz}]`;
+function clearSnowballs({ x, y, z, dx, dy, dz } = AREA) {
+	for (const entity of overworld().getEntities({
+		type: 'minecraft:item', location: { x, y, z }, volume: { x: dx, y: dy, z: dz }
+	})) {
+		if (entity.getComponent('minecraft:item')?.itemStack.typeId === 'minecraft:snowball') entity.remove();
+	}
+}
 
 /** Команды заливки всех этажей снегом. */
 export function arenaFillCommands() {
@@ -47,7 +83,7 @@ export function arenaFillCommands() {
 /** Залить этажи снегом заново (перед игрой, после неё и при загрузке — так бетон и стал снегом). Порциями по тикам. */
 export function resetArena() {
 	if (queue.length) return;      // заливка уже идёт
-	queue.push(...arenaFillCommands(), killItems());
+	queue.push(...arenaFillCommands());
 }
 /** Сколько команд заливки ещё ждёт. */
 export const pendingFill = () => queue.length;
@@ -62,7 +98,8 @@ export function startPoint(index, total) {
 
 /** Забрать лопату и сопротивление; кирку уровня вернёт functions/system/pickaxe_lvl (табло pick = 0). */
 function cleanup(p) {
-	run(p, 'replaceitem entity @s slot.hotbar 0 air');
+	const inv = p.getComponent('minecraft:inventory')?.container;
+	if (inv && gameShovel(inv.getItem(0))) inv.setItem(0);
 	run(p, 'scoreboard players set @s pick 0');
 	run(p, 'effect @s resistance 0');
 }
@@ -75,11 +112,12 @@ registerGame({
 	maxSeconds: 600,
 	lockTeleport: true,
 	spectate: SPECTATE,
+	canEquip: hasShovelSpace,
+	prepare: equipShovel,
 	onStart: () => resetArena(),
 	start: (p, index, total) => {
 		const [x, y, z] = startPoint(index, total);
 		run(p, `tp @s ${x} ${y} ${z} facing ${CENTER[0] + 0.5} ${y} ${CENTER[1] + 0.5}`);
-		run(p, SHOVEL);
 		run(p, 'effect @s resistance 3600 255 true');
 		try { p.selectedSlotIndex = 0; } catch { /* в 1.19.50 может быть только для чтения */ }
 	},
@@ -98,7 +136,7 @@ system.runInterval(() => {
 	if (tick === 40) run(overworld(), `tickingarea add ${AREA.x} ${AREA.y} ${AREA.z} ${AREA.x + AREA.dx} ${AREA.y + AREA.dy} ${AREA.z + AREA.dz} spleef`);
 	if (tick === 100) resetArena();
 	if (tick % 20 !== 0 || getGame('spleef')?.phase !== 'running') return;
-	run(overworld(), killItems());
+	clearSnowballs();
 });
 
 // Сломал снег в игре — снежки у этого блока убираем сразу (событие приходит, когда они уже выпали)
@@ -106,5 +144,5 @@ world.afterEvents.playerBreakBlock.subscribe((e) => {
 	const g = getGame('spleef');
 	if (!e.player || g?.phase !== 'running' || !g.alive.has(e.player.name)) return;
 	const { x, y, z } = e.block.location;
-	run(overworld(), killItems({ x: x - 1, y: y - 1, z: z - 1, dx: 2, dy: 2, dz: 2 }));
+	clearSnowballs({ x: x - 1, y: y - 1, z: z - 1, dx: 2, dy: 2, dz: 2 });
 });

@@ -195,12 +195,12 @@ export const VIP_ITEMS = {
 	'minecraft:netherite_pickaxe|§r§l§fЗачарованая кирка #1': { efficiency: 10, fortune: 5 },
 	'minecraft:netherite_pickaxe|§r§l§fЗачарованая кирка #2': { efficiency: 20, fortune: 10 },
 	'minecraft:netherite_pickaxe|§r§l§fЗачарованая кирка #3': { efficiency: 30, fortune: 15 },
-	'minecraft:skull|§r§eЧереп скелета': { protection: 10 },
-	'minecraft:skull|§r§eЧереп скелета-иссушителя': { protection: 10 },
-	'minecraft:skull|§r§eГолова зомби': { protection: 10 },
-	'minecraft:skull|§r§eГолова игрока': { protection: 10 },
-	'minecraft:skull|§r§eГолова крипера': { protection: 10 },
-	'minecraft:skull|§r§eГолова дракона Края': { protection: 10 }
+	'minecraft:skeleton_skull|§r§eЧереп скелета': { protection: 10 },
+	'minecraft:wither_skeleton_skull|§r§eЧереп скелета-иссушителя': { protection: 10 },
+	'minecraft:zombie_head|§r§eГолова зомби': { protection: 10 },
+	'minecraft:player_head|§r§eГолова игрока': { protection: 10 },
+	'minecraft:creeper_head|§r§eГолова крипера': { protection: 10 },
+	'minecraft:dragon_head|§r§eГолова дракона Края': { protection: 10 }
 };
 
 // --- Размер стопки ---

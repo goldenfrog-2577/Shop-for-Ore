@@ -195,13 +195,12 @@ export function aimAngle(eye, view, target) {
 /** Удар игрока по игроку: дальность, направление, несколько целей. Возвращает true, если удар засчитан нарушением. */
 export function checkHit(attacker, victim, damage) {
 	if (isExempt(attacker)) return false;
-	let eye;
-	try { eye = attacker.getHeadLocation(); } catch { return false; }
-	if (!eye) return false;
+	let eye, view;
+	try { eye = attacker.getHeadLocation(); view = attacker.getViewDirection(); } catch { return false; }
 	const reach = reachDistance(eye, victim);
 	let bad = false;
 	if (reach > REACH) { flag(attacker, 'reach', reach.toFixed(1)); bad = true; }
-	const { angle, allowed, dist } = aimAngle(eye, attacker.viewVector, victim);
+	const { angle, allowed, dist } = aimAngle(eye, view, victim);
 	if (!bad && dist > 1.5 && angle > allowed) { flag(attacker, 'killaura', `${Math.round(angle)}°`); bad = true; }
 	const log = (hitLog.get(attacker.name) ?? []).filter(h => h.tick > tick - MULTI_TARGET_TICKS);
 	log.push({ tick, target: victim.name });
@@ -211,7 +210,7 @@ export function checkHit(attacker, victim, damage) {
 	if (bad && rollbackEnabled() && damage > 0) {
 		try {
 			const health = victim.getComponent('health');
-			if (health.currentValue > 0) health.setCurrentValue(Math.min(healtheffectiveMax, health.currentValue + damage));
+			if (health.currentValue > 0) health.setCurrentValue(Math.min(health.effectiveMax, health.currentValue + damage));
 		} catch { /* нет компонента */ }
 	}
 	return bad;
@@ -222,8 +221,8 @@ world.afterEvents.entityHurt.subscribe((e) => {
 	if (victim?.typeId !== 'minecraft:player') return;
 	// Отбрасывание, взрыв, падение после жемчуга — не считать движение читерским
 	graceMovement(victim.name);
-	if (attacker?.typeId !== 'minecraft:player' || attacker === victim || e.projectile) return;
-	if (e.cause !== undefined && e.cause !== 'entityAttack') return;
+	if (attacker?.typeId !== 'minecraft:player' || attacker.id === victim.id || e.damageSource.damagingProjectile) return;
+	if (e.damageSource.cause !== 'entityAttack') return;
 	checkHit(attacker, victim, e.damage);
 });
 

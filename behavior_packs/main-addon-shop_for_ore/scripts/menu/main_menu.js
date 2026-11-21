@@ -11,8 +11,8 @@ import { cosmeticsMenu } from './cosmetics_shop.js';
 import { achievementsMenu } from './achievements_menu.js';
 import { listGames, gameOf, joinGame, leaveGame } from '../system/minigames/minigames.js';
 import { runChatCommand } from '../chat/commands/commands.js';
-import { MUSIC_OFF, DISC_MODE, getVolume, setVolume, setMusicOff, unlockedDiscs, nowPlaying, playNow, playlistOf } from '../system/ui/music.js';
-import { TRACK, DISCS } from '../system/ui/music_tracks.js';
+import { MUSIC_OFF, DISC_MODE, getVolume, setVolume, setMusicOff, unlockedDiscs, nowPlaying, playNow, playlistOf, playback, setPaused, seek } from '../system/ui/music.js';
+import { TRACK, DISCS, trackTitle, trackArtist } from '../system/ui/music_tracks.js';
 import { BOSS_DISCS } from '../system/player/discs.js';
 import { ChangePasswordUI } from '../registration/change.js';
 import { redeemPromo } from '../system/economy/promo.js';
@@ -21,7 +21,7 @@ import { bankAmount, exchangeCoins, inventoryCoins, rebirth } from '../system/ec
 const OPEN = '\n%menu.common.tap_to_open';
 const COIN = '', LVL = '';
 // Номер сборки в «Версия карты»
-const BUILD = '0.3.0_20261114r';
+const BUILD = '0.4.1';
 
 /** Строки описания из ключей prefix.1 … prefix.N через перенос. */
 const lines = (prefix, n, from = 1) => Array.from({ length: n - from + 1 }, (_, i) => `%${prefix}.${from + i}`).join('\n');
@@ -84,7 +84,20 @@ function syncMenuItems(player, notify = false) {
 	if (!player.isValid || isBot(player)) return;
 	const inventory = player.getComponent('minecraft:inventory')?.container;
 	if (!inventory) return;
-	const serverReady = equipMenu(inventory, 'server:menu', 8);
+	const borrowedCompass = player.hasTag('sys:fb_compass');
+	if (borrowedCompass && world.scoreboard.getObjective('system')?.getScore('fallback') === 0) {
+		for (let slot = 0; slot < 9; slot++) {
+			const marker = 'sys:fb_slot_' + slot;
+			if (!player.hasTag(marker)) continue;
+			const item = inventory.getItem(slot);
+			if (item?.typeId === 'minecraft:compass' && item.keepOnDeath && item.lockMode === ItemLockMode.slot) {
+				inventory.setItem(slot);
+			}
+			player.removeTag(marker);
+		}
+		player.removeTag('sys:fb_compass');
+	}
+	const serverReady = (borrowedCompass && player.hasTag('sys:fb_slot_8')) || equipMenu(inventory, 'server:menu', 8);
 	let adminReady = true;
 	if (hasRole(player, 'admin')) {
 		checkedWithoutAdmin.delete(player.id);
@@ -95,7 +108,7 @@ function syncMenuItems(player, notify = false) {
 		}
 		checkedWithoutAdmin.add(player.id);
 	}
-	if (notify && (!serverReady || !adminReady)) tell(player, 'sfo.port.inventory_full');
+	if (notify && (!serverReady || !adminReady)) tell(player, 'chat.server.inventory_full');
 }
 
 world.afterEvents.playerSpawn.subscribe(({ player }) => syncMenuItems(player, true));
@@ -139,7 +152,7 @@ const HOWTOPLAY = ['\ue101 ' + lines('menu.howtoplay.line', 5), '\ue152 ' + line
 	...Array.from({ length: 8 }, (_, i) => `%menu.howtoplay.line.${14 + i}`)].join('\n\n');
 // Строк «что нового» в .lang: menu.version.line.3…VERSION_LINES
 const VERSION_LINES = 47;
-const VERSION = `%menu.version.line.1\n\n§r %menu.version.label §a${BUILD}§r\n%menu.version.line.2\n\n${lines('menu.version.line', VERSION_LINES, 3)}`;
+const VERSION = `%menu.version.line.1\n\n§r %menu.version.label §a${BUILD}§r\n%menu.version.current\n\n%menu.version.line.2\n\n${lines('menu.version.line', VERSION_LINES, 3)}`;
 
 /** Страница текста с одной кнопкой «Назад». */
 function textPage(player, title, body, back) {
@@ -261,20 +274,31 @@ function tagSetting(player, kind, tag, back) {
 
 // Музыка (system/ui/music.js): вкл/выкл, громкость 0–100, источник — музыка сервера по зонам или свои пластинки,
 // следующий трек и выбор пластинки (плашка «Сейчас играет»). В описании — что играет и как всё настроено
+const musicTime = seconds => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
 function musicSetting(player, back) {
 	const again = () => musicSetting(player, back);
 	const off = player.hasTag(MUSIC_OFF), discMode = player.hasTag(DISC_MODE), discs = unlockedDiscs(player);
+	const current = playback(player);
 	const body = () => {
-		const t = nowPlaying(player);
+		const t = current?.track;
 		return ['%menu.settings.music.body', '',
 			`%menu.settings.state ${off ? '%menu.settings.state.off' : '%menu.settings.state.on'}`,
-			`%menu.music.now ${t ? `§f${t.title} §8— §f${t.author}§7` : '§8—'}`,
+			`%menu.music.now ${t ? `§f ${trackTitle(t)} §8— §f ${trackArtist(t)}` : '§8—'}`,
+			...(Number.isFinite(current?.position) ? [`%menu.music.position §f${musicTime(current.position)} §7/ §f${musicTime(current.duration)}`] : []),
 			`%menu.music.source ${discMode ? '%menu.music.source.discs' : '%menu.music.source.server'}`,
 			`%menu.music.volume §f${getVolume(player)}§7 / 100`,
 			`%menu.music.discs §f${discs.length}§7 / ${DISCS.length}`].join('\n');
 	};
 	showMenu(player, '%menu.settings.music.title', body, [
 		{ text: off ? '\ue139 %menu.settings.button.enable' : '\ue130 %menu.settings.button.disable', run: () => { setMusicOff(player, !off); changed(player, off); again(); } },
+		...(current ? [{ text: current.paused ? '%menu.music.button.resume' : '%menu.music.button.pause', icon: 'textures/server_icons/note_block', run: () => {
+			setPaused(player, current.instanceId, !current.paused); again();
+		} }] : []),
+		...(current?.duration >= 1 ? [{ text: '%menu.music.button.seek', icon: 'textures/server_icons/note_block', run: () => {
+			const max = Math.floor(current.duration);
+			const form = modal('%menu.music.seek.title').slider('%menu.music.seek.label', 0, max, { valueStep: 1, defaultValue: Math.min(max, Math.floor(current.position)) });
+			showModal(player, form, ([value]) => { seek(player, current.instanceId, value); again(); }, again);
+		} }] : []),
 		{ text: '%menu.music.button.volume', icon: 'textures/server_icons/note_block', run: () => musicVolume(player, again) },
 		{ text: discMode ? '%menu.music.button.to_server' : '%menu.music.button.to_discs', icon: 'textures/items/record_cat', run: () => {
 			if (!discMode && !discs.length) return tell(player, 'chat.music.error.no_discs');
@@ -293,13 +317,15 @@ function musicVolume(player, back) {
 	showModal(player, form, ([v]) => { setVolume(player, v); tell(player, 'chat.music.volume', String(getVolume(player))); back(); }, back);
 }
 
-// Коллекция: все 15 пластинок. Найденная — нажал, и она играет (источник переключается на «Мои пластинки»);
+// Коллекция: все пластинки. Найденная — нажал, и она играет (источник переключается на «Мои пластинки»);
 // ненайденная — «???» с подсказкой, где искать (system/player/discs.js)
 function musicCollection(player, back) {
 	const owned = unlockedDiscs(player);
 	const items = DISCS.map(d => owned.includes(d.id)
-		? { text: `§8${d.title}\n§7${d.author}`, icon: `textures/items/record_${d.id}`, run: () => {
-			if (player.hasTag(MUSIC_OFF)) return tell(player, 'chat.music.error.off');
+		? { text: `§8 ${trackTitle(d)}\n§r ${trackArtist(d)}`, icon: d.icon, run: () => {
+			if (player.hasTag(MUSIC_OFF) || getVolume(player) === 0) return tell(player, 'chat.music.error.off');
+			const { key, list } = playlistOf(player);
+			if (key === 'boss' && !list.includes(d.id)) return tell(player, 'chat.music.error.arena');
 			player.addTag(DISC_MODE);
 			if (!playNow(player, d.id)) return tell(player, 'chat.music.error.arena');
 			back();
@@ -311,11 +337,11 @@ function musicCollection(player, back) {
 // Выбрать трек из текущего плейлиста: музыка зоны (мир, Незер, арена Хранителя) или свои пластинки. Нажал — играет сразу,
 // с плашкой «Сейчас играет»; играющий сейчас отмечен
 function musicChoose(player, back) {
-	if (player.hasTag(MUSIC_OFF)) return tell(player, 'chat.music.error.off');
+	if (player.hasTag(MUSIC_OFF) || getVolume(player) === 0) return tell(player, 'chat.music.error.off');
 	const { key, list } = playlistOf(player), now = nowPlaying(player)?.id;
 	const items = list.map(id => ({
-		text: `${id === now ? '§2' : '§8'}${TRACK[id].title}\n§7${TRACK[id].author}`,
-		icon: TRACK[id].item ? `textures/items/record_${id}` : 'textures/server_icons/note_block',
+		text: `${id === now ? '§2' : '§8'} ${trackTitle(TRACK[id])}\n§r ${trackArtist(TRACK[id])}`,
+		icon: TRACK[id].icon ?? 'textures/server_icons/note_block',
 		run: () => { if (!playNow(player, id)) return tell(player, 'chat.music.error.off'); back(); }
 	}));
 	showMenu(player, '%menu.music.choose.title', `%menu.music.choose.body\n\n%menu.music.choose.${key}`, [...items, backButton(back)], back);
@@ -389,7 +415,7 @@ function bankTransfer(player, back) {
 	}, back);
 }
 
-const gameStateLine = (g) => `§8 %menu.games.phase.${g.phase} §7(${g.players.size}/${g.def.maxPlayers})`;
+const gameStateLine = (g) => `§8 %menu.games.phase.${g.phase} §r(${g.players.size}/${g.def.maxPlayers})`;
 
 export function minigamesMenu(player, back) {
 	const mine = gameOf(player);

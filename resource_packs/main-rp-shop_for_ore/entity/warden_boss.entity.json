@@ -19,6 +19,7 @@
 				"default": "geometry.warden"
 			},
 			"scripts": {
+				"should_update_effects_offscreen": "1.0",
 				"pre_animation": [
 					"variable.animation_speed = Math.min(0.5, 3.0 * query.modified_move_speed);",
 					"variable.anim_pos_mod = 49.388962;",
@@ -87,6 +88,8 @@
 				"melee_attack_controller": "controller.animation.warden.melee_attacking",
 				"bob": "animation.warden.bob",
 				"swimming": "animation.humanoid.swimming.v1.0",
+				"hurt": "animation.warden.hurt",
+				"hurt_controller": "controller.animation.warden.hurt",
 				"sonic_boom": "animation.warden.sonic_boom",
 				"sonic_boom_controller": "controller.animation.warden.sonic_boom"
 			},

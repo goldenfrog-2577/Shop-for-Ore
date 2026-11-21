@@ -121,7 +121,7 @@ export function showModal(player, form, onSubmit, onBack) {
 export const modal = (title) => new ModalFormData().title(title);
 
 /**
- * Окно «Да / Нет». В 1.19.50 button1 — selection 1, button2 — selection 0.
+ * Окно «Да / Нет». Индексы кнопок Bedrock 26.60: «Да» — 0, «Нет» — 1.
  * @param {Player} player
  * @param {string} title
  * @param {string} body
@@ -135,10 +135,10 @@ export function confirm(player, title, body, onYes, onNo) {
 		.button1(' %menu.common.yes')
 		.button2(' %menu.common.no');
 	return show(player, form).then(r => {
-		if (!r) return;
-		if (r.selection === 1 || (!r.canceled && r.selection === 0)) click(player);
-		if (r.selection === 1) act(player, onYes, onNo);
-		else if (!r.canceled && onNo && r.selection === 0) act(player, onNo);
+		if (!r || r.canceled || (r.selection !== 0 && r.selection !== 1)) return;
+		click(player);
+		if (r.selection === 0) return act(player, onYes, onNo);
+		return act(player, onNo);
 	});
 }
 
@@ -148,7 +148,7 @@ export function confirm(player, title, body, onYes, onNo) {
  * @param {Player} player
  * @param {string} body
  * @param {() => void} onYes
- * @param {() => void} [onNo] — «Нет» и крестик
+ * @param {() => void} [onNo] — кнопка «Нет»
  */
 export const WARN_TITLE = '\ue1f8 %admin.wipe.title';
 export function wipeConfirm(player, body, onYes, onNo) {

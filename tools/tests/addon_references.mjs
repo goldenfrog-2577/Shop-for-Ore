@@ -9,6 +9,7 @@ assert.equal(new Set(names.map(p=>p.toLowerCase())).size,names.length,'paths mus
 const has=(p,label)=>assert.ok(exact.has(p),label+': '+p);
 const index=JSON.parse(fs.readFileSync(path.join(pack,'contents.json'),'utf8')).content.map(e=>e.path);
 assert.equal(new Set(index.map(p=>p.toLowerCase())).size,index.length,'pack index duplicates');for(const p of index)has(p,'indexed file');
+assert.deepEqual(index.filter(p=>p!=='contents.json').sort(),names.filter(p=>p!=='contents.json').sort(),'pack index exactly matches shipped files');
 const modules=names.filter(p=>p.startsWith('scripts/')&&p.endsWith('.js'));
 assert.deepEqual(index.filter(p=>p.startsWith('scripts/')&&p.endsWith('.js')).sort(),[...modules].sort(),'script index exactly matches files');
 const manifest=JSON.parse(fs.readFileSync(path.join(pack,'manifest.json'),'utf8'));for(const m of manifest.modules)if(m.entry)has(m.entry,'manifest entry');
