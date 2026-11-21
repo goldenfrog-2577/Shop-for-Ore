@@ -64,5 +64,5 @@ export const PLAYLISTS = {
 		'comforting_memories', 'an_ordinary_day', 'aerie', 'firebugs', 'labyrinthine', 'biome_fest', 'blind_spots', 'haunt_muskie',
 		'aria_math', 'dreiton', 'taswell', 'mutation', 'moog_city_2', 'beginning_2', 'floating_trees'],
 	nether: ['rubedo', 'chrysopoeia', 'so_below', 'concrete_halls', 'dead_voxel', 'warmth', 'ballad_of_the_cats'],
-	boss: ['ancestry', '5', '11', '13', 'mellohi', 'ward']
+	boss: ['ancestry', '5', '11', '13']
 };
